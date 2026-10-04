@@ -1,0 +1,26 @@
+# Root ignores. The Serverpod/Flutter packages add their own .gitignore files.
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+
+# Secrets: never commit (NFR-SEC-05)
+.env
+.env.*
+*.jks
+*.keystore
+key.properties
+**/config/passwords.yaml
+
+# Agent tooling installed locally, not committed (see CLAUDE.md, "Agent tooling")
+.claude/skills/
+.claude/knowledge/
+.claude/settings.local.json
