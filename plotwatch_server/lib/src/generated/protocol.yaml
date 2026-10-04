@@ -9,3 +9,6 @@ emailIdp:
   - hasAccount:
 jwtRefresh:
   - refreshAccessToken:
+profile:
+  - getMe:
+  - updateMe:

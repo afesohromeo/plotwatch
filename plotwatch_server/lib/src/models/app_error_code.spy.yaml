@@ -8,6 +8,11 @@ enum: AppErrorCode
 serialized: byName
 values:
   - permissionDenied
+  # Profile (decision M1-2)
+  - invalidFullName
+  - invalidCountryCode
+  - invalidLocale
+  # Set by the client from the auth module's exceptions
   - authInvalidCredentials
   - authTooManyAttempts
   - authRequestExpired

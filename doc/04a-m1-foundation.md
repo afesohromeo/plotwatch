@@ -1,7 +1,7 @@
 # M1 Foundation Plan (D2, Mon 2026-10-05)
 
 > **Parent plan:** [04-implementation-plan.md](04-implementation-plan.md) §4, M1.
-> **Status:** Task group A **approved and completed 2026-10-04** (see "Group A outcome" at the end). Groups B–E **drafted 2026-10-04, awaiting approval** (end of this file).
+> **Status:** Task group A **approved and completed 2026-10-04** (see "Group A outcome" at the end). Groups B–E **approved 2026-10-04** (end of this file).
 > **Work split** ([04 §1.2](04-implementation-plan.md#12-who-runs-what-decided-2026-10-04)): **You run** the tool commands; Claude moves, copies and edits files, writes the code and tests, and runs `dart test` / `flutter test`.
 
 ---
@@ -144,7 +144,7 @@ Differences from the plan, and why:
 
 ## Groups B–E: profile, auth, profile screen, Cloud deploy (draft for approval)
 
-> **Status:** draft 2026-10-04, **awaiting approval**. Facts below were checked in the installed Serverpod 4.0.3 sources (auth module, `serverpod_test`, generated client).
+> **Status:** **approved 2026-10-04**. Facts below were checked in the installed Serverpod 4.0.3 sources (auth module, `serverpod_test`, generated client).
 
 ### Decisions in this draft
 | # | Decision | Proposal |
@@ -416,3 +416,11 @@ class ProfileEndpoint extends Endpoint {
 6. Updates: `00` §8 (M1 done), and `serverpod-feedback.md` (any new findings).
 
 **M1 exit criterion** ([04 §4](04-implementation-plan.md#m1-foundation-d2)): on the Cloud URL, a new user can sign up, verify their email, sign in, set French and sign out. The Android debug build does the same against Cloud. All tests pass, and CI is green.
+
+### Group B outcome (2026-10-04)
+Done and verified as planned:
+- `dart test`: **10/10** profile endpoint tests pass. RED was seen first: the tests failed on the missing `profile` endpoint, `UserSettings` and the three error codes.
+- Migration `20261004185135416` creates `user_settings` with the unique index on `authUserId`.
+- `flutter test` is still 21/21 after the client was regenerated.
+
+No deviations from the plan.

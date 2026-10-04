@@ -20,6 +20,9 @@ import 'package:serverpod_client/serverpod_client.dart' as _isc;
 /// own exceptions (`_standards/14` §2.3.1).
 enum AppErrorCode implements _isc.SerializableModel {
   permissionDenied,
+  invalidFullName,
+  invalidCountryCode,
+  invalidLocale,
   authInvalidCredentials,
   authTooManyAttempts,
   authRequestExpired,
@@ -32,6 +35,12 @@ enum AppErrorCode implements _isc.SerializableModel {
     switch (name) {
       case 'permissionDenied':
         return AppErrorCode.permissionDenied;
+      case 'invalidFullName':
+        return AppErrorCode.invalidFullName;
+      case 'invalidCountryCode':
+        return AppErrorCode.invalidCountryCode;
+      case 'invalidLocale':
+        return AppErrorCode.invalidLocale;
       case 'authInvalidCredentials':
         return AppErrorCode.authInvalidCredentials;
       case 'authTooManyAttempts':

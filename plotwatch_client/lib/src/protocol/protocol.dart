@@ -18,8 +18,12 @@ import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
 import 'app_error_code.dart' as _imu8gbx5;
 import 'app_exception.dart' as _it4z223c;
+import 'my_profile.dart' as _i1hmtol2;
+import 'user_settings.dart' as _iy88a0nt;
 export 'app_error_code.dart';
 export 'app_exception.dart';
+export 'my_profile.dart';
+export 'user_settings.dart';
 export 'client.dart';
 
 class Protocol extends _isc.SerializationManager {
@@ -62,11 +66,23 @@ class Protocol extends _isc.SerializationManager {
     if (t == _it4z223c.AppException) {
       return _it4z223c.AppException.fromJson(data) as T;
     }
+    if (t == _i1hmtol2.MyProfile) {
+      return _i1hmtol2.MyProfile.fromJson(data) as T;
+    }
+    if (t == _iy88a0nt.UserSettings) {
+      return _iy88a0nt.UserSettings.fromJson(data) as T;
+    }
     if (t == _isc.getType<_imu8gbx5.AppErrorCode?>()) {
       return (data != null ? _imu8gbx5.AppErrorCode.fromJson(data) : null) as T;
     }
     if (t == _isc.getType<_it4z223c.AppException?>()) {
       return (data != null ? _it4z223c.AppException.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_i1hmtol2.MyProfile?>()) {
+      return (data != null ? _i1hmtol2.MyProfile.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_iy88a0nt.UserSettings?>()) {
+      return (data != null ? _iy88a0nt.UserSettings.fromJson(data) : null) as T;
     }
     try {
       return _iaic.Protocol().deserialize<T>(data, t);
@@ -81,6 +97,8 @@ class Protocol extends _isc.SerializationManager {
     return switch (type) {
       _imu8gbx5.AppErrorCode => 'AppErrorCode',
       _it4z223c.AppException => 'AppException',
+      _i1hmtol2.MyProfile => 'MyProfile',
+      _iy88a0nt.UserSettings => 'UserSettings',
       _ => null,
     };
   }
@@ -99,6 +117,10 @@ class Protocol extends _isc.SerializationManager {
         return 'AppErrorCode';
       case _it4z223c.AppException():
         return 'AppException';
+      case _i1hmtol2.MyProfile():
+        return 'MyProfile';
+      case _iy88a0nt.UserSettings():
+        return 'UserSettings';
     }
     className = _iaic.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -126,6 +148,12 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'AppException') {
       return deserialize<_it4z223c.AppException>(data['data']);
+    }
+    if (dataClassName == 'MyProfile') {
+      return deserialize<_i1hmtol2.MyProfile>(data['data']);
+    }
+    if (dataClassName == 'UserSettings') {
+      return deserialize<_iy88a0nt.UserSettings>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);

@@ -19,8 +19,12 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
 import 'app_error_code.dart' as _imu8gbx5;
 import 'app_exception.dart' as _it4z223c;
+import 'my_profile.dart' as _i1hmtol2;
+import 'user_settings.dart' as _iy88a0nt;
 export 'app_error_code.dart';
 export 'app_exception.dart';
+export 'my_profile.dart';
+export 'user_settings.dart';
 
 class Protocol extends _is.DatabaseSerializationManager {
   Protocol._();
@@ -30,6 +34,68 @@ class Protocol extends _is.DatabaseSerializationManager {
   static final Protocol _instance = Protocol._().._registerHostProtocols();
 
   static List<_isp.TableDefinition> get targetTableDefinitions => [
+    _isp.TableDefinition(
+      name: 'user_settings',
+      dartName: 'UserSettings',
+      schema: 'public',
+      module: 'plotwatch',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'authUserId',
+          columnType: _isp.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _isp.ColumnDefinition(
+          name: 'countryCode',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'locale',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _isp.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _isp.IndexDefinition(
+          indexName: 'user_settings_auth_user_idx',
+          tableSpace: null,
+          elements: [
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'authUserId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
     ..._iais.Protocol.targetTableDefinitions,
     ..._iacs.Protocol.targetTableDefinitions,
     ..._isp.Protocol.targetTableDefinitions,
@@ -68,11 +134,23 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _it4z223c.AppException) {
       return _it4z223c.AppException.fromJson(data) as T;
     }
+    if (t == _i1hmtol2.MyProfile) {
+      return _i1hmtol2.MyProfile.fromJson(data) as T;
+    }
+    if (t == _iy88a0nt.UserSettings) {
+      return _iy88a0nt.UserSettings.fromJson(data) as T;
+    }
     if (t == _is.getType<_imu8gbx5.AppErrorCode?>()) {
       return (data != null ? _imu8gbx5.AppErrorCode.fromJson(data) : null) as T;
     }
     if (t == _is.getType<_it4z223c.AppException?>()) {
       return (data != null ? _it4z223c.AppException.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_i1hmtol2.MyProfile?>()) {
+      return (data != null ? _i1hmtol2.MyProfile.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_iy88a0nt.UserSettings?>()) {
+      return (data != null ? _iy88a0nt.UserSettings.fromJson(data) : null) as T;
     }
     try {
       return _iais.Protocol().deserialize<T>(data, t);
@@ -90,6 +168,8 @@ class Protocol extends _is.DatabaseSerializationManager {
     return switch (type) {
       _imu8gbx5.AppErrorCode => 'AppErrorCode',
       _it4z223c.AppException => 'AppException',
+      _i1hmtol2.MyProfile => 'MyProfile',
+      _iy88a0nt.UserSettings => 'UserSettings',
       _ => null,
     };
   }
@@ -108,6 +188,10 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'AppErrorCode';
       case _it4z223c.AppException():
         return 'AppException';
+      case _i1hmtol2.MyProfile():
+        return 'MyProfile';
+      case _iy88a0nt.UserSettings():
+        return 'UserSettings';
     }
     className = _iais.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -139,6 +223,12 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'AppException') {
       return deserialize<_it4z223c.AppException>(data['data']);
+    }
+    if (dataClassName == 'MyProfile') {
+      return deserialize<_i1hmtol2.MyProfile>(data['data']);
+    }
+    if (dataClassName == 'UserSettings') {
+      return deserialize<_iy88a0nt.UserSettings>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
@@ -179,6 +269,10 @@ class Protocol extends _is.DatabaseSerializationManager {
       if (table != null) {
         return table;
       }
+    }
+    switch (t) {
+      case _iy88a0nt.UserSettings:
+        return _iy88a0nt.UserSettings.t;
     }
     return null;
   }

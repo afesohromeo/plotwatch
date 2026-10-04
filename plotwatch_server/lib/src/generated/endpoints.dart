@@ -17,6 +17,7 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
 import '../endpoints/email_idp_endpoint.dart' as _ilutrrxn;
 import '../endpoints/jwt_refresh_endpoint.dart' as _in48dm4x;
+import '../endpoints/profile_endpoint.dart' as _i2cx2pww;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
@@ -32,6 +33,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'jwtRefresh',
+          null,
+        ),
+      'profile': _i2cx2pww.ProfileEndpoint()
+        ..initialize(
+          server,
+          'profile',
           null,
         ),
     };
@@ -238,6 +245,53 @@ class Endpoints extends _is.EndpointDispatch {
                         session,
                         refreshToken: params['refreshToken'],
                       ),
+        ),
+      },
+    );
+    connectors['profile'] = _is.EndpointConnector(
+      name: 'profile',
+      endpoint: endpoints['profile']!,
+      methodConnectors: {
+        'getMe': _is.MethodConnector(
+          name: 'getMe',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['profile'] as _i2cx2pww.ProfileEndpoint)
+                  .getMe(session),
+        ),
+        'updateMe': _is.MethodConnector(
+          name: 'updateMe',
+          params: {
+            'fullName': _is.ParameterDescription(
+              name: 'fullName',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'countryCode': _is.ParameterDescription(
+              name: 'countryCode',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+            'locale': _is.ParameterDescription(
+              name: 'locale',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['profile'] as _i2cx2pww.ProfileEndpoint).updateMe(
+                    session,
+                    fullName: params['fullName'],
+                    countryCode: params['countryCode'],
+                    locale: params['locale'],
+                  ),
         ),
       },
     );

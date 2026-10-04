@@ -1,0 +1,17 @@
+### App settings of a signed-in user. Name and email live in the auth
+### module's own profile (decision M1-1, doc/04a-m1-foundation.md).
+class: UserSettings
+table: user_settings
+fields:
+  ### The auth module's user ID (`session.authenticated!.authUserId`).
+  authUserId: UuidValue
+  ### ISO 3166-1 alpha-2, upper case (e.g. CM); null when not set.
+  countryCode: String?
+  ### `en` or `fr`.
+  locale: String
+  createdAt: DateTime
+  updatedAt: DateTime
+indexes:
+  user_settings_auth_user_idx:
+    fields: authUserId
+    unique: true

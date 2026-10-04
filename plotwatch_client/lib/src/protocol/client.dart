@@ -12,6 +12,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _ida;
 import 'package:http/http.dart' as _i85jenna;
+import 'package:plotwatch_client/src/protocol/my_profile.dart' as _iclzzlcy;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
@@ -244,6 +245,37 @@ class EndpointJwtRefresh extends _iacc.EndpointRefreshJwtTokens {
       );
 }
 
+/// The signed-in user's own profile (PROF-01–03).
+/// Thin: sign-in → validate → one service call (`_standards/14` §4.2).
+/// {@category Endpoint}
+class EndpointProfile extends _isc.EndpointRef {
+  EndpointProfile(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'profile';
+
+  _ida.Future<_iclzzlcy.MyProfile> getMe() =>
+      caller.callServerEndpoint<_iclzzlcy.MyProfile>(
+        'profile',
+        'getMe',
+        {},
+      );
+
+  _ida.Future<_iclzzlcy.MyProfile> updateMe({
+    required String fullName,
+    String? countryCode,
+    required String locale,
+  }) => caller.callServerEndpoint<_iclzzlcy.MyProfile>(
+    'profile',
+    'updateMe',
+    {
+      'fullName': fullName,
+      'countryCode': countryCode,
+      'locale': locale,
+    },
+  );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _iaic.Caller(client);
@@ -284,6 +316,7 @@ class Client extends _isc.ServerpodClientShared {
        ) {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
+    profile = EndpointProfile(this);
     modules = Modules(this);
   }
 
@@ -291,12 +324,15 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointJwtRefresh jwtRefresh;
 
+  late final EndpointProfile profile;
+
   late final Modules modules;
 
   @override
   Map<String, _isc.EndpointRef> get endpointRefLookup => {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
+    'profile': profile,
   };
 
   @override

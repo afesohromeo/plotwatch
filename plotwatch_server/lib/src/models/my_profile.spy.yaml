@@ -1,0 +1,8 @@
+### What the app shows on the profile screen: the auth module's name and
+### email plus our [UserSettings] (no table).
+class: MyProfile
+fields:
+  fullName: String?
+  email: String?
+  countryCode: String?
+  locale: String
