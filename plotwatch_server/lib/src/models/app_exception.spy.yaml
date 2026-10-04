@@ -1,0 +1,8 @@
+### The only exception the server throws for business and validation errors
+### (`_standards/14` §2.1).
+exception: AppException
+fields:
+  ### What went wrong; the client turns it into a localized message.
+  code: AppErrorCode
+  ### Technical detail for logs only, never shown to users.
+  details: String?

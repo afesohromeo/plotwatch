@@ -41,7 +41,7 @@ A milestone plan may adjust details of this file. Any change to **scope** or to 
 
 ## 2. Target repository layout
 
-Created in M1 with `serverpod create plotwatch --database --auth --webapp --no-redis --no-website --ide claude` in a temporary folder. The generated files are then **moved to the repo root**, so the repo doesn't nest `plotwatch/plotwatch/`.
+Created in M1 with `serverpod create plotwatch --database --auth --webapp --no-redis --no-website --ide claude` in a temporary folder. The generated files are then **moved to the repo root**, so the repo doesn't nest `plotwatch/plotwatch/`. **The generated Flutter app is replaced with the developer's [flutter_bloc_kit](https://github.com/afesohromeo/flutter_bloc_kit)** (decision 2026-10-04, see [04a](04a-m1-foundation.md) task group A): the kit's `lib/`, `Makefile`, `l10n.yaml` and `analysis_options.yaml`, combined with the template's platform folders, workspace settings and `lib/driver.dart`. **The generated Flutter app is replaced with the developer's [flutter_bloc_kit](https://github.com/afesohromeo/flutter_bloc_kit)** (decision 2026-10-04, see [04a](04a-m1-foundation.md) task group A): the kit's `lib/`, `Makefile`, `l10n.yaml` and `analysis_options.yaml`, with the template's platform folders, workspace settings and `lib/driver.dart`.
 
 ```
 plotwatch/                          (git root)
@@ -63,7 +63,7 @@ plotwatch/                          (git root)
 │   ├── migrations/                 # generated, committed, never edited (14 §4.2.7)
 │   └── test/{integration,unit}/
 ├── plotwatch_client/               # generated, never edited
-└── plotwatch_flutter/
+└── plotwatch_flutter/              # app code from flutter_bloc_kit
     └── lib/src/                    # _standards/01 + 14 §5
         ├── core/                   # application, app_initializer, routing/, layout/, l10n/, theme/
         ├── data/api/config/        # api_provider.dart (Serverpod Client), api_error_handler.dart

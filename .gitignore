@@ -12,6 +12,11 @@ desktop.ini
 !.vscode/extensions.json
 !.vscode/launch.json
 
+# Dart / pub (from the Serverpod template)
+.dart_tool/
+.packages
+pubspec_overrides.yaml
+
 # Secrets: never commit (NFR-SEC-05)
 .env
 .env.*
@@ -20,7 +25,18 @@ desktop.ini
 key.properties
 **/config/passwords.yaml
 
-# Agent tooling installed locally, not committed (see CLAUDE.md, "Agent tooling")
+# Agent tooling installed locally, not committed (see CLAUDE.md, "Agent tooling").
+# Only the generated agent files are ignored, so .claude/settings.json stays committed.
 .claude/skills/
 .claude/knowledge/
 .claude/settings.local.json
+.dart_skills/
+.agents/
+.gemini/
+.cursor/
+.codex/
+.mcp.json
+.vscode/mcp.json
+
+# Serverpod Cloud CLI
+.scloud/

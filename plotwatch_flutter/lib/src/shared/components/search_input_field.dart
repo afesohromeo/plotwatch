@@ -1,0 +1,59 @@
+import 'package:flutter/material.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
+
+class SearchInputField extends StatelessWidget {
+  const SearchInputField(
+      {super.key,
+      required this.onChanged,
+      required this.labelText,
+      this.padding,
+      this.initialValue,
+      this.inputController,
+      this.labelColor,
+      this.bgColor,
+      this.showSuffixIcon = true,
+      this.shape});
+  final void Function(String)? onChanged;
+  final String labelText;
+  final EdgeInsets? padding;
+  final String? initialValue;
+  final TextEditingController? inputController;
+  final Color? labelColor;
+  final Color? bgColor;
+  final bool? showSuffixIcon;
+  final ShapeBorder? shape;
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: ResponsiveLayout.isMobile(context)
+          ? null
+          : MediaQuery.sizeOf(context).width * .4,
+      child: InputField(
+        borderRadius: BorderRadius.circular(
+          10,
+        ),
+
+        labelColor: labelColor,
+        bgColor: bgColor,
+        controller: inputController,
+        padding: padding ?? EdgeInsets.zero,
+        validator: null,
+        radius: 10,
+        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+
+        // hintText: 'Recherche',
+        initialValue: initialValue,
+        onChanged: onChanged,
+        keyboardType: TextInputType.text,
+        labelText: labelText,
+
+        suffixIcon: showSuffixIcon!
+            ? Icon(
+                Icons.search_rounded,
+                color: labelColor,
+              )
+            : null,
+      ),
+    );
+  }
+}

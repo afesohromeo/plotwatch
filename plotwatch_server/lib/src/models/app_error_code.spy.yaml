@@ -1,0 +1,17 @@
+### Error codes sent to the client inside [AppException].
+###
+### The server never sends display text: the client maps each code to a
+### localized message (one ARB key per code, `_standards/14` §2).
+### Auth codes are set by the client's ApiErrorHandler from the auth module's
+### own exceptions (`_standards/14` §2.3.1).
+enum: AppErrorCode
+serialized: byName
+values:
+  - permissionDenied
+  - authInvalidCredentials
+  - authTooManyAttempts
+  - authRequestExpired
+  - authRequestInvalid
+  - authPasswordPolicy
+  - authUserBlocked
+  - authUnknown

@@ -38,8 +38,31 @@ Registered for this folder in the user's local Claude Code config (not in the re
 |--------|---------|
 | **dart** | Dart/Flutter tooling: analysis, pub, tests, running apps. Registered as `cmd /c dart mcp-server` because `dart` is a `.bat` on Windows. |
 | **stitch** | Google Stitch: AI-generated UI screens and design systems |
+| **serverpod** | Bridge to a running `serverpod start` (see "Working with Serverpod"). Registered in the local, gitignored `.mcp.json` as `cmd /c <full path to serverpod.bat> mcp-server --server-dir plotwatch_server` (`serverpod` is also a `.bat`; the full path avoids depending on the PATH that VS Code inherited at startup); loaded through `enableAllProjectMcpServers` in `.claude/settings.json`. |
 
 Prefer MCP tools over shell commands when they overlap.
+
+---
+
+## Working with Serverpod
+*(Merged from the Serverpod 4 template's `AGENTS.md` on 2026-10-04, adapted to this project's work split.)*
+
+- **Who runs what** ([`doc/04` §1.2](doc/04-implementation-plan.md#12-who-runs-what-decided-2026-10-04)):
+  - The developer runs `serverpod start`, which generates code, runs the server and the Flutter app, and hot-reloads on file changes. **Never start the server yourself.**
+  - Claude runs only `dart test` (in `plotwatch_server`) and `flutter test` (in `plotwatch_flutter`). Every other command is written as a "You run:" step.
+- **`serverpod` MCP tools** (only work while `serverpod start` is running; if one says the server isn't running, stop and ask the developer to start it):
+  - Claude may use the read-only ones: `tail_server_logs`, `tail_flutter_logs`, `get_flutter_app_dtd`.
+  - Tools that change state (`create_migration`, `apply_migrations`, `create_repair_migration`, `hot_reload`, `hot_restart`, `spawn_flutter_app`) are the developer's, unless they ask Claude to use them.
+- **Never edit generated code:** `plotwatch_server/lib/src/generated/` and the whole `plotwatch_client` package are rewritten by the generator. Change the `.spy.yaml` models, the endpoints or `lib/server.dart` instead.
+- **Migrations** are generated and never edited by hand ([`_standards/14` §4.2.7](_standards/14_serverpod_adaptation.md)). Serverpod itself allows editing `migration.sql` to avoid data loss; that exception is not adopted yet (decision 2026-10-04).
+- **Tests need no Docker:** `config/test.yaml` sets `database.dataPath`, so Serverpod runs an embedded PostgreSQL for tests.
+- **Checklist after changes:**
+  1. `dart analyze` and `dart format` (developer)
+  2. migration if a model with a `table` changed (developer)
+  3. `hot_restart` if the change needs it (developer)
+  4. tests (Claude)
+  5. Claude checks `tail_server_logs` / `tail_flutter_logs`
+- **Driving the app:** the app is launched from `plotwatch_flutter/lib/driver.dart` (Flutter driver extension). To let an agent type, set `enableTextEntryEmulation: true` there.
 
 ---
 
@@ -53,6 +76,8 @@ Prefer MCP tools over shell commands when they overlap.
 | Flutter | Flutter skill set, [flutter/skills](https://github.com/flutter/skills) |
 
 All three were copied from PlusLocate on 2026-10-03. The Stitch and Flutter upstream repositories were identified afterwards; the copies don't record their exact source.
+
+**Serverpod and Relic skills** (`.claude/skills/serverpod-*`, `.claude/skills/relic-*`, 28 skills): installed by `serverpod create --ide claude` on 2026-10-04 from Serverpod's skills registry (cache in `.dart_skills/`, also gitignored). They sit directly in `.claude/skills/`, so Claude Code discovers them automatically, unlike the nested sets above. Use `serverpod-overview` once per session in this project, then the matching `serverpod-*` skill per feature area. **Precedence still applies:** `_standards/14` wins over them (e.g. layer folders instead of feature folders; no hand-edited migrations). The template's `flutter-*`, `petitparser-*` and `synchronized-*` skills and the `.agents/` copies were not kept.
 
 ---
 
