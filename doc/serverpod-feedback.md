@@ -1,0 +1,16 @@
+# Serverpod Feedback Log
+
+> **Purpose:** actionable feedback on the Serverpod SDKs, CLI, templates and docs, collected while building Plotwatch. It is the source for the hackathon's **Most Valuable Feedback** form ([Official Rules](https://tinyurl.com/SP-rules) §4: bug reports, UI improvements, suggested integrations; one form per entrant, before 14 Oct 2026, 23:59 CEST).
+> **Environment:** Windows 11 Pro, Serverpod CLI 4.0.3, Flutter 3.47.5, Dart 3.13.4.
+> **How to add an entry:** what happened, how to reproduce it, what was expected, and a suggestion. Add the date.
+
+---
+
+| # | Date | Area | Observation | Reproduce | Suggestion |
+|---|------|------|-------------|-----------|------------|
+| F-1 | 2026-10-04 | Docs | The [quickstart page](https://docs.serverpod.dev/quickstart) uses `serverpod quickstart`, while the [upgrade guide](https://docs.serverpod.dev/upgrading/upgrade-to-four) says `serverpod create` replaces the quickstart workflow. The CLI has both (`quickstart` = `create` with defaults plus an editor prompt). | Compare the two pages with `serverpod --help`. | State in one place how the two commands relate and when to use which. |
+| F-2 | 2026-10-04 | CLI / Windows | `serverpod create` on Windows prints "Updating Flutter app MacOS entitlements. failed." The rest of the setup succeeds. | `serverpod create sp_quickstart --database --auth --webapp --no-redis --no-website --ide none --no-interactive` | Skip the step on non-macOS hosts, or explain the failure. A "failed" line in an otherwise successful setup looks alarming. |
+| F-3 | 2026-10-04 | Template | The fullstack template's `test/widget_test.dart` contains no tests, and its comment still says `PROJECTNAME`. `flutter test` in the Flutter package reports "No tests were found" (exit code 79). | Run `flutter test` in `<name>_flutter/` right after `serverpod create`. | Ship a minimal passing widget test (e.g. the greeting screen renders), or remove the file. Replace the `PROJECTNAME` placeholder. |
+| F-4 | 2026-10-04 | CLI | After `dart test`, the embedded test PostgreSQL keeps running (6 `postgres.exe` processes). `serverpod database` only has `start`; there is no `stop`. | Run `dart test` in the server package, then check `tasklist \| findstr postgres`. | Add `serverpod database stop`, or stop the test database when the test run ends. Document what happens to the processes. |
+| F-5 | 2026-10-04 | Docs / Windows | `dart install serverpod_cli` installs to `%LOCALAPPDATA%\Dart\install\bin\`, which isn't on PATH. The installation page doesn't mention it; only the installer's warning does. | Fresh Windows machine: `dart install serverpod_cli`, then `serverpod`. | Add a Windows PATH note (with the exact folder) to the installation page. |
+| F-6 | 2026-10-04 | Template | The root `.gitignore` ignores the whole `.claude/` (and `.cursor/`, `.gemini/`, …) directory. That also hides project-level files teams usually commit, such as `.claude/settings.json`. | Inspect the root `.gitignore` after `serverpod create`. | Ignore only the files Serverpod generates (e.g. its skills folder and MCP config), not the whole agent directory. |

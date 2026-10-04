@@ -36,7 +36,7 @@ Ledger shows budget / released / spent / unaccounted, live for both sides
 | Item | Date |
 |------|------|
 | Today (documentation) | Sat 2026-10-03 |
-| Hackathon deadline | "Before October 14th". **Exact time and time zone to confirm in the [full rules](https://tinyurl.com/SP-rules).** |
+| Hackathon deadline | **14 October 2026, 23:59 CEST**, no extensions ([Official Rules](https://tinyurl.com/SP-rules) §1, confirmed 2026-10-04) |
 | **Our target submission** | **Tue 2026-10-13**, one day of buffer |
 
 ### 2.1 Day-by-day plan (proposal)
@@ -224,24 +224,28 @@ These were proposed during brainstorming and are **not yet approved**:
 ---
 
 ## 9. Hackathon submission checklist
+*Requirements from the [Official Rules](https://tinyurl.com/SP-rules) §4 (read 2026-10-04).*
 - [ ] Working project (Flutter + Serverpod), deployed
-- [ ] Demo video ≤ 3 minutes (judges only have to watch the first 3)
-- [ ] Project description: what it does and how it was built
-- [ ] Repository link (public, or read access granted to judges)
-- [ ] Submitted on BuilderBase before the deadline
-- [ ] *(Bonus)* Social post tagging Serverpod (LinkedIn: Serverpod, X: @ServerpodDev, Bluesky: @serverpod.dev)
+- [ ] Demo video **under 2 minutes** (judges needn't watch beyond 2:00), **public on YouTube or Vimeo**, showing the app on its target devices; no copyrighted music or third-party trademarks without permission
+- [ ] Project description: features, functionality and how it was built, **including disclosure of the AI tools used** (Claude Code, Stitch)
+- [ ] **Build and run instructions** (README)
+- [ ] **Testing access** (deployed web URL + APK + demo login credentials), free and unrestricted for the sponsor, administrator and judges **until judging ends (20 Oct 2026, 17:00 CEST)**. Keep the Serverpod Cloud deployment running until then.
+- [ ] Repository link with all source, assets and instructions: make the repo **public** before submitting (secret scan first). If it stays private, share it with viktor@serverpod.dev, alexander@serverpod.dev and isak@serverpod.dev.
+- [ ] All materials in English
+- [ ] Submitted on BuilderBase before **14 Oct 2026, 23:59 CEST**
+- [ ] *(Bonus, Best Hackathon Post: $500 credits)* Public post during the hackathon, clearly identifying it and showing real work (LinkedIn: Serverpod, X: @ServerpodDev, Bluesky: @serverpod.dev)
+- [ ] *(Most Valuable Feedback: $500 + $500 credits)* Feedback form with actionable comments on the Serverpod SDKs, App Studio or docs, drawn from [`serverpod-feedback.md`](serverpod-feedback.md)
 - [ ] Joined the Serverpod Discord
 
-### 9.1 Demo video outline (≤ 3:00, draft)
+### 9.1 Demo video outline (< 2:00, draft)
 | Time | Scene |
 |------|-------|
-| 0:00–0:20 | **The problem:** "You send money home to build a house. You get photos on WhatsApp. Are they real?" Statistics/headlines from the research. |
-| 0:20–0:45 | **Setup:** the funder (web/phone) creates a project, sets the site by Plus Code, applies a template, invites the site manager. |
-| 0:45–1:25 | **Verified capture:** the site manager on site captures a photo, which appears live on the funder's screen with a ✅ Verified badge. Then a photo taken *outside* the plot shows ❌ Unverified, with the reason. |
-| 1:25–1:50 | **Spot check:** the funder sends "show me the north wall now"; the site manager responds; "Fulfilled on time". |
-| 1:50–2:25 | **Review + money:** the stage is submitted, approved, the release recorded, expenses with receipts; the ledger shows the unaccounted amount. |
-| 2:25–2:50 | **How it's built:** Flutter + Serverpod 4 architecture diagram: streaming, future calls, ORM, file uploads, Serverpod Cloud. |
-| 2:50–3:00 | **Vision:** inspectors, escrow, maintenance history. Call to action. |
+| 0:00–0:15 | **The problem:** "You send money home to build a house. You get photos on WhatsApp. Are they real?" One headline from the research. |
+| 0:15–0:35 | **Setup:** the funder (web/phone) creates a project, sets the site by Plus Code, applies a template, invites the site manager. |
+| 0:35–1:10 | **Verified capture:** the site manager on site captures a photo, which appears live on the funder's screen with a ✅ Verified badge. Then a photo taken *outside* the plot shows ❌ Unverified, with the reason. |
+| 1:10–1:30 | **Spot check:** the funder sends "show me the north wall now"; the site manager responds; "Fulfilled on time". |
+| 1:30–1:50 | **Review + money:** the stage is submitted, approved, the release recorded, expenses with receipts; the ledger shows the unaccounted amount. |
+| 1:50–1:59 | **How it's built + vision:** one architecture frame (streaming, future calls, ORM, file uploads, Serverpod Cloud) and the roadmap (inspectors, escrow, maintenance history). |
 
 ---
 

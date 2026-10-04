@@ -4,7 +4,7 @@
 > **Status:** Approved 2026-10-03 (decision D-12 (a)–(d)). Draft wording, to be reviewed by the developer.
 > **Precedence:** files 01–13 were written for Dio/REST projects. **Where this file contradicts them, this file wins.** Everything not mentioned here applies unchanged: BLoC patterns, naming, `ResponsiveScaffoldWrapper`, routing, i18n, mobile pagination UI, and all UI rules.
 >
-> ⚠️ Serverpod syntax below (model YAML, client exception class names, test helpers) follows current Serverpod conventions. **Check it against the Serverpod 4 documentation during the quickstart** and correct this file if anything differs.
+> ✅ **Verified against Serverpod 4.0.3 on 2026-10-04** (CLI, generated template and package sources): model YAML keys, client exception classes, auth module, uploads, transactions, future calls and test helpers. Corrections approved by the developer the same day.
 
 ---
 
@@ -29,6 +29,7 @@
 
 ### 1.1 Shared models are generated
 - All data exchanged between server and client (entities, enums, page models, exceptions) is defined in **Serverpod model files** in `<name>_server/lib/src/models/`, one per type: `{entity}.spy.yaml`.
+  - Serverpod accepts model files anywhere under `lib/`, and its template groups them by feature (`lib/src/greetings/greeting.spy.yaml` next to its endpoint). **We deliberately keep the layer folders of §4.1** (D-12 d). When the project is created, the template's `greetings/` example is removed and its `auth/` endpoints move to `endpoints/`.
 - Serverpod generates the Dart classes for **both** server and client. The client uses them **directly** as its domain models: no Freezed copy, no hand-written `fromJson`, no static payload builders. Endpoints take typed objects or parameters.
 - Generated files are never edited by hand.
 
@@ -57,6 +58,9 @@ values:
   - changesRequested
   - approved
 ```
+
+- `serialized: byName` is Serverpod's default; we write it anyway so the intent is explicit.
+- Models that must never change after creation (e.g. `Evidence`, CAP-09) can declare `immutable: true`.
 
 ### 1.2 Freezed is still used for
 - **BLoC events and states**: unchanged, per 02 / 13.
@@ -115,24 +119,36 @@ Keep the names already used in 01 / 02 / 13 so the BLoC handler patterns apply a
 
 | Exception | Meaning | Created from |
 |-----------|---------|--------------|
-| `HttpException400` | Business / validation error, **with `AppErrorCode code`** | `AppException` thrown by the server |
-| `HttpException401` | Not signed in / session expired | Serverpod "unauthorized" client exception |
-| `NetworkException` | No connection, timeout | Socket/timeout/connection errors |
-| `UnknownApiException` | Anything else (server 500, unexpected) | Fallback |
+| `HttpException400` | Business / validation error, **with `AppErrorCode code`** | `AppException` thrown by the server; auth module exceptions (§2.3.1); `ServerpodClientForbidden` (→ `permissionDenied`) |
+| `HttpException401` | Not signed in / session expired | `ServerpodClientUnauthorized` |
+| `NetworkException` | No connection, timeout | `ServerpodClientNetworkException`; `MethodStreamException` subclasses for streams (`ConnectionClosedException`, `WebSocketConnectException`, …) |
+| `UnknownApiException` | Anything else (server 500, unexpected) | Fallback (e.g. `ServerpodClientInternalServerError`) |
 
 ### 2.3 `ApiErrorHandler` (in `data/api/config/api_error_handler.dart`)
 ```dart
 class ApiErrorHandler {
   static Exception handle(Object e) {
     if (e is AppException) return HttpException400(code: e.code);
+    final authCode = _authErrorCode(e);           // §2.3.1
+    if (authCode != null) return HttpException400(code: authCode);
     if (e is ServerpodClientUnauthorized) return HttpException401();
-    if (_isNetworkError(e)) return NetworkException();
+    if (e is ServerpodClientForbidden) {
+      return HttpException400(code: AppErrorCode.permissionDenied);
+    }
+    if (e is ServerpodClientNetworkException || e is MethodStreamException) {
+      return NetworkException();
+    }
     return UnknownApiException(e);
   }
-  // _isNetworkError: platform-safe check (dart:io is unavailable on web)
 }
 ```
-*(Exact Serverpod client exception class names to be confirmed for Serverpod 4.)*
+All of these classes come from `serverpod_client` and work on web (no `dart:io` check needed).
+
+#### 2.3.1 Auth module errors
+Sign-in uses the `serverpod_auth_idp` module (§2.4), which throws **its own serializable exceptions**, not `AppException`. For example, a wrong password throws `EmailAccountLoginException(reason: invalidCredentials)`. To keep the "one ARB key per code" rule:
+- `AppErrorCode` also gets one value per auth failure we handle (e.g. `authInvalidCredentials`).
+- `_authErrorCode(e)` maps each module exception and `reason` to that code, and returns `null` for anything that isn't an auth module exception.
+- The exact list of module exceptions and reasons is taken from `serverpod_auth_idp_client` when auth is implemented.
 
 ### 2.4 API provider template (replaces the Dio template in 04)
 ```dart
@@ -148,8 +164,18 @@ class StageApiProvider {
   }
 }
 ```
-- `data/api/config/api_provider.dart` holds the single Serverpod `Client` instance (and its authentication setup) instead of the Dio instance.
+- `data/api/config/api_provider.dart` holds the single Serverpod `Client` instance (and its authentication setup) instead of the Dio instance:
+  ```dart
+  client = Client(serverUrl)
+    ..connectivityMonitor = FlutterConnectivityMonitor()
+    ..authSessionManager = FlutterAuthSessionManager();
+  unawaited(client.auth.initialize());
+  ```
+- **Authentication:** the `serverpod_auth_idp` module (`serverpod_auth_idp_server` / `_client` / `_flutter`): email identity provider plus JWT tokens with refresh, as set up by the Serverpod 4 template. The legacy `serverpod_auth` module is not used.
 - **File uploads:** commit → the server returns an upload description → the API provider uploads the bytes → finalize (requirements §9.1). The upload helper lives in the evidence API provider.
+  - Server: `session.storage.createUploadDescription(storageId: …, path: …)` returns the description (a `String`); after the upload, `session.storage.verifyUpload(storageId: …, path: …)`.
+  - Client: `FileUploader(description).upload(stream, length)` (or `uploadByteData`).
+  - Storage: the template registers Serverpod Cloud storage (`private` / `public`) with a database fallback in development.
 - No business logic in API providers (unchanged).
 
 ### 2.5 Repository template (replaces 04)
@@ -243,14 +269,16 @@ New items arrive at the top in real time while older ones load below. Page numbe
 | `endpoints/` | One endpoint per feature | `{feature}_endpoint.dart` → `{Feature}Endpoint` |
 | `services/` | All business logic | `{feature}_service.dart` → `{Feature}Service` |
 | `future_calls/` | Scheduled jobs | `{name}_future_call.dart` → `{Name}FutureCall` |
-| `web/` | Public verification pages (stretch) | `{name}_route.dart` |
+| `web/` | Public verification pages (stretch); the template's `web/routes/` (app config route) lives here too | `{name}_route.dart` |
 | `generated/` | Serverpod output: **never edit** | — |
+
+**Future calls** are typed and generated in Serverpod 4: a class extends `FutureCall<T>` (T = the serializable model passed to the call) and declares public `Future<void>` methods taking a `Session` first. `serverpod generate` then creates type-safe scheduling methods: `callAtTime(time)`, `callWithDelay(delay)`, `callRecurring().cron(expr)` / `.every(interval)`, and `cancel(identifier)`. Use an `identifier` (e.g. the evidence request ID) whenever a call may need cancelling.
 
 ### 4.2 Layer rules
 1. **Endpoints are thin.** Order inside each method: require sign-in → `PermissionService` check on the project → validate input → call one service method → return. No business logic, no direct multi-step database work.
 2. **Services hold the business logic.** Domain services (stage, evidence, ledger, membership…) **don't call each other**. Only the cross-cutting services may be called from any service: `PermissionService`, `ActivityService`, `NotificationService`, `AuditService`.
 3. **Errors:** always `throw AppException(code: AppErrorCode.x)`. Never throw plain `Exception('text')` and never return error strings.
-4. **Transactions:** any write that touches more than one table (e.g. approve stage + activity event + notification + audit log) runs inside a single database transaction.
+4. **Transactions:** any write that touches more than one table (e.g. approve stage + activity event + notification + audit log) runs inside a single database transaction: `await session.db.transaction((transaction) async { … })`, passing `transaction: transaction` to every database call inside it.
 5. **Money:** integers in minor units plus an ISO 4217 currency code. Never `double`.
 6. **Time:** UTC everywhere. Trust-relevant timestamps are set by the server (`DateTime.now().toUtc()`), never taken from the client.
 7. **Migrations:** generated with the Serverpod CLI, committed, **never edited by hand**.
@@ -264,6 +292,10 @@ New items arrive at the top in real time while older ones load below. Page numbe
 | Unit | `test/unit/{feature}_service_test.dart` | Pure logic: verification checks, ledger calculations, distance/geofence math |
 
 A test is written and seen to fail before the code that makes it pass.
+
+- Integration tests use the generated helper: `withServerpod('Given X endpoint', (sessionBuilder, endpoints) { … })` from `test/integration/test_tools/serverpod_test_tools.dart`, calling `endpoints.{feature}.{method}(sessionBuilder, …)`. By default each test's database changes are rolled back (`RollbackDatabase.afterEach`).
+- Permission tests set the caller with `sessionBuilder.copyWith(authentication: AuthenticationOverride.authenticationInfo(userId, {}))`, or leave it unauthenticated.
+- Run with `dart test` in the server package. The test database is an embedded PostgreSQL started by Serverpod (`database.dataPath` in `config/test.yaml`), so **no Docker is needed**.
 
 ---
 

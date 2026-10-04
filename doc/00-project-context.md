@@ -16,6 +16,7 @@
 | [02-requirements-specification.md](02-requirements-specification.md) | Full functional and non-functional requirements (all phases), architecture (frontend, backend, database, storage, integrations), data model, verification engine, flows, state machines, open questions |
 | [03-mvp-scope.md](03-mvp-scope.md) | What we build for the hackathon: in/out of scope, day-by-day plan, acceptance criteria, pending decisions, submission checklist, demo script |
 | `04-implementation-plan.md` | *Not written yet.* Next document, after docs 01–03 are approved |
+| [serverpod-feedback.md](serverpod-feedback.md) | Feedback log on Serverpod SDKs/CLI/templates/docs, the source for the hackathon's Most Valuable Feedback form |
 
 ---
 
@@ -37,6 +38,14 @@
    - PlusLocate review conventions the user enforces (likely to apply here too): import through the package barrel file, `context.goNamed(...)` instead of `context.go(path)`, colors from `customColors`, text styles from `context.textTheme`, and a dedicated l10n key for each error case (no generic `operationError`).
 5. **Tooling (set up 2026-10-03):** `.claude/skills/`, `.claude/knowledge/` and `.claude/settings.json` were copied from PlusLocate. PlusLocate's `.claude/CLAUDE.md` (titled SmartDrive, recommends MVVM) and `GEMINI.md` were **not** copied; their useful parts are merged into the root `CLAUDE.md`, which lists the skills with notes on where `_standards/` overrides them. The `dart` and `stitch` MCP servers are registered for this folder in the user's local Claude Code config (`dart` via `cmd /c dart mcp-server`, because `dart` is a `.bat` on Windows). Both were verified as connected. `.stitch/` was **not** copied (it points to PlusLocate's Stitch project); create a new Stitch project when UI design starts.
 6. **Keep this file up to date.** When a decision is made or a milestone reached, update §6 (decisions) and §8 (status).
+7. **Serverpod 4 tooling (verified 2026-10-04 with a throwaway project; CLI 4.0.3, Flutter 3.47.5, Dart 3.13.4):**
+   - Install: `dart install serverpod_cli` → `%LOCALAPPDATA%\Dart\install\bin\serverpod.bat` (added to the user PATH). From Git Bash call it through PowerShell, since `.bat` files don't run from bash.
+   - Create: `serverpod create <name> --database --auth --webapp --no-redis --no-website --ide none` (`quickstart` = `create` with defaults plus an editor prompt). Produces a Dart **workspace**: root `pubspec.yaml` + `<name>_server/`, `<name>_client/`, `<name>_flutter/`, plus `AGENTS.md`, `.github/workflows/` (analyze, format, tests) and `.vscode/`. `--ide <claude|cursor|vscode|…>` installs Serverpod's own agent skills and MCP config.
+   - Run: `serverpod start` (code generation, server, Flutter app, hot reload; `--no-tui --no-flutter` for headless). Ports: API 8080, Insights 8081, web 8082, dev DB 8090, test DB 9090.
+   - **Docker is not needed.** `config/development.yaml` and `config/test.yaml` set `database.dataPath`, so Serverpod runs an **embedded PostgreSQL** (data in the gitignored `.serverpod/`). `docker-compose.yaml` remains as an alternative.
+   - Tests: `dart test` in the server package (embedded test DB, `withServerpod` helper in `test/integration/test_tools/`). The test Postgres keeps running afterwards; there is no `serverpod database stop`.
+   - Template defaults: `serverpod_auth_idp` email sign-in (verification codes logged to the console in development, sent by Serverpod Cloud email in staging/production), JWT tokens with refresh, Serverpod Cloud storage with a database fallback.
+   - Agent MCP: `serverpod mcp-server` bridges to a running `serverpod start` (migrations, logs, hot reload/restart, launching the Flutter app).
 
 ---
 
@@ -163,6 +172,8 @@ Mostly **human-service models** (vetted contractors, inspectors, managed builds)
 | 2026-10-03 | **D-12(c) Pagination approved:** the server returns one generated page model per list (e.g. `EvidencePage { items, page, pageSize }`); repositories convert it into a client-only `PaginatedList<T>`, so BLoCs/UI follow `_standards/13_mobile_pagination.md` as written. For the live activity feed and notifications only, `pageKey` = ID of the last loaded item (keyset pagination, avoiding duplicates as new items arrive); live items are inserted at the top through a separate BLoC event. Filters/search always server-side. |
 | 2026-10-03 | **D-12(d) Server conventions approved:** `models/`, `endpoints/`, `services/`, `future_calls/`, `web/`; thin endpoints (sign-in → permission → validate → one service call); domain services don't call each other (only Permission/Activity/Notification/Audit are shared); `AppException` codes only; multi-table writes in transactions; money in minor units; UTC server timestamps; generated migrations only; no secrets in logs; integration tests per endpoint + unit tests for pure logic. **D-12 complete** → [`_standards/14_serverpod_adaptation.md`](../_standards/14_serverpod_adaptation.md). |
 | 2026-10-04 | **Repository:** git initialized (branch `main`), remote [github.com/afesohromeo/plotwatch](https://github.com/afesohromeo/plotwatch), **private while building, public before submission** (secret scan first). No open-source licence: README says "All rights reserved", with the hackathon licence (§3, IP) as the stated exception. `.claude/skills/` and `.claude/knowledge/` stay local (gitignored, third-party content; sources listed in `CLAUDE.md`); `CLAUDE.md`, `.claude/settings.json`, `doc/` and `_standards/` (the user's own work) are committed. LF line endings via `.gitattributes`. |
+| 2026-10-04 | **Serverpod 4 verification approved:** `_standards/14` corrected against Serverpod 4.0.3. Layer folders kept even though the template groups by feature. Exact client exception classes (`ServerpodClientUnauthorized`, `ServerpodClientForbidden`, `ServerpodClientNetworkException`, `MethodStreamException`). Auth module errors mapped to `AppErrorCode` values. `serverpod_auth_idp` instead of legacy `serverpod_auth`. Exact upload, transaction, future-call and test-helper APIs. **Migrations: strict rule kept** (never edited by hand); Serverpod allows editing `migration.sql` only to avoid data loss, which we can revisit once there is production data. Docker not used (embedded Postgres). |
+| 2026-10-04 | **`03-mvp-scope.md` aligned with the Official Rules:** deadline 14 Oct 23:59 CEST; demo video under 2:00 (outline compressed); checklist gains build/run instructions, testing access until 20 Oct, AI-tool disclosure, English materials and the Most Valuable Feedback form. Feedback log started in `doc/serverpod-feedback.md`. |
 | 2026-10-03 | **D-11 Maps approved:** Google Maps (`google_maps_flutter`), as in PlusLocate. Requires an API key with billing (Android/iOS and web). OpenStreetMap is the fallback if costs grow. |
 
 ### 6.2 Pending (need the user's approval)
@@ -197,7 +208,7 @@ See [03-mvp-scope.md §7](03-mvp-scope.md#7-decisions-to-confirm-before-implemen
 
 ## 8. Current status & next steps
 
-**Status (2026-10-04):** Documentation drafted (01, 02, 03, this file, `_standards/14_serverpod_adaptation.md`); all decisions D-1 to D-12 made; tooling (`.claude/`, MCP servers) set up. Git repository initialized and pushed to GitHub (private). Official Rules read: they differ from `03-mvp-scope.md` on the deadline time and on video length (2 min, not 3); corrections to `03` await the user's approval. **No code yet.** Project folder: `C:\New_folder\plotwatch`.
+**Status (2026-10-04):** Documentation drafted (01, 02, 03, this file, `_standards/14_serverpod_adaptation.md`); all decisions D-1 to D-12 made; tooling (`.claude/`, MCP servers) set up. Git repository initialized and pushed to GitHub (private). Official Rules read and `03` aligned with them. Serverpod CLI 4.0.3 installed and quickstart verified; `_standards/14` corrected against Serverpod 4.0.3. **No code yet.** Next: `doc/04-implementation-plan.md`. Project folder: `C:\New_folder\plotwatch`.
 
 **Next steps:**
 1. The user reviews `01`, `02`, `03` and requests changes. Iterate until approved.
@@ -205,6 +216,6 @@ See [03-mvp-scope.md §7](03-mvp-scope.md#7-decisions-to-confirm-before-implemen
 3. ~~Confirm the exact deadline in the hackathon rules.~~ Done 2026-10-04: 14 Oct 2026, 23:59 CEST (see §3).
 4. ~~Decide whether to copy the `.claude/` skills setup from PlusLocate~~ Done 2026-10-03 (see §2 item 5).
 5. ~~Initialize a git repository (and a GitHub repo for submission).~~ Done 2026-10-04 (see §6.1, "Repository").
-6. Install tooling: Serverpod CLI, Docker (for local Postgres); do the Serverpod 4 quickstart.
+6. ~~Install tooling: Serverpod CLI, Docker (for local Postgres); do the Serverpod 4 quickstart.~~ Done 2026-10-04: Serverpod CLI 4.0.3 installed, quickstart verified (see §2 item 7). Docker not installed: not needed with embedded Postgres. `_standards/14` corrections approved and applied.
 7. Write `doc/04-implementation-plan.md` (task-by-task, TDD), get approval, then start D2 of the schedule.
 8. Send the forwardable message to the intermediary.
