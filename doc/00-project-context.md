@@ -15,7 +15,7 @@
 | [01-project-overview.md](01-project-overview.md) | Problem, solution, users, objectives, differentiation, business model, roadmap, risks |
 | [02-requirements-specification.md](02-requirements-specification.md) | Full functional and non-functional requirements (all phases), architecture (frontend, backend, database, storage, integrations), data model, verification engine, flows, state machines, open questions |
 | [03-mvp-scope.md](03-mvp-scope.md) | What we build for the hackathon: in/out of scope, day-by-day plan, acceptance criteria, pending decisions, submission checklist, demo script |
-| `04-implementation-plan.md` | *Not written yet.* Next document, after docs 01–03 are approved |
+| [04-implementation-plan.md](04-implementation-plan.md) | Master implementation plan: repo layout, milestones M1–M9 mapped to D2–D10, scope, tests and exit criteria per milestone. *Approved 2026-10-04.* Each milestone gets a detailed plan `04x-….md` |
 | [serverpod-feedback.md](serverpod-feedback.md) | Feedback log on Serverpod SDKs/CLI/templates/docs, the source for the hackathon's Most Valuable Feedback form |
 
 ---
@@ -174,6 +174,8 @@ Mostly **human-service models** (vetted contractors, inspectors, managed builds)
 | 2026-10-04 | **Repository:** git initialized (branch `main`), remote [github.com/afesohromeo/plotwatch](https://github.com/afesohromeo/plotwatch), **private while building, public before submission** (secret scan first). No open-source licence: README says "All rights reserved", with the hackathon licence (§3, IP) as the stated exception. `.claude/skills/` and `.claude/knowledge/` stay local (gitignored, third-party content; sources listed in `CLAUDE.md`); `CLAUDE.md`, `.claude/settings.json`, `doc/` and `_standards/` (the user's own work) are committed. LF line endings via `.gitattributes`. |
 | 2026-10-04 | **Serverpod 4 verification approved:** `_standards/14` corrected against Serverpod 4.0.3. Layer folders kept even though the template groups by feature. Exact client exception classes (`ServerpodClientUnauthorized`, `ServerpodClientForbidden`, `ServerpodClientNetworkException`, `MethodStreamException`). Auth module errors mapped to `AppErrorCode` values. `serverpod_auth_idp` instead of legacy `serverpod_auth`. Exact upload, transaction, future-call and test-helper APIs. **Migrations: strict rule kept** (never edited by hand); Serverpod allows editing `migration.sql` only to avoid data loss, which we can revisit once there is production data. Docker not used (embedded Postgres). |
 | 2026-10-04 | **`03-mvp-scope.md` aligned with the Official Rules:** deadline 14 Oct 23:59 CEST; demo video under 2:00 (outline compressed); checklist gains build/run instructions, testing access until 20 Oct, AI-tool disclosure, English materials and the Most Valuable Feedback form. Feedback log started in `doc/serverpod-feedback.md`. |
+| 2026-10-04 | **Process for implementation:** (1) two levels of plans: master `04-implementation-plan.md` plus one detailed plan per milestone, each approved before coding; (2) **the developer runs every command except tests**; Claude runs only `dart test` / `flutter test` and writes every other command as a "You run:" step (this answers §2 item 4 on `build_runner` / l10n); (3) the real project is created with `--ide claude`: Serverpod's MCP server is registered, its skills stay local, the template `.gitignore` is narrowed to keep `.claude/settings.json`, and `AGENTS.md` is merged into `CLAUDE.md`. |
+| 2026-10-04 | **`04-implementation-plan.md` approved.** Android application ID **`com.afesohromeo.plotwatch`**; client test mocks with **`mocktail`**; **Claude commits and pushes after a meaningful amount of finished, tested work** (not after every approval). |
 | 2026-10-03 | **D-11 Maps approved:** Google Maps (`google_maps_flutter`), as in PlusLocate. Requires an API key with billing (Android/iOS and web). OpenStreetMap is the fallback if costs grow. |
 
 ### 6.2 Pending (need the user's approval)
@@ -208,7 +210,7 @@ See [03-mvp-scope.md §7](03-mvp-scope.md#7-decisions-to-confirm-before-implemen
 
 ## 8. Current status & next steps
 
-**Status (2026-10-04):** Documentation drafted (01, 02, 03, this file, `_standards/14_serverpod_adaptation.md`); all decisions D-1 to D-12 made; tooling (`.claude/`, MCP servers) set up. Git repository initialized and pushed to GitHub (private). Official Rules read and `03` aligned with them. Serverpod CLI 4.0.3 installed and quickstart verified; `_standards/14` corrected against Serverpod 4.0.3. **No code yet.** Next: `doc/04-implementation-plan.md`. Project folder: `C:\New_folder\plotwatch`.
+**Status (2026-10-04):** Documentation drafted (01, 02, 03, this file, `_standards/14_serverpod_adaptation.md`); all decisions D-1 to D-12 made; tooling (`.claude/`, MCP servers) set up. Git repository initialized and pushed to GitHub (private). Official Rules read and `03` aligned with them. Serverpod CLI 4.0.3 installed and quickstart verified; `_standards/14` corrected against Serverpod 4.0.3. `doc/04-implementation-plan.md` approved. **No code yet.** Next: the M1 plan (`04a-m1-foundation.md`), then D2. Project folder: `C:\New_folder\plotwatch`.
 
 **Next steps:**
 1. The user reviews `01`, `02`, `03` and requests changes. Iterate until approved.
