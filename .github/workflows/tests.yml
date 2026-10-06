@@ -51,3 +51,9 @@ jobs:
       - name: Run tests
         working-directory: plotwatch_server
         run: dart test
+
+      # The Flutter app's unit, BLoC and widget tests (generated l10n and
+      # Freezed files are committed, so no generation step is needed).
+      - name: Run app tests
+        working-directory: plotwatch_flutter
+        run: flutter test
