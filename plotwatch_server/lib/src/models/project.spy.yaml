@@ -1,0 +1,15 @@
+### A construction project (PROJ). The owner is the `ProjectMember` with role
+### `owner` (decision M2-2).
+class: Project
+table: project
+fields:
+  name: String
+  description: String?
+  type: ProjectType
+  status: ProjectStatus
+  ### ISO 4217, e.g. XAF. Locked once ledger entries exist (PROJ-04, M6).
+  currencyCode: String
+  plannedStart: DateTime?
+  plannedEnd: DateTime?
+  createdAt: DateTime
+  updatedAt: DateTime

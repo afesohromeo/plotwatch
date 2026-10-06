@@ -12,6 +12,22 @@ values:
   - invalidFullName
   - invalidCountryCode
   - invalidLocale
+  # Projects and site (doc/04b, group A)
+  - projectNotFound
+  - invalidProjectName
+  - invalidProjectDescription
+  - invalidCurrencyCode
+  - invalidProjectDates
+  - invalidStatusTransition
+  - invalidSiteLocation
+  - invalidSiteRadius
+  # Membership
+  - invitationNotFound
+  - invitationExpired
+  - invitationUsed
+  - invalidInvitationRole
+  - alreadyMember
+  - cannotRemoveOwner
   # Set by the client from the auth module's exceptions
   - authInvalidCredentials
   - authTooManyAttempts

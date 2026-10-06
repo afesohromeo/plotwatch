@@ -123,10 +123,10 @@ class ProfileService {
   }) async {
     final profile = await AuthServices.instance.userProfiles
         .maybeFindUserProfileByUserId(
-      session,
-      authUserId,
-      transaction: transaction,
-    );
+          session,
+          authUserId,
+          transaction: transaction,
+        );
     return MyProfile(
       fullName: profile?.fullName,
       email: profile?.email,

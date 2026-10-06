@@ -1,0 +1,20 @@
+### An invitation to join a project with a role (MEMB-01, 02).
+class: Invitation
+table: invitation
+fields:
+  projectId: int, relation(parent=project, onDelete=Cascade)
+  role: ProjectRole
+  canApprove: bool, default=false
+  ### 8 characters, stored without the hyphen (decision M2-6).
+  code: String
+  status: InvitationStatus
+  expiresAt: DateTime
+  createdBy: UuidValue
+  acceptedBy: UuidValue?
+  createdAt: DateTime
+indexes:
+  invitation_code_idx:
+    fields: code
+    unique: true
+  invitation_project_idx:
+    fields: projectId

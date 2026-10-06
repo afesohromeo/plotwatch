@@ -1,0 +1,11 @@
+### What happened on a project, shown in the activity feed (FEED). Streamed
+### from M5; written from M2 on.
+enum: ActivityType
+serialized: byName
+values:
+  - projectCreated
+  - projectUpdated
+  - projectStatusChanged
+  - siteChanged
+  - memberJoined
+  - memberRemoved

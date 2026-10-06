@@ -164,6 +164,60 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errorInvalidLocale => 'Choisissez l\'anglais ou le français.';
 
   @override
+  String get errorProjectNotFound =>
+      'Ce projet n\'existe pas ou vous n\'en êtes pas membre.';
+
+  @override
+  String get errorInvalidProjectName =>
+      'Saisissez un nom de projet de 1 à 100 caractères.';
+
+  @override
+  String get errorInvalidProjectDescription =>
+      'Utilisez 1 000 caractères au maximum pour la description.';
+
+  @override
+  String get errorInvalidCurrencyCode => 'Choisissez une devise dans la liste.';
+
+  @override
+  String get errorInvalidProjectDates =>
+      'La fin prévue doit être le même jour ou après le début prévu.';
+
+  @override
+  String get errorInvalidStatusTransition =>
+      'Le projet ne peut pas passer à ce statut depuis son statut actuel.';
+
+  @override
+  String get errorInvalidSiteLocation =>
+      'Choisissez un emplacement valide pour le chantier.';
+
+  @override
+  String get errorInvalidSiteRadius =>
+      'Le rayon du chantier doit être compris entre 10 et 500 mètres.';
+
+  @override
+  String get errorInvitationNotFound =>
+      'Aucune invitation ne correspond à ce code. Vérifiez-le et réessayez.';
+
+  @override
+  String get errorInvitationExpired =>
+      'Cette invitation a expiré. Demandez-en une nouvelle.';
+
+  @override
+  String get errorInvitationUsed =>
+      'Cette invitation a déjà été utilisée ou annulée.';
+
+  @override
+  String get errorInvalidInvitationRole =>
+      'Choisissez chef de chantier, co-financeur ou observateur.';
+
+  @override
+  String get errorAlreadyMember => 'Vous êtes déjà membre de ce projet.';
+
+  @override
+  String get errorCannotRemoveOwner =>
+      'Le propriétaire du projet ne peut pas être retiré.';
+
+  @override
   String get errorAuthInvalidCredentials => 'E-mail ou mot de passe incorrect.';
 
   @override

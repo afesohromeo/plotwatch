@@ -1,0 +1,19 @@
+### Append-only record of security-relevant and financial actions (AUD-01).
+### Only AuditService writes it; nothing updates or deletes a row. Server only:
+### owners reading it is AUD-02 (P1).
+class: AuditLog
+serverOnly: true
+table: audit_log
+fields:
+  actorId: UuidValue?
+  projectId: int?
+  ### e.g. `project.create`, `site.set`, `member.remove`.
+  action: String
+  entityType: String
+  entityId: int?
+  before: Map<String, String>?
+  after: Map<String, String>?
+  createdAt: DateTime
+indexes:
+  audit_log_project_idx:
+    fields: projectId

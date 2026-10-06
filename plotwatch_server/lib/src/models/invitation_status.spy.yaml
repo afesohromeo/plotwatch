@@ -1,0 +1,10 @@
+### An invitation can be used once (MEMB-02). `expired` is set when someone
+### tries a code after its expiry; until then a pending code past its expiry is
+### treated as expired.
+enum: InvitationStatus
+serialized: byName
+values:
+  - pending
+  - accepted
+  - cancelled
+  - expired

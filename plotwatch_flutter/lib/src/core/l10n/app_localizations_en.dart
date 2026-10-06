@@ -162,6 +162,59 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorInvalidLocale => 'Choose English or French.';
 
   @override
+  String get errorProjectNotFound =>
+      'This project doesn\'t exist or you\'re not a member.';
+
+  @override
+  String get errorInvalidProjectName =>
+      'Enter a project name of 1 to 100 characters.';
+
+  @override
+  String get errorInvalidProjectDescription =>
+      'Use 1,000 characters at most for the description.';
+
+  @override
+  String get errorInvalidCurrencyCode => 'Choose a currency from the list.';
+
+  @override
+  String get errorInvalidProjectDates =>
+      'The planned end must be on or after the planned start.';
+
+  @override
+  String get errorInvalidStatusTransition =>
+      'The project can\'t move to this status from its current one.';
+
+  @override
+  String get errorInvalidSiteLocation =>
+      'Choose a valid location for the site.';
+
+  @override
+  String get errorInvalidSiteRadius =>
+      'The site radius must be between 10 and 500 metres.';
+
+  @override
+  String get errorInvitationNotFound =>
+      'No invitation has this code. Check it and try again.';
+
+  @override
+  String get errorInvitationExpired =>
+      'This invitation has expired. Ask for a new one.';
+
+  @override
+  String get errorInvitationUsed =>
+      'This invitation has already been used or cancelled.';
+
+  @override
+  String get errorInvalidInvitationRole =>
+      'Choose site manager, co-funder or viewer.';
+
+  @override
+  String get errorAlreadyMember => 'You\'re already a member of this project.';
+
+  @override
+  String get errorCannotRemoveOwner => 'The project owner can\'t be removed.';
+
+  @override
   String get errorAuthInvalidCredentials => 'Wrong email or password.';
 
   @override

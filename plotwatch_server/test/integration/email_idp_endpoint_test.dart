@@ -20,14 +20,14 @@ void main() {
         EmailIdpConfig(
           secretHashPepper: 'test-pepper',
           // Captures the code that is emailed in production.
-          sendRegistrationVerificationCode: (
-            session, {
-            required email,
-            required accountRequestId,
-            required verificationCode,
-            required transaction,
-          }) =>
-              sentCode = verificationCode,
+          sendRegistrationVerificationCode:
+              (
+                session, {
+                required email,
+                required accountRequestId,
+                required verificationCode,
+                required transaction,
+              }) => sentCode = verificationCode,
         ),
       ],
     );
@@ -36,11 +36,15 @@ void main() {
   // The auth module verifies the code in a transaction of its own (rate
   // limiter), which needs the database without automatic rollback. Data then
   // stays for the whole group, so the tests compare before and after.
-  withServerpod('Given a registration whose email was verified',
-      (sessionBuilder, endpoints) {
+  withServerpod('Given a registration whose email was verified', (
+    sessionBuilder,
+    endpoints,
+  ) {
     Future<String> verifiedRegistration(String email) async {
-      final requestId =
-          await endpoints.emailIdp.startRegistration(sessionBuilder, email: email);
+      final requestId = await endpoints.emailIdp.startRegistration(
+        sessionBuilder,
+        email: email,
+      );
       return endpoints.emailIdp.verifyRegistrationCode(
         sessionBuilder,
         accountRequestId: requestId,
@@ -48,22 +52,26 @@ void main() {
       );
     }
 
-    test(
-        'when it is finished with a profile then the account has the name, '
+    test('when it is finished with a profile then the account has the name, '
         'email and language', () async {
       final token = await verifiedRegistration('ada@example.com');
 
-      final authSuccess = await endpoints.emailIdp.finishRegistrationWithProfile(
-        sessionBuilder,
-        registrationToken: token,
-        password: 'secret123',
-        fullName: '  Ada Lovelace ',
-        locale: 'fr',
+      final authSuccess = await endpoints.emailIdp
+          .finishRegistrationWithProfile(
+            sessionBuilder,
+            registrationToken: token,
+            password: 'secret123',
+            fullName: '  Ada Lovelace ',
+            locale: 'fr',
+          );
+      final me = await endpoints.profile.getMe(
+        sessionBuilder.copyWith(
+          authentication: AuthenticationOverride.authenticationInfo(
+            authSuccess.authUserId.uuid,
+            {},
+          ),
+        ),
       );
-      final me = await endpoints.profile.getMe(sessionBuilder.copyWith(
-        authentication: AuthenticationOverride.authenticationInfo(
-            authSuccess.authUserId.uuid, {}),
-      ));
 
       expect(me.fullName, 'Ada Lovelace');
       expect(me.email, 'ada@example.com');
@@ -77,27 +85,35 @@ void main() {
       );
     });
 
-    test('when the name is invalid then it is refused and no account is created',
-        () async {
-      final token = await verifiedRegistration('bob@example.com');
-      final accountsBefore =
-          await AuthServices.instance.authUsers.list(sessionBuilder.build());
+    test(
+      'when the name is invalid then it is refused and no account is created',
+      () async {
+        final token = await verifiedRegistration('bob@example.com');
+        final accountsBefore = await AuthServices.instance.authUsers.list(
+          sessionBuilder.build(),
+        );
 
-      await expectLater(
-        endpoints.emailIdp.finishRegistrationWithProfile(
-          sessionBuilder,
-          registrationToken: token,
-          password: 'secret123',
-          fullName: '   ',
-          locale: 'en',
-        ),
-        throwsA(isA<AppException>()
-            .having((e) => e.code, 'code', AppErrorCode.invalidFullName)),
-      );
-      expect(
-        await AuthServices.instance.authUsers.list(sessionBuilder.build()),
-        hasLength(accountsBefore.length),
-      );
-    });
+        await expectLater(
+          endpoints.emailIdp.finishRegistrationWithProfile(
+            sessionBuilder,
+            registrationToken: token,
+            password: 'secret123',
+            fullName: '   ',
+            locale: 'en',
+          ),
+          throwsA(
+            isA<AppException>().having(
+              (e) => e.code,
+              'code',
+              AppErrorCode.invalidFullName,
+            ),
+          ),
+        );
+        expect(
+          await AuthServices.instance.authUsers.list(sessionBuilder.build()),
+          hasLength(accountsBefore.length),
+        );
+      },
+    );
   }, rollbackDatabase: RollbackDatabase.disabled);
 }

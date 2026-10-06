@@ -9,6 +9,7 @@ environment:
 resolution: workspace
 
 dependencies:
+  open_location_code: ^1.0.1
   serverpod: 4.0.3
   serverpod_auth_idp_server: 4.0.3
   serverpod_cloud_storage: 4.0.3

@@ -1,0 +1,16 @@
+### One entry of a project's activity feed (FEED). Written from M2, streamed
+### to members from M5; (projectId, id) supports catch-up after a reconnect.
+class: ActivityEvent
+table: activity_event
+fields:
+  projectId: int, relation(parent=project, onDelete=Cascade)
+  actorId: UuidValue
+  type: ActivityType
+  targetType: String
+  targetId: int?
+  ### Small summary so the feed renders without extra calls.
+  payload: Map<String, String>?
+  createdAt: DateTime
+indexes:
+  activity_event_project_idx:
+    fields: projectId, id

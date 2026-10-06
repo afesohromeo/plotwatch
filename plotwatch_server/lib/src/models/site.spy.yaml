@@ -1,0 +1,20 @@
+### Where the project is built: the centre and radius that captures are
+### checked against (SITE). One per project.
+class: Site
+table: site
+fields:
+  projectId: int, relation(parent=project, onDelete=Cascade)
+  centerLat: double
+  centerLng: double
+  ### 10-digit Plus Code, computed by the server from the centre.
+  plusCode: String
+  ### 10–500 m (SITE-03).
+  radiusM: int
+  addressText: String?
+  ### IANA time zone; no UI in the MVP (decision M2-10).
+  timezone: String?
+  updatedAt: DateTime
+indexes:
+  site_project_idx:
+    fields: projectId
+    unique: true

@@ -1,0 +1,11 @@
+### Project lifecycle (PROJ-05). A finished wizard creates `active`; `draft`
+### is kept for "finish the wizard later" (P1). Allowed transitions: decision
+### M2-4.
+enum: ProjectStatus
+serialized: byName
+values:
+  - draft
+  - active
+  - paused
+  - completed
+  - archived

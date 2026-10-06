@@ -1,0 +1,8 @@
+### A member's role on one project (doc/02 §3.1).
+enum: ProjectRole
+serialized: byName
+values:
+  - owner
+  - coFunder
+  - viewer
+  - siteManager

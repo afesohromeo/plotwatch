@@ -16,13 +16,35 @@ import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _iaic;
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
+import 'activity_event.dart' as _iwse5pgb;
+import 'activity_type.dart' as _iorr0e24;
 import 'app_error_code.dart' as _imu8gbx5;
 import 'app_exception.dart' as _it4z223c;
+import 'invitation.dart' as _ix00wubs;
+import 'invitation_status.dart' as _ifbgrtog;
+import 'member_status.dart' as _iolegqnm;
 import 'my_profile.dart' as _i1hmtol2;
+import 'project.dart' as _ifiazq2p;
+import 'project_member.dart' as _i7o7d07j;
+import 'project_role.dart' as _i46wx1t7;
+import 'project_status.dart' as _iqsxbscs;
+import 'project_type.dart' as _irluonl0;
+import 'site.dart' as _iz8v5x4v;
 import 'user_settings.dart' as _iy88a0nt;
+export 'activity_event.dart';
+export 'activity_type.dart';
 export 'app_error_code.dart';
 export 'app_exception.dart';
+export 'invitation.dart';
+export 'invitation_status.dart';
+export 'member_status.dart';
 export 'my_profile.dart';
+export 'project.dart';
+export 'project_member.dart';
+export 'project_role.dart';
+export 'project_status.dart';
+export 'project_type.dart';
+export 'site.dart';
 export 'user_settings.dart';
 export 'client.dart';
 
@@ -60,17 +82,57 @@ class Protocol extends _isc.SerializationManager {
       }
     }
 
+    if (t == _iwse5pgb.ActivityEvent) {
+      return _iwse5pgb.ActivityEvent.fromJson(data) as T;
+    }
+    if (t == _iorr0e24.ActivityType) {
+      return _iorr0e24.ActivityType.fromJson(data) as T;
+    }
     if (t == _imu8gbx5.AppErrorCode) {
       return _imu8gbx5.AppErrorCode.fromJson(data) as T;
     }
     if (t == _it4z223c.AppException) {
       return _it4z223c.AppException.fromJson(data) as T;
     }
+    if (t == _ix00wubs.Invitation) {
+      return _ix00wubs.Invitation.fromJson(data) as T;
+    }
+    if (t == _ifbgrtog.InvitationStatus) {
+      return _ifbgrtog.InvitationStatus.fromJson(data) as T;
+    }
+    if (t == _iolegqnm.MemberStatus) {
+      return _iolegqnm.MemberStatus.fromJson(data) as T;
+    }
     if (t == _i1hmtol2.MyProfile) {
       return _i1hmtol2.MyProfile.fromJson(data) as T;
     }
+    if (t == _ifiazq2p.Project) {
+      return _ifiazq2p.Project.fromJson(data) as T;
+    }
+    if (t == _i7o7d07j.ProjectMember) {
+      return _i7o7d07j.ProjectMember.fromJson(data) as T;
+    }
+    if (t == _i46wx1t7.ProjectRole) {
+      return _i46wx1t7.ProjectRole.fromJson(data) as T;
+    }
+    if (t == _iqsxbscs.ProjectStatus) {
+      return _iqsxbscs.ProjectStatus.fromJson(data) as T;
+    }
+    if (t == _irluonl0.ProjectType) {
+      return _irluonl0.ProjectType.fromJson(data) as T;
+    }
+    if (t == _iz8v5x4v.Site) {
+      return _iz8v5x4v.Site.fromJson(data) as T;
+    }
     if (t == _iy88a0nt.UserSettings) {
       return _iy88a0nt.UserSettings.fromJson(data) as T;
+    }
+    if (t == _isc.getType<_iwse5pgb.ActivityEvent?>()) {
+      return (data != null ? _iwse5pgb.ActivityEvent.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_iorr0e24.ActivityType?>()) {
+      return (data != null ? _iorr0e24.ActivityType.fromJson(data) : null) as T;
     }
     if (t == _isc.getType<_imu8gbx5.AppErrorCode?>()) {
       return (data != null ? _imu8gbx5.AppErrorCode.fromJson(data) : null) as T;
@@ -78,11 +140,56 @@ class Protocol extends _isc.SerializationManager {
     if (t == _isc.getType<_it4z223c.AppException?>()) {
       return (data != null ? _it4z223c.AppException.fromJson(data) : null) as T;
     }
+    if (t == _isc.getType<_ix00wubs.Invitation?>()) {
+      return (data != null ? _ix00wubs.Invitation.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_ifbgrtog.InvitationStatus?>()) {
+      return (data != null ? _ifbgrtog.InvitationStatus.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_iolegqnm.MemberStatus?>()) {
+      return (data != null ? _iolegqnm.MemberStatus.fromJson(data) : null) as T;
+    }
     if (t == _isc.getType<_i1hmtol2.MyProfile?>()) {
       return (data != null ? _i1hmtol2.MyProfile.fromJson(data) : null) as T;
     }
+    if (t == _isc.getType<_ifiazq2p.Project?>()) {
+      return (data != null ? _ifiazq2p.Project.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_i7o7d07j.ProjectMember?>()) {
+      return (data != null ? _i7o7d07j.ProjectMember.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_i46wx1t7.ProjectRole?>()) {
+      return (data != null ? _i46wx1t7.ProjectRole.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_iqsxbscs.ProjectStatus?>()) {
+      return (data != null ? _iqsxbscs.ProjectStatus.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_irluonl0.ProjectType?>()) {
+      return (data != null ? _irluonl0.ProjectType.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_iz8v5x4v.Site?>()) {
+      return (data != null ? _iz8v5x4v.Site.fromJson(data) : null) as T;
+    }
     if (t == _isc.getType<_iy88a0nt.UserSettings?>()) {
       return (data != null ? _iy88a0nt.UserSettings.fromJson(data) : null) as T;
+    }
+    if (t == Map<String, String>) {
+      return (data as Map).map(
+            (k, v) => MapEntry(deserialize<String>(k), deserialize<String>(v)),
+          )
+          as T;
+    }
+    if (t == _isc.getType<Map<String, String>?>()) {
+      return (data != null
+              ? (data as Map).map(
+                  (k, v) =>
+                      MapEntry(deserialize<String>(k), deserialize<String>(v)),
+                )
+              : null)
+          as T;
     }
     try {
       return _iaic.Protocol().deserialize<T>(data, t);
@@ -95,9 +202,20 @@ class Protocol extends _isc.SerializationManager {
 
   static String? getClassNameForType(Type type) {
     return switch (type) {
+      _iwse5pgb.ActivityEvent => 'ActivityEvent',
+      _iorr0e24.ActivityType => 'ActivityType',
       _imu8gbx5.AppErrorCode => 'AppErrorCode',
       _it4z223c.AppException => 'AppException',
+      _ix00wubs.Invitation => 'Invitation',
+      _ifbgrtog.InvitationStatus => 'InvitationStatus',
+      _iolegqnm.MemberStatus => 'MemberStatus',
       _i1hmtol2.MyProfile => 'MyProfile',
+      _ifiazq2p.Project => 'Project',
+      _i7o7d07j.ProjectMember => 'ProjectMember',
+      _i46wx1t7.ProjectRole => 'ProjectRole',
+      _iqsxbscs.ProjectStatus => 'ProjectStatus',
+      _irluonl0.ProjectType => 'ProjectType',
+      _iz8v5x4v.Site => 'Site',
       _iy88a0nt.UserSettings => 'UserSettings',
       _ => null,
     };
@@ -113,12 +231,34 @@ class Protocol extends _isc.SerializationManager {
     }
 
     switch (data) {
+      case _iwse5pgb.ActivityEvent():
+        return 'ActivityEvent';
+      case _iorr0e24.ActivityType():
+        return 'ActivityType';
       case _imu8gbx5.AppErrorCode():
         return 'AppErrorCode';
       case _it4z223c.AppException():
         return 'AppException';
+      case _ix00wubs.Invitation():
+        return 'Invitation';
+      case _ifbgrtog.InvitationStatus():
+        return 'InvitationStatus';
+      case _iolegqnm.MemberStatus():
+        return 'MemberStatus';
       case _i1hmtol2.MyProfile():
         return 'MyProfile';
+      case _ifiazq2p.Project():
+        return 'Project';
+      case _i7o7d07j.ProjectMember():
+        return 'ProjectMember';
+      case _i46wx1t7.ProjectRole():
+        return 'ProjectRole';
+      case _iqsxbscs.ProjectStatus():
+        return 'ProjectStatus';
+      case _irluonl0.ProjectType():
+        return 'ProjectType';
+      case _iz8v5x4v.Site():
+        return 'Site';
       case _iy88a0nt.UserSettings():
         return 'UserSettings';
     }
@@ -143,14 +283,47 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
     }
+    if (dataClassName == 'ActivityEvent') {
+      return deserialize<_iwse5pgb.ActivityEvent>(data['data']);
+    }
+    if (dataClassName == 'ActivityType') {
+      return deserialize<_iorr0e24.ActivityType>(data['data']);
+    }
     if (dataClassName == 'AppErrorCode') {
       return deserialize<_imu8gbx5.AppErrorCode>(data['data']);
     }
     if (dataClassName == 'AppException') {
       return deserialize<_it4z223c.AppException>(data['data']);
     }
+    if (dataClassName == 'Invitation') {
+      return deserialize<_ix00wubs.Invitation>(data['data']);
+    }
+    if (dataClassName == 'InvitationStatus') {
+      return deserialize<_ifbgrtog.InvitationStatus>(data['data']);
+    }
+    if (dataClassName == 'MemberStatus') {
+      return deserialize<_iolegqnm.MemberStatus>(data['data']);
+    }
     if (dataClassName == 'MyProfile') {
       return deserialize<_i1hmtol2.MyProfile>(data['data']);
+    }
+    if (dataClassName == 'Project') {
+      return deserialize<_ifiazq2p.Project>(data['data']);
+    }
+    if (dataClassName == 'ProjectMember') {
+      return deserialize<_i7o7d07j.ProjectMember>(data['data']);
+    }
+    if (dataClassName == 'ProjectRole') {
+      return deserialize<_i46wx1t7.ProjectRole>(data['data']);
+    }
+    if (dataClassName == 'ProjectStatus') {
+      return deserialize<_iqsxbscs.ProjectStatus>(data['data']);
+    }
+    if (dataClassName == 'ProjectType') {
+      return deserialize<_irluonl0.ProjectType>(data['data']);
+    }
+    if (dataClassName == 'Site') {
+      return deserialize<_iz8v5x4v.Site>(data['data']);
     }
     if (dataClassName == 'UserSettings') {
       return deserialize<_iy88a0nt.UserSettings>(data['data']);

@@ -1,0 +1,6 @@
+### A removed member keeps their row (history) but loses all access (MEMB-08).
+enum: MemberStatus
+serialized: byName
+values:
+  - active
+  - removed

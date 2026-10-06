@@ -1,0 +1,9 @@
+### What is being built (PROJ-01).
+enum: ProjectType
+serialized: byName
+values:
+  - newHouse
+  - expansion
+  - renovation
+  - communityBuilding
+  - other

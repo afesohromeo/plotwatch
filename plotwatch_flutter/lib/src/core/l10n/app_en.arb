@@ -208,6 +208,62 @@
     "@errorInvalidLocale": {
         "description": "AppErrorCode.invalidLocale"
     },
+    "errorProjectNotFound": "This project doesn't exist or you're not a member.",
+    "@errorProjectNotFound": {
+        "description": "AppErrorCode.projectNotFound"
+    },
+    "errorInvalidProjectName": "Enter a project name of 1 to 100 characters.",
+    "@errorInvalidProjectName": {
+        "description": "AppErrorCode.invalidProjectName"
+    },
+    "errorInvalidProjectDescription": "Use 1,000 characters at most for the description.",
+    "@errorInvalidProjectDescription": {
+        "description": "AppErrorCode.invalidProjectDescription"
+    },
+    "errorInvalidCurrencyCode": "Choose a currency from the list.",
+    "@errorInvalidCurrencyCode": {
+        "description": "AppErrorCode.invalidCurrencyCode"
+    },
+    "errorInvalidProjectDates": "The planned end must be on or after the planned start.",
+    "@errorInvalidProjectDates": {
+        "description": "AppErrorCode.invalidProjectDates"
+    },
+    "errorInvalidStatusTransition": "The project can't move to this status from its current one.",
+    "@errorInvalidStatusTransition": {
+        "description": "AppErrorCode.invalidStatusTransition"
+    },
+    "errorInvalidSiteLocation": "Choose a valid location for the site.",
+    "@errorInvalidSiteLocation": {
+        "description": "AppErrorCode.invalidSiteLocation"
+    },
+    "errorInvalidSiteRadius": "The site radius must be between 10 and 500 metres.",
+    "@errorInvalidSiteRadius": {
+        "description": "AppErrorCode.invalidSiteRadius"
+    },
+    "errorInvitationNotFound": "No invitation has this code. Check it and try again.",
+    "@errorInvitationNotFound": {
+        "description": "AppErrorCode.invitationNotFound"
+    },
+    "errorInvitationExpired": "This invitation has expired. Ask for a new one.",
+    "@errorInvitationExpired": {
+        "description": "AppErrorCode.invitationExpired"
+    },
+    "errorInvitationUsed": "This invitation has already been used or cancelled.",
+    "@errorInvitationUsed": {
+        "description": "AppErrorCode.invitationUsed"
+    },
+    "errorInvalidInvitationRole": "Choose site manager, co-funder or viewer.",
+    "@errorInvalidInvitationRole": {
+        "description": "AppErrorCode.invalidInvitationRole"
+    },
+    "errorAlreadyMember": "You're already a member of this project.",
+    "@errorAlreadyMember": {
+        "description": "AppErrorCode.alreadyMember"
+    },
+    "errorCannotRemoveOwner": "The project owner can't be removed.",
+    "@errorCannotRemoveOwner": {
+        "description": "AppErrorCode.cannotRemoveOwner"
+    },
     "errorAuthInvalidCredentials": "Wrong email or password.",
     "@errorAuthInvalidCredentials": {
         "description": "AppErrorCode.authInvalidCredentials"

@@ -392,6 +392,90 @@ abstract class AppLocalizations {
   /// **'Choose English or French.'**
   String get errorInvalidLocale;
 
+  /// AppErrorCode.projectNotFound
+  ///
+  /// In en, this message translates to:
+  /// **'This project doesn\'t exist or you\'re not a member.'**
+  String get errorProjectNotFound;
+
+  /// AppErrorCode.invalidProjectName
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a project name of 1 to 100 characters.'**
+  String get errorInvalidProjectName;
+
+  /// AppErrorCode.invalidProjectDescription
+  ///
+  /// In en, this message translates to:
+  /// **'Use 1,000 characters at most for the description.'**
+  String get errorInvalidProjectDescription;
+
+  /// AppErrorCode.invalidCurrencyCode
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a currency from the list.'**
+  String get errorInvalidCurrencyCode;
+
+  /// AppErrorCode.invalidProjectDates
+  ///
+  /// In en, this message translates to:
+  /// **'The planned end must be on or after the planned start.'**
+  String get errorInvalidProjectDates;
+
+  /// AppErrorCode.invalidStatusTransition
+  ///
+  /// In en, this message translates to:
+  /// **'The project can\'t move to this status from its current one.'**
+  String get errorInvalidStatusTransition;
+
+  /// AppErrorCode.invalidSiteLocation
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a valid location for the site.'**
+  String get errorInvalidSiteLocation;
+
+  /// AppErrorCode.invalidSiteRadius
+  ///
+  /// In en, this message translates to:
+  /// **'The site radius must be between 10 and 500 metres.'**
+  String get errorInvalidSiteRadius;
+
+  /// AppErrorCode.invitationNotFound
+  ///
+  /// In en, this message translates to:
+  /// **'No invitation has this code. Check it and try again.'**
+  String get errorInvitationNotFound;
+
+  /// AppErrorCode.invitationExpired
+  ///
+  /// In en, this message translates to:
+  /// **'This invitation has expired. Ask for a new one.'**
+  String get errorInvitationExpired;
+
+  /// AppErrorCode.invitationUsed
+  ///
+  /// In en, this message translates to:
+  /// **'This invitation has already been used or cancelled.'**
+  String get errorInvitationUsed;
+
+  /// AppErrorCode.invalidInvitationRole
+  ///
+  /// In en, this message translates to:
+  /// **'Choose site manager, co-funder or viewer.'**
+  String get errorInvalidInvitationRole;
+
+  /// AppErrorCode.alreadyMember
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re already a member of this project.'**
+  String get errorAlreadyMember;
+
+  /// AppErrorCode.cannotRemoveOwner
+  ///
+  /// In en, this message translates to:
+  /// **'The project owner can\'t be removed.'**
+  String get errorCannotRemoveOwner;
+
   /// AppErrorCode.authInvalidCredentials
   ///
   /// In en, this message translates to:

@@ -23,6 +23,20 @@ enum AppErrorCode implements _is.SerializableModel {
   invalidFullName,
   invalidCountryCode,
   invalidLocale,
+  projectNotFound,
+  invalidProjectName,
+  invalidProjectDescription,
+  invalidCurrencyCode,
+  invalidProjectDates,
+  invalidStatusTransition,
+  invalidSiteLocation,
+  invalidSiteRadius,
+  invitationNotFound,
+  invitationExpired,
+  invitationUsed,
+  invalidInvitationRole,
+  alreadyMember,
+  cannotRemoveOwner,
   authInvalidCredentials,
   authTooManyAttempts,
   authRequestExpired,
@@ -41,6 +55,34 @@ enum AppErrorCode implements _is.SerializableModel {
         return AppErrorCode.invalidCountryCode;
       case 'invalidLocale':
         return AppErrorCode.invalidLocale;
+      case 'projectNotFound':
+        return AppErrorCode.projectNotFound;
+      case 'invalidProjectName':
+        return AppErrorCode.invalidProjectName;
+      case 'invalidProjectDescription':
+        return AppErrorCode.invalidProjectDescription;
+      case 'invalidCurrencyCode':
+        return AppErrorCode.invalidCurrencyCode;
+      case 'invalidProjectDates':
+        return AppErrorCode.invalidProjectDates;
+      case 'invalidStatusTransition':
+        return AppErrorCode.invalidStatusTransition;
+      case 'invalidSiteLocation':
+        return AppErrorCode.invalidSiteLocation;
+      case 'invalidSiteRadius':
+        return AppErrorCode.invalidSiteRadius;
+      case 'invitationNotFound':
+        return AppErrorCode.invitationNotFound;
+      case 'invitationExpired':
+        return AppErrorCode.invitationExpired;
+      case 'invitationUsed':
+        return AppErrorCode.invitationUsed;
+      case 'invalidInvitationRole':
+        return AppErrorCode.invalidInvitationRole;
+      case 'alreadyMember':
+        return AppErrorCode.alreadyMember;
+      case 'cannotRemoveOwner':
+        return AppErrorCode.cannotRemoveOwner;
       case 'authInvalidCredentials':
         return AppErrorCode.authInvalidCredentials;
       case 'authTooManyAttempts':

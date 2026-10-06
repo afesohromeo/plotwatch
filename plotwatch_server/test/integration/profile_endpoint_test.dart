@@ -16,8 +16,10 @@ void main() {
     );
   });
 
-  withServerpod('Given a registered user and the profile endpoint',
-      (sessionBuilder, endpoints) {
+  withServerpod('Given a registered user and the profile endpoint', (
+    sessionBuilder,
+    endpoints,
+  ) {
     late TestSessionBuilder signedIn;
 
     setUp(() async {
@@ -29,8 +31,10 @@ void main() {
         UserProfileData(fullName: 'Ada Lovelace', email: 'ada@example.com'),
       );
       signedIn = sessionBuilder.copyWith(
-        authentication:
-            AuthenticationOverride.authenticationInfo(authUser.id.uuid, {}),
+        authentication: AuthenticationOverride.authenticationInfo(
+          authUser.id.uuid,
+          {},
+        ),
       );
     });
 
@@ -46,8 +50,7 @@ void main() {
         );
       });
 
-      test(
-          'for the first time then it returns the auth profile with default '
+      test('for the first time then it returns the auth profile with default '
           'settings', () async {
         final me = await endpoints.profile.getMe(signedIn);
 
@@ -91,11 +94,18 @@ void main() {
       });
 
       test('without a country then the country is cleared', () async {
-        await endpoints.profile.updateMe(signedIn,
-            fullName: 'Ada', countryCode: 'CM', locale: 'en');
+        await endpoints.profile.updateMe(
+          signedIn,
+          fullName: 'Ada',
+          countryCode: 'CM',
+          locale: 'en',
+        );
 
-        final updated =
-            await endpoints.profile.updateMe(signedIn, fullName: 'Ada', locale: 'en');
+        final updated = await endpoints.profile.updateMe(
+          signedIn,
+          fullName: 'Ada',
+          locale: 'en',
+        );
 
         expect(updated.countryCode, isNull);
       });
@@ -111,14 +121,20 @@ void main() {
       }
 
       for (final country in ['cm', 'CMR']) {
-        test('with the country "$country" then it throws invalidCountryCode',
-            () async {
-          await expectLater(
-            endpoints.profile.updateMe(signedIn,
-                fullName: 'Ada', countryCode: country, locale: 'en'),
-            throwsA(_appException(AppErrorCode.invalidCountryCode)),
-          );
-        });
+        test(
+          'with the country "$country" then it throws invalidCountryCode',
+          () async {
+            await expectLater(
+              endpoints.profile.updateMe(
+                signedIn,
+                fullName: 'Ada',
+                countryCode: country,
+                locale: 'en',
+              ),
+              throwsA(_appException(AppErrorCode.invalidCountryCode)),
+            );
+          },
+        );
       }
 
       test('with the language "de" then it throws invalidLocale', () async {
@@ -148,14 +164,19 @@ void main() {
           UserProfileData(email: 'ada@example.com'),
         );
         final signedIn = sessionBuilder.copyWith(
-          authentication:
-              AuthenticationOverride.authenticationInfo(authUser.id.uuid, {}),
+          authentication: AuthenticationOverride.authenticationInfo(
+            authUser.id.uuid,
+            {},
+          ),
         );
 
         await Future.wait([
           endpoints.profile.getMe(signedIn),
-          endpoints.profile
-              .updateMe(signedIn, fullName: 'Ada Lovelace', locale: 'fr'),
+          endpoints.profile.updateMe(
+            signedIn,
+            fullName: 'Ada Lovelace',
+            locale: 'fr',
+          ),
         ]);
 
         final me = await endpoints.profile.getMe(signedIn);

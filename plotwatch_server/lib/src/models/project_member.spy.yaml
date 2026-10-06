@@ -1,0 +1,19 @@
+### A user's membership of a project. Users are referenced by the auth user
+### ID (decision M1-1).
+class: ProjectMember
+table: project_member
+fields:
+  projectId: int, relation(parent=project, onDelete=Cascade)
+  authUserId: UuidValue
+  role: ProjectRole
+  ### Approval rights; only meaningful for co-funders (doc/02 §3.2).
+  canApprove: bool, default=false
+  status: MemberStatus
+  joinedAt: DateTime
+  removedAt: DateTime?
+indexes:
+  project_member_idx:
+    fields: projectId, authUserId
+    unique: true
+  project_member_user_idx:
+    fields: authUserId
