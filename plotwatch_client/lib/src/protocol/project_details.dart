@@ -14,9 +14,12 @@ import 'package:serverpod_client/serverpod_client.dart' as _isc;
 import 'project_type.dart' as _irluonl0;
 
 /// What the owner enters to create or edit a project (PROJ-01, PROJ-04).
+/// Immutable: a value object compared by its fields (==), e.g. in BLoC
+/// events.
+@_isc.immutable
 abstract class ProjectDetails
     implements _isc.SerializableModel, _isc.ProtocolSerialization {
-  ProjectDetails._({
+  const ProjectDetails._({
     required this.name,
     this.description,
     required this.type,
@@ -25,7 +28,7 @@ abstract class ProjectDetails
     this.plannedEnd,
   });
 
-  factory ProjectDetails({
+  const factory ProjectDetails({
     required String name,
     String? description,
     required _irluonl0.ProjectType type,
@@ -56,20 +59,20 @@ abstract class ProjectDetails
   }
 
   /// 1–100 characters after trimming.
-  String name;
+  final String name;
 
   /// At most 1,000 characters; blank is saved as none.
-  String? description;
+  final String? description;
 
-  _irluonl0.ProjectType type;
+  final _irluonl0.ProjectType type;
 
   /// ISO 4217 code from the supported list.
-  String currencyCode;
+  final String currencyCode;
 
-  DateTime? plannedStart;
+  final DateTime? plannedStart;
 
   /// On or after [plannedStart] when both are set.
-  DateTime? plannedEnd;
+  final DateTime? plannedEnd;
 
   /// Returns a shallow copy of this [ProjectDetails]
   /// with some or all fields replaced by the given arguments.
@@ -82,6 +85,59 @@ abstract class ProjectDetails
     DateTime? plannedStart,
     DateTime? plannedEnd,
   });
+  @override
+  bool operator ==(Object other) {
+    return identical(
+          other,
+          this,
+        ) ||
+        other.runtimeType == runtimeType &&
+            other is ProjectDetails &&
+            (identical(
+                  other.name,
+                  name,
+                ) ||
+                other.name == name) &&
+            (identical(
+                  other.description,
+                  description,
+                ) ||
+                other.description == description) &&
+            (identical(
+                  other.type,
+                  type,
+                ) ||
+                other.type == type) &&
+            (identical(
+                  other.currencyCode,
+                  currencyCode,
+                ) ||
+                other.currencyCode == currencyCode) &&
+            (identical(
+                  other.plannedStart,
+                  plannedStart,
+                ) ||
+                other.plannedStart == plannedStart) &&
+            (identical(
+                  other.plannedEnd,
+                  plannedEnd,
+                ) ||
+                other.plannedEnd == plannedEnd);
+  }
+
+  @override
+  int get hashCode {
+    return Object.hash(
+      runtimeType,
+      name,
+      description,
+      type,
+      currencyCode,
+      plannedStart,
+      plannedEnd,
+    );
+  }
+
   @override
   Map<String, dynamic> toJson() {
     return {
@@ -117,7 +173,7 @@ abstract class ProjectDetails
 class _Undefined {}
 
 class _ProjectDetailsImpl extends ProjectDetails {
-  _ProjectDetailsImpl({
+  const _ProjectDetailsImpl({
     required String name,
     String? description,
     required _irluonl0.ProjectType type,

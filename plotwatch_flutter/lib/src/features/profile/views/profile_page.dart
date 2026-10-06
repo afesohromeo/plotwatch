@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
-import 'package:plotwatch_flutter/src/shared/components/searchable_dropdown_field.dart';
 
 /// Name, country and app language of the signed-in user (PROF-01–03).
 /// The form values live in the page until saved; the saved profile lives in

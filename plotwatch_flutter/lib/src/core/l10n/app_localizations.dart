@@ -308,18 +308,6 @@ abstract class AppLocalizations {
   /// **'If {email} has an account, we sent it a reset code.'**
   String passwordResetCodeSent(String email);
 
-  /// Title of the signed-in home page
-  ///
-  /// In en, this message translates to:
-  /// **'Your projects'**
-  String get homeTitle;
-
-  /// Home page text until projects exist (M2)
-  ///
-  /// In en, this message translates to:
-  /// **'Your construction projects will appear here.'**
-  String get homePlaceholder;
-
   /// Email field left empty
   ///
   /// In en, this message translates to:
@@ -691,6 +679,354 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not save your profile. Try again.'**
   String get errorProfileSave;
+
+  /// Title of the project list (signed-in home page)
+  ///
+  /// In en, this message translates to:
+  /// **'My projects'**
+  String get projectsTitle;
+
+  /// Button and page title for creating a project
+  ///
+  /// In en, this message translates to:
+  /// **'New project'**
+  String get newProject;
+
+  /// Project list when the user has no projects
+  ///
+  /// In en, this message translates to:
+  /// **'No projects yet. Create one, or join a project with the invitation code you received.'**
+  String get projectsEmpty;
+
+  /// Unexpected error while loading the project list
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load your projects. Try again.'**
+  String get errorProjectsLoad;
+
+  /// Unexpected error while loading one project
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load this project. Try again.'**
+  String get errorProjectLoad;
+
+  /// Unexpected error while creating a project
+  ///
+  /// In en, this message translates to:
+  /// **'Could not create the project. Try again.'**
+  String get errorProjectCreate;
+
+  /// Unexpected error while saving project details or status
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save the project. Try again.'**
+  String get errorProjectSave;
+
+  /// ProjectType.newHouse
+  ///
+  /// In en, this message translates to:
+  /// **'New house'**
+  String get projectTypeNewHouse;
+
+  /// ProjectType.expansion (an extension to an existing building)
+  ///
+  /// In en, this message translates to:
+  /// **'Extension'**
+  String get projectTypeExpansion;
+
+  /// ProjectType.renovation
+  ///
+  /// In en, this message translates to:
+  /// **'Renovation'**
+  String get projectTypeRenovation;
+
+  /// ProjectType.communityBuilding
+  ///
+  /// In en, this message translates to:
+  /// **'Community building'**
+  String get projectTypeCommunityBuilding;
+
+  /// ProjectType.other
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get projectTypeOther;
+
+  /// ProjectStatus.draft (waiting for its site)
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get projectStatusDraft;
+
+  /// ProjectStatus.active
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get projectStatusActive;
+
+  /// ProjectStatus.paused
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get projectStatusPaused;
+
+  /// ProjectStatus.completed
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get projectStatusCompleted;
+
+  /// ProjectStatus.archived
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get projectStatusArchived;
+
+  /// ProjectRole.owner
+  ///
+  /// In en, this message translates to:
+  /// **'Owner'**
+  String get projectRoleOwner;
+
+  /// ProjectRole.coFunder
+  ///
+  /// In en, this message translates to:
+  /// **'Co-funder'**
+  String get projectRoleCoFunder;
+
+  /// ProjectRole.viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Viewer'**
+  String get projectRoleViewer;
+
+  /// ProjectRole.siteManager
+  ///
+  /// In en, this message translates to:
+  /// **'Site manager'**
+  String get projectRoleSiteManager;
+
+  /// Project form: name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Project name'**
+  String get labelProjectName;
+
+  /// Project form: description field label
+  ///
+  /// In en, this message translates to:
+  /// **'Description (optional)'**
+  String get labelDescription;
+
+  /// Project form: type of work field label
+  ///
+  /// In en, this message translates to:
+  /// **'Type of work'**
+  String get labelProjectType;
+
+  /// Project form: type of work field placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the type of work'**
+  String get selectProjectType;
+
+  /// Project form: currency field label
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get labelCurrency;
+
+  /// Project form: currency field placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a currency'**
+  String get selectCurrency;
+
+  /// Project form: planned start date field label
+  ///
+  /// In en, this message translates to:
+  /// **'Planned start (optional)'**
+  String get labelPlannedStart;
+
+  /// Project form: planned end date field label
+  ///
+  /// In en, this message translates to:
+  /// **'Planned end (optional)'**
+  String get labelPlannedEnd;
+
+  /// Project form: name is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a project name'**
+  String get validateProjectNameRequired;
+
+  /// Project form: name longer than 100 characters
+  ///
+  /// In en, this message translates to:
+  /// **'Use 100 characters at most'**
+  String get validateProjectNameTooLong;
+
+  /// Project form: description longer than 1,000 characters
+  ///
+  /// In en, this message translates to:
+  /// **'Use 1,000 characters at most'**
+  String get validateDescriptionTooLong;
+
+  /// Project form: no type of work chosen
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a type of work to continue'**
+  String get validateProjectTypeRequired;
+
+  /// Project form: no currency chosen
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a currency to continue'**
+  String get validateCurrencyRequired;
+
+  /// Project form: planned end before planned start
+  ///
+  /// In en, this message translates to:
+  /// **'The end must be on or after the start'**
+  String get validateDatesOrder;
+
+  /// Create-project wizard: progress above the step title
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String stepOf(int current, int total);
+
+  /// Create-project wizard: title of the details step
+  ///
+  /// In en, this message translates to:
+  /// **'Project details'**
+  String get stepDetailsTitle;
+
+  /// Create-project wizard: title of the review step
+  ///
+  /// In en, this message translates to:
+  /// **'Check and create'**
+  String get stepReviewTitle;
+
+  /// Create-project wizard: explains the draft status on the review step
+  ///
+  /// In en, this message translates to:
+  /// **'The project starts as a draft. It becomes active once your site manager has localized the site and you have validated it.'**
+  String get reviewDraftNote;
+
+  /// Create-project wizard: final button
+  ///
+  /// In en, this message translates to:
+  /// **'Create project'**
+  String get createProjectAction;
+
+  /// Button returning to the previous step
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get backAction;
+
+  /// Button opening the edit form
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editAction;
+
+  /// Project page: button opening the status menu
+  ///
+  /// In en, this message translates to:
+  /// **'Change status'**
+  String get changeStatus;
+
+  /// Project page: status label
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get labelStatus;
+
+  /// Project page: label of the user's role
+  ///
+  /// In en, this message translates to:
+  /// **'Your role'**
+  String get labelYourRole;
+
+  /// Project page: planned dates label
+  ///
+  /// In en, this message translates to:
+  /// **'Planned dates'**
+  String get labelPlannedDates;
+
+  /// Shown for an optional value that is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get notSet;
+
+  /// Project page: heading of the site section
+  ///
+  /// In en, this message translates to:
+  /// **'Site'**
+  String get siteTitle;
+
+  /// Project page, other members: no site yet
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the site location.'**
+  String get siteWaiting;
+
+  /// Project page, owner: no site yet, what happens next
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the site location. Invite a site manager: standing on the plot, they localize it with their phone, then you validate it.'**
+  String get siteWaitingOwner;
+
+  /// Project page, site manager: no site yet, what to do
+  ///
+  /// In en, this message translates to:
+  /// **'Go to the plot and localize the site with your phone, so the owner can validate it.'**
+  String get siteWaitingManager;
+
+  /// Project page: Plus Code of the site
+  ///
+  /// In en, this message translates to:
+  /// **'Plus Code'**
+  String get labelPlusCode;
+
+  /// Project page: address or landmark of the site
+  ///
+  /// In en, this message translates to:
+  /// **'Address or landmark'**
+  String get labelAddress;
+
+  /// Project page: radius of the site
+  ///
+  /// In en, this message translates to:
+  /// **'Radius'**
+  String get labelRadius;
+
+  /// Site radius in metres
+  ///
+  /// In en, this message translates to:
+  /// **'{radius} m'**
+  String radiusMeters(int radius);
+
+  /// Title of the edit-project page
+  ///
+  /// In en, this message translates to:
+  /// **'Edit project'**
+  String get editProjectTitle;
+
+  /// Confirmation after the project details were saved
+  ///
+  /// In en, this message translates to:
+  /// **'The project has been saved.'**
+  String get projectSaved;
+
+  /// Confirmation after the project status was changed
+  ///
+  /// In en, this message translates to:
+  /// **'The status has been changed.'**
+  String get statusChanged;
 }
 
 class _AppLocalizationsDelegate

@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 typedef SearchableDropdownItemBuilder<T> = Widget Function(
@@ -182,7 +181,9 @@ class _SearchableDropdownFieldState<T>
                                   ),
                               selected: item == selectedValue,
                               onTap: () {
-                                context.pop(item);
+                                // Navigator, not go_router: the sheet is a
+                                // plain route (and this works in widget tests).
+                                Navigator.of(context).pop(item);
                               },
                             );
                           },
@@ -207,7 +208,9 @@ class _SearchableDropdownFieldState<T>
     return InputField(
       onTap: () async {
         final result = await _openSelectionDialog(widget.selectedValue, l10n);
-        widget.onChanged(result);
+        // Dismissing the sheet returns null: keep the current value. Clearing
+        // is done with the field's close icon.
+        if (result != null) widget.onChanged(result);
       },
       readOnly: true,
       // hintText: _getHintText(l10n),

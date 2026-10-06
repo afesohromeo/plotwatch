@@ -48,7 +48,11 @@ class _DatePickerFieldState extends State<DatePickerField> {
       if (!mounted) return;
       _controller.text = widget.value == null
           ? ''
-          : formatDate(widget.value!, withTime: widget.withTime);
+          : formatDate(
+              widget.value!,
+              withTime: widget.withTime,
+              locale: Localizations.localeOf(context).languageCode,
+            );
     });
   }
 

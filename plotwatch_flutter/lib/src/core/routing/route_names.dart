@@ -5,3 +5,6 @@ const String signUpRouteName = 'sign-up';
 const String passwordResetRouteName = 'forgot-password';
 const String homeRouteName = 'home';
 const String profileRouteName = 'profile';
+const String createProjectRouteName = 'new-project';
+const String projectRouteName = 'project';
+const String editProjectRouteName = 'edit-project';

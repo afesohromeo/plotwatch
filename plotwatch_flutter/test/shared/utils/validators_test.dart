@@ -68,4 +68,29 @@ void main() {
       expect(Validators.fullName('Ada Lovelace', l10n), isNull);
     });
   });
+
+  // Mirrors the server's ProjectService.validateDetails (doc/04b, group B).
+  group('Given the project name validator', () {
+    test('when blank then it asks for a project name', () {
+      expect(Validators.projectName('  ', l10n),
+          l10n.validateProjectNameRequired);
+    });
+    test('when longer than 100 characters then it says too long', () {
+      expect(Validators.projectName('x' * 101, l10n),
+          l10n.validateProjectNameTooLong);
+    });
+    test('when 1 to 100 characters then it passes', () {
+      expect(Validators.projectName('House in Bafoussam', l10n), isNull);
+    });
+  });
+
+  group('Given the project description validator', () {
+    test('when empty then it passes (it is optional)', () {
+      expect(Validators.projectDescription('', l10n), isNull);
+    });
+    test('when longer than 1,000 characters then it says too long', () {
+      expect(Validators.projectDescription('x' * 1001, l10n),
+          l10n.validateDescriptionTooLong);
+    });
+  });
 }

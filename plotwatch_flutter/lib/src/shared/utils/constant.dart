@@ -85,16 +85,25 @@ String formatPrice(double? price, String currency) {
   return '${NumberFormat('#,###.#').format(price)} $currency';
 }
 
+/// [locale] defaults to the app language (AC-7); the kit used French always.
 String formatDate(DateTime? date,
-    {bool withTime = false, bool withDay = false}) {
+    {bool withTime = false, bool withDay = false, String? locale}) {
   if (date == null) return '';
+  final languageCode = locale ?? LocalizationService.localization.localeName;
   return withTime
-      ? DateFormat('d MMM yyyy - HH:mm', 'fr_FR').format(date)
+      ? DateFormat('d MMM yyyy - HH:mm', languageCode).format(date)
       : withDay
-          ? DateFormat('EEE d MMM yyyy', 'fr_FR').format(date)
-          : DateFormat('d MMM yyyy', 'fr_FR').format(date);
+          ? DateFormat('EEE d MMM yyyy', languageCode).format(date)
+          : DateFormat('d MMM yyyy', languageCode).format(date);
 }
 
 /// App languages (D-8). Mirrors the server's ProfileService.supportedLocales.
 const List<String> supportedLanguageCodes = ['en', 'fr'];
 const String defaultLanguageCode = 'en';
+
+/// Project currencies (decision M2-13). Mirrors the server's
+/// ProjectService.supportedCurrencies.
+const List<String> supportedCurrencyCodes = [
+  'XAF', 'XOF', 'NGN', 'GHS', 'KES', 'UGX', 'TZS', 'RWF', 'CDF', 'GNF', //
+  'ZAR', 'MAD', 'EGP', 'ETB', 'EUR', 'USD', 'GBP', 'CAD', 'CHF',
+];

@@ -27,6 +27,14 @@ void main() {
         welcomePage,
       );
     });
+
+    test('when opening a project page then it goes to the welcome page', () {
+      expect(
+        RouteManager.redirectFor(
+            AuthenticationStatus.unauthenticated, '/projects/7'),
+        welcomePage,
+      );
+    });
   });
 
   group('Given a signed-in user', () {

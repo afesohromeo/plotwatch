@@ -120,12 +120,6 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get homeTitle => 'Vos projets';
-
-  @override
-  String get homePlaceholder => 'Vos projets de construction apparaîtront ici.';
-
-  @override
   String get validateEmailRequired => 'Saisissez votre e-mail';
 
   @override
@@ -339,4 +333,191 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get errorProfileSave =>
       'Impossible d\'enregistrer votre profil. Réessayez.';
+
+  @override
+  String get projectsTitle => 'Mes projets';
+
+  @override
+  String get newProject => 'Nouveau projet';
+
+  @override
+  String get projectsEmpty =>
+      'Aucun projet pour l\'instant. Créez-en un, ou rejoignez un projet avec le code d\'invitation reçu.';
+
+  @override
+  String get errorProjectsLoad =>
+      'Impossible de charger vos projets. Réessayez.';
+
+  @override
+  String get errorProjectLoad => 'Impossible de charger ce projet. Réessayez.';
+
+  @override
+  String get errorProjectCreate => 'Impossible de créer le projet. Réessayez.';
+
+  @override
+  String get errorProjectSave =>
+      'Impossible d\'enregistrer le projet. Réessayez.';
+
+  @override
+  String get projectTypeNewHouse => 'Maison neuve';
+
+  @override
+  String get projectTypeExpansion => 'Extension';
+
+  @override
+  String get projectTypeRenovation => 'Rénovation';
+
+  @override
+  String get projectTypeCommunityBuilding => 'Bâtiment communautaire';
+
+  @override
+  String get projectTypeOther => 'Autre';
+
+  @override
+  String get projectStatusDraft => 'Brouillon';
+
+  @override
+  String get projectStatusActive => 'Actif';
+
+  @override
+  String get projectStatusPaused => 'En pause';
+
+  @override
+  String get projectStatusCompleted => 'Terminé';
+
+  @override
+  String get projectStatusArchived => 'Archivé';
+
+  @override
+  String get projectRoleOwner => 'Propriétaire';
+
+  @override
+  String get projectRoleCoFunder => 'Co-financeur';
+
+  @override
+  String get projectRoleViewer => 'Observateur';
+
+  @override
+  String get projectRoleSiteManager => 'Chef de chantier';
+
+  @override
+  String get labelProjectName => 'Nom du projet';
+
+  @override
+  String get labelDescription => 'Description (facultative)';
+
+  @override
+  String get labelProjectType => 'Type de travaux';
+
+  @override
+  String get selectProjectType => 'Choisissez le type de travaux';
+
+  @override
+  String get labelCurrency => 'Devise';
+
+  @override
+  String get selectCurrency => 'Choisissez une devise';
+
+  @override
+  String get labelPlannedStart => 'Début prévu (facultatif)';
+
+  @override
+  String get labelPlannedEnd => 'Fin prévue (facultative)';
+
+  @override
+  String get validateProjectNameRequired => 'Saisissez un nom de projet';
+
+  @override
+  String get validateProjectNameTooLong => 'Utilisez 100 caractères au maximum';
+
+  @override
+  String get validateDescriptionTooLong =>
+      'Utilisez 1 000 caractères au maximum';
+
+  @override
+  String get validateProjectTypeRequired =>
+      'Choisissez un type de travaux pour continuer';
+
+  @override
+  String get validateCurrencyRequired => 'Choisissez une devise pour continuer';
+
+  @override
+  String get validateDatesOrder =>
+      'La fin doit être le même jour ou après le début';
+
+  @override
+  String stepOf(int current, int total) {
+    return 'Étape $current sur $total';
+  }
+
+  @override
+  String get stepDetailsTitle => 'Détails du projet';
+
+  @override
+  String get stepReviewTitle => 'Vérifiez et créez';
+
+  @override
+  String get reviewDraftNote =>
+      'Le projet commence en brouillon. Il devient actif une fois que votre chef de chantier a localisé le chantier et que vous avez validé l\'emplacement.';
+
+  @override
+  String get createProjectAction => 'Créer le projet';
+
+  @override
+  String get backAction => 'Retour';
+
+  @override
+  String get editAction => 'Modifier';
+
+  @override
+  String get changeStatus => 'Changer le statut';
+
+  @override
+  String get labelStatus => 'Statut';
+
+  @override
+  String get labelYourRole => 'Votre rôle';
+
+  @override
+  String get labelPlannedDates => 'Dates prévues';
+
+  @override
+  String get notSet => 'Non défini';
+
+  @override
+  String get siteTitle => 'Chantier';
+
+  @override
+  String get siteWaiting => 'En attente de l\'emplacement du chantier.';
+
+  @override
+  String get siteWaitingOwner =>
+      'En attente de l\'emplacement du chantier. Invitez un chef de chantier : sur le terrain, il le localise avec son téléphone, puis vous le validez.';
+
+  @override
+  String get siteWaitingManager =>
+      'Rendez-vous sur le terrain et localisez le chantier avec votre téléphone, pour que le propriétaire puisse le valider.';
+
+  @override
+  String get labelPlusCode => 'Plus Code';
+
+  @override
+  String get labelAddress => 'Adresse ou repère';
+
+  @override
+  String get labelRadius => 'Rayon';
+
+  @override
+  String radiusMeters(int radius) {
+    return '$radius m';
+  }
+
+  @override
+  String get editProjectTitle => 'Modifier le projet';
+
+  @override
+  String get projectSaved => 'Le projet a été enregistré.';
+
+  @override
+  String get statusChanged => 'Le statut a été modifié.';
 }

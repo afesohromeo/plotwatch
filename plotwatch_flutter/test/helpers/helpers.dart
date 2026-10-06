@@ -4,3 +4,4 @@ export 'mocks.dart';
 export 'pump_app.dart';
 export 'test_localization.dart';
 export 'field_helpers.dart';
+export 'fixtures.dart';

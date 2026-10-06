@@ -152,14 +152,6 @@
             }
         }
     },
-    "homeTitle": "Your projects",
-    "@homeTitle": {
-        "description": "Title of the signed-in home page"
-    },
-    "homePlaceholder": "Your construction projects will appear here.",
-    "@homePlaceholder": {
-        "description": "Home page text until projects exist (M2)"
-    },
     "validateEmailRequired": "Enter your email",
     "@validateEmailRequired": {
         "description": "Email field left empty"
@@ -407,5 +399,250 @@
     "errorProfileSave": "Could not save your profile. Try again.",
     "@errorProfileSave": {
         "description": "Unexpected error while saving the profile"
+    },
+    "projectsTitle": "My projects",
+    "@projectsTitle": {
+        "description": "Title of the project list (signed-in home page)"
+    },
+    "newProject": "New project",
+    "@newProject": {
+        "description": "Button and page title for creating a project"
+    },
+    "projectsEmpty": "No projects yet. Create one, or join a project with the invitation code you received.",
+    "@projectsEmpty": {
+        "description": "Project list when the user has no projects"
+    },
+    "errorProjectsLoad": "Could not load your projects. Try again.",
+    "@errorProjectsLoad": {
+        "description": "Unexpected error while loading the project list"
+    },
+    "errorProjectLoad": "Could not load this project. Try again.",
+    "@errorProjectLoad": {
+        "description": "Unexpected error while loading one project"
+    },
+    "errorProjectCreate": "Could not create the project. Try again.",
+    "@errorProjectCreate": {
+        "description": "Unexpected error while creating a project"
+    },
+    "errorProjectSave": "Could not save the project. Try again.",
+    "@errorProjectSave": {
+        "description": "Unexpected error while saving project details or status"
+    },
+    "projectTypeNewHouse": "New house",
+    "@projectTypeNewHouse": {
+        "description": "ProjectType.newHouse"
+    },
+    "projectTypeExpansion": "Extension",
+    "@projectTypeExpansion": {
+        "description": "ProjectType.expansion (an extension to an existing building)"
+    },
+    "projectTypeRenovation": "Renovation",
+    "@projectTypeRenovation": {
+        "description": "ProjectType.renovation"
+    },
+    "projectTypeCommunityBuilding": "Community building",
+    "@projectTypeCommunityBuilding": {
+        "description": "ProjectType.communityBuilding"
+    },
+    "projectTypeOther": "Other",
+    "@projectTypeOther": {
+        "description": "ProjectType.other"
+    },
+    "projectStatusDraft": "Draft",
+    "@projectStatusDraft": {
+        "description": "ProjectStatus.draft (waiting for its site)"
+    },
+    "projectStatusActive": "Active",
+    "@projectStatusActive": {
+        "description": "ProjectStatus.active"
+    },
+    "projectStatusPaused": "Paused",
+    "@projectStatusPaused": {
+        "description": "ProjectStatus.paused"
+    },
+    "projectStatusCompleted": "Completed",
+    "@projectStatusCompleted": {
+        "description": "ProjectStatus.completed"
+    },
+    "projectStatusArchived": "Archived",
+    "@projectStatusArchived": {
+        "description": "ProjectStatus.archived"
+    },
+    "projectRoleOwner": "Owner",
+    "@projectRoleOwner": {
+        "description": "ProjectRole.owner"
+    },
+    "projectRoleCoFunder": "Co-funder",
+    "@projectRoleCoFunder": {
+        "description": "ProjectRole.coFunder"
+    },
+    "projectRoleViewer": "Viewer",
+    "@projectRoleViewer": {
+        "description": "ProjectRole.viewer"
+    },
+    "projectRoleSiteManager": "Site manager",
+    "@projectRoleSiteManager": {
+        "description": "ProjectRole.siteManager"
+    },
+    "labelProjectName": "Project name",
+    "@labelProjectName": {
+        "description": "Project form: name field label"
+    },
+    "labelDescription": "Description (optional)",
+    "@labelDescription": {
+        "description": "Project form: description field label"
+    },
+    "labelProjectType": "Type of work",
+    "@labelProjectType": {
+        "description": "Project form: type of work field label"
+    },
+    "selectProjectType": "Choose the type of work",
+    "@selectProjectType": {
+        "description": "Project form: type of work field placeholder"
+    },
+    "labelCurrency": "Currency",
+    "@labelCurrency": {
+        "description": "Project form: currency field label"
+    },
+    "selectCurrency": "Choose a currency",
+    "@selectCurrency": {
+        "description": "Project form: currency field placeholder"
+    },
+    "labelPlannedStart": "Planned start (optional)",
+    "@labelPlannedStart": {
+        "description": "Project form: planned start date field label"
+    },
+    "labelPlannedEnd": "Planned end (optional)",
+    "@labelPlannedEnd": {
+        "description": "Project form: planned end date field label"
+    },
+    "validateProjectNameRequired": "Enter a project name",
+    "@validateProjectNameRequired": {
+        "description": "Project form: name is empty"
+    },
+    "validateProjectNameTooLong": "Use 100 characters at most",
+    "@validateProjectNameTooLong": {
+        "description": "Project form: name longer than 100 characters"
+    },
+    "validateDescriptionTooLong": "Use 1,000 characters at most",
+    "@validateDescriptionTooLong": {
+        "description": "Project form: description longer than 1,000 characters"
+    },
+    "validateProjectTypeRequired": "Choose a type of work to continue",
+    "@validateProjectTypeRequired": {
+        "description": "Project form: no type of work chosen"
+    },
+    "validateCurrencyRequired": "Choose a currency to continue",
+    "@validateCurrencyRequired": {
+        "description": "Project form: no currency chosen"
+    },
+    "validateDatesOrder": "The end must be on or after the start",
+    "@validateDatesOrder": {
+        "description": "Project form: planned end before planned start"
+    },
+    "stepOf": "Step {current} of {total}",
+    "@stepOf": {
+        "description": "Create-project wizard: progress above the step title",
+        "placeholders": {
+            "current": {
+                "type": "int"
+            },
+            "total": {
+                "type": "int"
+            }
+        }
+    },
+    "stepDetailsTitle": "Project details",
+    "@stepDetailsTitle": {
+        "description": "Create-project wizard: title of the details step"
+    },
+    "stepReviewTitle": "Check and create",
+    "@stepReviewTitle": {
+        "description": "Create-project wizard: title of the review step"
+    },
+    "reviewDraftNote": "The project starts as a draft. It becomes active once your site manager has localized the site and you have validated it.",
+    "@reviewDraftNote": {
+        "description": "Create-project wizard: explains the draft status on the review step"
+    },
+    "createProjectAction": "Create project",
+    "@createProjectAction": {
+        "description": "Create-project wizard: final button"
+    },
+    "backAction": "Back",
+    "@backAction": {
+        "description": "Button returning to the previous step"
+    },
+    "editAction": "Edit",
+    "@editAction": {
+        "description": "Button opening the edit form"
+    },
+    "changeStatus": "Change status",
+    "@changeStatus": {
+        "description": "Project page: button opening the status menu"
+    },
+    "labelStatus": "Status",
+    "@labelStatus": {
+        "description": "Project page: status label"
+    },
+    "labelYourRole": "Your role",
+    "@labelYourRole": {
+        "description": "Project page: label of the user's role"
+    },
+    "labelPlannedDates": "Planned dates",
+    "@labelPlannedDates": {
+        "description": "Project page: planned dates label"
+    },
+    "notSet": "Not set",
+    "@notSet": {
+        "description": "Shown for an optional value that is empty"
+    },
+    "siteTitle": "Site",
+    "@siteTitle": {
+        "description": "Project page: heading of the site section"
+    },
+    "siteWaiting": "Waiting for the site location.",
+    "@siteWaiting": {
+        "description": "Project page, other members: no site yet"
+    },
+    "siteWaitingOwner": "Waiting for the site location. Invite a site manager: standing on the plot, they localize it with their phone, then you validate it.",
+    "@siteWaitingOwner": {
+        "description": "Project page, owner: no site yet, what happens next"
+    },
+    "siteWaitingManager": "Go to the plot and localize the site with your phone, so the owner can validate it.",
+    "@siteWaitingManager": {
+        "description": "Project page, site manager: no site yet, what to do"
+    },
+    "labelPlusCode": "Plus Code",
+    "@labelPlusCode": {
+        "description": "Project page: Plus Code of the site"
+    },
+    "labelAddress": "Address or landmark",
+    "@labelAddress": {
+        "description": "Project page: address or landmark of the site"
+    },
+    "labelRadius": "Radius",
+    "@labelRadius": {
+        "description": "Project page: radius of the site"
+    },
+    "radiusMeters": "{radius} m",
+    "@radiusMeters": {
+        "description": "Site radius in metres",
+        "placeholders": {
+            "radius": {
+                "type": "int"
+            }
+        }
+    },
+    "editProjectTitle": "Edit project",
+    "@editProjectTitle": {
+        "description": "Title of the edit-project page"
+    },
+    "projectSaved": "The project has been saved.",
+    "@projectSaved": {
+        "description": "Confirmation after the project details were saved"
+    },
+    "statusChanged": "The status has been changed.",
+    "@statusChanged": {
+        "description": "Confirmation after the project status was changed"
     }
 }

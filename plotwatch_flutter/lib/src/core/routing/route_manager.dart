@@ -96,7 +96,50 @@ class RouteManager {
         path: homePage,
         pageBuilder: (context, state) => NoTransitionPage<void>(
           key: state.pageKey,
-          child: const HomePage(),
+          child: BlocProvider(
+            create: (context) => ProjectListBloc(
+                projectRepository: context.read<ProjectRepository>()),
+            child: const ProjectListPage(),
+          ),
+        ),
+      ),
+      // Before `projectPage`, so "new" isn't read as a project ID.
+      GoRoute(
+        name: createProjectRouteName,
+        path: createProjectPage,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => CreateProjectBloc(
+                projectRepository: context.read<ProjectRepository>()),
+            child: const CreateProjectPage(),
+          ),
+        ),
+      ),
+      GoRoute(
+        name: projectRouteName,
+        path: projectPage,
+        redirect: _requireProjectId,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => ProjectOverviewBloc(
+                projectRepository: context.read<ProjectRepository>()),
+            child: ProjectOverviewPage(projectId: _projectId(state)!),
+          ),
+        ),
+      ),
+      GoRoute(
+        name: editProjectRouteName,
+        path: editProjectPage,
+        redirect: _requireProjectId,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => ProjectOverviewBloc(
+                projectRepository: context.read<ProjectRepository>()),
+            child: EditProjectPage(projectId: _projectId(state)!),
+          ),
         ),
       ),
       GoRoute(
@@ -109,6 +152,13 @@ class RouteManager {
       ),
     ];
   }
+
+  static int? _projectId(GoRouterState state) =>
+      int.tryParse(state.pathParameters['projectId'] ?? '');
+
+  /// A malformed project ID in the URL goes back to the project list.
+  static String? _requireProjectId(BuildContext context, GoRouterState state) =>
+      _projectId(state) == null ? homePage : null;
 
   CustomTransitionPage slideTransition(
       GoRouterState state, Widget child, Offset begin) {

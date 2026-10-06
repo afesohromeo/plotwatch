@@ -270,3 +270,18 @@ Changes from the plan:
 | Activity types | `siteProposed`, `siteProposalRejected`; the first validation also writes `projectStatusChanged` | The feed shows every step of the site flow (SITE-07) |
 | Migration | Created with `--force`: adding required columns made Serverpod drop and recreate `site` | Safe: the table was empty everywhere (not deployed yet). Once `site` holds data, a change like this needs a nullable column or a default (feedback F-9) |
 | Invitation status | A pending code past its expiry is refused but stays `pending` in the database; `expired` is reserved for a later cleanup job | A refused accept rolls back its transaction, so it can't also store the status |
+
+### Group E outcome (2026-10-06)
+Done and verified: project list (signed-in home page, infinite scroll per `_standards/13`), create wizard (Details → Review, one create request), project page (details, role, status, site state; owner: edit and status menu), edit page. `flutter test` **285/285**, `dart test` **200/200**.
+
+Changes and fixes found along the way:
+| Item | Change | Reason |
+|------|--------|--------|
+| `PaginatedList<T>` | Created in `domain/models/` (Freezed) | `_standards/14` §3.2; first paginated list of the app |
+| `ProjectDetails` | `immutable: true` | Generated models have no `==`; BLoC events carrying the details must compare by value |
+| Kit `formatDate` | Takes the app language (was always `fr_FR`) | AC-7: dates in the user's language. Test added |
+| Kit `SearchableDropdownField` | Dismissing the sheet keeps the value (it used to clear it, also on the profile's country); closes with `Navigator` instead of go_router | Bug found while writing the form tests; the test was seen failing without the fix |
+| Barrels | `searchable_dropdown_field` and `date_picker_field` exported; profile page imports through the barrel; duplicate exports removed from the extensions barrel | The barrel-only convention |
+| Home page | M1's placeholder `HomePage` and its two texts removed; the project list keeps the profile and sign-out buttons | Decision M1-8 said the project list replaces it in M2 |
+| Site on the project page | Three texts: owner (what happens next), site manager (go and localize), other members (waiting) | The owner's text didn't fit viewers and co-funders. The proposal state and actions come with group G |
+| Currencies | 19 codes (`supportedCurrencyCodes`), mirroring the server | Decision M2-13 |

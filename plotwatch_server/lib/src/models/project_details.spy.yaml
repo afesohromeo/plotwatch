@@ -1,5 +1,8 @@
 ### What the owner enters to create or edit a project (PROJ-01, PROJ-04).
+### Immutable: a value object compared by its fields (==), e.g. in BLoC
+### events.
 class: ProjectDetails
+immutable: true
 fields:
   ### 1–100 characters after trimming.
   name: String

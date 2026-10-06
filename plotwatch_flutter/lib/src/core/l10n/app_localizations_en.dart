@@ -120,12 +120,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get homeTitle => 'Your projects';
-
-  @override
-  String get homePlaceholder => 'Your construction projects will appear here.';
-
-  @override
   String get validateEmailRequired => 'Enter your email';
 
   @override
@@ -331,4 +325,186 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorProfileSave => 'Could not save your profile. Try again.';
+
+  @override
+  String get projectsTitle => 'My projects';
+
+  @override
+  String get newProject => 'New project';
+
+  @override
+  String get projectsEmpty =>
+      'No projects yet. Create one, or join a project with the invitation code you received.';
+
+  @override
+  String get errorProjectsLoad => 'Could not load your projects. Try again.';
+
+  @override
+  String get errorProjectLoad => 'Could not load this project. Try again.';
+
+  @override
+  String get errorProjectCreate => 'Could not create the project. Try again.';
+
+  @override
+  String get errorProjectSave => 'Could not save the project. Try again.';
+
+  @override
+  String get projectTypeNewHouse => 'New house';
+
+  @override
+  String get projectTypeExpansion => 'Extension';
+
+  @override
+  String get projectTypeRenovation => 'Renovation';
+
+  @override
+  String get projectTypeCommunityBuilding => 'Community building';
+
+  @override
+  String get projectTypeOther => 'Other';
+
+  @override
+  String get projectStatusDraft => 'Draft';
+
+  @override
+  String get projectStatusActive => 'Active';
+
+  @override
+  String get projectStatusPaused => 'Paused';
+
+  @override
+  String get projectStatusCompleted => 'Completed';
+
+  @override
+  String get projectStatusArchived => 'Archived';
+
+  @override
+  String get projectRoleOwner => 'Owner';
+
+  @override
+  String get projectRoleCoFunder => 'Co-funder';
+
+  @override
+  String get projectRoleViewer => 'Viewer';
+
+  @override
+  String get projectRoleSiteManager => 'Site manager';
+
+  @override
+  String get labelProjectName => 'Project name';
+
+  @override
+  String get labelDescription => 'Description (optional)';
+
+  @override
+  String get labelProjectType => 'Type of work';
+
+  @override
+  String get selectProjectType => 'Choose the type of work';
+
+  @override
+  String get labelCurrency => 'Currency';
+
+  @override
+  String get selectCurrency => 'Choose a currency';
+
+  @override
+  String get labelPlannedStart => 'Planned start (optional)';
+
+  @override
+  String get labelPlannedEnd => 'Planned end (optional)';
+
+  @override
+  String get validateProjectNameRequired => 'Enter a project name';
+
+  @override
+  String get validateProjectNameTooLong => 'Use 100 characters at most';
+
+  @override
+  String get validateDescriptionTooLong => 'Use 1,000 characters at most';
+
+  @override
+  String get validateProjectTypeRequired => 'Choose a type of work to continue';
+
+  @override
+  String get validateCurrencyRequired => 'Choose a currency to continue';
+
+  @override
+  String get validateDatesOrder => 'The end must be on or after the start';
+
+  @override
+  String stepOf(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get stepDetailsTitle => 'Project details';
+
+  @override
+  String get stepReviewTitle => 'Check and create';
+
+  @override
+  String get reviewDraftNote =>
+      'The project starts as a draft. It becomes active once your site manager has localized the site and you have validated it.';
+
+  @override
+  String get createProjectAction => 'Create project';
+
+  @override
+  String get backAction => 'Back';
+
+  @override
+  String get editAction => 'Edit';
+
+  @override
+  String get changeStatus => 'Change status';
+
+  @override
+  String get labelStatus => 'Status';
+
+  @override
+  String get labelYourRole => 'Your role';
+
+  @override
+  String get labelPlannedDates => 'Planned dates';
+
+  @override
+  String get notSet => 'Not set';
+
+  @override
+  String get siteTitle => 'Site';
+
+  @override
+  String get siteWaiting => 'Waiting for the site location.';
+
+  @override
+  String get siteWaitingOwner =>
+      'Waiting for the site location. Invite a site manager: standing on the plot, they localize it with their phone, then you validate it.';
+
+  @override
+  String get siteWaitingManager =>
+      'Go to the plot and localize the site with your phone, so the owner can validate it.';
+
+  @override
+  String get labelPlusCode => 'Plus Code';
+
+  @override
+  String get labelAddress => 'Address or landmark';
+
+  @override
+  String get labelRadius => 'Radius';
+
+  @override
+  String radiusMeters(int radius) {
+    return '$radius m';
+  }
+
+  @override
+  String get editProjectTitle => 'Edit project';
+
+  @override
+  String get projectSaved => 'The project has been saved.';
+
+  @override
+  String get statusChanged => 'The status has been changed.';
 }

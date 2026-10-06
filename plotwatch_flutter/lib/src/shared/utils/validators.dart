@@ -51,4 +51,25 @@ class Validators {
     if (name.length > maxFullNameLength) return l10n.validateNameTooLong;
     return null;
   }
+
+  // Project rules mirror the server's ProjectService.validateDetails.
+  static const maxProjectNameLength = 100;
+  static const maxProjectDescriptionLength = 1000;
+
+  static String? projectName(String? value, AppLocalizations l10n) {
+    final name = value?.trim() ?? '';
+    if (name.isEmpty) return l10n.validateProjectNameRequired;
+    if (name.length > maxProjectNameLength) {
+      return l10n.validateProjectNameTooLong;
+    }
+    return null;
+  }
+
+  /// Optional: only the length is checked.
+  static String? projectDescription(String? value, AppLocalizations l10n) {
+    if ((value?.trim() ?? '').length > maxProjectDescriptionLength) {
+      return l10n.validateDescriptionTooLong;
+    }
+    return null;
+  }
 }
