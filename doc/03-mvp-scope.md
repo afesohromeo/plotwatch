@@ -67,7 +67,7 @@ Each day starts by checking the plan and ends with: tests passing, code committe
 | Auth | AUTH-01, 02, 03, 07, 08 | Email sign-up/in, verification, reset, persistent session, sign-out |
 | Profile | PROF-01, 02, 03 | Name, country, language (EN/FR), edit profile |
 | Projects | PROJ-01, 02, 03, 04, 05, 08 | Create (wizard), list, edit, status |
-| Site | SITE-01, 02, 03, 06, 07 | Map pin or Plus Code, radius, address; changes logged |
+| Site | SITE-03, 04, 06, 07 | Site manager localizes with GPS on the plot, owner validates and sets the radius; address; changes logged (revised 2026-10-06, `04b` M2-15) |
 | Members | MEMB-01, 02, 03, 04, 05, 08 | Invitation code/link, join, member list, remove, cancel |
 | Stages | STG-01 → 09 | Create/edit/reorder, templates, checklist, statuses, submit, progress |
 | Budget | BUD-01, 02 | Stage budgets, minor units + currency code |
@@ -92,7 +92,6 @@ Each day starts by checking the plan and ends with: tests passing, code committe
 | Release confirmation | LED-02 | Site manager confirms receipt of money |
 | Unaccounted alert | LED-05 | Makes the key number visible |
 | Google sign-in | AUTH-04 | Faster onboarding |
-| Site proposal from GPS | SITE-04 | Lets the site manager set the location while standing on the plot |
 | Schedule status | STG-10 | On time / late |
 | Inactivity reminder | UPD-05 | Second future call |
 | Review → release shortcut | REV-06 | Smooth flow in the demo |
@@ -147,8 +146,8 @@ Auth module, `ProfileEndpoint`, `ProjectEndpoint`, `SiteEndpoint`, `MembershipEn
 | Role | Screens |
 |------|---------|
 | Everyone | Welcome, Sign in, Sign up, Verify email, Forgot password, Project list, Join with code, Notifications, Profile/Settings, Activity feed, Evidence detail + verification breakdown, Stage list, Stage detail, Ledger summary |
-| Funder | Create project wizard (Details → Site → Stages → Review), Site picker, Members & invite, Edit stage, Stage review, Record release, Funder dashboard, *(S)* New evidence request, *(S)* Fund request decision |
-| Site manager | Site manager home, Camera, Capture review, New progress update, Record expense, *(S)* Fulfil evidence request, *(S)* New fund request |
+| Funder | Create project wizard (Details → Stages → Review), Validate site, Members & invite, Edit stage, Stage review, Record release, Funder dashboard, *(S)* New evidence request, *(S)* Fund request decision |
+| Site manager | Site manager home, Localize site, Camera, Capture review, New progress update, Record expense, *(S)* Fulfil evidence request, *(S)* New fund request |
 
 ### 5.5 Platform targets
 - **Android:** site manager and funder (main demo device)
@@ -160,7 +159,8 @@ Auth module, `ProfileEndpoint`, `ProjectEndpoint`, `SiteEndpoint`, `MembershipEn
 ## 6. Acceptance criteria (core loop)
 
 **AC-1 Project setup**
-- Given a signed-in user, when they complete the wizard with name, currency, a site (pin or Plus Code, radius) and a template, then a project exists with them as `owner` and the template's stages and checklist items.
+- Given a signed-in user, when they complete the wizard with name, currency and a template, then a `draft` project exists with them as `owner` and the template's stages and checklist items.
+- Given a site manager of that project standing on the plot with a GPS accuracy of 20 m or better, when they localize the site, then the owner sees the proposal on a map. When the owner sets the radius and validates it, the project becomes `active` with that site. *(Revised 2026-10-06, `04b` M2-15: the site comes from the site manager's GPS, not the owner's map pin or Plus Code.)*
 
 **AC-2 Invitation**
 - Given an owner, when they create a site-manager invitation, then a code and link are shown. When another signed-in user enters the code, they join as `site_manager`. Using the code again fails with a clear message, and so does an expired code.

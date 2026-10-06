@@ -135,7 +135,8 @@ A user can hold different roles on different projects (a site manager on one pro
 | Action | owner | co_funder | viewer | site_manager |
 |--------|:-----:|:---------:|:------:|:------------:|
 | View project, stages, evidence, ledger | ✅ | ✅ | ✅ | ✅ |
-| Edit project details, site, currency | ✅ | ❌ | ❌ | ❌ |
+| Edit project details, currency; validate or reject the site location | ✅ | ❌ | ❌ | ❌ |
+| Propose the site location (GPS on the plot, SITE-04) | ❌ | ❌ | ❌ | ✅ |
 | Archive / delete project | ✅ | ❌ | ❌ | ❌ |
 | Invite / remove members | ✅ | ❌ | ❌ | ❌ |
 | Create / edit / reorder stages | ✅ | ❌ | ❌ | ❌ *(may propose, P1)* |
@@ -201,12 +202,12 @@ A user can hold different roles on different projects (a site manager on one pro
 ### 4.4 Site and location (SITE)
 | ID | Requirement | Phase |
 |----|-------------|-------|
-| SITE-01 | The owner can set the site's centre by dropping a pin on a map. | MVP |
-| SITE-02 | The owner can set the site's centre by entering a Plus Code (Open Location Code), full or short with a locality. | MVP |
-| SITE-03 | The owner can set the site's radius in metres (default 50 m, range 10–500 m). The radius is drawn on the map. | MVP |
-| SITE-04 | A site manager standing on the plot can propose setting the centre to their current GPS position. The owner must confirm. | MVP-S |
+| SITE-01 | The owner can set the site's centre by dropping a pin on a map. | P1 (revised 2026-10-06, `04b` M2-15) |
+| SITE-02 | The owner can set the site's centre by entering a Plus Code (Open Location Code), full or short with a locality. | P1 (revised 2026-10-06, `04b` M2-15) |
+| SITE-03 | The owner sets the site's radius in metres when validating the location (default 50 m, range 10–500 m). The radius is drawn on the map. | MVP |
+| SITE-04 | A site manager standing on the plot proposes the site's centre from their current GPS position (accuracy 20 m or better; mocked positions refused). The owner validates or rejects the proposal; the first validation activates the project. This is the way the site is set. | MVP (revised 2026-10-06, `04b` M2-15) |
 | SITE-05 | The owner can draw a polygon boundary instead of a radius. | P2 |
-| SITE-06 | The site stores an optional address/description and the plot's time zone. | MVP |
+| SITE-06 | The site stores an optional address/description (MVP) and the plot's time zone (P1, `04b` M2-10). | MVP |
 | SITE-07 | Every change to the site location is recorded in the audit log and shown in the activity feed, because moving the site would change which captures pass the location check. | MVP |
 | SITE-08 | Reference "photo points": fixed positions on site, re-photographed over time from the same angle, with an on-screen guide (see CMP). | P2 |
 
@@ -637,8 +638,8 @@ flowchart LR
 |--------|------------------|-------------|
 | `auth` | Sign up/in, email verification, password reset, session | Welcome, Sign in, Sign up, Verify email, Forgot password |
 | `profile` | Profile, language, settings | Profile, Settings |
-| `projects` | Project list, creation wizard, details, status | Project list, Create project wizard (Details → Site → Stages → Review), Project settings |
-| `site` | Map pin, Plus Code entry, radius | Site picker |
+| `projects` | Project list, creation wizard, details, status | Project list, Create project wizard (Details → Stages → Review), Project settings |
+| `site` | GPS localization by the site manager, validation with radius by the owner | Localize site, Validate site |
 | `members` | Invitations, joining, member list | Members, Invite, Join with code |
 | `stages` | Stage list, detail, checklist, templates, submit | Stage list, Stage detail, Edit stage, Template picker |
 | `capture` | Camera, GPS status, hashing, commit/upload, queue | Camera, Capture review, Upload queue |
@@ -675,7 +676,7 @@ flowchart LR
 | Auth (module) | sign up, sign in, verify email, reset password, Google sign-in | MVP |
 | `ProfileEndpoint` | `getMe`, `updateMe` | MVP |
 | `ProjectEndpoint` | `create`, `list`, `get`, `update`, `setStatus` | MVP |
-| `SiteEndpoint` | `get`, `set`, `proposeFromCurrentLocation`, `confirmProposal` | MVP |
+| `SiteEndpoint` | `get`, `propose`, `listProposals`, `validate`, `reject` (`04b` group D) | MVP |
 | `MembershipEndpoint` | `createInvitation`, `listInvitations`, `cancelInvitation`, `previewInvitation`, `acceptInvitation`, `listMembers`, `removeMember` | MVP |
 | `TemplateEndpoint` | `list`, `get` | MVP |
 | `StageEndpoint` | `list`, `get`, `create`, `update`, `reorder`, `delete`, `applyTemplate`, `start`, `submit`, `review` | MVP |
@@ -815,7 +816,7 @@ erDiagram
 | radiusM | int | 10–500 |
 | addressText | string? | |
 | timezone | string? | IANA |
-| proposedLat / proposedLng / proposedBy | nullable | Pending proposal from a site manager (SITE-04) |
+| validatedProposalId / validatedBy / validatedAt | | The validated `SiteProposal` (SITE-04). Proposals have their own table `SiteProposal` (lat, lng, accuracy, status, decision), see `04b` group D |
 | updatedAt | datetime | |
 
 #### `ProjectMember`
