@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -84,6 +85,44 @@ void main() {
 
       verify(() => bloc.add(const SignInEvent.passwordVisibilityToggled()))
           .called(1);
+    });
+  });
+
+  group('Given the browser or phone password manager', () {
+    testWidgets('when the page is shown then the fields are marked for autofill',
+        (tester) async {
+      await pumpPage(tester);
+
+      expect(autofillHintsOf(tester, SignInPage.emailFieldKey),
+          containsAll([AutofillHints.email, AutofillHints.username]));
+      expect(autofillHintsOf(tester, SignInPage.passwordFieldKey),
+          [AutofillHints.password]);
+    });
+
+    testWidgets('when signing in succeeds then it is asked to save the login',
+        (tester) async {
+      whenListen(
+        bloc,
+        Stream.fromIterable(const [
+          SignInState(signInStatus: GenericStatus.loading),
+          SignInState(signInStatus: GenericStatus.success),
+        ]),
+        initialState: const SignInState(),
+      );
+      await pumpPage(tester);
+      await tester.pump();
+
+      expect(autofillContextsFinished(tester), [true]);
+    });
+
+    testWidgets(
+        'when the page is left without signing in then nothing is offered for '
+        'saving', (tester) async {
+      await pumpPage(tester);
+
+      await tester.pumpWidget(const SizedBox());
+
+      expect(autofillContextsFinished(tester), [false]);
     });
   });
 }

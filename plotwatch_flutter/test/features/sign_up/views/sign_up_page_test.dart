@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -114,6 +115,90 @@ void main() {
             password: 'secret123',
             locale: 'en',
           ))).called(1);
+    });
+  });
+
+  group('Given the browser or phone password manager', () {
+    testWidgets(
+        'when the details step is shown then the name and email are marked '
+        'for autofill', (tester) async {
+      await pumpAt(tester, SignUpStep.details);
+
+      expect(autofillHintsOf(tester, SignUpPage.nameFieldKey),
+          [AutofillHints.name]);
+      expect(autofillHintsOf(tester, SignUpPage.emailFieldKey),
+          containsAll([AutofillHints.email, AutofillHints.username]));
+    });
+
+    testWidgets(
+        'when the password step is shown then both fields ask for a new '
+        'password and the account email is shown read-only', (tester) async {
+      await pumpAt(tester, SignUpStep.password);
+
+      expect(autofillHintsOf(tester, SignUpPage.passwordFieldKey),
+          [AutofillHints.newPassword]);
+      expect(autofillHintsOf(tester, SignUpPage.confirmPasswordFieldKey),
+          [AutofillHints.newPassword]);
+      // The password manager saves the new password under this email.
+      expect(fieldText(tester, SignUpPage.accountEmailFieldKey),
+          'ada@example.com');
+      expect(isReadOnly(tester, SignUpPage.accountEmailFieldKey), isTrue);
+      expect(autofillHintsOf(tester, SignUpPage.accountEmailFieldKey),
+          [AutofillHints.username]);
+    });
+
+    testWidgets(
+        'when the account is created then it is asked to save the login',
+        (tester) async {
+      const atPassword =
+          SignUpState(step: SignUpStep.password, email: 'ada@example.com');
+      whenListen(
+        bloc,
+        Stream.fromIterable([
+          atPassword.copyWith(signUpStatus: GenericStatus.loading),
+          atPassword.copyWith(signUpStatus: GenericStatus.success),
+        ]),
+        initialState: atPassword,
+      );
+      await tester.pumpApp(
+        BlocProvider<SignUpBloc>.value(value: bloc, child: const SignUpPage()),
+      );
+      await tester.pump();
+
+      expect(autofillContextsFinished(tester), [true]);
+    });
+
+    testWidgets(
+        'when an earlier step succeeds then nothing is offered for saving yet',
+        (tester) async {
+      whenListen(
+        bloc,
+        Stream.fromIterable(const [
+          SignUpState(signUpStatus: GenericStatus.loading),
+          SignUpState(
+            signUpStatus: GenericStatus.success,
+            step: SignUpStep.verifyCode,
+            email: 'ada@example.com',
+          ),
+        ]),
+        initialState: const SignUpState(),
+      );
+      await tester.pumpApp(
+        BlocProvider<SignUpBloc>.value(value: bloc, child: const SignUpPage()),
+      );
+      await tester.pump();
+
+      expect(autofillContextsFinished(tester), isEmpty);
+    });
+
+    testWidgets(
+        'when the page is left before the account is created then nothing is '
+        'offered for saving', (tester) async {
+      await pumpAt(tester, SignUpStep.password);
+
+      await tester.pumpWidget(const SizedBox());
+
+      expect(autofillContextsFinished(tester), [false]);
     });
   });
 }

@@ -57,12 +57,19 @@ void main() {
         expect(me.countryCode, isNull);
       });
 
-      test('twice then only one settings row exists', () async {
+      test('then it only reads: no settings row is created', () async {
         await endpoints.profile.getMe(signedIn);
         await endpoints.profile.getMe(signedIn);
 
-        expect(await UserSettings.db.count(sessionBuilder.build()), 1);
+        expect(await UserSettings.db.count(sessionBuilder.build()), 0);
       });
+    });
+
+    test('when updateMe is called for a user without settings then exactly '
+        'one settings row is created', () async {
+      await endpoints.profile.updateMe(signedIn, fullName: 'Ada', locale: 'en');
+
+      expect(await UserSettings.db.count(sessionBuilder.build()), 1);
     });
 
     group('when updateMe is called', () {
@@ -122,6 +129,42 @@ void main() {
       });
     });
   });
+
+  // Regression test for the Cloud bug of 2026-10-06: right after sign-up the
+  // app fetched the profile and saved the name at the same moment; both
+  // requests tried to create the settings row and the save failed with a
+  // unique-constraint violation. Concurrent transactions need the database
+  // without automatic rollback (serverpod-testing skill).
+  withServerpod(
+    'Given a new user whose profile is fetched and saved at the same time',
+    (sessionBuilder, endpoints) {
+      test('when both requests run concurrently then both succeed and the '
+          'name is kept', () async {
+        final session = sessionBuilder.build();
+        final authUser = await AuthServices.instance.authUsers.create(session);
+        await AuthServices.instance.userProfiles.createUserProfile(
+          session,
+          authUser.id,
+          UserProfileData(email: 'ada@example.com'),
+        );
+        final signedIn = sessionBuilder.copyWith(
+          authentication:
+              AuthenticationOverride.authenticationInfo(authUser.id.uuid, {}),
+        );
+
+        await Future.wait([
+          endpoints.profile.getMe(signedIn),
+          endpoints.profile
+              .updateMe(signedIn, fullName: 'Ada Lovelace', locale: 'fr'),
+        ]);
+
+        final me = await endpoints.profile.getMe(signedIn);
+        expect(me.fullName, 'Ada Lovelace');
+        expect(me.locale, 'fr');
+      });
+    },
+    rollbackDatabase: RollbackDatabase.disabled,
+  );
 }
 
 Matcher _appException(AppErrorCode code) =>

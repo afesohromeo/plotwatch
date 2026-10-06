@@ -103,4 +103,13 @@ void main() {
     expect(find.text(l10n.validateNameRequired), findsOneWidget);
     verifyNever(() => profileBloc.add(any()));
   });
+
+  testWidgets(
+      'Given a loaded profile then the name field is marked for autofill',
+      (tester) async {
+    await pumpPage(tester, loaded);
+
+    expect(autofillHintsOf(tester, ProfilePage.nameFieldKey),
+        [AutofillHints.name]);
+  });
 }

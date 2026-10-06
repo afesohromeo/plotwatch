@@ -190,6 +190,45 @@ class _EmailIdpEndpoint {
 
   final _is.SerializationManager _serializationManager;
 
+  _ida.Future<_iacs.AuthSuccess> finishRegistrationWithProfile(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String registrationToken,
+    required String password,
+    required String fullName,
+    required String locale,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'emailIdp',
+            method: 'finishRegistrationWithProfile',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'emailIdp',
+          methodName: 'finishRegistrationWithProfile',
+          parameters: _ist.testObjectToJson({
+            'registrationToken': registrationToken,
+            'password': password,
+            'fullName': fullName,
+            'locale': locale,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_iacs.AuthSuccess>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
   _ida.Future<_iacs.AuthSuccess> login(
     _ist.TestSessionBuilder sessionBuilder, {
     required String email,

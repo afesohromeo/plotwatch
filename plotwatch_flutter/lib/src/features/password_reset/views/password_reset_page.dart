@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
@@ -9,6 +10,7 @@ class PasswordResetPage extends StatefulWidget {
 
   static const emailFieldKey = Key('passwordReset.email');
   static const codeFieldKey = Key('passwordReset.code');
+  static const accountEmailFieldKey = Key('passwordReset.accountEmail');
   static const passwordFieldKey = Key('passwordReset.password');
   static const confirmPasswordFieldKey = Key('passwordReset.confirmPassword');
   static const submitButtonKey = Key('passwordReset.submit');
@@ -71,6 +73,11 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
           if (state.passwordResetStatus == GenericStatus.failure &&
               state.passwordResetErrorMessage != null) {
             DialogUtils.handleFailure(context, state.passwordResetErrorMessage!);
+          } else if (state.step == PasswordResetStep.newPassword &&
+              state.passwordResetStatus == GenericStatus.success) {
+            // The password is set: offer to update the saved login in the
+            // browser or phone password manager.
+            TextInput.finishAutofillContext();
           }
         },
         buildWhen: (previous, current) =>
@@ -85,20 +92,28 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                 ? l10n.passwordResetCodeSent(state.email)
                 : null,
             children: [
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ..._fields(state, l10n),
-                    const Gap.vertical(height: AppSpacing.lg),
-                    SubmitButton(
-                      key: PasswordResetPage.submitButtonKey,
-                      label: l10n.continueAction,
-                      isLoading: isLoading,
-                      onPressed: () => _submit(state.step),
-                    ),
-                  ],
+              // Leaving before the password is set must not offer to save
+              // what was typed; success saves it explicitly (listener above).
+              // The key keeps the group across steps, when the subtitle and
+              // the resend button appear around it.
+              AutofillGroup(
+                key: const ValueKey('passwordReset.autofillGroup'),
+                onDisposeAction: AutofillContextAction.cancel,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ..._fields(state, l10n),
+                      const Gap.vertical(height: AppSpacing.lg),
+                      SubmitButton(
+                        key: PasswordResetPage.submitButtonKey,
+                        label: l10n.continueAction,
+                        isLoading: isLoading,
+                        onPressed: () => _submit(state.step),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               if (state.step == PasswordResetStep.verifyCode) ...[
@@ -129,6 +144,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
             controller: _email,
             labelText: l10n.labelEmail,
             keyboardType: TextInputType.emailAddress,
+            autofillHints: const [AutofillHints.email, AutofillHints.username],
             validator: (value) => Validators.email(value, l10n),
           ),
         ],
@@ -142,6 +158,16 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
           ),
         ],
       PasswordResetStep.newPassword => [
+          // The password manager updates the password saved under this email.
+          InputField(
+            key: PasswordResetPage.accountEmailFieldKey,
+            initialValue: state.email,
+            labelText: l10n.labelEmail,
+            readOnly: true,
+            autofillHints: const [AutofillHints.username],
+            validator: null,
+          ),
+          const Gap.vertical(height: AppSpacing.md),
           InputField(
             key: PasswordResetPage.passwordFieldKey,
             controller: _password,
@@ -155,6 +181,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                   toggle(const PasswordResetEvent.passwordVisibilityToggled()),
             ),
             enableSuggestions: false,
+            autofillHints: const [AutofillHints.newPassword],
             validator: (value) => Validators.password(value, l10n),
           ),
           const Gap.vertical(height: AppSpacing.md),
@@ -170,6 +197,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                   toggle(const PasswordResetEvent.confirmPasswordVisibilityToggled()),
             ),
             enableSuggestions: false,
+            autofillHints: const [AutofillHints.newPassword],
             validator: (value) =>
                 Validators.confirmPassword(value, _password.text, l10n),
           ),

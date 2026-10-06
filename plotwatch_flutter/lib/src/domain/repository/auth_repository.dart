@@ -53,11 +53,15 @@ class AuthRepository {
   Future<void> finishRegistration({
     required String registrationToken,
     required String password,
+    required String fullName,
+    required String locale,
   }) async {
     try {
       final authSuccess = await _apiProvider.finishRegistration(
         registrationToken: registrationToken,
         password: password,
+        fullName: fullName,
+        locale: locale,
       );
       await _apiProvider.saveSession(authSuccess);
     } catch (e) {

@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -104,6 +105,86 @@ void main() {
       verify(() => bloc.add(const PasswordResetEvent.newPasswordSubmitted(
             password: 'newSecret1',
           ))).called(1);
+    });
+  });
+
+  group('Given the browser or phone password manager', () {
+    testWidgets('when the email step is shown then the email is marked for '
+        'autofill', (tester) async {
+      when(() => bloc.state).thenReturn(const PasswordResetState());
+      await pumpPage(tester);
+
+      expect(autofillHintsOf(tester, PasswordResetPage.emailFieldKey),
+          containsAll([AutofillHints.email, AutofillHints.username]));
+    });
+
+    testWidgets(
+        'when the new-password step is shown then both fields ask for a new '
+        'password and the account email is shown read-only', (tester) async {
+      await pumpPage(tester);
+
+      expect(autofillHintsOf(tester, PasswordResetPage.passwordFieldKey),
+          [AutofillHints.newPassword]);
+      expect(autofillHintsOf(tester, PasswordResetPage.confirmPasswordFieldKey),
+          [AutofillHints.newPassword]);
+      // The password manager updates the password saved under this email.
+      expect(fieldText(tester, PasswordResetPage.accountEmailFieldKey),
+          'ada@example.com');
+      expect(isReadOnly(tester, PasswordResetPage.accountEmailFieldKey), isTrue);
+      expect(autofillHintsOf(tester, PasswordResetPage.accountEmailFieldKey),
+          [AutofillHints.username]);
+    });
+
+    testWidgets(
+        'when the new password is set then it is asked to save the login',
+        (tester) async {
+      const atNewPassword = PasswordResetState(
+        step: PasswordResetStep.newPassword,
+        email: 'ada@example.com',
+      );
+      whenListen(
+        bloc,
+        Stream.fromIterable([
+          atNewPassword.copyWith(passwordResetStatus: GenericStatus.loading),
+          atNewPassword.copyWith(passwordResetStatus: GenericStatus.success),
+        ]),
+        initialState: atNewPassword,
+      );
+      await pumpPage(tester);
+      await tester.pump();
+
+      expect(autofillContextsFinished(tester), [true]);
+    });
+
+    testWidgets(
+        'when an earlier step succeeds then nothing is offered for saving yet',
+        (tester) async {
+      whenListen(
+        bloc,
+        Stream.fromIterable(const [
+          PasswordResetState(passwordResetStatus: GenericStatus.loading),
+          PasswordResetState(
+            passwordResetStatus: GenericStatus.success,
+            step: PasswordResetStep.verifyCode,
+            email: 'ada@example.com',
+          ),
+        ]),
+        initialState: const PasswordResetState(),
+      );
+      await pumpPage(tester);
+      await tester.pump();
+
+      expect(autofillContextsFinished(tester), isEmpty);
+    });
+
+    testWidgets(
+        'when the page is left before the password is set then nothing is '
+        'offered for saving', (tester) async {
+      await pumpPage(tester);
+
+      await tester.pumpWidget(const SizedBox());
+
+      expect(autofillContextsFinished(tester), [false]);
     });
   });
 }

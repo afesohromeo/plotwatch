@@ -1,4 +1,5 @@
 emailIdp:
+  - finishRegistrationWithProfile:
   - login:
   - startRegistration:
   - verifyRegistrationCode:

@@ -30,6 +30,27 @@ class EndpointEmailIdp extends _iaic.EndpointEmailIdpBase {
   @override
   String get name => 'emailIdp';
 
+  /// Last step of Plotwatch's sign-up (decision M1-4): creates the account
+  /// and saves the user's name and language **in the same request**, so no
+  /// other request can see the new user half-created (Cloud bug of
+  /// 2026-10-06). Invalid profile values are refused before the account is
+  /// created.
+  _ida.Future<_iacc.AuthSuccess> finishRegistrationWithProfile({
+    required String registrationToken,
+    required String password,
+    required String fullName,
+    required String locale,
+  }) => caller.callServerEndpoint<_iacc.AuthSuccess>(
+    'emailIdp',
+    'finishRegistrationWithProfile',
+    {
+      'registrationToken': registrationToken,
+      'password': password,
+      'fullName': fullName,
+      'locale': locale,
+    },
+  );
+
   /// Logs in the user and returns a new session.
   ///
   /// Throws an [EmailAccountLoginException] in case of errors, with reason:

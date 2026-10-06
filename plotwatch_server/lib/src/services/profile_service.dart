@@ -33,9 +33,20 @@ class ProfileService {
     }
   }
 
+  /// Read-only: a user without settings gets the defaults. Only [updateMe]
+  /// creates the settings row, so a fetch and a save running at the same time
+  /// can't both insert it (Cloud bug of 2026-10-06).
   Future<MyProfile> getMe(Session session, UuidValue authUserId) async {
-    final settings = await _findOrCreateSettings(session, authUserId);
-    return _toMyProfile(session, authUserId, settings);
+    final settings = await UserSettings.db.findFirstRow(
+      session,
+      where: (t) => t.authUserId.equals(authUserId),
+    );
+    return _toMyProfile(
+      session,
+      authUserId,
+      countryCode: settings?.countryCode,
+      locale: settings?.locale ?? defaultLocale,
+    );
   }
 
   /// Saves validated values: the name in the auth profile, the rest in
@@ -68,7 +79,13 @@ class ProfileService {
         fullName.trim(),
         transaction: transaction,
       );
-      return _toMyProfile(session, authUserId, saved, transaction: transaction);
+      return _toMyProfile(
+        session,
+        authUserId,
+        countryCode: saved.countryCode,
+        locale: saved.locale,
+        transaction: transaction,
+      );
     });
   }
 
@@ -99,8 +116,9 @@ class ProfileService {
 
   Future<MyProfile> _toMyProfile(
     Session session,
-    UuidValue authUserId,
-    UserSettings settings, {
+    UuidValue authUserId, {
+    required String? countryCode,
+    required String locale,
     Transaction? transaction,
   }) async {
     final profile = await AuthServices.instance.userProfiles
@@ -112,8 +130,8 @@ class ProfileService {
     return MyProfile(
       fullName: profile?.fullName,
       email: profile?.email,
-      countryCode: settings.countryCode,
-      locale: settings.locale,
+      countryCode: countryCode,
+      locale: locale,
     );
   }
 }

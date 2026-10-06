@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
@@ -53,6 +54,10 @@ class _SignInPageState extends State<SignInPage> {
           if (state.signInStatus == GenericStatus.failure &&
               state.signInErrorMessage != null) {
             DialogUtils.handleFailure(context, state.signInErrorMessage!);
+          } else if (state.signInStatus == GenericStatus.success) {
+            // Offers to save the login in the browser or phone password
+            // manager.
+            TextInput.finishAutofillContext();
           }
         },
         buildWhen: (previous, current) =>
@@ -62,7 +67,11 @@ class _SignInPageState extends State<SignInPage> {
           return AuthFormLayout(
             title: l10n.signInHeading,
             children: [
-              Form(
+              // Leaving without signing in must not offer to save what was
+              // typed; success saves it explicitly (listener above).
+              AutofillGroup(
+                onDisposeAction: AutofillContextAction.cancel,
+                child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -72,6 +81,10 @@ class _SignInPageState extends State<SignInPage> {
                       controller: _email,
                       labelText: l10n.labelEmail,
                       keyboardType: TextInputType.emailAddress,
+                      autofillHints: const [
+                        AutofillHints.email,
+                        AutofillHints.username,
+                      ],
                       validator: (value) => Validators.email(value, l10n),
                     ),
                     const Gap.vertical(height: AppSpacing.md),
@@ -81,6 +94,7 @@ class _SignInPageState extends State<SignInPage> {
                       labelText: l10n.labelPassword,
                       obscureText: !state.isPasswordVisible,
                       enableSuggestions: false,
+                      autofillHints: const [AutofillHints.password],
                       suffixIcon: PasswordVisibilityButton(
                         key: SignInPage.passwordVisibilityButtonKey,
                         isVisible: state.isPasswordVisible,
@@ -99,6 +113,7 @@ class _SignInPageState extends State<SignInPage> {
                       onPressed: _submit,
                     ),
                   ],
+                ),
                 ),
               ),
               const Gap.vertical(height: AppSpacing.sm),

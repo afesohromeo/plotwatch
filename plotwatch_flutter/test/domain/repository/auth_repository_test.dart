@@ -39,17 +39,53 @@ void main() {
       verifyNever(() => apiProvider.saveSession(any()));
     });
 
-    test('when registration finishes then the session is saved', () async {
+    test(
+        'when registration finishes then the name and language go in the same '
+        'call and the session is saved after it', () async {
       when(() => apiProvider.finishRegistration(
             registrationToken: 'token',
             password: 'secret123',
+            fullName: 'Ada Lovelace',
+            locale: 'fr',
           )).thenAnswer((_) async => authSuccess);
       when(() => apiProvider.saveSession(any())).thenAnswer((_) async {});
 
       await repository.finishRegistration(
-          registrationToken: 'token', password: 'secret123');
+        registrationToken: 'token',
+        password: 'secret123',
+        fullName: 'Ada Lovelace',
+        locale: 'fr',
+      );
 
-      verify(() => apiProvider.saveSession(authSuccess)).called(1);
+      verifyInOrder([
+        () => apiProvider.finishRegistration(
+              registrationToken: 'token',
+              password: 'secret123',
+              fullName: 'Ada Lovelace',
+              locale: 'fr',
+            ),
+        () => apiProvider.saveSession(authSuccess),
+      ]);
+    });
+
+    test('when registration fails then no session is saved', () async {
+      when(() => apiProvider.finishRegistration(
+            registrationToken: any(named: 'registrationToken'),
+            password: any(named: 'password'),
+            fullName: any(named: 'fullName'),
+            locale: any(named: 'locale'),
+          )).thenThrow(const HttpException400(code: AppErrorCode.invalidFullName));
+
+      await expectLater(
+        repository.finishRegistration(
+          registrationToken: 'token',
+          password: 'secret123',
+          fullName: ' ',
+          locale: 'en',
+        ),
+        throwsA(isA<HttpException400>()),
+      );
+      verifyNever(() => apiProvider.saveSession(any()));
     });
 
     test('when signed-in state is read then it comes from the API provider',

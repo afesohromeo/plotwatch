@@ -46,6 +46,43 @@ class Endpoints extends _is.EndpointDispatch {
       name: 'emailIdp',
       endpoint: endpoints['emailIdp']!,
       methodConnectors: {
+        'finishRegistrationWithProfile': _is.MethodConnector(
+          name: 'finishRegistrationWithProfile',
+          params: {
+            'registrationToken': _is.ParameterDescription(
+              name: 'registrationToken',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'password': _is.ParameterDescription(
+              name: 'password',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'fullName': _is.ParameterDescription(
+              name: 'fullName',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'locale': _is.ParameterDescription(
+              name: 'locale',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _ilutrrxn.EmailIdpEndpoint)
+                  .finishRegistrationWithProfile(
+                    session,
+                    registrationToken: params['registrationToken'],
+                    password: params['password'],
+                    fullName: params['fullName'],
+                    locale: params['locale'],
+                  ),
+        ),
         'login': _is.MethodConnector(
           name: 'login',
           params: {

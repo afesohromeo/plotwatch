@@ -9,12 +9,10 @@ import '../../../helpers/helpers.dart';
 void main() {
   late AppLocalizations l10n;
   late MockAuthRepository authRepository;
-  late MockProfileRepository profileRepository;
 
   final requestId = UuidValue.fromString('11111111-1111-4111-8111-111111111111');
   final newRequestId =
       UuidValue.fromString('22222222-2222-4222-8222-222222222222');
-  final profile = MyProfile(fullName: 'Ada Lovelace', locale: 'fr');
 
   setUpAll(() {
     l10n = setUpTestLocalization();
@@ -23,13 +21,9 @@ void main() {
   });
   setUp(() {
     authRepository = MockAuthRepository();
-    profileRepository = MockProfileRepository();
   });
 
-  SignUpBloc build() => SignUpBloc(
-        authRepository: authRepository,
-        profileRepository: profileRepository,
-      );
+  SignUpBloc build() => SignUpBloc(authRepository: authRepository);
 
   final atCodeStep = SignUpState(
     step: SignUpStep.verifyCode,
@@ -128,18 +122,14 @@ void main() {
 
   group('Given the password step', () {
     blocTest<SignUpBloc, SignUpState>(
-      'when a valid password is submitted then the account is created and the '
-      'name and language are saved',
-      setUp: () {
-        when(() => authRepository.finishRegistration(
-              registrationToken: 'token',
-              password: 'secret123',
-            )).thenAnswer((_) async {});
-        when(() => profileRepository.updateMe(
-              fullName: 'Ada Lovelace',
-              locale: 'fr',
-            )).thenAnswer((_) async => profile);
-      },
+      'when a valid password is submitted then the account is created with '
+      'the name and language in one call',
+      setUp: () => when(() => authRepository.finishRegistration(
+            registrationToken: 'token',
+            password: 'secret123',
+            fullName: 'Ada Lovelace',
+            locale: 'fr',
+          )).thenAnswer((_) async {}),
       build: build,
       seed: () => atPasswordStep,
       act: (bloc) => bloc.add(
@@ -148,37 +138,21 @@ void main() {
         atPasswordStep.copyWith(signUpStatus: GenericStatus.loading),
         atPasswordStep.copyWith(signUpStatus: GenericStatus.success),
       ],
-      verify: (_) => verify(() => profileRepository.updateMe(
-          fullName: 'Ada Lovelace', locale: 'fr')).called(1),
+      verify: (_) => verify(() => authRepository.finishRegistration(
+            registrationToken: 'token',
+            password: 'secret123',
+            fullName: 'Ada Lovelace',
+            locale: 'fr',
+          )).called(1),
     );
 
     blocTest<SignUpBloc, SignUpState>(
-      'when saving the name fails after the account exists then sign-up still '
-      'succeeds',
-      setUp: () {
-        when(() => authRepository.finishRegistration(
-              registrationToken: any(named: 'registrationToken'),
-              password: any(named: 'password'),
-            )).thenAnswer((_) async {});
-        when(() => profileRepository.updateMe(
-              fullName: any(named: 'fullName'),
-              locale: any(named: 'locale'),
-            )).thenThrow(const NetworkException());
-      },
-      build: build,
-      seed: () => atPasswordStep,
-      act: (bloc) => bloc.add(
-          const SignUpEvent.passwordSubmitted(password: 'secret123', locale: 'en')),
-      skip: 1,
-      expect: () => [atPasswordStep.copyWith(signUpStatus: GenericStatus.success)],
-    );
-
-    blocTest<SignUpBloc, SignUpState>(
-      'when the password breaks the policy then it shows the policy message '
-      'and saves nothing',
+      'when the password breaks the policy then it shows the policy message',
       setUp: () => when(() => authRepository.finishRegistration(
             registrationToken: any(named: 'registrationToken'),
             password: any(named: 'password'),
+            fullName: any(named: 'fullName'),
+            locale: any(named: 'locale'),
           )).thenThrow(
               const HttpException400(code: AppErrorCode.authPasswordPolicy)),
       build: build,
@@ -192,10 +166,6 @@ void main() {
           signUpErrorMessage: AppErrorCode.authPasswordPolicy.message(l10n),
         ),
       ],
-      verify: (_) => verifyNever(() => profileRepository.updateMe(
-            fullName: any(named: 'fullName'),
-            locale: any(named: 'locale'),
-          )),
     );
 
     blocTest<SignUpBloc, SignUpState>(
@@ -203,6 +173,8 @@ void main() {
       setUp: () => when(() => authRepository.finishRegistration(
             registrationToken: any(named: 'registrationToken'),
             password: any(named: 'password'),
+            fullName: any(named: 'fullName'),
+            locale: any(named: 'locale'),
           )).thenThrow(StateError('x')),
       build: build,
       seed: () => atPasswordStep,

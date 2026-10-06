@@ -43,14 +43,20 @@ class AuthApiProvider {
     }
   }
 
+  /// Creates the account and saves the name and language in one request
+  /// (Cloud bug of 2026-10-06).
   Future<AuthSuccess> finishRegistration({
     required String registrationToken,
     required String password,
+    required String fullName,
+    required String locale,
   }) async {
     try {
-      return await _client.emailIdp.finishRegistration(
+      return await _client.emailIdp.finishRegistrationWithProfile(
         registrationToken: registrationToken,
         password: password,
+        fullName: fullName,
+        locale: locale,
       );
     } catch (e) {
       throw ApiErrorHandler.handle(e);

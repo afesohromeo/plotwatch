@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
@@ -11,6 +12,7 @@ class SignUpPage extends StatefulWidget {
   static const nameFieldKey = Key('signUp.name');
   static const emailFieldKey = Key('signUp.email');
   static const codeFieldKey = Key('signUp.code');
+  static const accountEmailFieldKey = Key('signUp.accountEmail');
   static const passwordFieldKey = Key('signUp.password');
   static const confirmPasswordFieldKey = Key('signUp.confirmPassword');
   static const submitButtonKey = Key('signUp.submit');
@@ -80,6 +82,11 @@ class _SignUpPageState extends State<SignUpPage> {
           if (state.signUpStatus == GenericStatus.failure &&
               state.signUpErrorMessage != null) {
             DialogUtils.handleFailure(context, state.signUpErrorMessage!);
+          } else if (state.step == SignUpStep.password &&
+              state.signUpStatus == GenericStatus.success) {
+            // The account exists: offer to save the login in the browser or
+            // phone password manager.
+            TextInput.finishAutofillContext();
           }
         },
         buildWhen: (previous, current) =>
@@ -97,22 +104,30 @@ class _SignUpPageState extends State<SignUpPage> {
                 ? l10n.signUpCodeSent(state.email)
                 : null,
             children: [
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ..._fields(state, l10n),
-                    const Gap.vertical(height: AppSpacing.lg),
-                    SubmitButton(
-                      key: SignUpPage.submitButtonKey,
-                      label: state.step == SignUpStep.password
-                          ? l10n.createAccount
-                          : l10n.continueAction,
-                      isLoading: isLoading,
-                      onPressed: () => _submit(state.step),
-                    ),
-                  ],
+              // Leaving before the account exists must not offer to save
+              // what was typed; success saves it explicitly (listener above).
+              // The key keeps the group across steps, when the subtitle and
+              // the resend button appear around it.
+              AutofillGroup(
+                key: const ValueKey('signUp.autofillGroup'),
+                onDisposeAction: AutofillContextAction.cancel,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ..._fields(state, l10n),
+                      const Gap.vertical(height: AppSpacing.lg),
+                      SubmitButton(
+                        key: SignUpPage.submitButtonKey,
+                        label: state.step == SignUpStep.password
+                            ? l10n.createAccount
+                            : l10n.continueAction,
+                        isLoading: isLoading,
+                        onPressed: () => _submit(state.step),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const Gap.vertical(height: AppSpacing.sm),
@@ -146,6 +161,7 @@ class _SignUpPageState extends State<SignUpPage> {
             key: SignUpPage.nameFieldKey,
             controller: _name,
             labelText: l10n.labelFullName,
+            autofillHints: const [AutofillHints.name],
             validator: (value) => Validators.fullName(value, l10n),
           ),
           const Gap.vertical(height: AppSpacing.md),
@@ -154,6 +170,7 @@ class _SignUpPageState extends State<SignUpPage> {
             controller: _email,
             labelText: l10n.labelEmail,
             keyboardType: TextInputType.emailAddress,
+            autofillHints: const [AutofillHints.email, AutofillHints.username],
             validator: (value) => Validators.email(value, l10n),
           ),
         ],
@@ -167,6 +184,16 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ],
       SignUpStep.password => [
+          // The password manager saves the new password under this email.
+          InputField(
+            key: SignUpPage.accountEmailFieldKey,
+            initialValue: state.email,
+            labelText: l10n.labelEmail,
+            readOnly: true,
+            autofillHints: const [AutofillHints.username],
+            validator: null,
+          ),
+          const Gap.vertical(height: AppSpacing.md),
           InputField(
             key: SignUpPage.passwordFieldKey,
             controller: _password,
@@ -180,6 +207,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   toggle(const SignUpEvent.passwordVisibilityToggled()),
             ),
             enableSuggestions: false,
+            autofillHints: const [AutofillHints.newPassword],
             validator: (value) => Validators.password(value, l10n),
           ),
           const Gap.vertical(height: AppSpacing.md),
@@ -195,6 +223,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   toggle(const SignUpEvent.confirmPasswordVisibilityToggled()),
             ),
             enableSuggestions: false,
+            autofillHints: const [AutofillHints.newPassword],
             validator: (value) =>
                 Validators.confirmPassword(value, _password.text, l10n),
           ),

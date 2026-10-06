@@ -132,6 +132,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       key: ProfilePage.nameFieldKey,
                       controller: _name,
                       labelText: l10n.labelFullName,
+                      autofillHints: const [AutofillHints.name],
                       validator: (value) => Validators.fullName(value, l10n),
                     ),
                     const Gap.vertical(height: AppSpacing.md),

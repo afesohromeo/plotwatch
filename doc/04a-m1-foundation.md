@@ -447,3 +447,27 @@ Notes:
 - **Language** is applied after saving: the saved profile updates `MaterialApp.locale` through `ProfileState.appLocale`.
 - **Bug found by the group D tests and fixed:** the design step had wrapped `InputField`'s label and field in `MergeSemantics`. That breaks Flutter's semantics tree for fields with their own tap actions (the kit's dropdown). It was removed; screen readers read the label just before the field.
 - `supportedLanguageCodes` / `defaultLanguageCode` added to `shared/utils/constant.dart` (mirror of the server's `ProfileService`).
+
+### Group E progress (2026-10-06)
+Deployed: Serverpod Cloud project `plotwatch` (web app `plotwatch.serverpod.space`, API `plotwatch.api.serverpod.space`). Sign-up with a real email works: the code arrives through Serverpod Cloud.
+
+**Bug found on Cloud and fixed (approved 2026-10-06): the name was lost at sign-up.**
+- *Symptom:* after signing up, the profile page showed an empty name, even after a refresh.
+- *Root cause (Cloud log):* right after sign-up the app sent two requests at once: the profile fetch (`getMe`) and the name save (`updateMe`). Both tried to create the user's `user_settings` row, and the save failed with a unique-constraint violation on `user_settings_auth_user_idx`. `SignUpBloc` logged and ignored that failure, so the user saw no error.
+- *Fix:*
+  - `EmailIdpEndpoint.finishRegistrationWithProfile` creates the account and saves the name and language **in one request**. The values are validated before the account is created, so an invalid name creates nothing.
+  - `ProfileService.getMe` is read-only (defaults when there is no row); only `updateMe` creates the row.
+  - `SignUpBloc` makes one call and no longer depends on `ProfileRepository`; a failure shows the usual error dialog.
+- *Tests:* server `email_idp_endpoint_test.dart` (new, with `RollbackDatabase.disabled` because the auth module verifies the code in its own transaction), `getMe` creates no row, `updateMe` creates exactly one. App: repository and `SignUpBloc` tests for the single call.
+
+**Added with the fix (approved 2026-10-06): browser and phone autofill.**
+- `InputField.autofillHints`; hints on sign-in (email/username, password), sign-up and reset (name, email/username, new password) and the profile name.
+- Each auth form is an `AutofillGroup` that **discards** what was typed when the page is left, and the page explicitly offers to save the login only on final success (`TextInput.finishAutofillContext`).
+- The sign-up password step and the reset new-password step show the account email read-only, so the password manager knows which account the new password belongs to.
+- *Bug found by these tests and fixed:* without a key, the reset form's `AutofillGroup` was rebuilt when the subtitle and resend button appeared at the code step, which discarded the autofill context. The multi-step pages now give the group a stable key.
+
+Results: `flutter test` **174/174**, `dart test` **14/14**.
+
+Still to check for the M1 exit criterion: redeploy; on Cloud, sign up (name kept), autofill in Chrome, French, sign out; the web app's `config.json` points at the Cloud API; Android against Cloud.
+
+Lesson for the self-review checklist: a find-or-create needs a test with two concurrent requests, and no request handler should write as a side effect of a read.

@@ -73,10 +73,8 @@ class RouteManager {
         pageBuilder: (context, state) => NoTransitionPage<void>(
           key: state.pageKey,
           child: BlocProvider(
-            create: (context) => SignUpBloc(
-              authRepository: context.read<AuthRepository>(),
-              profileRepository: context.read<ProfileRepository>(),
-            ),
+            create: (context) =>
+                SignUpBloc(authRepository: context.read<AuthRepository>()),
             child: const SignUpPage(),
           ),
         ),

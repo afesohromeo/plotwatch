@@ -14,6 +14,7 @@ class InputField extends StatelessWidget {
       this.labelText,
       this.obscureText = false,
       this.enableSuggestions = true,
+      this.autofillHints,
       this.controller,
       this.initialValue,
       this.prefixIcon,
@@ -47,6 +48,10 @@ class InputField extends StatelessWidget {
   final String? labelText;
   final bool obscureText;
   final bool enableSuggestions;
+
+  /// Lets the browser or phone password manager fill this field, e.g.
+  /// [AutofillHints.email]. Fields of one form go in an [AutofillGroup].
+  final Iterable<String>? autofillHints;
   final TextEditingController? controller;
   final String? initialValue;
   final Icon? prefixIcon;
@@ -91,6 +96,7 @@ class InputField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       enableSuggestions: enableSuggestions,
+      autofillHints: autofillHints,
       inputFormatters: inputFormatters,
       validator: validator,
       keyboardType: keyboardType,

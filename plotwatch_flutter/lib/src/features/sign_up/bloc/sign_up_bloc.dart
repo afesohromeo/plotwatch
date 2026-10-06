@@ -9,12 +9,10 @@ part 'sign_up_state.dart';
 part 'sign_up_bloc.freezed.dart';
 
 /// Three-step sign-up (decision M1-4): name + email → emailed code →
-/// password. Finishing signs the user in, then saves name and language.
+/// password. Finishing creates the account with the name and language in one
+/// request and signs the user in.
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  SignUpBloc({
-    required this._authRepository,
-    required this._profileRepository,
-  })  : super(const SignUpState()) {
+  SignUpBloc({required this._authRepository}) : super(const SignUpState()) {
     on<_DetailsSubmitted>(_onDetailsSubmitted);
     on<_CodeSubmitted>(_onCodeSubmitted);
     on<_CodeResent>(_onCodeResent);
@@ -25,7 +23,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   }
 
   final AuthRepository _authRepository;
-  final ProfileRepository _profileRepository;
 
   Future<void> _onDetailsSubmitted(
     _DetailsSubmitted event,
@@ -115,33 +112,20 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       await _authRepository.finishRegistration(
         registrationToken: state.registrationToken!,
         password: event.password,
-      );
-    } on HttpException400 catch (e) {
-      emit(_failure(e.code.message(LocalizationService.localization)));
-      return;
-    } on HttpException401 catch (_) {
-      emit(_failure(LocalizationService.localization.errorUnauthorized));
-      return;
-    } on NetworkException catch (_) {
-      emit(_failure(LocalizationService.localization.networkError));
-      return;
-    } catch (e) {
-      log('SignUpBloc._onPasswordSubmitted error: $e');
-      emit(_failure(LocalizationService.localization.errorSignUp));
-      return;
-    }
-
-    // The account exists and the user is signed in. A failure to save the
-    // name must not undo that; it can be set later on the profile page.
-    try {
-      await _profileRepository.updateMe(
         fullName: state.fullName,
         locale: event.locale,
       );
+      emit(state.copyWith(signUpStatus: GenericStatus.success));
+    } on HttpException400 catch (e) {
+      emit(_failure(e.code.message(LocalizationService.localization)));
+    } on HttpException401 catch (_) {
+      emit(_failure(LocalizationService.localization.errorUnauthorized));
+    } on NetworkException catch (_) {
+      emit(_failure(LocalizationService.localization.networkError));
     } catch (e) {
-      log('SignUpBloc: saving the name after sign-up failed: $e');
+      log('SignUpBloc._onPasswordSubmitted error: $e');
+      emit(_failure(LocalizationService.localization.errorSignUp));
     }
-    emit(state.copyWith(signUpStatus: GenericStatus.success));
   }
 
   void _onPasswordVisibilityToggled(
