@@ -257,3 +257,16 @@ Changes from the plan:
 - **`ProjectType.expansion`** instead of `extension` (renamed by the developer: `extension` is a reserved word in Dart, so generation failed). The app's label can still read "Extension".
 - `AuditService` and `ActivityService` move to group B, where tests first use them.
 - The migration was created after group A instead of after group C: all M2 tables are in group A.
+
+### Groups B–D outcome (2026-10-06)
+Done and verified: `ProjectEndpoint`, `MembershipEndpoint` and `SiteEndpoint` with their services, plus `AuditService` and `ActivityService`. `dart test` **200/200** (projects 31, membership 21, site 25, permission service 6, permission matrix 97), `flutter test` **214/214**. Seen red first: the tests failed to compile until the endpoints and models existed. Two rules were then broken on purpose to check the tests catch them: an accuracy limit of 25 m instead of 20, and no row lock when accepting an invitation (the concurrent-accept test). Both made the tests fail.
+
+Changes from the plan:
+| Item | Change | Reason |
+|------|--------|--------|
+| Endpoint signatures | `cancelInvitation`, `removeMember`, `site.validate` and `site.reject` also take the project ID | The permission check on the project comes first, as in every endpoint (`_standards/14` §4.2) |
+| Optional parameters | `project.list({int? page, int? pageSize})`, `createInvitation(…, {bool? canApprove})`; defaults applied on the server | Serverpod 4.0.3 makes a named parameter with a default **required** in the generated client (feedback F-8) |
+| Error codes | 6 more than planned: `memberNotFound`, `siteProposalNotFound`, `textTooLong` (address > 200, reject reason > 500 characters), besides `siteProposalNotPending`, `siteAccuracyTooLow`, `siteMockLocation` | Cases found while writing the tests |
+| Activity types | `siteProposed`, `siteProposalRejected`; the first validation also writes `projectStatusChanged` | The feed shows every step of the site flow (SITE-07) |
+| Migration | Created with `--force`: adding required columns made Serverpod drop and recreate `site` | Safe: the table was empty everywhere (not deployed yet). Once `site` holds data, a change like this needs a nullable column or a default (feedback F-9) |
+| Invitation status | A pending code past its expiry is refused but stays `pending` in the database; `expired` is reserved for a later cleanup job | A refused accept rolls back its transaction, so it can't also store the status |

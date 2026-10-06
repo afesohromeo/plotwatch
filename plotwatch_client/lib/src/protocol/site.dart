@@ -13,7 +13,8 @@
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
 
 /// Where the project is built: the centre and radius that captures are
-/// checked against (SITE). One per project.
+/// checked against (SITE). One per project, created when the owner validates
+/// the first proposal (decision M2-15).
 abstract class Site
     implements _isc.SerializableModel, _isc.ProtocolSerialization {
   Site._({
@@ -25,6 +26,9 @@ abstract class Site
     required this.radiusM,
     this.addressText,
     this.timezone,
+    required this.validatedProposalId,
+    required this.validatedBy,
+    required this.validatedAt,
     required this.updatedAt,
   });
 
@@ -37,6 +41,9 @@ abstract class Site
     required int radiusM,
     String? addressText,
     String? timezone,
+    required int validatedProposalId,
+    required _isc.UuidValue validatedBy,
+    required DateTime validatedAt,
     required DateTime updatedAt,
   }) = _SiteImpl;
 
@@ -50,6 +57,13 @@ abstract class Site
       radiusM: jsonSerialization['radiusM'] as int,
       addressText: jsonSerialization['addressText'] as String?,
       timezone: jsonSerialization['timezone'] as String?,
+      validatedProposalId: jsonSerialization['validatedProposalId'] as int,
+      validatedBy: _isc.UuidValueJsonExtension.fromJson(
+        jsonSerialization['validatedBy'],
+      ),
+      validatedAt: _isc.DateTimeJsonExtension.fromJson(
+        jsonSerialization['validatedAt'],
+      ),
       updatedAt: _isc.DateTimeJsonExtension.fromJson(
         jsonSerialization['updatedAt'],
       ),
@@ -70,13 +84,20 @@ abstract class Site
   /// 10-digit Plus Code, computed by the server from the centre.
   String plusCode;
 
-  /// 10–500 m (SITE-03).
+  /// 10–500 m, set by the owner when validating (SITE-03, decision M2-16).
   int radiusM;
 
   String? addressText;
 
   /// IANA time zone; no UI in the MVP (decision M2-10).
   String? timezone;
+
+  /// The proposal this location comes from.
+  int validatedProposalId;
+
+  _isc.UuidValue validatedBy;
+
+  DateTime validatedAt;
 
   DateTime updatedAt;
 
@@ -92,6 +113,9 @@ abstract class Site
     int? radiusM,
     String? addressText,
     String? timezone,
+    int? validatedProposalId,
+    _isc.UuidValue? validatedBy,
+    DateTime? validatedAt,
     DateTime? updatedAt,
   });
   @override
@@ -106,6 +130,9 @@ abstract class Site
       'radiusM': radiusM,
       if (addressText != null) 'addressText': addressText,
       if (timezone != null) 'timezone': timezone,
+      'validatedProposalId': validatedProposalId,
+      'validatedBy': validatedBy.toJson(),
+      'validatedAt': validatedAt.toJson(),
       'updatedAt': updatedAt.toJson(),
     };
   }
@@ -122,6 +149,9 @@ abstract class Site
       'radiusM': radiusM,
       if (addressText != null) 'addressText': addressText,
       if (timezone != null) 'timezone': timezone,
+      'validatedProposalId': validatedProposalId,
+      'validatedBy': validatedBy.toJson(),
+      'validatedAt': validatedAt.toJson(),
       'updatedAt': updatedAt.toJson(),
     };
   }
@@ -144,6 +174,9 @@ class _SiteImpl extends Site {
     required int radiusM,
     String? addressText,
     String? timezone,
+    required int validatedProposalId,
+    required _isc.UuidValue validatedBy,
+    required DateTime validatedAt,
     required DateTime updatedAt,
   }) : super._(
          id: id,
@@ -154,6 +187,9 @@ class _SiteImpl extends Site {
          radiusM: radiusM,
          addressText: addressText,
          timezone: timezone,
+         validatedProposalId: validatedProposalId,
+         validatedBy: validatedBy,
+         validatedAt: validatedAt,
          updatedAt: updatedAt,
        );
 
@@ -170,6 +206,9 @@ class _SiteImpl extends Site {
     int? radiusM,
     Object? addressText = _Undefined,
     Object? timezone = _Undefined,
+    int? validatedProposalId,
+    _isc.UuidValue? validatedBy,
+    DateTime? validatedAt,
     DateTime? updatedAt,
   }) {
     return Site(
@@ -181,6 +220,9 @@ class _SiteImpl extends Site {
       radiusM: radiusM ?? this.radiusM,
       addressText: addressText is String? ? addressText : this.addressText,
       timezone: timezone is String? ? timezone : this.timezone,
+      validatedProposalId: validatedProposalId ?? this.validatedProposalId,
+      validatedBy: validatedBy ?? this.validatedBy,
+      validatedAt: validatedAt ?? this.validatedAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }

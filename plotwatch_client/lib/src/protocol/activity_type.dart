@@ -18,6 +18,8 @@ enum ActivityType implements _isc.SerializableModel {
   projectCreated,
   projectUpdated,
   projectStatusChanged,
+  siteProposed,
+  siteProposalRejected,
   siteChanged,
   memberJoined,
   memberRemoved;
@@ -30,6 +32,10 @@ enum ActivityType implements _isc.SerializableModel {
         return ActivityType.projectUpdated;
       case 'projectStatusChanged':
         return ActivityType.projectStatusChanged;
+      case 'siteProposed':
+        return ActivityType.siteProposed;
+      case 'siteProposalRejected':
+        return ActivityType.siteProposalRejected;
       case 'siteChanged':
         return ActivityType.siteChanged;
       case 'memberJoined':

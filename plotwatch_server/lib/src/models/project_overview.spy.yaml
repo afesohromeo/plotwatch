@@ -1,0 +1,8 @@
+### One project as a member sees it: details, validated site and their role.
+class: ProjectOverview
+fields:
+  project: Project
+  ### Null until the owner validates a location (decision M2-15).
+  site: Site?
+  myRole: ProjectRole
+  myCanApprove: bool

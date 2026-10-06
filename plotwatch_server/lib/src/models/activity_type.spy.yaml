@@ -6,6 +6,9 @@ values:
   - projectCreated
   - projectUpdated
   - projectStatusChanged
+  - siteProposed
+  - siteProposalRejected
+  # A proposal was validated: the site was set or moved.
   - siteChanged
   - memberJoined
   - memberRemoved

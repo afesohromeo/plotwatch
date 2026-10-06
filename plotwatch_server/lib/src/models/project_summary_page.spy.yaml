@@ -1,0 +1,6 @@
+### A page of the caller's projects (`_standards/14` §3.1).
+class: ProjectSummaryPage
+fields:
+  items: List<ProjectSummary>
+  page: int
+  pageSize: int

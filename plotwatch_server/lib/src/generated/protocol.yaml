@@ -10,6 +10,26 @@ emailIdp:
   - hasAccount:
 jwtRefresh:
   - refreshAccessToken:
+membership:
+  - createInvitation:
+  - listInvitations:
+  - cancelInvitation:
+  - previewInvitation:
+  - acceptInvitation:
+  - listMembers:
+  - removeMember:
 profile:
   - getMe:
   - updateMe:
+project:
+  - create:
+  - list:
+  - get:
+  - update:
+  - setStatus:
+site:
+  - get:
+  - propose:
+  - listProposals:
+  - validate:
+  - reject:

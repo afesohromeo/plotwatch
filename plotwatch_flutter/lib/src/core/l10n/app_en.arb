@@ -264,6 +264,30 @@
     "@errorCannotRemoveOwner": {
         "description": "AppErrorCode.cannotRemoveOwner"
     },
+    "errorMemberNotFound": "This person isn't a member of the project.",
+    "@errorMemberNotFound": {
+        "description": "AppErrorCode.memberNotFound"
+    },
+    "errorSiteProposalNotFound": "This location proposal doesn't exist in this project.",
+    "@errorSiteProposalNotFound": {
+        "description": "AppErrorCode.siteProposalNotFound"
+    },
+    "errorSiteProposalNotPending": "This location proposal has already been decided or replaced.",
+    "@errorSiteProposalNotPending": {
+        "description": "AppErrorCode.siteProposalNotPending"
+    },
+    "errorSiteAccuracyTooLow": "The GPS position isn't precise enough. Move to open sky and wait until the accuracy is 20 m or better.",
+    "@errorSiteAccuracyTooLow": {
+        "description": "AppErrorCode.siteAccuracyTooLow"
+    },
+    "errorSiteMockLocation": "Your phone reports a simulated location. Turn off any location-faking app and try again.",
+    "@errorSiteMockLocation": {
+        "description": "AppErrorCode.siteMockLocation"
+    },
+    "errorTextTooLong": "This text is too long.",
+    "@errorTextTooLong": {
+        "description": "AppErrorCode.textTooLong"
+    },
     "errorAuthInvalidCredentials": "Wrong email or password.",
     "@errorAuthInvalidCredentials": {
         "description": "AppErrorCode.authInvalidCredentials"

@@ -11,6 +11,8 @@ enum ProjectAction {
   archiveProject,
   manageMembers,
   manageStages,
+  /// The site manager proposes the site from GPS on the plot (SITE-04).
+  proposeSite,
   captureEvidence,
   postUpdates,
   submitStage,
@@ -48,6 +50,7 @@ class PermissionService {
       ProjectAction.archiveProject ||
       ProjectAction.manageMembers ||
       ProjectAction.manageStages => isOwner,
+      ProjectAction.proposeSite ||
       ProjectAction.captureEvidence ||
       ProjectAction.postUpdates ||
       ProjectAction.submitStage ||

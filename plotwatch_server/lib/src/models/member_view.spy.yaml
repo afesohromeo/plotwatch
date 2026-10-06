@@ -1,0 +1,6 @@
+### A member as the members list shows them (MEMB-04).
+class: MemberView
+fields:
+  member: ProjectMember
+  fullName: String?
+  email: String?

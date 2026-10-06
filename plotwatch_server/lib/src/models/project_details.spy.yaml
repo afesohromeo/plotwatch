@@ -1,0 +1,13 @@
+### What the owner enters to create or edit a project (PROJ-01, PROJ-04).
+class: ProjectDetails
+fields:
+  ### 1–100 characters after trimming.
+  name: String
+  ### At most 1,000 characters; blank is saved as none.
+  description: String?
+  type: ProjectType
+  ### ISO 4217 code from the supported list.
+  currencyCode: String
+  plannedStart: DateTime?
+  ### On or after [plannedStart] when both are set.
+  plannedEnd: DateTime?

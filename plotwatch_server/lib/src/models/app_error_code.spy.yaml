@@ -28,6 +28,14 @@ values:
   - invalidInvitationRole
   - alreadyMember
   - cannotRemoveOwner
+  - memberNotFound
+  # Site localization (doc/04b, group D)
+  - siteProposalNotFound
+  - siteProposalNotPending
+  - siteAccuracyTooLow
+  - siteMockLocation
+  # Free text longer than its limit
+  - textTooLong
   # Set by the client from the auth module's exceptions
   - authInvalidCredentials
   - authTooManyAttempts

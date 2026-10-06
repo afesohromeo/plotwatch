@@ -24,6 +24,13 @@ extension AppErrorCodeMessage on AppErrorCode {
         AppErrorCode.invalidInvitationRole => l10n.errorInvalidInvitationRole,
         AppErrorCode.alreadyMember => l10n.errorAlreadyMember,
         AppErrorCode.cannotRemoveOwner => l10n.errorCannotRemoveOwner,
+        AppErrorCode.memberNotFound => l10n.errorMemberNotFound,
+        AppErrorCode.siteProposalNotFound => l10n.errorSiteProposalNotFound,
+        AppErrorCode.siteProposalNotPending =>
+          l10n.errorSiteProposalNotPending,
+        AppErrorCode.siteAccuracyTooLow => l10n.errorSiteAccuracyTooLow,
+        AppErrorCode.siteMockLocation => l10n.errorSiteMockLocation,
+        AppErrorCode.textTooLong => l10n.errorTextTooLong,
         AppErrorCode.authInvalidCredentials => l10n.errorAuthInvalidCredentials,
         AppErrorCode.authTooManyAttempts => l10n.errorAuthTooManyAttempts,
         AppErrorCode.authRequestExpired => l10n.errorAuthRequestExpired,

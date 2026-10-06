@@ -10,6 +10,11 @@
 // ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:plotwatch_server/src/generated/project_details.dart'
+    as _i4y7utee;
+import 'package:plotwatch_server/src/generated/project_role.dart' as _izsiizob;
+import 'package:plotwatch_server/src/generated/project_status.dart'
+    as _ipfaavrx;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
@@ -17,7 +22,10 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
 import '../endpoints/email_idp_endpoint.dart' as _ilutrrxn;
 import '../endpoints/jwt_refresh_endpoint.dart' as _in48dm4x;
+import '../endpoints/membership_endpoint.dart' as _it8meaj6;
 import '../endpoints/profile_endpoint.dart' as _i2cx2pww;
+import '../endpoints/project_endpoint.dart' as _iemg8ri2;
+import '../endpoints/site_endpoint.dart' as _iisfmjap;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
@@ -35,10 +43,28 @@ class Endpoints extends _is.EndpointDispatch {
           'jwtRefresh',
           null,
         ),
+      'membership': _it8meaj6.MembershipEndpoint()
+        ..initialize(
+          server,
+          'membership',
+          null,
+        ),
       'profile': _i2cx2pww.ProfileEndpoint()
         ..initialize(
           server,
           'profile',
+          null,
+        ),
+      'project': _iemg8ri2.ProjectEndpoint()
+        ..initialize(
+          server,
+          'project',
+          null,
+        ),
+      'site': _iisfmjap.SiteEndpoint()
+        ..initialize(
+          server,
+          'site',
           null,
         ),
     };
@@ -285,6 +311,176 @@ class Endpoints extends _is.EndpointDispatch {
         ),
       },
     );
+    connectors['membership'] = _is.EndpointConnector(
+      name: 'membership',
+      endpoint: endpoints['membership']!,
+      methodConnectors: {
+        'createInvitation': _is.MethodConnector(
+          name: 'createInvitation',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'role': _is.ParameterDescription(
+              name: 'role',
+              type: _is.getType<_izsiizob.ProjectRole>(),
+              nullable: false,
+            ),
+            'canApprove': _is.ParameterDescription(
+              name: 'canApprove',
+              type: _is.getType<bool?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['membership'] as _it8meaj6.MembershipEndpoint)
+                      .createInvitation(
+                        session,
+                        params['projectId'],
+                        params['role'],
+                        canApprove: params['canApprove'],
+                      ),
+        ),
+        'listInvitations': _is.MethodConnector(
+          name: 'listInvitations',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['membership'] as _it8meaj6.MembershipEndpoint)
+                      .listInvitations(
+                        session,
+                        params['projectId'],
+                      ),
+        ),
+        'cancelInvitation': _is.MethodConnector(
+          name: 'cancelInvitation',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'invitationId': _is.ParameterDescription(
+              name: 'invitationId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['membership'] as _it8meaj6.MembershipEndpoint)
+                      .cancelInvitation(
+                        session,
+                        params['projectId'],
+                        params['invitationId'],
+                      ),
+        ),
+        'previewInvitation': _is.MethodConnector(
+          name: 'previewInvitation',
+          params: {
+            'code': _is.ParameterDescription(
+              name: 'code',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['membership'] as _it8meaj6.MembershipEndpoint)
+                      .previewInvitation(
+                        session,
+                        params['code'],
+                      ),
+        ),
+        'acceptInvitation': _is.MethodConnector(
+          name: 'acceptInvitation',
+          params: {
+            'code': _is.ParameterDescription(
+              name: 'code',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['membership'] as _it8meaj6.MembershipEndpoint)
+                      .acceptInvitation(
+                        session,
+                        params['code'],
+                      ),
+        ),
+        'listMembers': _is.MethodConnector(
+          name: 'listMembers',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['membership'] as _it8meaj6.MembershipEndpoint)
+                      .listMembers(
+                        session,
+                        params['projectId'],
+                      ),
+        ),
+        'removeMember': _is.MethodConnector(
+          name: 'removeMember',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'memberId': _is.ParameterDescription(
+              name: 'memberId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['membership'] as _it8meaj6.MembershipEndpoint)
+                      .removeMember(
+                        session,
+                        params['projectId'],
+                        params['memberId'],
+                      ),
+        ),
+      },
+    );
     connectors['profile'] = _is.EndpointConnector(
       name: 'profile',
       endpoint: endpoints['profile']!,
@@ -329,6 +525,276 @@ class Endpoints extends _is.EndpointDispatch {
                     countryCode: params['countryCode'],
                     locale: params['locale'],
                   ),
+        ),
+      },
+    );
+    connectors['project'] = _is.EndpointConnector(
+      name: 'project',
+      endpoint: endpoints['project']!,
+      methodConnectors: {
+        'create': _is.MethodConnector(
+          name: 'create',
+          params: {
+            'details': _is.ParameterDescription(
+              name: 'details',
+              type: _is.getType<_i4y7utee.ProjectDetails>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['project'] as _iemg8ri2.ProjectEndpoint).create(
+                    session,
+                    params['details'],
+                  ),
+        ),
+        'list': _is.MethodConnector(
+          name: 'list',
+          params: {
+            'page': _is.ParameterDescription(
+              name: 'page',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
+            'pageSize': _is.ParameterDescription(
+              name: 'pageSize',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['project'] as _iemg8ri2.ProjectEndpoint).list(
+                    session,
+                    page: params['page'],
+                    pageSize: params['pageSize'],
+                  ),
+        ),
+        'get': _is.MethodConnector(
+          name: 'get',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['project'] as _iemg8ri2.ProjectEndpoint).get(
+                    session,
+                    params['projectId'],
+                  ),
+        ),
+        'update': _is.MethodConnector(
+          name: 'update',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'details': _is.ParameterDescription(
+              name: 'details',
+              type: _is.getType<_i4y7utee.ProjectDetails>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['project'] as _iemg8ri2.ProjectEndpoint).update(
+                    session,
+                    params['projectId'],
+                    params['details'],
+                  ),
+        ),
+        'setStatus': _is.MethodConnector(
+          name: 'setStatus',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'status': _is.ParameterDescription(
+              name: 'status',
+              type: _is.getType<_ipfaavrx.ProjectStatus>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['project'] as _iemg8ri2.ProjectEndpoint).setStatus(
+                    session,
+                    params['projectId'],
+                    params['status'],
+                  ),
+        ),
+      },
+    );
+    connectors['site'] = _is.EndpointConnector(
+      name: 'site',
+      endpoint: endpoints['site']!,
+      methodConnectors: {
+        'get': _is.MethodConnector(
+          name: 'get',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['site'] as _iisfmjap.SiteEndpoint).get(
+                session,
+                params['projectId'],
+              ),
+        ),
+        'propose': _is.MethodConnector(
+          name: 'propose',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'lat': _is.ParameterDescription(
+              name: 'lat',
+              type: _is.getType<double>(),
+              nullable: false,
+            ),
+            'lng': _is.ParameterDescription(
+              name: 'lng',
+              type: _is.getType<double>(),
+              nullable: false,
+            ),
+            'accuracyM': _is.ParameterDescription(
+              name: 'accuracyM',
+              type: _is.getType<double>(),
+              nullable: false,
+            ),
+            'isMocked': _is.ParameterDescription(
+              name: 'isMocked',
+              type: _is.getType<bool>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['site'] as _iisfmjap.SiteEndpoint).propose(
+                session,
+                params['projectId'],
+                lat: params['lat'],
+                lng: params['lng'],
+                accuracyM: params['accuracyM'],
+                isMocked: params['isMocked'],
+              ),
+        ),
+        'listProposals': _is.MethodConnector(
+          name: 'listProposals',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['site'] as _iisfmjap.SiteEndpoint).listProposals(
+                    session,
+                    params['projectId'],
+                  ),
+        ),
+        'validate': _is.MethodConnector(
+          name: 'validate',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'proposalId': _is.ParameterDescription(
+              name: 'proposalId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'radiusM': _is.ParameterDescription(
+              name: 'radiusM',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'addressText': _is.ParameterDescription(
+              name: 'addressText',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['site'] as _iisfmjap.SiteEndpoint).validate(
+                session,
+                params['projectId'],
+                params['proposalId'],
+                radiusM: params['radiusM'],
+                addressText: params['addressText'],
+              ),
+        ),
+        'reject': _is.MethodConnector(
+          name: 'reject',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'proposalId': _is.ParameterDescription(
+              name: 'proposalId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'reason': _is.ParameterDescription(
+              name: 'reason',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['site'] as _iisfmjap.SiteEndpoint).reject(
+                session,
+                params['projectId'],
+                params['proposalId'],
+                reason: params['reason'],
+              ),
         ),
       },
     );

@@ -218,6 +218,29 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le propriétaire du projet ne peut pas être retiré.';
 
   @override
+  String get errorMemberNotFound =>
+      'Cette personne n\'est pas membre du projet.';
+
+  @override
+  String get errorSiteProposalNotFound =>
+      'Cette proposition d\'emplacement n\'existe pas dans ce projet.';
+
+  @override
+  String get errorSiteProposalNotPending =>
+      'Cette proposition d\'emplacement a déjà été traitée ou remplacée.';
+
+  @override
+  String get errorSiteAccuracyTooLow =>
+      'La position GPS n\'est pas assez précise. Placez-vous à ciel ouvert et attendez une précision de 20 m ou mieux.';
+
+  @override
+  String get errorSiteMockLocation =>
+      'Votre téléphone indique une position simulée. Désactivez toute application de fausse localisation et réessayez.';
+
+  @override
+  String get errorTextTooLong => 'Ce texte est trop long.';
+
+  @override
   String get errorAuthInvalidCredentials => 'E-mail ou mot de passe incorrect.';
 
   @override

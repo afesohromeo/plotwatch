@@ -1,0 +1,21 @@
+### A site location proposed by a site manager on the plot (decision M2-15).
+### Rows are never deleted: they are the history of the site's location.
+class: SiteProposal
+table: site_proposal
+fields:
+  projectId: int, relation(parent=project, onDelete=Cascade)
+  proposedBy: UuidValue
+  lat: double
+  lng: double
+  ### GPS accuracy of the reading in metres; at most 20 (decision M2-17).
+  accuracyM: double
+  ### When the server received the proposal (trusted time).
+  proposedAt: DateTime
+  status: SiteProposalStatus
+  decidedBy: UuidValue?
+  decidedAt: DateTime?
+  ### Optional, at most 500 characters (decision M2-18).
+  rejectReason: String?
+indexes:
+  site_proposal_project_idx:
+    fields: projectId, status

@@ -11,6 +11,9 @@
 // ignore_for_file: dead_code, unnecessary_type_check
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:plotwatch_client/src/protocol/invitation.dart' as _idw8kw5i;
+import 'package:plotwatch_client/src/protocol/member_view.dart' as _ifqht5qj;
+import 'package:plotwatch_client/src/protocol/site_proposal.dart' as _irbyqz3h;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
@@ -21,30 +24,46 @@ import 'activity_type.dart' as _iorr0e24;
 import 'app_error_code.dart' as _imu8gbx5;
 import 'app_exception.dart' as _it4z223c;
 import 'invitation.dart' as _ix00wubs;
+import 'invitation_preview.dart' as _i8l83u67;
 import 'invitation_status.dart' as _ifbgrtog;
 import 'member_status.dart' as _iolegqnm;
+import 'member_view.dart' as _iwpqxdug;
 import 'my_profile.dart' as _i1hmtol2;
 import 'project.dart' as _ifiazq2p;
+import 'project_details.dart' as _irbn6ip5;
 import 'project_member.dart' as _i7o7d07j;
+import 'project_overview.dart' as _iy1z8w9e;
 import 'project_role.dart' as _i46wx1t7;
 import 'project_status.dart' as _iqsxbscs;
+import 'project_summary.dart' as _ivxocntb;
+import 'project_summary_page.dart' as _i4o32k29;
 import 'project_type.dart' as _irluonl0;
 import 'site.dart' as _iz8v5x4v;
+import 'site_proposal.dart' as _ira79kry;
+import 'site_proposal_status.dart' as _i8b5g94r;
 import 'user_settings.dart' as _iy88a0nt;
 export 'activity_event.dart';
 export 'activity_type.dart';
 export 'app_error_code.dart';
 export 'app_exception.dart';
 export 'invitation.dart';
+export 'invitation_preview.dart';
 export 'invitation_status.dart';
 export 'member_status.dart';
+export 'member_view.dart';
 export 'my_profile.dart';
 export 'project.dart';
+export 'project_details.dart';
 export 'project_member.dart';
+export 'project_overview.dart';
 export 'project_role.dart';
 export 'project_status.dart';
+export 'project_summary.dart';
+export 'project_summary_page.dart';
 export 'project_type.dart';
 export 'site.dart';
+export 'site_proposal.dart';
+export 'site_proposal_status.dart';
 export 'user_settings.dart';
 export 'client.dart';
 
@@ -97,11 +116,17 @@ class Protocol extends _isc.SerializationManager {
     if (t == _ix00wubs.Invitation) {
       return _ix00wubs.Invitation.fromJson(data) as T;
     }
+    if (t == _i8l83u67.InvitationPreview) {
+      return _i8l83u67.InvitationPreview.fromJson(data) as T;
+    }
     if (t == _ifbgrtog.InvitationStatus) {
       return _ifbgrtog.InvitationStatus.fromJson(data) as T;
     }
     if (t == _iolegqnm.MemberStatus) {
       return _iolegqnm.MemberStatus.fromJson(data) as T;
+    }
+    if (t == _iwpqxdug.MemberView) {
+      return _iwpqxdug.MemberView.fromJson(data) as T;
     }
     if (t == _i1hmtol2.MyProfile) {
       return _i1hmtol2.MyProfile.fromJson(data) as T;
@@ -109,8 +134,14 @@ class Protocol extends _isc.SerializationManager {
     if (t == _ifiazq2p.Project) {
       return _ifiazq2p.Project.fromJson(data) as T;
     }
+    if (t == _irbn6ip5.ProjectDetails) {
+      return _irbn6ip5.ProjectDetails.fromJson(data) as T;
+    }
     if (t == _i7o7d07j.ProjectMember) {
       return _i7o7d07j.ProjectMember.fromJson(data) as T;
+    }
+    if (t == _iy1z8w9e.ProjectOverview) {
+      return _iy1z8w9e.ProjectOverview.fromJson(data) as T;
     }
     if (t == _i46wx1t7.ProjectRole) {
       return _i46wx1t7.ProjectRole.fromJson(data) as T;
@@ -118,11 +149,23 @@ class Protocol extends _isc.SerializationManager {
     if (t == _iqsxbscs.ProjectStatus) {
       return _iqsxbscs.ProjectStatus.fromJson(data) as T;
     }
+    if (t == _ivxocntb.ProjectSummary) {
+      return _ivxocntb.ProjectSummary.fromJson(data) as T;
+    }
+    if (t == _i4o32k29.ProjectSummaryPage) {
+      return _i4o32k29.ProjectSummaryPage.fromJson(data) as T;
+    }
     if (t == _irluonl0.ProjectType) {
       return _irluonl0.ProjectType.fromJson(data) as T;
     }
     if (t == _iz8v5x4v.Site) {
       return _iz8v5x4v.Site.fromJson(data) as T;
+    }
+    if (t == _ira79kry.SiteProposal) {
+      return _ira79kry.SiteProposal.fromJson(data) as T;
+    }
+    if (t == _i8b5g94r.SiteProposalStatus) {
+      return _i8b5g94r.SiteProposalStatus.fromJson(data) as T;
     }
     if (t == _iy88a0nt.UserSettings) {
       return _iy88a0nt.UserSettings.fromJson(data) as T;
@@ -143,6 +186,10 @@ class Protocol extends _isc.SerializationManager {
     if (t == _isc.getType<_ix00wubs.Invitation?>()) {
       return (data != null ? _ix00wubs.Invitation.fromJson(data) : null) as T;
     }
+    if (t == _isc.getType<_i8l83u67.InvitationPreview?>()) {
+      return (data != null ? _i8l83u67.InvitationPreview.fromJson(data) : null)
+          as T;
+    }
     if (t == _isc.getType<_ifbgrtog.InvitationStatus?>()) {
       return (data != null ? _ifbgrtog.InvitationStatus.fromJson(data) : null)
           as T;
@@ -150,14 +197,25 @@ class Protocol extends _isc.SerializationManager {
     if (t == _isc.getType<_iolegqnm.MemberStatus?>()) {
       return (data != null ? _iolegqnm.MemberStatus.fromJson(data) : null) as T;
     }
+    if (t == _isc.getType<_iwpqxdug.MemberView?>()) {
+      return (data != null ? _iwpqxdug.MemberView.fromJson(data) : null) as T;
+    }
     if (t == _isc.getType<_i1hmtol2.MyProfile?>()) {
       return (data != null ? _i1hmtol2.MyProfile.fromJson(data) : null) as T;
     }
     if (t == _isc.getType<_ifiazq2p.Project?>()) {
       return (data != null ? _ifiazq2p.Project.fromJson(data) : null) as T;
     }
+    if (t == _isc.getType<_irbn6ip5.ProjectDetails?>()) {
+      return (data != null ? _irbn6ip5.ProjectDetails.fromJson(data) : null)
+          as T;
+    }
     if (t == _isc.getType<_i7o7d07j.ProjectMember?>()) {
       return (data != null ? _i7o7d07j.ProjectMember.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_iy1z8w9e.ProjectOverview?>()) {
+      return (data != null ? _iy1z8w9e.ProjectOverview.fromJson(data) : null)
           as T;
     }
     if (t == _isc.getType<_i46wx1t7.ProjectRole?>()) {
@@ -167,11 +225,26 @@ class Protocol extends _isc.SerializationManager {
       return (data != null ? _iqsxbscs.ProjectStatus.fromJson(data) : null)
           as T;
     }
+    if (t == _isc.getType<_ivxocntb.ProjectSummary?>()) {
+      return (data != null ? _ivxocntb.ProjectSummary.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_i4o32k29.ProjectSummaryPage?>()) {
+      return (data != null ? _i4o32k29.ProjectSummaryPage.fromJson(data) : null)
+          as T;
+    }
     if (t == _isc.getType<_irluonl0.ProjectType?>()) {
       return (data != null ? _irluonl0.ProjectType.fromJson(data) : null) as T;
     }
     if (t == _isc.getType<_iz8v5x4v.Site?>()) {
       return (data != null ? _iz8v5x4v.Site.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_ira79kry.SiteProposal?>()) {
+      return (data != null ? _ira79kry.SiteProposal.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_i8b5g94r.SiteProposalStatus?>()) {
+      return (data != null ? _i8b5g94r.SiteProposalStatus.fromJson(data) : null)
+          as T;
     }
     if (t == _isc.getType<_iy88a0nt.UserSettings?>()) {
       return (data != null ? _iy88a0nt.UserSettings.fromJson(data) : null) as T;
@@ -191,6 +264,30 @@ class Protocol extends _isc.SerializationManager {
               : null)
           as T;
     }
+    if (t == List<_ivxocntb.ProjectSummary>) {
+      return (data as List)
+              .map((e) => deserialize<_ivxocntb.ProjectSummary>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_idw8kw5i.Invitation>) {
+      return (data as List)
+              .map((e) => deserialize<_idw8kw5i.Invitation>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_ifqht5qj.MemberView>) {
+      return (data as List)
+              .map((e) => deserialize<_ifqht5qj.MemberView>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_irbyqz3h.SiteProposal>) {
+      return (data as List)
+              .map((e) => deserialize<_irbyqz3h.SiteProposal>(e))
+              .toList()
+          as T;
+    }
     try {
       return _iaic.Protocol().deserialize<T>(data, t);
     } on _isc.DeserializationTypeNotFoundException catch (_) {}
@@ -207,15 +304,23 @@ class Protocol extends _isc.SerializationManager {
       _imu8gbx5.AppErrorCode => 'AppErrorCode',
       _it4z223c.AppException => 'AppException',
       _ix00wubs.Invitation => 'Invitation',
+      _i8l83u67.InvitationPreview => 'InvitationPreview',
       _ifbgrtog.InvitationStatus => 'InvitationStatus',
       _iolegqnm.MemberStatus => 'MemberStatus',
+      _iwpqxdug.MemberView => 'MemberView',
       _i1hmtol2.MyProfile => 'MyProfile',
       _ifiazq2p.Project => 'Project',
+      _irbn6ip5.ProjectDetails => 'ProjectDetails',
       _i7o7d07j.ProjectMember => 'ProjectMember',
+      _iy1z8w9e.ProjectOverview => 'ProjectOverview',
       _i46wx1t7.ProjectRole => 'ProjectRole',
       _iqsxbscs.ProjectStatus => 'ProjectStatus',
+      _ivxocntb.ProjectSummary => 'ProjectSummary',
+      _i4o32k29.ProjectSummaryPage => 'ProjectSummaryPage',
       _irluonl0.ProjectType => 'ProjectType',
       _iz8v5x4v.Site => 'Site',
+      _ira79kry.SiteProposal => 'SiteProposal',
+      _i8b5g94r.SiteProposalStatus => 'SiteProposalStatus',
       _iy88a0nt.UserSettings => 'UserSettings',
       _ => null,
     };
@@ -241,24 +346,40 @@ class Protocol extends _isc.SerializationManager {
         return 'AppException';
       case _ix00wubs.Invitation():
         return 'Invitation';
+      case _i8l83u67.InvitationPreview():
+        return 'InvitationPreview';
       case _ifbgrtog.InvitationStatus():
         return 'InvitationStatus';
       case _iolegqnm.MemberStatus():
         return 'MemberStatus';
+      case _iwpqxdug.MemberView():
+        return 'MemberView';
       case _i1hmtol2.MyProfile():
         return 'MyProfile';
       case _ifiazq2p.Project():
         return 'Project';
+      case _irbn6ip5.ProjectDetails():
+        return 'ProjectDetails';
       case _i7o7d07j.ProjectMember():
         return 'ProjectMember';
+      case _iy1z8w9e.ProjectOverview():
+        return 'ProjectOverview';
       case _i46wx1t7.ProjectRole():
         return 'ProjectRole';
       case _iqsxbscs.ProjectStatus():
         return 'ProjectStatus';
+      case _ivxocntb.ProjectSummary():
+        return 'ProjectSummary';
+      case _i4o32k29.ProjectSummaryPage():
+        return 'ProjectSummaryPage';
       case _irluonl0.ProjectType():
         return 'ProjectType';
       case _iz8v5x4v.Site():
         return 'Site';
+      case _ira79kry.SiteProposal():
+        return 'SiteProposal';
+      case _i8b5g94r.SiteProposalStatus():
+        return 'SiteProposalStatus';
       case _iy88a0nt.UserSettings():
         return 'UserSettings';
     }
@@ -298,11 +419,17 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName == 'Invitation') {
       return deserialize<_ix00wubs.Invitation>(data['data']);
     }
+    if (dataClassName == 'InvitationPreview') {
+      return deserialize<_i8l83u67.InvitationPreview>(data['data']);
+    }
     if (dataClassName == 'InvitationStatus') {
       return deserialize<_ifbgrtog.InvitationStatus>(data['data']);
     }
     if (dataClassName == 'MemberStatus') {
       return deserialize<_iolegqnm.MemberStatus>(data['data']);
+    }
+    if (dataClassName == 'MemberView') {
+      return deserialize<_iwpqxdug.MemberView>(data['data']);
     }
     if (dataClassName == 'MyProfile') {
       return deserialize<_i1hmtol2.MyProfile>(data['data']);
@@ -310,8 +437,14 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName == 'Project') {
       return deserialize<_ifiazq2p.Project>(data['data']);
     }
+    if (dataClassName == 'ProjectDetails') {
+      return deserialize<_irbn6ip5.ProjectDetails>(data['data']);
+    }
     if (dataClassName == 'ProjectMember') {
       return deserialize<_i7o7d07j.ProjectMember>(data['data']);
+    }
+    if (dataClassName == 'ProjectOverview') {
+      return deserialize<_iy1z8w9e.ProjectOverview>(data['data']);
     }
     if (dataClassName == 'ProjectRole') {
       return deserialize<_i46wx1t7.ProjectRole>(data['data']);
@@ -319,11 +452,23 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName == 'ProjectStatus') {
       return deserialize<_iqsxbscs.ProjectStatus>(data['data']);
     }
+    if (dataClassName == 'ProjectSummary') {
+      return deserialize<_ivxocntb.ProjectSummary>(data['data']);
+    }
+    if (dataClassName == 'ProjectSummaryPage') {
+      return deserialize<_i4o32k29.ProjectSummaryPage>(data['data']);
+    }
     if (dataClassName == 'ProjectType') {
       return deserialize<_irluonl0.ProjectType>(data['data']);
     }
     if (dataClassName == 'Site') {
       return deserialize<_iz8v5x4v.Site>(data['data']);
+    }
+    if (dataClassName == 'SiteProposal') {
+      return deserialize<_ira79kry.SiteProposal>(data['data']);
+    }
+    if (dataClassName == 'SiteProposalStatus') {
+      return deserialize<_i8b5g94r.SiteProposalStatus>(data['data']);
     }
     if (dataClassName == 'UserSettings') {
       return deserialize<_iy88a0nt.UserSettings>(data['data']);

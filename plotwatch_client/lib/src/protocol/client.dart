@@ -12,7 +12,22 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _ida;
 import 'package:http/http.dart' as _i85jenna;
+import 'package:plotwatch_client/src/protocol/invitation.dart' as _idw8kw5i;
+import 'package:plotwatch_client/src/protocol/invitation_preview.dart'
+    as _idbqcfcc;
+import 'package:plotwatch_client/src/protocol/member_view.dart' as _ifqht5qj;
 import 'package:plotwatch_client/src/protocol/my_profile.dart' as _iclzzlcy;
+import 'package:plotwatch_client/src/protocol/project_details.dart'
+    as _iailnz8l;
+import 'package:plotwatch_client/src/protocol/project_member.dart' as _ibpqw7ry;
+import 'package:plotwatch_client/src/protocol/project_overview.dart'
+    as _ixsm3hkh;
+import 'package:plotwatch_client/src/protocol/project_role.dart' as _iei5qef1;
+import 'package:plotwatch_client/src/protocol/project_status.dart' as _id1x6c7u;
+import 'package:plotwatch_client/src/protocol/project_summary_page.dart'
+    as _i5ea8tcf;
+import 'package:plotwatch_client/src/protocol/site.dart' as _iw3fvswq;
+import 'package:plotwatch_client/src/protocol/site_proposal.dart' as _irbyqz3h;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
@@ -266,6 +281,84 @@ class EndpointJwtRefresh extends _iacc.EndpointRefreshJwtTokens {
       );
 }
 
+/// Invitations and members (MEMB-01–05, 08). Thin: sign-in → permission →
+/// validate → one service call (`_standards/14` §4.2).
+/// {@category Endpoint}
+class EndpointMembership extends _isc.EndpointRef {
+  EndpointMembership(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'membership';
+
+  _ida.Future<_idw8kw5i.Invitation> createInvitation(
+    int projectId,
+    _iei5qef1.ProjectRole role, {
+    bool? canApprove,
+  }) => caller.callServerEndpoint<_idw8kw5i.Invitation>(
+    'membership',
+    'createInvitation',
+    {
+      'projectId': projectId,
+      'role': role,
+      'canApprove': canApprove,
+    },
+  );
+
+  _ida.Future<List<_idw8kw5i.Invitation>> listInvitations(int projectId) =>
+      caller.callServerEndpoint<List<_idw8kw5i.Invitation>>(
+        'membership',
+        'listInvitations',
+        {'projectId': projectId},
+      );
+
+  _ida.Future<void> cancelInvitation(
+    int projectId,
+    int invitationId,
+  ) => caller.callServerEndpoint<void>(
+    'membership',
+    'cancelInvitation',
+    {
+      'projectId': projectId,
+      'invitationId': invitationId,
+    },
+  );
+
+  /// Signed-in only: the code is the authorization (MEMB-03).
+  _ida.Future<_idbqcfcc.InvitationPreview> previewInvitation(String code) =>
+      caller.callServerEndpoint<_idbqcfcc.InvitationPreview>(
+        'membership',
+        'previewInvitation',
+        {'code': code},
+      );
+
+  /// Signed-in only: the code is the authorization (MEMB-03).
+  _ida.Future<_ibpqw7ry.ProjectMember> acceptInvitation(String code) =>
+      caller.callServerEndpoint<_ibpqw7ry.ProjectMember>(
+        'membership',
+        'acceptInvitation',
+        {'code': code},
+      );
+
+  _ida.Future<List<_ifqht5qj.MemberView>> listMembers(int projectId) =>
+      caller.callServerEndpoint<List<_ifqht5qj.MemberView>>(
+        'membership',
+        'listMembers',
+        {'projectId': projectId},
+      );
+
+  _ida.Future<void> removeMember(
+    int projectId,
+    int memberId,
+  ) => caller.callServerEndpoint<void>(
+    'membership',
+    'removeMember',
+    {
+      'projectId': projectId,
+      'memberId': memberId,
+    },
+  );
+}
+
 /// The signed-in user's own profile (PROF-01–03).
 /// Thin: sign-in → validate → one service call (`_standards/14` §4.2).
 /// {@category Endpoint}
@@ -293,6 +386,145 @@ class EndpointProfile extends _isc.EndpointRef {
       'fullName': fullName,
       'countryCode': countryCode,
       'locale': locale,
+    },
+  );
+}
+
+/// Projects (PROJ-01–05). Thin: sign-in → permission → validate → one
+/// service call (`_standards/14` §4.2).
+/// {@category Endpoint}
+class EndpointProject extends _isc.EndpointRef {
+  EndpointProject(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'project';
+
+  /// Any signed-in user can create a project and becomes its owner.
+  _ida.Future<_ixsm3hkh.ProjectOverview> create(
+    _iailnz8l.ProjectDetails details,
+  ) => caller.callServerEndpoint<_ixsm3hkh.ProjectOverview>(
+    'project',
+    'create',
+    {'details': details},
+  );
+
+  /// The caller's projects, a page at a time (`_standards/14` §3.1).
+  /// Nullable instead of default values: the generated client makes a named
+  /// parameter with a default required (Serverpod 4.0.3).
+  _ida.Future<_i5ea8tcf.ProjectSummaryPage> list({
+    int? page,
+    int? pageSize,
+  }) => caller.callServerEndpoint<_i5ea8tcf.ProjectSummaryPage>(
+    'project',
+    'list',
+    {
+      'page': page,
+      'pageSize': pageSize,
+    },
+  );
+
+  _ida.Future<_ixsm3hkh.ProjectOverview> get(int projectId) =>
+      caller.callServerEndpoint<_ixsm3hkh.ProjectOverview>(
+        'project',
+        'get',
+        {'projectId': projectId},
+      );
+
+  _ida.Future<_ixsm3hkh.ProjectOverview> update(
+    int projectId,
+    _iailnz8l.ProjectDetails details,
+  ) => caller.callServerEndpoint<_ixsm3hkh.ProjectOverview>(
+    'project',
+    'update',
+    {
+      'projectId': projectId,
+      'details': details,
+    },
+  );
+
+  _ida.Future<_ixsm3hkh.ProjectOverview> setStatus(
+    int projectId,
+    _id1x6c7u.ProjectStatus status,
+  ) => caller.callServerEndpoint<_ixsm3hkh.ProjectOverview>(
+    'project',
+    'setStatus',
+    {
+      'projectId': projectId,
+      'status': status,
+    },
+  );
+}
+
+/// The site's location (SITE-03, 04, 07; decision M2-15). Thin: sign-in →
+/// permission → validate → one service call (`_standards/14` §4.2).
+/// {@category Endpoint}
+class EndpointSite extends _isc.EndpointRef {
+  EndpointSite(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'site';
+
+  /// The validated site, or null while the project waits for one.
+  _ida.Future<_iw3fvswq.Site?> get(int projectId) =>
+      caller.callServerEndpoint<_iw3fvswq.Site?>(
+        'site',
+        'get',
+        {'projectId': projectId},
+      );
+
+  /// The site manager's GPS reading on the plot (phone app only).
+  _ida.Future<_irbyqz3h.SiteProposal> propose(
+    int projectId, {
+    required double lat,
+    required double lng,
+    required double accuracyM,
+    required bool isMocked,
+  }) => caller.callServerEndpoint<_irbyqz3h.SiteProposal>(
+    'site',
+    'propose',
+    {
+      'projectId': projectId,
+      'lat': lat,
+      'lng': lng,
+      'accuracyM': accuracyM,
+      'isMocked': isMocked,
+    },
+  );
+
+  _ida.Future<List<_irbyqz3h.SiteProposal>> listProposals(int projectId) =>
+      caller.callServerEndpoint<List<_irbyqz3h.SiteProposal>>(
+        'site',
+        'listProposals',
+        {'projectId': projectId},
+      );
+
+  _ida.Future<_iw3fvswq.Site> validate(
+    int projectId,
+    int proposalId, {
+    required int radiusM,
+    String? addressText,
+  }) => caller.callServerEndpoint<_iw3fvswq.Site>(
+    'site',
+    'validate',
+    {
+      'projectId': projectId,
+      'proposalId': proposalId,
+      'radiusM': radiusM,
+      'addressText': addressText,
+    },
+  );
+
+  _ida.Future<void> reject(
+    int projectId,
+    int proposalId, {
+    String? reason,
+  }) => caller.callServerEndpoint<void>(
+    'site',
+    'reject',
+    {
+      'projectId': projectId,
+      'proposalId': proposalId,
+      'reason': reason,
     },
   );
 }
@@ -337,7 +569,10 @@ class Client extends _isc.ServerpodClientShared {
        ) {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
+    membership = EndpointMembership(this);
     profile = EndpointProfile(this);
+    project = EndpointProject(this);
+    site = EndpointSite(this);
     modules = Modules(this);
   }
 
@@ -345,7 +580,13 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointJwtRefresh jwtRefresh;
 
+  late final EndpointMembership membership;
+
   late final EndpointProfile profile;
+
+  late final EndpointProject project;
+
+  late final EndpointSite site;
 
   late final Modules modules;
 
@@ -353,7 +594,10 @@ class Client extends _isc.ServerpodClientShared {
   Map<String, _isc.EndpointRef> get endpointRefLookup => {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
+    'membership': membership,
     'profile': profile,
+    'project': project,
+    'site': site,
   };
 
   @override

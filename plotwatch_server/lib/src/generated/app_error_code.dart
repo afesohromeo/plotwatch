@@ -37,6 +37,12 @@ enum AppErrorCode implements _is.SerializableModel {
   invalidInvitationRole,
   alreadyMember,
   cannotRemoveOwner,
+  memberNotFound,
+  siteProposalNotFound,
+  siteProposalNotPending,
+  siteAccuracyTooLow,
+  siteMockLocation,
+  textTooLong,
   authInvalidCredentials,
   authTooManyAttempts,
   authRequestExpired,
@@ -83,6 +89,18 @@ enum AppErrorCode implements _is.SerializableModel {
         return AppErrorCode.alreadyMember;
       case 'cannotRemoveOwner':
         return AppErrorCode.cannotRemoveOwner;
+      case 'memberNotFound':
+        return AppErrorCode.memberNotFound;
+      case 'siteProposalNotFound':
+        return AppErrorCode.siteProposalNotFound;
+      case 'siteProposalNotPending':
+        return AppErrorCode.siteProposalNotPending;
+      case 'siteAccuracyTooLow':
+        return AppErrorCode.siteAccuracyTooLow;
+      case 'siteMockLocation':
+        return AppErrorCode.siteMockLocation;
+      case 'textTooLong':
+        return AppErrorCode.textTooLong;
       case 'authInvalidCredentials':
         return AppErrorCode.authInvalidCredentials;
       case 'authTooManyAttempts':

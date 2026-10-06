@@ -12,9 +12,9 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
 
-/// An invitation can be used once (MEMB-02). `expired` is set when someone
-/// tries a code after its expiry; until then a pending code past its expiry is
-/// treated as expired.
+/// An invitation can be used once (MEMB-02). A pending code past its expiry
+/// date is refused as expired; the stored status stays `pending` (no cleanup
+/// job in the MVP), so `expired` is reserved for that later job.
 enum InvitationStatus implements _isc.SerializableModel {
   pending,
   accepted,

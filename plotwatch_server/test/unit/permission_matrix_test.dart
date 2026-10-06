@@ -16,6 +16,7 @@ const _matrix = <ProjectAction, List<bool>>{
   ProjectAction.archiveProject: [_y, _n, _n, _n, _n],
   ProjectAction.manageMembers: [_y, _n, _n, _n, _n],
   ProjectAction.manageStages: [_y, _n, _n, _n, _n],
+  ProjectAction.proposeSite: [_n, _n, _n, _n, _y],
   ProjectAction.captureEvidence: [_n, _n, _n, _n, _y],
   ProjectAction.postUpdates: [_n, _n, _n, _n, _y],
   ProjectAction.submitStage: [_n, _n, _n, _n, _y],

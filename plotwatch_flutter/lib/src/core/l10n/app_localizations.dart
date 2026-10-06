@@ -476,6 +476,42 @@ abstract class AppLocalizations {
   /// **'The project owner can\'t be removed.'**
   String get errorCannotRemoveOwner;
 
+  /// AppErrorCode.memberNotFound
+  ///
+  /// In en, this message translates to:
+  /// **'This person isn\'t a member of the project.'**
+  String get errorMemberNotFound;
+
+  /// AppErrorCode.siteProposalNotFound
+  ///
+  /// In en, this message translates to:
+  /// **'This location proposal doesn\'t exist in this project.'**
+  String get errorSiteProposalNotFound;
+
+  /// AppErrorCode.siteProposalNotPending
+  ///
+  /// In en, this message translates to:
+  /// **'This location proposal has already been decided or replaced.'**
+  String get errorSiteProposalNotPending;
+
+  /// AppErrorCode.siteAccuracyTooLow
+  ///
+  /// In en, this message translates to:
+  /// **'The GPS position isn\'t precise enough. Move to open sky and wait until the accuracy is 20 m or better.'**
+  String get errorSiteAccuracyTooLow;
+
+  /// AppErrorCode.siteMockLocation
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone reports a simulated location. Turn off any location-faking app and try again.'**
+  String get errorSiteMockLocation;
+
+  /// AppErrorCode.textTooLong
+  ///
+  /// In en, this message translates to:
+  /// **'This text is too long.'**
+  String get errorTextTooLong;
+
   /// AppErrorCode.authInvalidCredentials
   ///
   /// In en, this message translates to:

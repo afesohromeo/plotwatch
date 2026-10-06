@@ -1,0 +1,9 @@
+### What someone sees before accepting an invitation (MEMB-03).
+class: InvitationPreview
+fields:
+  projectName: String
+  role: ProjectRole
+  canApprove: bool
+  ### Null when the inviter has no name in their profile.
+  inviterName: String?
+  expiresAt: DateTime

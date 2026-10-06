@@ -1,0 +1,9 @@
+### Life of a site location proposal (decision M2-15).
+enum: SiteProposalStatus
+serialized: byName
+values:
+  - pending
+  - validated
+  - rejected
+  # A newer proposal replaced it before the owner decided.
+  - superseded

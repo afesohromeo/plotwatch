@@ -1,0 +1,7 @@
+### One row of the project list (PROJ-03).
+class: ProjectSummary
+fields:
+  project: Project
+  myRole: ProjectRole
+  ### 0–100; computed from the stages from M3 on, 0 until then.
+  progressPercent: int

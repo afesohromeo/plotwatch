@@ -215,6 +215,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorCannotRemoveOwner => 'The project owner can\'t be removed.';
 
   @override
+  String get errorMemberNotFound =>
+      'This person isn\'t a member of the project.';
+
+  @override
+  String get errorSiteProposalNotFound =>
+      'This location proposal doesn\'t exist in this project.';
+
+  @override
+  String get errorSiteProposalNotPending =>
+      'This location proposal has already been decided or replaced.';
+
+  @override
+  String get errorSiteAccuracyTooLow =>
+      'The GPS position isn\'t precise enough. Move to open sky and wait until the accuracy is 20 m or better.';
+
+  @override
+  String get errorSiteMockLocation =>
+      'Your phone reports a simulated location. Turn off any location-faking app and try again.';
+
+  @override
+  String get errorTextTooLong => 'This text is too long.';
+
+  @override
   String get errorAuthInvalidCredentials => 'Wrong email or password.';
 
   @override
