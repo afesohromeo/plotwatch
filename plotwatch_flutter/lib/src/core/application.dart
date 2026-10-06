@@ -15,15 +15,49 @@ class Application extends StatelessWidget {
         RepositoryProvider(create: (_) => AuthRepository()),
         RepositoryProvider(create: (_) => ProfileRepository()),
       ],
-      child: BlocProvider(
-        create: (context) => AuthenticationBloc(
-          authRepository: context.read<AuthRepository>(),
-        )..add(const AuthenticationEvent.started()),
-        child: Provider<RouteManager>(
-          lazy: true,
-          create: (context) =>
-              RouteManager(context.read<AuthenticationBloc>()),
-          child: const ApplicationView(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthenticationBloc(
+              authRepository: context.read<AuthRepository>(),
+            )..add(const AuthenticationEvent.started()),
+          ),
+          BlocProvider(
+            create: (context) {
+              final bloc = ProfileBloc(
+                profileRepository: context.read<ProfileRepository>(),
+              );
+              // Signed in from a restored session: load the profile now
+              // (the listener below only sees later changes).
+              if (context.read<AuthenticationBloc>().state.status ==
+                  AuthenticationStatus.authenticated) {
+                bloc.add(const ProfileEvent.fetchMe());
+              }
+              return bloc;
+            },
+          ),
+        ],
+        // The profile follows the session; coordinated here so no BLoC
+        // calls another (_standards/02).
+        child: BlocListener<AuthenticationBloc, AuthenticationState>(
+          listenWhen: (previous, current) => previous.status != current.status,
+          listener: (context, state) {
+            final profileBloc = context.read<ProfileBloc>();
+            switch (state.status) {
+              case AuthenticationStatus.authenticated:
+                profileBloc.add(const ProfileEvent.fetchMe());
+              case AuthenticationStatus.unauthenticated:
+                profileBloc.add(const ProfileEvent.reset());
+              case AuthenticationStatus.unknown:
+                break;
+            }
+          },
+          child: Provider<RouteManager>(
+            lazy: true,
+            create: (context) =>
+                RouteManager(context.read<AuthenticationBloc>()),
+            child: const ApplicationView(),
+          ),
         ),
       ),
     );

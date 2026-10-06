@@ -151,7 +151,7 @@ class _SearchableDropdownFieldState<T>
                       },
                       labelText: l10n.search,
                       showSuffixIcon: false,
-                      bgColor: customColors.surface,
+                      bgColor: customColors.ground,
                       labelColor: customColors.black1.withValues(alpha: .7),
                     ),
                     const SizedBox(height: 8),
@@ -232,7 +232,8 @@ class _SearchableDropdownFieldState<T>
           : widget.isFailure
               ? IconButton(
                   icon:
-                      Icon(Icons.refresh_rounded, color: Colors.red, size: 20),
+                      Icon(Icons.refresh_rounded,
+                          color: customColors.unverified, size: 20),
                   onPressed: widget.onRetry,
                 )
               : hasFilled

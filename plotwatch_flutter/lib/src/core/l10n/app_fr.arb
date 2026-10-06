@@ -68,5 +68,15 @@
     "validatePasswordMismatch": "Les mots de passe ne correspondent pas",
     "signInHeading": "Bon retour",
     "showPassword": "Afficher le mot de passe",
-    "hidePassword": "Masquer le mot de passe"
+    "hidePassword": "Masquer le mot de passe",
+    "profileTitle": "Profil",
+    "labelCountry": "Pays",
+    "selectCountry": "Sélectionnez votre pays",
+    "labelLanguage": "Langue",
+    "languageEnglish": "English",
+    "languageFrench": "Français",
+    "saveChanges": "Enregistrer",
+    "profileSaved": "Votre profil a été enregistré.",
+    "errorProfileLoad": "Impossible de charger votre profil. Réessayez.",
+    "errorProfileSave": "Impossible d'enregistrer votre profil. Réessayez."
 }

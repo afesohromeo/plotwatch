@@ -13,6 +13,14 @@ void main() {
       });
     }
 
+    test('when opening the profile page then it goes to the welcome page', () {
+      expect(
+        RouteManager.redirectFor(
+            AuthenticationStatus.unauthenticated, profilePage),
+        welcomePage,
+      );
+    });
+
     test('when opening the home page then it goes to the welcome page', () {
       expect(
         RouteManager.redirectFor(AuthenticationStatus.unauthenticated, homePage),

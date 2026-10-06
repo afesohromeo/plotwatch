@@ -94,3 +94,7 @@ String formatDate(DateTime? date,
           ? DateFormat('EEE d MMM yyyy', 'fr_FR').format(date)
           : DateFormat('d MMM yyyy', 'fr_FR').format(date);
 }
+
+/// App languages (D-8). Mirrors the server's ProfileService.supportedLocales.
+const List<String> supportedLanguageCodes = ['en', 'fr'];
+const String defaultLanguageCode = 'en';

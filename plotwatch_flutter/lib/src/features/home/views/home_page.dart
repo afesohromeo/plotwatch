@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 /// Signed-in placeholder until the project list arrives in M2 (decision M1-8).
@@ -7,6 +8,7 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   static const signOutButtonKey = Key('home.signOut');
+  static const profileButtonKey = Key('home.profile');
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,13 @@ class HomePage extends StatelessWidget {
             child: Text(l10n.homeTitle),
           ),
           actions: [
+            IconButton(
+              key: profileButtonKey,
+              tooltip: l10n.profileTitle,
+              color: customColors.primary,
+              onPressed: () => context.goNamed(profileRouteName),
+              icon: const Icon(Icons.person_outline_rounded),
+            ),
             TextButton.icon(
               key: signOutButtonKey,
               onPressed: () => context

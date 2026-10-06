@@ -72,8 +72,9 @@ class InputField extends StatelessWidget {
   final VisualDensity? visualDensity;
   final AutovalidateMode autovalidateMode;
 
-  /// The label sits above the field (doc/05-design-system.md §5);
-  /// [MergeSemantics] keeps it attached to the field for screen readers.
+  /// The label sits above the field (doc/05-design-system.md §5); screen
+  /// readers read it just before the field. (No MergeSemantics: fields with
+  /// their own tap actions, such as SearchableDropdownField, break it.)
   /// Borders, colours and text styles come from the theme.
   @override
   Widget build(BuildContext context) {
@@ -118,16 +119,14 @@ class InputField extends StatelessWidget {
 
     if (labelText == null) return field;
 
-    return MergeSemantics(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(labelText!, style: context.textTheme.labelMedium),
-          const Gap.vertical(height: 6),
-          field,
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(labelText!, style: context.textTheme.labelMedium),
+        const Gap.vertical(height: 6),
+        field,
+      ],
     );
   }
 }

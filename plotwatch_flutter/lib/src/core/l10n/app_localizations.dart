@@ -511,6 +511,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hide password'**
   String get hidePassword;
+
+  /// Profile page title and the home action that opens it
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileTitle;
+
+  /// Country field label on the profile page
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get labelCountry;
+
+  /// Hint of the country picker
+  ///
+  /// In en, this message translates to:
+  /// **'Select your country'**
+  String get selectCountry;
+
+  /// Language selector label on the profile page
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get labelLanguage;
+
+  /// Language option; shown in its own language
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// Language option; shown in its own language
+  ///
+  /// In en, this message translates to:
+  /// **'Français'**
+  String get languageFrench;
+
+  /// Save button on the profile page
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get saveChanges;
+
+  /// Success dialog after saving the profile
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile has been saved.'**
+  String get profileSaved;
+
+  /// Unexpected error while loading the profile
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load your profile. Try again.'**
+  String get errorProfileLoad;
+
+  /// Unexpected error while saving the profile
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save your profile. Try again.'**
+  String get errorProfileSave;
 }
 
 class _AppLocalizationsDelegate

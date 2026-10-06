@@ -225,4 +225,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hidePassword => 'Hide password';
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get labelCountry => 'Country';
+
+  @override
+  String get selectCountry => 'Select your country';
+
+  @override
+  String get labelLanguage => 'Language';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageFrench => 'Français';
+
+  @override
+  String get saveChanges => 'Save changes';
+
+  @override
+  String get profileSaved => 'Your profile has been saved.';
+
+  @override
+  String get errorProfileLoad => 'Could not load your profile. Try again.';
+
+  @override
+  String get errorProfileSave => 'Could not save your profile. Try again.';
 }

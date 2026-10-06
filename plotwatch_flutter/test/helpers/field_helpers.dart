@@ -8,3 +8,11 @@ bool isObscured(WidgetTester tester, Key fieldKey) {
   );
   return textField.obscureText;
 }
+
+/// The text currently in the text field inside the widget found by [fieldKey].
+String fieldText(WidgetTester tester, Key fieldKey) {
+  final textField = tester.widget<TextField>(
+    find.descendant(of: find.byKey(fieldKey), matching: find.byType(TextField)),
+  );
+  return textField.controller?.text ?? '';
+}

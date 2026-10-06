@@ -230,4 +230,36 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get hidePassword => 'Masquer le mot de passe';
+
+  @override
+  String get profileTitle => 'Profil';
+
+  @override
+  String get labelCountry => 'Pays';
+
+  @override
+  String get selectCountry => 'Sélectionnez votre pays';
+
+  @override
+  String get labelLanguage => 'Langue';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageFrench => 'Français';
+
+  @override
+  String get saveChanges => 'Enregistrer';
+
+  @override
+  String get profileSaved => 'Votre profil a été enregistré.';
+
+  @override
+  String get errorProfileLoad =>
+      'Impossible de charger votre profil. Réessayez.';
+
+  @override
+  String get errorProfileSave =>
+      'Impossible d\'enregistrer votre profil. Réessayez.';
 }

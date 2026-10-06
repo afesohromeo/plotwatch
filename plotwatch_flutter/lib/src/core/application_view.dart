@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
@@ -41,7 +41,11 @@ class _ApplicationViewState extends State<ApplicationView> {
               limitedScaleFactor,
             ),
           ),
-          child: MaterialApp.router(
+          child: BlocBuilder<ProfileBloc, ProfileState>(
+            // The app language follows the profile (decision M1-6).
+            buildWhen: (previous, current) =>
+                previous.appLocale != current.appLocale,
+            builder: (context, profileState) => MaterialApp.router(
             onGenerateTitle: (context) {
               // Set the localization in the service when the app starts
               LocalizationService.setAppLocalizations(
@@ -52,10 +56,10 @@ class _ApplicationViewState extends State<ApplicationView> {
             supportedLocales: AppLocalizations.supportedLocales,
             routerConfig: _router,
             theme: PlotwatchTheme.light(customColors),
-            // locale: const Locale('fr'),
+            locale: profileState.appLocale,
 
             debugShowCheckedModeBanner: false,
-          ));
+          )));
     });
 
     // LocalizationWrapper(child: HomePage());

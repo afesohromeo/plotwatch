@@ -438,3 +438,12 @@ Differences from the plan, and why:
 | `AuthenticationBloc` | Starts with the known status (saved session restored before the first frame) and follows changes with `emit.forEach`; no separate `statusChanged` event | Simpler, same behaviour |
 | `SignInBloc` | No `resetFlowStep` event (no flow step: one action) | Not needed |
 | Design | Pulled forward: [`05-design-system.md`](05-design-system.md), direction A "Calm Ledger", `PlotwatchTheme`, bundled Manrope | The developer found the kit's default look unacceptable |
+
+### Group D outcome (2026-10-06)
+Done and verified: profile page (name, country, language), app-wide `ProfileBloc` (loaded after sign-in, cleared on sign-out), app language following the profile. `flutter test` 160/160, `dart test` 10/10.
+
+Notes:
+- **Country picker:** the kit's `SearchableDropdownField` with `intl_phone_field`'s country list, shown in the app language. Two hard-coded colours in the kit dropdown were aligned with the theme (search fill, retry icon).
+- **Language** is applied after saving: the saved profile updates `MaterialApp.locale` through `ProfileState.appLocale`.
+- **Bug found by the group D tests and fixed:** the design step had wrapped `InputField`'s label and field in `MergeSemantics`. That breaks Flutter's semantics tree for fields with their own tap actions (the kit's dropdown). It was removed; screen readers read the label just before the field.
+- `supportedLanguageCodes` / `defaultLanguageCode` added to `shared/utils/constant.dart` (mirror of the server's `ProfileService`).

@@ -287,5 +287,45 @@
     "hidePassword": "Hide password",
     "@hidePassword": {
         "description": "Tooltip of the eye button that hides a password again"
+    },
+    "profileTitle": "Profile",
+    "@profileTitle": {
+        "description": "Profile page title and the home action that opens it"
+    },
+    "labelCountry": "Country",
+    "@labelCountry": {
+        "description": "Country field label on the profile page"
+    },
+    "selectCountry": "Select your country",
+    "@selectCountry": {
+        "description": "Hint of the country picker"
+    },
+    "labelLanguage": "Language",
+    "@labelLanguage": {
+        "description": "Language selector label on the profile page"
+    },
+    "languageEnglish": "English",
+    "@languageEnglish": {
+        "description": "Language option; shown in its own language"
+    },
+    "languageFrench": "Français",
+    "@languageFrench": {
+        "description": "Language option; shown in its own language"
+    },
+    "saveChanges": "Save changes",
+    "@saveChanges": {
+        "description": "Save button on the profile page"
+    },
+    "profileSaved": "Your profile has been saved.",
+    "@profileSaved": {
+        "description": "Success dialog after saving the profile"
+    },
+    "errorProfileLoad": "Could not load your profile. Try again.",
+    "@errorProfileLoad": {
+        "description": "Unexpected error while loading the profile"
+    },
+    "errorProfileSave": "Could not save your profile. Try again.",
+    "@errorProfileSave": {
+        "description": "Unexpected error while saving the profile"
     }
 }

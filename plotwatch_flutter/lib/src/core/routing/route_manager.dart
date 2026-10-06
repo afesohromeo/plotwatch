@@ -101,6 +101,14 @@ class RouteManager {
           child: const HomePage(),
         ),
       ),
+      GoRoute(
+        name: profileRouteName,
+        path: profilePage,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: const ProfilePage(),
+        ),
+      ),
     ];
   }
 
