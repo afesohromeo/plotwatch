@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:plotwatch_flutter/src/data/api/api.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 class AppInitializer {
   /// Initialize services, plugins, etc. before the app runs.

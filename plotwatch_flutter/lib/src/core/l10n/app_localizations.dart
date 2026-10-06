@@ -98,16 +98,10 @@ abstract class AppLocalizations {
     Locale('fr'),
   ];
 
-  /// counter count
+  /// App name, used as the window/tab title
   ///
   /// In en, this message translates to:
-  /// **'Count'**
-  String get count;
-
-  /// counter count
-  ///
-  /// In en, this message translates to:
-  /// **'Flutter bloc kit'**
+  /// **'Plotwatch'**
   String get appTitle;
 
   /// Button text to refresh content
@@ -193,6 +187,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An error occurred'**
   String get operationError;
+
+  /// Welcome page subtitle under the app name
+  ///
+  /// In en, this message translates to:
+  /// **'Fund construction you can\'t watch, with verified progress.'**
+  String get welcomeTagline;
+
+  /// Button and page title to sign in
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get signIn;
+
+  /// Button to start creating an account
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get createAccount;
+
+  /// Action to sign out
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get signOut;
+
+  /// Email field label
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get labelEmail;
+
+  /// Password field label
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get labelPassword;
+
+  /// New password field label in the password reset flow
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get labelNewPassword;
+
+  /// Full name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get labelFullName;
+
+  /// Field for the code received by email
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code'**
+  String get labelVerificationCode;
+
+  /// Hint under password fields, mirrors the server password rule
+  ///
+  /// In en, this message translates to:
+  /// **'At least 8 characters, no spaces at the start or end'**
+  String get passwordRuleHint;
+
+  /// Link from sign-in to the password reset flow
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPassword;
+
+  /// Link from sign-in to sign-up
+  ///
+  /// In en, this message translates to:
+  /// **'No account yet? Create one'**
+  String get noAccountYet;
+
+  /// Link from sign-up to sign-in
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? Sign in'**
+  String get alreadyHaveAccount;
+
+  /// Button to go to the next step of a form
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueAction;
+
+  /// Button to request a new verification code
+  ///
+  /// In en, this message translates to:
+  /// **'Send a new code'**
+  String get resendCode;
+
+  /// Sign-up page title
+  ///
+  /// In en, this message translates to:
+  /// **'Create your account'**
+  String get signUpTitle;
+
+  /// Shown on the code step of sign-up. The server never says whether an email is already registered.
+  ///
+  /// In en, this message translates to:
+  /// **'If {email} can be registered, we sent it a verification code.'**
+  String signUpCodeSent(String email);
+
+  /// Title of the last sign-up step
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a password'**
+  String get choosePasswordTitle;
+
+  /// Password reset page title
+  ///
+  /// In en, this message translates to:
+  /// **'Reset your password'**
+  String get passwordResetTitle;
+
+  /// Shown on the code step of the password reset
+  ///
+  /// In en, this message translates to:
+  /// **'If {email} has an account, we sent it a reset code.'**
+  String passwordResetCodeSent(String email);
+
+  /// Title of the signed-in home page
+  ///
+  /// In en, this message translates to:
+  /// **'Your projects'**
+  String get homeTitle;
+
+  /// Home page text until projects exist (M2)
+  ///
+  /// In en, this message translates to:
+  /// **'Your construction projects will appear here.'**
+  String get homePlaceholder;
+
+  /// Email field left empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get validateEmailRequired;
+
+  /// Email field not in email format
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email'**
+  String get validateEmailInvalid;
+
+  /// Password field left empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a password'**
+  String get validatePasswordRequired;
+
+  /// Password shorter than 8 characters
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least 8 characters'**
+  String get validatePasswordTooShort;
+
+  /// Password starts or ends with a space
+  ///
+  /// In en, this message translates to:
+  /// **'Remove spaces at the start or end'**
+  String get validatePasswordSpaces;
+
+  /// Verification code field left empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code from the email'**
+  String get validateCodeRequired;
+
+  /// Name field left empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get validateNameRequired;
+
+  /// Name longer than 100 characters
+  ///
+  /// In en, this message translates to:
+  /// **'Use 100 characters or fewer'**
+  String get validateNameTooLong;
+
+  /// AppErrorCode.permissionDenied
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have permission to do this.'**
+  String get errorPermissionDenied;
+
+  /// AppErrorCode.invalidFullName
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name of 1 to 100 characters.'**
+  String get errorInvalidFullName;
+
+  /// AppErrorCode.invalidCountryCode
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a country from the list.'**
+  String get errorInvalidCountryCode;
+
+  /// AppErrorCode.invalidLocale
+  ///
+  /// In en, this message translates to:
+  /// **'Choose English or French.'**
+  String get errorInvalidLocale;
+
+  /// AppErrorCode.authInvalidCredentials
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong email or password.'**
+  String get errorAuthInvalidCredentials;
+
+  /// AppErrorCode.authTooManyAttempts
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Try again in a few minutes.'**
+  String get errorAuthTooManyAttempts;
+
+  /// AppErrorCode.authRequestExpired
+  ///
+  /// In en, this message translates to:
+  /// **'This code has expired. Request a new one.'**
+  String get errorAuthRequestExpired;
+
+  /// AppErrorCode.authRequestInvalid
+  ///
+  /// In en, this message translates to:
+  /// **'This code is not valid. Check it and try again.'**
+  String get errorAuthRequestInvalid;
+
+  /// AppErrorCode.authPasswordPolicy
+  ///
+  /// In en, this message translates to:
+  /// **'This password isn\'t allowed. Use at least 8 characters, with no spaces at the start or end.'**
+  String get errorAuthPasswordPolicy;
+
+  /// AppErrorCode.authUserBlocked
+  ///
+  /// In en, this message translates to:
+  /// **'This account is blocked.'**
+  String get errorAuthUserBlocked;
+
+  /// AppErrorCode.authUnknown
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication failed. Try again.'**
+  String get errorAuthUnknown;
+
+  /// HttpException401
+  ///
+  /// In en, this message translates to:
+  /// **'Your session has expired. Sign in again.'**
+  String get errorUnauthorized;
+
+  /// NetworkException
+  ///
+  /// In en, this message translates to:
+  /// **'No connection. Check your internet and try again.'**
+  String get networkError;
+
+  /// Unexpected error while signing in
+  ///
+  /// In en, this message translates to:
+  /// **'Could not sign in. Try again.'**
+  String get errorSignIn;
+
+  /// Unexpected error during sign-up
+  ///
+  /// In en, this message translates to:
+  /// **'Could not create the account. Try again.'**
+  String get errorSignUp;
+
+  /// Unexpected error during password reset
+  ///
+  /// In en, this message translates to:
+  /// **'Could not reset the password. Try again.'**
+  String get errorPasswordReset;
+
+  /// Unexpected error while signing out
+  ///
+  /// In en, this message translates to:
+  /// **'Could not sign out. Try again.'**
+  String get errorSignOut;
+
+  /// Second password field on sign-up, must match the first
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get labelConfirmPassword;
+
+  /// Second password field on password reset, must match the first
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get labelConfirmNewPassword;
+
+  /// Confirm-password field left empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the password again'**
+  String get validateConfirmPasswordRequired;
+
+  /// Confirm-password field differs from the password field
+  ///
+  /// In en, this message translates to:
+  /// **'The passwords don\'t match'**
+  String get validatePasswordMismatch;
+
+  /// Heading on the sign-in page (the app bar says Sign in)
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get signInHeading;
+
+  /// Tooltip of the eye button that reveals a password
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get showPassword;
+
+  /// Tooltip of the eye button that hides a password again
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get hidePassword;
 }
 
 class _AppLocalizationsDelegate

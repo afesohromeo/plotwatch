@@ -1,5 +1,5 @@
-import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 class MultiSelectField<T> extends StatelessWidget {
   const MultiSelectField({

@@ -1,7 +1,6 @@
-import 'package:plotwatch_client/plotwatch_client.dart';
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
-import 'api_exceptions.dart';
 
 /// Converts any error from the Serverpod client into the app's exception
 /// types (`_standards/14` §2.3). Used by every API provider:

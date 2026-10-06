@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 // import 'theme/app_theme.dart';
 
@@ -51,7 +51,7 @@ class _ApplicationViewState extends State<ApplicationView> {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             routerConfig: _router,
-            theme: AppTheme.light(colors: customColors, context: context),
+            theme: PlotwatchTheme.light(customColors),
             // locale: const Locale('fr'),
 
             debugShowCheckedModeBanner: false,

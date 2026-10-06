@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'src/core/core.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 void main() {
   final AppInitializer appInitializer = AppInitializer();

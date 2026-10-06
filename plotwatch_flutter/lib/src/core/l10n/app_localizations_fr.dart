@@ -9,10 +9,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get count => 'Count';
-
-  @override
-  String get appTitle => 'Flutter bloc kit';
+  String get appTitle => 'Plotwatch';
 
   @override
   String get refresh => 'Rafraîchir';
@@ -55,4 +52,182 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get operationError => 'Une erreur est survenue';
+
+  @override
+  String get welcomeTagline =>
+      'Financez une construction que vous ne pouvez pas surveiller, avec des preuves vérifiées.';
+
+  @override
+  String get signIn => 'Se connecter';
+
+  @override
+  String get createAccount => 'Créer un compte';
+
+  @override
+  String get signOut => 'Se déconnecter';
+
+  @override
+  String get labelEmail => 'E-mail';
+
+  @override
+  String get labelPassword => 'Mot de passe';
+
+  @override
+  String get labelNewPassword => 'Nouveau mot de passe';
+
+  @override
+  String get labelFullName => 'Nom complet';
+
+  @override
+  String get labelVerificationCode => 'Code de vérification';
+
+  @override
+  String get passwordRuleHint =>
+      'Au moins 8 caractères, sans espace au début ni à la fin';
+
+  @override
+  String get forgotPassword => 'Mot de passe oublié ?';
+
+  @override
+  String get noAccountYet => 'Pas encore de compte ? Créez-en un';
+
+  @override
+  String get alreadyHaveAccount => 'Déjà un compte ? Connectez-vous';
+
+  @override
+  String get continueAction => 'Continuer';
+
+  @override
+  String get resendCode => 'Envoyer un nouveau code';
+
+  @override
+  String get signUpTitle => 'Créez votre compte';
+
+  @override
+  String signUpCodeSent(String email) {
+    return 'Si $email peut être inscrit, nous lui avons envoyé un code de vérification.';
+  }
+
+  @override
+  String get choosePasswordTitle => 'Choisissez un mot de passe';
+
+  @override
+  String get passwordResetTitle => 'Réinitialisez votre mot de passe';
+
+  @override
+  String passwordResetCodeSent(String email) {
+    return 'Si $email a un compte, nous lui avons envoyé un code de réinitialisation.';
+  }
+
+  @override
+  String get homeTitle => 'Vos projets';
+
+  @override
+  String get homePlaceholder => 'Vos projets de construction apparaîtront ici.';
+
+  @override
+  String get validateEmailRequired => 'Saisissez votre e-mail';
+
+  @override
+  String get validateEmailInvalid => 'Saisissez un e-mail valide';
+
+  @override
+  String get validatePasswordRequired => 'Saisissez un mot de passe';
+
+  @override
+  String get validatePasswordTooShort => 'Utilisez au moins 8 caractères';
+
+  @override
+  String get validatePasswordSpaces =>
+      'Supprimez les espaces au début ou à la fin';
+
+  @override
+  String get validateCodeRequired => 'Saisissez le code reçu par e-mail';
+
+  @override
+  String get validateNameRequired => 'Saisissez votre nom';
+
+  @override
+  String get validateNameTooLong => 'Utilisez 100 caractères au maximum';
+
+  @override
+  String get errorPermissionDenied =>
+      'Vous n\'avez pas l\'autorisation de faire cela.';
+
+  @override
+  String get errorInvalidFullName => 'Saisissez un nom de 1 à 100 caractères.';
+
+  @override
+  String get errorInvalidCountryCode => 'Choisissez un pays dans la liste.';
+
+  @override
+  String get errorInvalidLocale => 'Choisissez l\'anglais ou le français.';
+
+  @override
+  String get errorAuthInvalidCredentials => 'E-mail ou mot de passe incorrect.';
+
+  @override
+  String get errorAuthTooManyAttempts =>
+      'Trop de tentatives. Réessayez dans quelques minutes.';
+
+  @override
+  String get errorAuthRequestExpired =>
+      'Ce code a expiré. Demandez-en un nouveau.';
+
+  @override
+  String get errorAuthRequestInvalid =>
+      'Ce code n\'est pas valide. Vérifiez-le et réessayez.';
+
+  @override
+  String get errorAuthPasswordPolicy =>
+      'Ce mot de passe n\'est pas autorisé. Utilisez au moins 8 caractères, sans espace au début ni à la fin.';
+
+  @override
+  String get errorAuthUserBlocked => 'Ce compte est bloqué.';
+
+  @override
+  String get errorAuthUnknown => 'L\'authentification a échoué. Réessayez.';
+
+  @override
+  String get errorUnauthorized => 'Votre session a expiré. Reconnectez-vous.';
+
+  @override
+  String get networkError =>
+      'Pas de connexion. Vérifiez votre accès à internet et réessayez.';
+
+  @override
+  String get errorSignIn => 'Impossible de se connecter. Réessayez.';
+
+  @override
+  String get errorSignUp => 'Impossible de créer le compte. Réessayez.';
+
+  @override
+  String get errorPasswordReset =>
+      'Impossible de réinitialiser le mot de passe. Réessayez.';
+
+  @override
+  String get errorSignOut => 'Impossible de se déconnecter. Réessayez.';
+
+  @override
+  String get labelConfirmPassword => 'Confirmez le mot de passe';
+
+  @override
+  String get labelConfirmNewPassword => 'Confirmez le nouveau mot de passe';
+
+  @override
+  String get validateConfirmPasswordRequired =>
+      'Saisissez à nouveau le mot de passe';
+
+  @override
+  String get validatePasswordMismatch =>
+      'Les mots de passe ne correspondent pas';
+
+  @override
+  String get signInHeading => 'Bon retour';
+
+  @override
+  String get showPassword => 'Afficher le mot de passe';
+
+  @override
+  String get hidePassword => 'Masquer le mot de passe';
 }

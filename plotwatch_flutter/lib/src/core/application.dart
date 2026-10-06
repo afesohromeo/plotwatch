@@ -1,39 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plotwatch_flutter/src/features/features.dart';
 import 'package:provider/provider.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
-import 'core.dart';
 
+/// App-wide repositories, the session BLoC, and the router built on it.
 class Application extends StatelessWidget {
-  const Application({
-    super.key,
-  });
+  const Application({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
-        providers: [
-          //Define all repositories used by the app here. Example
-          //RepositoryProvider(create: (context) => AuthenticationRepository()),
-          Provider<RouteManager>(
-              lazy: true, create: (context) => RouteManager())
-        ],
-        child: MultiBlocProvider(providers: [
-          //Define all bloc used by the app here. Example
-          // BlocProvider(
-          //     create: (context) => ProfileBloc(
-          //           userRepository: context.read<UserRepository>(),
-          //         )..add(const ProfileLoaded())),
-          // BlocProvider(
-          //     create: (context) => AppointmentBloc(
-          //           userRepository: context.read<UserRepository>(),
-          //         )..add(const AppointmentInitialized())),
-
-          BlocProvider(
-            create: (_) => HomeBloc(),
-            child: this,
-          ),
-        ], child: ApplicationView()));
+      providers: [
+        RepositoryProvider(create: (_) => AuthRepository()),
+        RepositoryProvider(create: (_) => ProfileRepository()),
+      ],
+      child: BlocProvider(
+        create: (context) => AuthenticationBloc(
+          authRepository: context.read<AuthRepository>(),
+        )..add(const AuthenticationEvent.started()),
+        child: Provider<RouteManager>(
+          lazy: true,
+          create: (context) =>
+              RouteManager(context.read<AuthenticationBloc>()),
+          child: const ApplicationView(),
+        ),
+      ),
+    );
   }
 }

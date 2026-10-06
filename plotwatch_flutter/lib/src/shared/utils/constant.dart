@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 bool isStandalone = false;
 GlobalKey<NavigatorState>? rootNavKey;
 
 const String defaultAddress = '';
 const String fakeTenant = '';
- final  customColors = MyAppColors(
-    primary: Colors.blue,
-    secondary: Colors.orange,
-    background: Colors.white,
-    surface: Colors.grey,
-    error: Colors.redAccent,
-    success: Colors.green,
-    warning: Colors.yellow,
-    black1: Color(0xFF000000));
+/// The "Calm Ledger" palette (doc/05-design-system.md §2).
+const customColors = MyAppColors(
+  primary: Color(0xFF0E5A52),
+  onPrimary: Color(0xFFFFFFFF),
+  accent: Color(0xFFA44A24),
+  accentSoft: Color(0xFFF6E7DE),
+  ink: Color(0xFF15201E),
+  muted: Color(0xFF55625F),
+  line: Color(0xFFD3DAD7),
+  ground: Color(0xFFF4F6F4),
+  surfaceWhite: Color(0xFFFFFFFF),
+  verified: Color(0xFF1D6A45),
+  verifiedSoft: Color(0xFFE1F1E7),
+  partial: Color(0xFF7A4F00),
+  partialSoft: Color(0xFFFBEFD5),
+  unverified: Color(0xFFA3262A),
+  unverifiedSoft: Color(0xFFFBE4E4),
+);
 String? formatDateForApi(DateTime? dateTime) {
   return dateTime == null
       ? null

@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:plotwatch_client/plotwatch_client.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 /// Holds the app's single generated Serverpod [Client] (`_standards/14` §2.4).
 /// API providers use `ApiProvider().client`.
@@ -36,8 +36,10 @@ class ApiProvider {
       ..authSessionManager = FlutterAuthSessionManager();
     _client = client;
 
-    // Restores the session from secure storage, then validates it with the
-    // server (2 s timeout, never throws), as in the Serverpod template.
+    // Decision M1-5: read the saved session before the first frame, so the
+    // router knows whether the user is signed in; then validate it with the
+    // server in the background (2 s timeout, never throws).
+    await client.auth.restore();
     unawaited(client.auth.initialize());
   }
 }

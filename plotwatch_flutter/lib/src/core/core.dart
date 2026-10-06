@@ -6,3 +6,5 @@ export 'layout/responsive_layout.dart';
 export 'l10n/app_localizations.dart';
 export 'my_app_colors.dart';
 export 'app_restart.dart';
+export 'environment.dart';
+export 'theme/plotwatch_theme.dart';

@@ -1,42 +1,54 @@
-import 'package:app_theme_kit/app_theme_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plotwatch_flutter/src/core/core.dart';
-import 'package:plotwatch_flutter/src/features/features.dart';
-import 'package:plotwatch_flutter/src/shared/components/gap.dart';
-import 'package:plotwatch_flutter/src/shared/extensions/context_extensions.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
+/// Signed-in placeholder until the project list arrives in M2 (decision M1-8).
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  static const signOutButtonKey = Key('home.signOut');
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: FractionallySizedBox(
-          widthFactor: 1,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.count,
-                style: context.textTheme.bodyLarge,
-              ),
-              const Gap.vertical(height: AppSpacing.sm),
-              BlocBuilder<HomeBloc, HomeState>(
-                builder: (context, state) {
-                  return Text(
-                    '${state.value}',
-                    style: context.textTheme.headlineLarge,
-                  );
-                },
-              )
-            ],
+    final l10n = AppLocalizations.of(context)!;
+
+    return BlocListener<AuthenticationBloc, AuthenticationState>(
+      listenWhen: (previous, current) =>
+          previous.signOutStatus != current.signOutStatus,
+      listener: (context, state) {
+        if (state.signOutStatus == GenericStatus.failure &&
+            state.signOutErrorMessage != null) {
+          DialogUtils.handleFailure(context, state.signOutErrorMessage!);
+        }
+      },
+      child: ResponsiveScaffoldWrapper(
+        props: ScaffoldWrapperProps(
+          title: Padding(
+            padding: const EdgeInsets.only(left: AppSpacing.md),
+            child: Text(l10n.homeTitle),
+          ),
+          actions: [
+            TextButton.icon(
+              key: signOutButtonKey,
+              onPressed: () => context
+                  .read<AuthenticationBloc>()
+                  .add(const AuthenticationEvent.signOutRequested()),
+              icon: const Icon(Icons.logout),
+              label: Text(l10n.signOut),
+            ),
+          ],
+        ),
+        mobileBody: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Text(
+              l10n.homePlaceholder,
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyLarge,
+            ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => context.read<HomeBloc>().add(HomeEvent.increment()),
-          child: const Icon(Icons.add),
-        ));
+      ),
+    );
   }
 }

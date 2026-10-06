@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
+/// Input decoration for the kit's fields. Borders, fill, text styles and the
+/// focus/error colours come from the theme's `inputDecorationTheme`
+/// (doc/05-design-system.md §5); this only adds what a field passes in.
+/// [labelColor], [radius] and [borderRadius] are kept for existing callers
+/// and no longer override the design system.
 InputDecoration customInputDecoration(
   String? labelText,
   Icon? prefixIcon,
@@ -17,68 +21,12 @@ InputDecoration customInputDecoration(
 }) {
   return InputDecoration(
     visualDensity: visualDensity,
-    isDense: true,
-    // counterStyle: context.textTheme.displayMedium!.copyWith(fontSize: 29),
-    contentPadding: contentPadding ??
-        const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-
-    // isCollapsed: true,
-
-    // prefixIcon: prefixIcon,
-    // prefix: const Icon(
-    //   Icons.email_outlined,
-    //   color: customColors.primary,
-    //   size: 12,
-    // ),
-    // constraints: BoxConstraints(maxHeight: 30),
-
+    contentPadding: contentPadding,
     hintText: hintText,
-    hintStyle: context.textTheme.bodyMedium?.copyWith(
-      color: labelColor ?? customColors.error,
-    ),
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
-    fillColor: bgColor ?? customColors.background.withValues(alpha: .2),
-    filled: true,
     labelText: labelText,
-    labelStyle: context.textTheme.displayMedium!.copyWith(
-      fontSize: 14,
-      color: labelColor ?? customColors.error,
-    ),
     floatingLabelAlignment: alignment,
-    floatingLabelStyle: context.textTheme.displayMedium!
-        .copyWith(color: labelColor ?? customColors.surface, fontSize: 14),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(radius ?? 10),
-      borderSide:
-          BorderSide(color: labelColor ?? customColors.surface, width: 1),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: borderRadius ?? BorderRadius.circular(radius ?? 10),
-      borderSide: BorderSide(
-          color: labelColor ?? customColors.error.withValues(alpha: .5),
-          width: 1),
-    ),
-    // focusColor: Color.fromARGB(255, 185, 61, 24),
-    // enabledBorder: UnderlineInputBorder(
-    //   borderSide: BorderSide(color: labelColor ?? customColors.primary),
-    // ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: borderRadius ?? BorderRadius.circular(radius ?? 10),
-      borderSide: BorderSide(color: customColors.success, width: 1),
-    ),
-    errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(radius ?? 10),
-      borderSide:
-          BorderSide(color: labelColor ?? customColors.surface, width: 1),
-    ),
-    errorMaxLines: 2,
-    errorStyle: context.textTheme.displaySmall!
-        .copyWith(color: customColors.error, fontSize: 12),
-    focusedErrorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(radius ?? 10),
-      borderSide:
-          BorderSide(color: labelColor ?? customColors.primary, width: 1),
-    ),
+    fillColor: bgColor,
   );
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plotwatch_flutter/src/core/core.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 class LocalizationWrapper extends StatelessWidget {
   const LocalizationWrapper({super.key, required this.child});

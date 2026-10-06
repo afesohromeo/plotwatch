@@ -424,3 +424,17 @@ Done and verified as planned:
 - `flutter test` is still 21/21 after the client was regenerated.
 
 No deviations from the plan.
+
+### Group C outcome (2026-10-06)
+Done and verified: sign-in, three-step sign-up and password reset in the app, with the global `AuthenticationBloc` driving the router guard. `flutter test` 144/144, `dart test` 10/10.
+
+Differences from the plan, and why:
+| Item | Change | Reason |
+|------|--------|--------|
+| Imports | Root barrel `plotwatch_flutter.dart` plus one barrel per layer and feature; tests import the app barrel and `test/helpers/helpers.dart` | The developer's convention (PlusLocate pattern), first missed by Claude |
+| Error display | `DialogUtils.handleFailure` (the kit's `ErrorDialog`) instead of SnackBars | The developer's review; RULE-031 |
+| Confirm password | Second field on sign-up and password reset, validated by `Validators.confirmPassword` | The developer's review |
+| Password visibility | Eye button on every password field; state in the page's BLoC (`isPasswordVisible`, `isConfirmPasswordVisible`); icon shows the state (open = visible, crossed = hidden) | The developer's request and convention |
+| `AuthenticationBloc` | Starts with the known status (saved session restored before the first frame) and follows changes with `emit.forEach`; no separate `statusChanged` event | Simpler, same behaviour |
+| `SignInBloc` | No `resetFlowStep` event (no flow step: one action) | Not needed |
+| Design | Pulled forward: [`05-design-system.md`](05-design-system.md), direction A "Calm Ledger", `PlotwatchTheme`, bundled Manrope | The developer found the kit's default look unacceptable |

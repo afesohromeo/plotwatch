@@ -1,4 +1,4 @@
-import 'package:plotwatch_client/plotwatch_client.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 /// Exceptions thrown by API providers (`_standards/14` §2.2).
 /// BLoCs catch them and show the localized message for each case.

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
+/// Error dialog of the design system (doc/05-design-system.md §5), shown
+/// through `DialogUtils.handleFailure`. The button closes the dialog unless
+/// [onPressed] is given; [refreshText] replaces its label.
 class ErrorDialog extends StatelessWidget {
-  const ErrorDialog(
-      {super.key,
-      required this.message,
-      this.onPressed,
-      this.refreshText,
-      required this.parentContext});
+  const ErrorDialog({
+    super.key,
+    required this.message,
+    this.onPressed,
+    this.refreshText,
+    required this.parentContext,
+  });
 
   final VoidCallback? onPressed;
   final String? refreshText;
@@ -16,73 +20,80 @@ class ErrorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return StatusDialog(
+      icon: Icons.close_rounded,
+      iconColor: customColors.unverified,
+      iconBackground: customColors.unverifiedSoft,
+      message: message,
+      buttonLabel: refreshText,
+      onPressed: onPressed,
+    );
+  }
+}
+
+/// Shared layout of the error and success dialogs.
+class StatusDialog extends StatelessWidget {
+  const StatusDialog({
+    super.key,
+    required this.icon,
+    required this.iconColor,
+    required this.iconBackground,
+    required this.message,
+    this.buttonLabel,
+    this.onPressed,
+  });
+
+  static const iconCircleKey = Key('statusDialog.iconCircle');
+
+  final IconData icon;
+  final Color iconColor;
+  final Color iconBackground;
+  final String message;
+  final String? buttonLabel;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return AlertDialog(
-        alignment: Alignment.center,
-        titlePadding: EdgeInsets.zero,
-        contentPadding: const EdgeInsets.all(30),
-        insetPadding: EdgeInsets.zero,
-        scrollable: true,
-        elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        content: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      contentPadding: const EdgeInsets.all(AppSpacing.lg),
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 360),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: 100,
-              height: 100,
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    // begin: Alignment.topLeft,
-                    // end: Alignment.bottomRight,
-                    stops: const [
-                      0.8,
-                      1,
-                    ],
-                    colors: [
-                      customColors.error.withValues(alpha: .9),
-                      customColors.error.withValues(alpha: .5),
-                    ],
-                  )),
+            Center(
               child: Container(
-                padding: const EdgeInsets.all(5),
-                decoration: const BoxDecoration(
+                key: iconCircleKey,
+                width: 56,
+                height: 56,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: iconBackground,
                   shape: BoxShape.circle,
-                  color: Colors.white,
                 ),
-                child: Icon(
-                  Icons.close_rounded,
-                  color: customColors.error,
-                  size: 75,
-                ),
+                child: Icon(icon, color: iconColor, size: 30),
               ),
             ),
-            const SizedBox(
-              height: 20,
+            const Gap.vertical(height: AppSpacing.md),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyLarge,
             ),
-            Text(message,
-                textAlign: TextAlign.center,
-                style: context.textTheme.displayMedium),
-            const SizedBox(
-              height: 20,
+            const Gap.vertical(height: AppSpacing.lg),
+            SizedBox(
+              height: PlotwatchTheme.controlHeight,
+              child: FilledButton(
+                onPressed: onPressed ?? () => Navigator.of(context).pop(),
+                child: Text(buttonLabel ?? l10n.ok),
+              ),
             ),
-            // PrimaryButton(
-            //     height: 55,
-            //     shape: RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.circular(10.0)),
-            //     inkRaduis: 10,
-            //     child: Text(
-            //       AppLocalizations.of(parentContext)!.ok,
-            //       style: context.textTheme.displayMedium!
-            //           .copyWith(color: Colors.white, fontSize: 14),
-            //     ),
-            //     onPressed: () {
-            //       context.read<CheckoutBloc>().add(CheckoutEvent.updateStatus(
-            //           status: CheckoutStatus.initial));
-            //       context.pop();
-            //     }),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }

@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:plotwatch_client/plotwatch_client.dart';
-import 'package:plotwatch_flutter/src/data/api/config/api_error_handler.dart';
-import 'package:plotwatch_flutter/src/data/api/config/api_exceptions.dart';
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 // Mapping rules: _standards/14_serverpod_adaptation.md §2.2, §2.3, §2.3.1.
 void main() {

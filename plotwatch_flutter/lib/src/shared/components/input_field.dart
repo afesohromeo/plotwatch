@@ -72,54 +72,62 @@ class InputField extends StatelessWidget {
   final VisualDensity? visualDensity;
   final AutovalidateMode autovalidateMode;
 
+  /// The label sits above the field (doc/05-design-system.md §5);
+  /// [MergeSemantics] keeps it attached to the field for screen readers.
+  /// Borders, colours and text styles come from the theme.
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: bgColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: borderRadius ?? BorderRadius.circular(radius ?? 10),
-      ),
-      elevation: elevation,
-      shadowColor: customColors.surface.withValues(alpha: 0.2),
-      child: TextFormField(
-          autovalidateMode: autovalidateMode,
-          focusNode: focusNode,
-          onEditingComplete: onEditingComplete,
-          enabled: enabled,
-          onTap: onTap,
-          readOnly: readOnly!,
-          maxLines: maxlines ?? 1,
-          initialValue: initialValue,
-          controller: controller,
-          obscureText: obscureText,
-          enableSuggestions: enableSuggestions,
-          inputFormatters: inputFormatters,
-          validator: validator,
-          keyboardType: keyboardType,
-          style: inputStyle ??
-              context.textTheme.displaySmall!.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: labelColor ?? customColors.black1,
-                  fontSize: 14),
-          onChanged: (value) {
-            final error = validator?.call(value);
+    final field = TextFormField(
+      autovalidateMode: autovalidateMode,
+      focusNode: focusNode,
+      onEditingComplete: onEditingComplete,
+      enabled: enabled,
+      onTap: onTap,
+      readOnly: readOnly!,
+      maxLines: maxlines ?? 1,
+      minLines: minlines,
+      initialValue: initialValue,
+      controller: controller,
+      obscureText: obscureText,
+      enableSuggestions: enableSuggestions,
+      inputFormatters: inputFormatters,
+      validator: validator,
+      keyboardType: keyboardType,
+      style: inputStyle ?? context.textTheme.bodyLarge,
+      onChanged: (value) {
+        final error = validator?.call(value);
 
-            if (error == null) {
-              onChanged?.call(value); // ✅ only valid input passes
-            }
-          },
-          decoration: customInputDecoration(
-              visualDensity: visualDensity,
-              labelText,
-              prefixIcon,
-              borderRadius: borderRadius,
-              suffixIcon,
-              labelColor,
-              radius,
-              hintText,
-              contentPadding,
-              context,
-              bgColor: bgColor)),
+        if (error == null) {
+          onChanged?.call(value); // ✅ only valid input passes
+        }
+      },
+      decoration: customInputDecoration(
+        visualDensity: visualDensity,
+        null,
+        prefixIcon,
+        borderRadius: borderRadius,
+        suffixIcon,
+        labelColor,
+        radius,
+        hintText,
+        contentPadding,
+        context,
+        bgColor: bgColor,
+      ),
+    );
+
+    if (labelText == null) return field;
+
+    return MergeSemantics(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(labelText!, style: context.textTheme.labelMedium),
+          const Gap.vertical(height: 6),
+          field,
+        ],
+      ),
     );
   }
 }

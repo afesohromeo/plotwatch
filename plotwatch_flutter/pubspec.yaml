@@ -52,6 +52,8 @@ dev_dependencies:
   # analyzer below 14, and freezed 4.0.2 needs analyzer 14.
   freezed: ^4.0.1
   flutter_gen_runner: ^5.4.0
+  bloc_test: ^10.0.0
+  mocktail: ^1.0.5
 
 # Serverpod 4 auth needs flutter_secure_storage 10+ on Android (template override).
 dependency_overrides:
@@ -62,6 +64,22 @@ flutter:
   generate: true
   assets:
     - assets/config.json
+
+  # Design system font (doc/05-design-system.md §3), bundled so it works
+  # offline. SIL Open Font License: assets/fonts/Manrope-OFL.txt.
+  fonts:
+    - family: Manrope
+      fonts:
+        - asset: assets/fonts/Manrope-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Manrope-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Manrope-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Manrope-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Manrope-ExtraBold.ttf
+          weight: 800
 
 fluttergen:
   output: lib/src/generated

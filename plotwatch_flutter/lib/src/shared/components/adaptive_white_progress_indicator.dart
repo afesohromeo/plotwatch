@@ -1,6 +1,6 @@
-import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 import 'package:flutter/material.dart';
+import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 class AdaptiveWhiteProgressIndicator extends StatelessWidget {
   const AdaptiveWhiteProgressIndicator({super.key});

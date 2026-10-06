@@ -1,12 +1,8 @@
 {
     "@@locale": "en",
-    "count": "Count",
-    "@count": {
-        "description": "counter count"
-    },
-    "appTitle": "Flutter bloc kit",
+    "appTitle": "Plotwatch",
     "@appTitle": {
-        "description": "counter count"
+        "description": "App name, used as the window/tab title"
     },
     "refresh": "Refresh",
     "@refresh": {
@@ -63,5 +59,233 @@
     "operationError": "An error occurred",
     "@operationError": {
         "description": "Generic operation error message"
+    },
+    "welcomeTagline": "Fund construction you can't watch, with verified progress.",
+    "@welcomeTagline": {
+        "description": "Welcome page subtitle under the app name"
+    },
+    "signIn": "Sign in",
+    "@signIn": {
+        "description": "Button and page title to sign in"
+    },
+    "createAccount": "Create account",
+    "@createAccount": {
+        "description": "Button to start creating an account"
+    },
+    "signOut": "Sign out",
+    "@signOut": {
+        "description": "Action to sign out"
+    },
+    "labelEmail": "Email",
+    "@labelEmail": {
+        "description": "Email field label"
+    },
+    "labelPassword": "Password",
+    "@labelPassword": {
+        "description": "Password field label"
+    },
+    "labelNewPassword": "New password",
+    "@labelNewPassword": {
+        "description": "New password field label in the password reset flow"
+    },
+    "labelFullName": "Full name",
+    "@labelFullName": {
+        "description": "Full name field label"
+    },
+    "labelVerificationCode": "Verification code",
+    "@labelVerificationCode": {
+        "description": "Field for the code received by email"
+    },
+    "passwordRuleHint": "At least 8 characters, no spaces at the start or end",
+    "@passwordRuleHint": {
+        "description": "Hint under password fields, mirrors the server password rule"
+    },
+    "forgotPassword": "Forgot password?",
+    "@forgotPassword": {
+        "description": "Link from sign-in to the password reset flow"
+    },
+    "noAccountYet": "No account yet? Create one",
+    "@noAccountYet": {
+        "description": "Link from sign-in to sign-up"
+    },
+    "alreadyHaveAccount": "Already have an account? Sign in",
+    "@alreadyHaveAccount": {
+        "description": "Link from sign-up to sign-in"
+    },
+    "continueAction": "Continue",
+    "@continueAction": {
+        "description": "Button to go to the next step of a form"
+    },
+    "resendCode": "Send a new code",
+    "@resendCode": {
+        "description": "Button to request a new verification code"
+    },
+    "signUpTitle": "Create your account",
+    "@signUpTitle": {
+        "description": "Sign-up page title"
+    },
+    "signUpCodeSent": "If {email} can be registered, we sent it a verification code.",
+    "@signUpCodeSent": {
+        "description": "Shown on the code step of sign-up. The server never says whether an email is already registered.",
+        "placeholders": {
+            "email": {
+                "type": "String",
+                "example": "ada@example.com"
+            }
+        }
+    },
+    "choosePasswordTitle": "Choose a password",
+    "@choosePasswordTitle": {
+        "description": "Title of the last sign-up step"
+    },
+    "passwordResetTitle": "Reset your password",
+    "@passwordResetTitle": {
+        "description": "Password reset page title"
+    },
+    "passwordResetCodeSent": "If {email} has an account, we sent it a reset code.",
+    "@passwordResetCodeSent": {
+        "description": "Shown on the code step of the password reset",
+        "placeholders": {
+            "email": {
+                "type": "String",
+                "example": "ada@example.com"
+            }
+        }
+    },
+    "homeTitle": "Your projects",
+    "@homeTitle": {
+        "description": "Title of the signed-in home page"
+    },
+    "homePlaceholder": "Your construction projects will appear here.",
+    "@homePlaceholder": {
+        "description": "Home page text until projects exist (M2)"
+    },
+    "validateEmailRequired": "Enter your email",
+    "@validateEmailRequired": {
+        "description": "Email field left empty"
+    },
+    "validateEmailInvalid": "Enter a valid email",
+    "@validateEmailInvalid": {
+        "description": "Email field not in email format"
+    },
+    "validatePasswordRequired": "Enter a password",
+    "@validatePasswordRequired": {
+        "description": "Password field left empty"
+    },
+    "validatePasswordTooShort": "Use at least 8 characters",
+    "@validatePasswordTooShort": {
+        "description": "Password shorter than 8 characters"
+    },
+    "validatePasswordSpaces": "Remove spaces at the start or end",
+    "@validatePasswordSpaces": {
+        "description": "Password starts or ends with a space"
+    },
+    "validateCodeRequired": "Enter the code from the email",
+    "@validateCodeRequired": {
+        "description": "Verification code field left empty"
+    },
+    "validateNameRequired": "Enter your name",
+    "@validateNameRequired": {
+        "description": "Name field left empty"
+    },
+    "validateNameTooLong": "Use 100 characters or fewer",
+    "@validateNameTooLong": {
+        "description": "Name longer than 100 characters"
+    },
+    "errorPermissionDenied": "You don't have permission to do this.",
+    "@errorPermissionDenied": {
+        "description": "AppErrorCode.permissionDenied"
+    },
+    "errorInvalidFullName": "Enter a name of 1 to 100 characters.",
+    "@errorInvalidFullName": {
+        "description": "AppErrorCode.invalidFullName"
+    },
+    "errorInvalidCountryCode": "Choose a country from the list.",
+    "@errorInvalidCountryCode": {
+        "description": "AppErrorCode.invalidCountryCode"
+    },
+    "errorInvalidLocale": "Choose English or French.",
+    "@errorInvalidLocale": {
+        "description": "AppErrorCode.invalidLocale"
+    },
+    "errorAuthInvalidCredentials": "Wrong email or password.",
+    "@errorAuthInvalidCredentials": {
+        "description": "AppErrorCode.authInvalidCredentials"
+    },
+    "errorAuthTooManyAttempts": "Too many attempts. Try again in a few minutes.",
+    "@errorAuthTooManyAttempts": {
+        "description": "AppErrorCode.authTooManyAttempts"
+    },
+    "errorAuthRequestExpired": "This code has expired. Request a new one.",
+    "@errorAuthRequestExpired": {
+        "description": "AppErrorCode.authRequestExpired"
+    },
+    "errorAuthRequestInvalid": "This code is not valid. Check it and try again.",
+    "@errorAuthRequestInvalid": {
+        "description": "AppErrorCode.authRequestInvalid"
+    },
+    "errorAuthPasswordPolicy": "This password isn't allowed. Use at least 8 characters, with no spaces at the start or end.",
+    "@errorAuthPasswordPolicy": {
+        "description": "AppErrorCode.authPasswordPolicy"
+    },
+    "errorAuthUserBlocked": "This account is blocked.",
+    "@errorAuthUserBlocked": {
+        "description": "AppErrorCode.authUserBlocked"
+    },
+    "errorAuthUnknown": "Authentication failed. Try again.",
+    "@errorAuthUnknown": {
+        "description": "AppErrorCode.authUnknown"
+    },
+    "errorUnauthorized": "Your session has expired. Sign in again.",
+    "@errorUnauthorized": {
+        "description": "HttpException401"
+    },
+    "networkError": "No connection. Check your internet and try again.",
+    "@networkError": {
+        "description": "NetworkException"
+    },
+    "errorSignIn": "Could not sign in. Try again.",
+    "@errorSignIn": {
+        "description": "Unexpected error while signing in"
+    },
+    "errorSignUp": "Could not create the account. Try again.",
+    "@errorSignUp": {
+        "description": "Unexpected error during sign-up"
+    },
+    "errorPasswordReset": "Could not reset the password. Try again.",
+    "@errorPasswordReset": {
+        "description": "Unexpected error during password reset"
+    },
+    "errorSignOut": "Could not sign out. Try again.",
+    "@errorSignOut": {
+        "description": "Unexpected error while signing out"
+    },
+    "labelConfirmPassword": "Confirm password",
+    "@labelConfirmPassword": {
+        "description": "Second password field on sign-up, must match the first"
+    },
+    "labelConfirmNewPassword": "Confirm new password",
+    "@labelConfirmNewPassword": {
+        "description": "Second password field on password reset, must match the first"
+    },
+    "validateConfirmPasswordRequired": "Enter the password again",
+    "@validateConfirmPasswordRequired": {
+        "description": "Confirm-password field left empty"
+    },
+    "validatePasswordMismatch": "The passwords don't match",
+    "@validatePasswordMismatch": {
+        "description": "Confirm-password field differs from the password field"
+    },
+    "signInHeading": "Welcome back",
+    "@signInHeading": {
+        "description": "Heading on the sign-in page (the app bar says Sign in)"
+    },
+    "showPassword": "Show password",
+    "@showPassword": {
+        "description": "Tooltip of the eye button that reveals a password"
+    },
+    "hidePassword": "Hide password",
+    "@hidePassword": {
+        "description": "Tooltip of the eye button that hides a password again"
     }
 }

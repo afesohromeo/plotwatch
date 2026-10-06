@@ -90,7 +90,7 @@ class ScaffoldWrapper extends StatelessWidget {
       appBar: hasAppbar
           ? AppBar(
               shadowColor: Colors.transparent,
-              elevation: elevation ?? 10,
+              elevation: elevation,
               centerTitle: false,
               automaticallyImplyLeading: false,
               leadingWidth: 60,
@@ -99,7 +99,7 @@ class ScaffoldWrapper extends StatelessWidget {
               leading: leading,
 
               actions: actions,
-              toolbarHeight: toolBarHeight ?? 65,
+              toolbarHeight: toolBarHeight ?? 64,
               backgroundColor: appBarBgColor,
               title: title,
               titleSpacing: 0,
