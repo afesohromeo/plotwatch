@@ -23,7 +23,7 @@
 | M2-8 | **Link and deep link** | The link is `https://plotwatch.serverpod.space/join/ABCDEFGH`. It opens the web app's `/join/:code` route. A signed-out user goes through sign-in or sign-up first and comes back to the join screen (MEMB-03). **Android App Links** (the link opening the installed app) need `assetlinks.json` and the release signing fingerprint: moved to M8. On Android the user types or pastes the code. |
 | M2-9 | ~~Site set by the owner (pin, Plus Code)~~ | **Replaced by M2-15** (revision of 2026-10-06). SITE-01 and SITE-02 move to P1. |
 | M2-10 | **Site time zone (SITE-06)** | **Moved to P1.** The column stays nullable; no UI. The MVP shows times in the viewer's zone. |
-| M2-11 | **Maps keys** | The map is used by the owner's "Validate site" screen. **Android:** key in a gitignored `plotwatch_flutter/android/secrets.properties`, read by Gradle into a manifest placeholder. **Web:** key stored as a Cloud password `googleMapsWebKey` (locally in `config/passwords.yaml`), added to the server's `config.json` as `mapsApiKey`; the app loads the Maps script with it before the first map opens. The key is never committed. |
+| M2-11 | **Maps keys** | The map is used by the owner's "Validate site" screen. **Android:** key in a gitignored `plotwatch_flutter/android/secrets.properties`, read by Gradle into a manifest placeholder. **iOS:** key in a gitignored `plotwatch_flutter/ios/Flutter/Secrets.xcconfig`, passed through `Info.plist` to `AppDelegate.swift` (G2-2). **Web:** key stored as a Cloud password `googleMapsWebKey` (locally in `config/passwords.yaml`), added to the server's `config.json` as `mapsApiKey`; the app loads the Maps script with it before the first map opens. The key is never committed. |
 | M2-12 | **Project list** | `ProjectSummary` (project, my role, progress) in a `ProjectSummaryPage`, page numbers per `_standards/14` §3.1, newest activity first (`updatedAt` desc, then `id` desc). Progress is 0 until M3 adds stages. The signed-in home page becomes this list. |
 | M2-13 | **Currency** | ISO 4217 codes from a fixed list of constants on the server (as `ProfileService.supportedLocales`), mirrored in the app's picker (like `supportedLanguageCodes`). "Currency locked once money is recorded" (PROJ-04) is enforced in M6, when the ledger exists. |
 | M2-14 | **New packages** | App: `google_maps_flutter`, `geolocator`, `share_plus`. Server: `open_location_code` (pure Dart, added in group A). You add them with `flutter pub add` / `dart pub add`. |
@@ -227,7 +227,7 @@ indexes:
 
 **Tests first:** `LocalizeSiteBloc` (permission denied, GPS off, accuracy improving to ≤ 20 m enables saving, mocked position refused, save success / each failure), `ValidateSiteBloc` (radius limits, validate, reject, failures); widget tests with the location provider and the map replaced by test doubles (the Google map can't render in widget tests).
 
-**You'll need:** a Google Cloud project with **Maps SDK for Android** and **Maps JavaScript API** enabled, a budget alert, and two keys: Android (restricted to `com.afesohromeo.plotwatch` + your debug SHA-1) and web (restricted to `localhost` and `plotwatch.serverpod.space`). Then `serverpod cloud password set googleMapsWebKey <key>`.
+**You'll need:** a Google Cloud project with **Maps SDK for Android**, **Maps SDK for iOS** and **Maps JavaScript API** enabled, a budget alert, and three keys: Android (restricted to `com.afesohromeo.plotwatch` + your debug SHA-1), iOS (restricted to the bundle ID `com.afesohromeo.plotwatch`, G2-3) and web (restricted to `localhost` and `plotwatch.serverpod.space`). Then `serverpod cloud password set googleMapsWebKey <key>`.
 
 **You run** after groups E–G: `flutter pub add google_maps_flutter geolocator share_plus`, `build_runner`, `gen-l10n`, `dart format`, `dart analyze`; Claude runs `flutter test`; you deploy.
 
@@ -403,3 +403,19 @@ Done: join fix (F2-1), Android App Links with the debug fingerprint (F2-2; to ve
 Found by the tests and fixed: the reject dialog disposed its text controller while its closing animation still used it (now a small widget that owns the controller).
 
 Also: the GitHub Format workflow had failed since group B because some server files were committed unformatted; both packages are now formatted with `dart format .`, and every "You run" batch formats whole packages from now on.
+
+## Group G2: iOS setup without a Mac (approved 2026-10-07)
+The app targets Android and iOS (and the web). The iOS project is set up from Windows, the same way PlusLocate was; it is built and checked on a Mac or a cloud Mac build later.
+
+| # | Item | Decision |
+|---|------|----------|
+| G2-1 | **Bundle ID** | `com.afesohromeo.plotwatch`, the same as the Android application ID (tests target: `com.afesohromeo.plotwatch.RunnerTests`). Changed in `Runner.xcodeproj/project.pbxproj`. |
+| G2-2 | **iOS Maps key** | In a gitignored `ios/Flutter/Secrets.xcconfig` (`MAPS_API_KEY = …`), included with `#include?` from `Debug.xcconfig` and `Release.xcconfig` (the `?` means a missing file is not an error). `Info.plist` exposes it as `GMSApiKey = $(MAPS_API_KEY)`; `AppDelegate.swift` reads `GMSApiKey` and calls `GMSServices.provideAPIKey` when it is not empty. A committed `Secrets.xcconfig.example` shows the format. Same pattern as PlusLocate. Without the file the app builds, and only the map stays blank. |
+| G2-3 | **Third Google key** | Maps SDK for iOS enabled in the same Google Cloud project; a key restricted to iOS apps with the bundle ID `com.afesohromeo.plotwatch`. |
+
+**Files:** `ios/Runner.xcodeproj/project.pbxproj`, `ios/Flutter/Debug.xcconfig`, `ios/Flutter/Release.xcconfig`, `ios/Flutter/Secrets.xcconfig.example`, `ios/.gitignore`, `ios/Runner/Info.plist`, `ios/Runner/AppDelegate.swift`.
+
+**Tests:** native configuration only, no Dart code changes, so no new Dart tests. It can't be compiled on Windows; the first iOS build (Mac or cloud Mac) is the check.
+
+### Group G2 outcome (2026-10-07)
+Done as planned. Not compiled yet (no Mac); the first iOS build is the check.
