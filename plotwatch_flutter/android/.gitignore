@@ -12,3 +12,6 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+
+# Maps key and other secrets (doc/04b G-3)
+secrets.properties

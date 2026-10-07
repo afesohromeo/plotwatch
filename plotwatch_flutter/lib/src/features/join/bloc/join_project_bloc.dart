@@ -12,8 +12,9 @@ part 'join_project_bloc.freezed.dart';
 /// then join (MEMB-03, AC-2).
 class JoinProjectBloc extends Bloc<JoinProjectEvent, JoinProjectState> {
   JoinProjectBloc({required this._membershipRepository})
-      : super(const JoinProjectState()) {
+    : super(const JoinProjectState()) {
     on<_PreviewRequested>(_onPreviewRequested);
+    on<_CodeEdited>(_onCodeEdited);
     on<_JoinRequested>(_onJoinRequested);
     on<_ResetFlowStep>(_onResetFlowStep);
   }
@@ -25,13 +26,14 @@ class JoinProjectBloc extends Bloc<JoinProjectEvent, JoinProjectState> {
     Emitter<JoinProjectState> emit,
   ) async {
     final l10n = LocalizationService.localization;
-    emit(JoinProjectState(code: event.code, previewStatus: GenericStatus.loading));
+    emit(
+      JoinProjectState(code: event.code, previewStatus: GenericStatus.loading),
+    );
     try {
       final preview = await _membershipRepository.previewInvitation(event.code);
-      emit(state.copyWith(
-        previewStatus: GenericStatus.success,
-        preview: preview,
-      ));
+      emit(
+        state.copyWith(previewStatus: GenericStatus.success, preview: preview),
+      );
     } on HttpException400 catch (e) {
       emit(_previewFailure(e.code.message(l10n)));
     } on HttpException401 catch (_) {
@@ -44,6 +46,12 @@ class JoinProjectBloc extends Bloc<JoinProjectEvent, JoinProjectState> {
     }
   }
 
+  void _onCodeEdited(_CodeEdited event, Emitter<JoinProjectState> emit) {
+    if (state.previewStatus == GenericStatus.initial) return;
+    if (event.code.trim() == state.code) return;
+    emit(const JoinProjectState());
+  }
+
   Future<void> _onJoinRequested(
     _JoinRequested event,
     Emitter<JoinProjectState> emit,
@@ -51,10 +59,9 @@ class JoinProjectBloc extends Bloc<JoinProjectEvent, JoinProjectState> {
     if (state.preview == null) return;
 
     final l10n = LocalizationService.localization;
-    emit(state.copyWith(
-      joinStatus: GenericStatus.loading,
-      joinErrorMessage: null,
-    ));
+    emit(
+      state.copyWith(joinStatus: GenericStatus.loading, joinErrorMessage: null),
+    );
     try {
       final joined = await _membershipRepository.acceptInvitation(state.code);
       emit(state.copyWith(joinStatus: GenericStatus.success, joined: joined));
@@ -70,23 +77,19 @@ class JoinProjectBloc extends Bloc<JoinProjectEvent, JoinProjectState> {
     }
   }
 
-  void _onResetFlowStep(
-    _ResetFlowStep event,
-    Emitter<JoinProjectState> emit,
-  ) {
-    emit(state.copyWith(
-      joinStatus: GenericStatus.initial,
-      joinErrorMessage: null,
-    ));
+  void _onResetFlowStep(_ResetFlowStep event, Emitter<JoinProjectState> emit) {
+    emit(
+      state.copyWith(joinStatus: GenericStatus.initial, joinErrorMessage: null),
+    );
   }
 
   JoinProjectState _previewFailure(String message) => state.copyWith(
-        previewStatus: GenericStatus.failure,
-        previewErrorMessage: message,
-      );
+    previewStatus: GenericStatus.failure,
+    previewErrorMessage: message,
+  );
 
   JoinProjectState _joinFailure(String message) => state.copyWith(
-        joinStatus: GenericStatus.failure,
-        joinErrorMessage: message,
-      );
+    joinStatus: GenericStatus.failure,
+    joinErrorMessage: message,
+  );
 }

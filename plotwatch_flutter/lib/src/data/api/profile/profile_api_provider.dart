@@ -1,6 +1,5 @@
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
-
 /// The signed-in user's profile (`client.profile`).
 class ProfileApiProvider {
   Client get _client => ApiProvider().client;

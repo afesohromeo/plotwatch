@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
-
 /// App-wide repositories, the session BLoC, and the router built on it.
 class Application extends StatelessWidget {
   const Application({super.key});
@@ -16,6 +15,7 @@ class Application extends StatelessWidget {
         RepositoryProvider(create: (_) => ProfileRepository()),
         RepositoryProvider(create: (_) => ProjectRepository()),
         RepositoryProvider(create: (_) => MembershipRepository()),
+        RepositoryProvider(create: (_) => SiteRepository()),
       ],
       child: MultiBlocProvider(
         providers: [

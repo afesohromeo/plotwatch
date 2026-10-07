@@ -495,7 +495,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get siteWaitingOwner =>
-      'En attente de l\'emplacement du chantier. Invitez un chef de chantier : sur le terrain, il le localise avec son téléphone, puis vous le validez.';
+      'Invitez un chef de chantier à localiser le terrain, ou localisez-le vous-même si vous êtes sur place.';
 
   @override
   String get siteWaitingManager =>
@@ -587,6 +587,15 @@ class AppLocalizationsFr extends AppLocalizations {
       'Envoyez ce code ou ce lien. Il ne sert qu\'une fois et expire dans 7 jours.';
 
   @override
+  String get copyLinkAction => 'Copier le lien';
+
+  @override
+  String get linkCopied => 'Lien copié ✓';
+
+  @override
+  String get shareInvitationAction => 'Partager l\'invitation';
+
+  @override
   String get shareAction => 'Partager';
 
   @override
@@ -619,4 +628,132 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get joinAction => 'Rejoindre le projet';
+
+  @override
+  String get localizeSiteTitle => 'Localiser le chantier';
+
+  @override
+  String get localizeSiteHint =>
+      'Placez-vous dans le terrain, à ciel ouvert, et attendez une précision de 20 m ou mieux.';
+
+  @override
+  String get localizePhoneOnly =>
+      'Localisez le chantier avec l\'application Plotwatch sur votre téléphone, sur le terrain.';
+
+  @override
+  String get gettingPosition => 'Recherche de votre position…';
+
+  @override
+  String get locationDenied =>
+      'Plotwatch a besoin de votre position pour localiser le chantier.';
+
+  @override
+  String get allowLocation => 'Autoriser la localisation';
+
+  @override
+  String get locationDeniedForever =>
+      'La localisation est bloquée pour Plotwatch. Autorisez-la dans les réglages de l\'application.';
+
+  @override
+  String get openSettings => 'Ouvrir les réglages';
+
+  @override
+  String get locationServiceOff =>
+      'La localisation est désactivée sur ce téléphone.';
+
+  @override
+  String get turnOnLocation => 'Activer la localisation';
+
+  @override
+  String accuracyMeters(int meters) {
+    return '± $meters m';
+  }
+
+  @override
+  String get accuracyGood =>
+      'Précision suffisante. Vous pouvez enregistrer cette position.';
+
+  @override
+  String get accuracyWaiting => 'Attendez 20 m ou mieux, à ciel ouvert.';
+
+  @override
+  String get saveLocationAction => 'Enregistrer cette position';
+
+  @override
+  String get siteProposalSent =>
+      'Emplacement envoyé. Le propriétaire va le vérifier.';
+
+  @override
+  String get errorSiteProposal =>
+      'Impossible d\'enregistrer l\'emplacement. Réessayez.';
+
+  @override
+  String get errorSiteLoad =>
+      'Impossible de charger l\'emplacement. Réessayez.';
+
+  @override
+  String get errorSiteSave =>
+      'Impossible d\'enregistrer votre décision. Réessayez.';
+
+  @override
+  String get mapUnavailable =>
+      'La carte ne peut pas être affichée pour le moment.';
+
+  @override
+  String get validateSiteTitle => 'Valider l\'emplacement';
+
+  @override
+  String get validateSiteHint =>
+      'Vérifiez que le cercle couvre le terrain, avec quelques mètres de marge.';
+
+  @override
+  String get noPendingProposal => 'Aucun emplacement n\'attend de validation.';
+
+  @override
+  String get labelAccuracy => 'Précision GPS';
+
+  @override
+  String get labelReadAt => 'Relevé le';
+
+  @override
+  String get labelAddressOptional => 'Adresse ou repère (facultatif)';
+
+  @override
+  String get validateAction => 'Valider';
+
+  @override
+  String get rejectAction => 'Refuser';
+
+  @override
+  String get rejectReasonTitle => 'Refuser cet emplacement ?';
+
+  @override
+  String get rejectReasonLabel => 'Motif (facultatif)';
+
+  @override
+  String get siteValidated => 'L\'emplacement du chantier est validé.';
+
+  @override
+  String get siteRejected =>
+      'L\'emplacement a été refusé. Un nouveau peut être proposé.';
+
+  @override
+  String get siteProposalPendingOwner =>
+      'Un emplacement attend votre validation.';
+
+  @override
+  String get siteProposalPendingManager =>
+      'En attente de la validation de votre emplacement par le propriétaire.';
+
+  @override
+  String get reviewLocationAction => 'Vérifier l\'emplacement';
+
+  @override
+  String get localizeSiteAction => 'Localiser le chantier';
+
+  @override
+  String get localizeAgainAction => 'Localiser à nouveau';
+
+  @override
+  String get proposeNewLocationAction => 'Proposer un nouvel emplacement';
 }

@@ -6,3 +6,5 @@ fields:
   site: Site?
   myRole: ProjectRole
   myCanApprove: bool
+  ### The proposal waiting for the owner's decision, if any (decision M2-15).
+  pendingSiteProposal: SiteProposal?

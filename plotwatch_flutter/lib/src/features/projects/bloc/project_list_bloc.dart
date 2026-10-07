@@ -14,7 +14,7 @@ const _kProjectsPageSize = 20;
 /// `_standards/13`).
 class ProjectListBloc extends Bloc<ProjectListEvent, ProjectListState> {
   ProjectListBloc({required this._projectRepository})
-      : super(const ProjectListState()) {
+    : super(const ProjectListState()) {
     on<_FetchProjects>(_onFetchProjects);
     on<_RefreshProjects>(_onRefreshProjects);
   }
@@ -26,12 +26,14 @@ class ProjectListBloc extends Bloc<ProjectListEvent, ProjectListState> {
     Emitter<ProjectListState> emit,
   ) async {
     final l10n = LocalizationService.localization;
-    emit(state.copyWith(
-      projectsListStatus: GenericStatus.loading,
-      projectsListError: null,
-      projects: event.pageKey == 0 ? [] : state.projects,
-      projectsRefreshController: false,
-    ));
+    emit(
+      state.copyWith(
+        projectsListStatus: GenericStatus.loading,
+        projectsListError: null,
+        projects: event.pageKey == 0 ? [] : state.projects,
+        projectsRefreshController: false,
+      ),
+    );
 
     try {
       final result = await _projectRepository.fetchProjects(
@@ -39,16 +41,18 @@ class ProjectListBloc extends Bloc<ProjectListEvent, ProjectListState> {
         size: event.size ?? _kProjectsPageSize,
       );
       final newItems = List<ProjectSummary>.from(result.content);
-      emit(state.copyWith(
-        projectsListStatus: GenericStatus.success,
-        paginatedProjects: newItems,
-        maxProjects:
-            newItems.length < (result.pagination.size ?? _kProjectsPageSize),
-        projectsPageKey: event.pageKey,
-        projects: event.pageKey == 0
-            ? newItems
-            : [...state.projects, ...newItems],
-      ));
+      emit(
+        state.copyWith(
+          projectsListStatus: GenericStatus.success,
+          paginatedProjects: newItems,
+          maxProjects:
+              newItems.length < (result.pagination.size ?? _kProjectsPageSize),
+          projectsPageKey: event.pageKey,
+          projects: event.pageKey == 0
+              ? newItems
+              : [...state.projects, ...newItems],
+        ),
+      );
     } on HttpException400 catch (e) {
       emit(_failure(e.code.message(l10n)));
     } on HttpException401 catch (_) {
@@ -65,18 +69,20 @@ class ProjectListBloc extends Bloc<ProjectListEvent, ProjectListState> {
     _RefreshProjects event,
     Emitter<ProjectListState> emit,
   ) {
-    emit(state.copyWith(
-      projectsListStatus: GenericStatus.initial,
-      projects: [],
-      paginatedProjects: [],
-      projectsPageKey: 0,
-      maxProjects: false,
-      projectsRefreshController: true,
-    ));
+    emit(
+      state.copyWith(
+        projectsListStatus: GenericStatus.initial,
+        projects: [],
+        paginatedProjects: [],
+        projectsPageKey: 0,
+        maxProjects: false,
+        projectsRefreshController: true,
+      ),
+    );
   }
 
   ProjectListState _failure(String message) => state.copyWith(
-        projectsListStatus: GenericStatus.failure,
-        projectsListError: message,
-      );
+    projectsListStatus: GenericStatus.failure,
+    projectsListError: message,
+  );
 }

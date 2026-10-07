@@ -8,5 +8,5 @@ enum GenericFlowStep {
   deletingItem,
   creatingItem,
   updatingItem,
-  error
+  error,
 }

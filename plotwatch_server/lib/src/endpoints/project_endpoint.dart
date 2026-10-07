@@ -29,13 +29,12 @@ class ProjectEndpoint extends Endpoint {
     Session session, {
     int? page,
     int? pageSize,
-  }) =>
-      _service.list(
-        session,
-        session.authenticated!.authUserId,
-        page: page ?? 0,
-        pageSize: pageSize ?? 20,
-      );
+  }) => _service.list(
+    session,
+    session.authenticated!.authUserId,
+    page: page ?? 0,
+    pageSize: pageSize ?? 20,
+  );
 
   Future<ProjectOverview> get(Session session, int projectId) async {
     final member = await _permissions.require(

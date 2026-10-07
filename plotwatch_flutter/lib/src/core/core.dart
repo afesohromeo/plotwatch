@@ -8,3 +8,4 @@ export 'my_app_colors.dart';
 export 'app_restart.dart';
 export 'environment.dart';
 export 'theme/plotwatch_theme.dart';
+export 'maps/maps_loader.dart';

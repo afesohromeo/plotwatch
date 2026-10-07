@@ -11,8 +11,7 @@ part 'sign_in_bloc.freezed.dart';
 /// Email + password sign-in. On success the session changes and the router
 /// moves to the home page (through `AuthenticationBloc`).
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
-  SignInBloc({required this._authRepository})
-      : super(const SignInState()) {
+  SignInBloc({required this._authRepository}) : super(const SignInState()) {
     on<_SignInSubmitted>(_onSignInSubmitted);
     on<_PasswordVisibilityToggled>(_onPasswordVisibilityToggled);
     on<_Reset>(_onReset);
@@ -24,10 +23,12 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     _SignInSubmitted event,
     Emitter<SignInState> emit,
   ) async {
-    emit(state.copyWith(
-      signInStatus: GenericStatus.loading,
-      signInErrorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        signInStatus: GenericStatus.loading,
+        signInErrorMessage: null,
+      ),
+    );
     try {
       await _authRepository.signIn(
         email: event.email.trim(),
@@ -35,26 +36,35 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       );
       emit(state.copyWith(signInStatus: GenericStatus.success));
     } on HttpException400 catch (e) {
-      emit(state.copyWith(
-        signInStatus: GenericStatus.failure,
-        signInErrorMessage: e.code.message(LocalizationService.localization),
-      ));
+      emit(
+        state.copyWith(
+          signInStatus: GenericStatus.failure,
+          signInErrorMessage: e.code.message(LocalizationService.localization),
+        ),
+      );
     } on HttpException401 catch (_) {
-      emit(state.copyWith(
-        signInStatus: GenericStatus.failure,
-        signInErrorMessage: LocalizationService.localization.errorUnauthorized,
-      ));
+      emit(
+        state.copyWith(
+          signInStatus: GenericStatus.failure,
+          signInErrorMessage:
+              LocalizationService.localization.errorUnauthorized,
+        ),
+      );
     } on NetworkException catch (_) {
-      emit(state.copyWith(
-        signInStatus: GenericStatus.failure,
-        signInErrorMessage: LocalizationService.localization.networkError,
-      ));
+      emit(
+        state.copyWith(
+          signInStatus: GenericStatus.failure,
+          signInErrorMessage: LocalizationService.localization.networkError,
+        ),
+      );
     } catch (e) {
       log('SignInBloc._onSignInSubmitted error: $e');
-      emit(state.copyWith(
-        signInStatus: GenericStatus.failure,
-        signInErrorMessage: LocalizationService.localization.errorSignIn,
-      ));
+      emit(
+        state.copyWith(
+          signInStatus: GenericStatus.failure,
+          signInErrorMessage: LocalizationService.localization.errorSignIn,
+        ),
+      );
     }
   }
 

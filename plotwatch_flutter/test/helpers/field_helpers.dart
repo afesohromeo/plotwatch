@@ -36,7 +36,8 @@ bool isReadOnly(WidgetTester tester, Key fieldKey) {
 /// What the page told the password manager each time it closed an autofill
 /// context: `true` offers to save the typed credentials, `false` drops them.
 List<bool> autofillContextsFinished(WidgetTester tester) => tester
-    .testTextInput.log
+    .testTextInput
+    .log
     .where((call) => call.method == 'TextInput.finishAutofillContext')
     .map((call) => call.arguments as bool)
     .toList();

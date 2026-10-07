@@ -23,11 +23,20 @@ void main() {
       expect(Validators.password('', l10n), l10n.validatePasswordRequired);
     });
     test('when shorter than 8 characters then it says too short', () {
-      expect(Validators.password('1234567', l10n), l10n.validatePasswordTooShort);
+      expect(
+        Validators.password('1234567', l10n),
+        l10n.validatePasswordTooShort,
+      );
     });
     test('when it starts or ends with a space then it says no spaces', () {
-      expect(Validators.password(' 12345678', l10n), l10n.validatePasswordSpaces);
-      expect(Validators.password('12345678 ', l10n), l10n.validatePasswordSpaces);
+      expect(
+        Validators.password(' 12345678', l10n),
+        l10n.validatePasswordSpaces,
+      );
+      expect(
+        Validators.password('12345678 ', l10n),
+        l10n.validatePasswordSpaces,
+      );
     });
     test('when 8 characters without outer spaces then it passes', () {
       expect(Validators.password('12345678', l10n), isNull);
@@ -36,15 +45,22 @@ void main() {
 
   group('Given the confirm-password validator', () {
     test('when empty then it asks to confirm', () {
-      expect(Validators.confirmPassword('', 'secret123', l10n),
-          l10n.validateConfirmPasswordRequired);
+      expect(
+        Validators.confirmPassword('', 'secret123', l10n),
+        l10n.validateConfirmPasswordRequired,
+      );
     });
     test('when different from the password then it says they do not match', () {
-      expect(Validators.confirmPassword('secret124', 'secret123', l10n),
-          l10n.validatePasswordMismatch);
+      expect(
+        Validators.confirmPassword('secret124', 'secret123', l10n),
+        l10n.validatePasswordMismatch,
+      );
     });
     test('when equal to the password then it passes', () {
-      expect(Validators.confirmPassword('secret123', 'secret123', l10n), isNull);
+      expect(
+        Validators.confirmPassword('secret123', 'secret123', l10n),
+        isNull,
+      );
     });
   });
 
@@ -72,12 +88,16 @@ void main() {
   // Mirrors the server's ProjectService.validateDetails (doc/04b, group B).
   group('Given the project name validator', () {
     test('when blank then it asks for a project name', () {
-      expect(Validators.projectName('  ', l10n),
-          l10n.validateProjectNameRequired);
+      expect(
+        Validators.projectName('  ', l10n),
+        l10n.validateProjectNameRequired,
+      );
     });
     test('when longer than 100 characters then it says too long', () {
-      expect(Validators.projectName('x' * 101, l10n),
-          l10n.validateProjectNameTooLong);
+      expect(
+        Validators.projectName('x' * 101, l10n),
+        l10n.validateProjectNameTooLong,
+      );
     });
     test('when 1 to 100 characters then it passes', () {
       expect(Validators.projectName('House in Bafoussam', l10n), isNull);
@@ -89,8 +109,10 @@ void main() {
       expect(Validators.projectDescription('', l10n), isNull);
     });
     test('when longer than 1,000 characters then it says too long', () {
-      expect(Validators.projectDescription('x' * 1001, l10n),
-          l10n.validateDescriptionTooLong);
+      expect(
+        Validators.projectDescription('x' * 1001, l10n),
+        l10n.validateDescriptionTooLong,
+      );
     });
   });
 }

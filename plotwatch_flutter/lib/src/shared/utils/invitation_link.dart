@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
 
 /// Shows an 8-character invitation code as `ABCD-EFGH` (decision M2-6).
-String formatInvitationCode(String code) => code.length == 8
-    ? '${code.substring(0, 4)}-${code.substring(4)}'
-    : code;
+String formatInvitationCode(String code) =>
+    code.length == 8 ? '${code.substring(0, 4)}-${code.substring(4)}' : code;
 
 /// The link that opens the web app's join page (decision M2-8).
 String invitationLink(String code, {String? webAppUrl}) {

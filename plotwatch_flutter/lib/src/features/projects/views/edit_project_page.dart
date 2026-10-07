@@ -25,9 +25,9 @@ class _EditProjectPageState extends State<EditProjectPage> {
   }
 
   void _backToProject() => context.goNamed(
-        projectRouteName,
-        pathParameters: {'projectId': '${widget.projectId}'},
-      );
+    projectRouteName,
+    pathParameters: {'projectId': '${widget.projectId}'},
+  );
 
   @override
   Widget build(BuildContext context) {

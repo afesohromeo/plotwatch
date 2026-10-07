@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.afesohromeo.plotwatch",
+      "sha256_cert_fingerprints": [
+        "0A:17:60:EF:F8:FC:8E:54:2D:1F:67:91:59:7D:42:88:80:7D:B4:26:02:BD:E9:41:06:46:14:50:8D:C5:83:FC"
+      ]
+    }
+  }
+]

@@ -7,6 +7,7 @@ GlobalKey<NavigatorState>? rootNavKey;
 
 const String defaultAddress = '';
 const String fakeTenant = '';
+
 /// The "Calm Ledger" palette (doc/05-design-system.md §2).
 const customColors = MyAppColors(
   primary: Color(0xFF0E5A52),
@@ -70,11 +71,11 @@ DateTime? convertJsonDate(value) {
 double? convertToDouble(value, {bool canBeNull = false}) {
   double? doubleValue = value == null || value == ''
       ? canBeNull
-          ? null
-          : 0.0
+            ? null
+            : 0.0
       : (value is int)
-          ? value.toDouble()
-          : value;
+      ? value.toDouble()
+      : value;
   return doubleValue;
 }
 
@@ -86,15 +87,19 @@ String formatPrice(double? price, String currency) {
 }
 
 /// [locale] defaults to the app language (AC-7); the kit used French always.
-String formatDate(DateTime? date,
-    {bool withTime = false, bool withDay = false, String? locale}) {
+String formatDate(
+  DateTime? date, {
+  bool withTime = false,
+  bool withDay = false,
+  String? locale,
+}) {
   if (date == null) return '';
   final languageCode = locale ?? LocalizationService.localization.localeName;
   return withTime
       ? DateFormat('d MMM yyyy - HH:mm', languageCode).format(date)
       : withDay
-          ? DateFormat('EEE d MMM yyyy', languageCode).format(date)
-          : DateFormat('d MMM yyyy', languageCode).format(date);
+      ? DateFormat('EEE d MMM yyyy', languageCode).format(date)
+      : DateFormat('d MMM yyyy', languageCode).format(date);
 }
 
 /// App languages (D-8). Mirrors the server's ProfileService.supportedLocales.
@@ -110,3 +115,10 @@ const List<String> supportedCurrencyCodes = [
 
 /// Logo D1, full detail, for light backgrounds (doc/04b, group E2).
 const String brandMarkAsset = 'assets/brand/mark_full.svg';
+
+/// Site rules, mirrored from the server's SiteService (decisions M2-16,
+/// M2-17).
+const double maxGpsAccuracyM = 20;
+const int minSiteRadiusM = 10;
+const int maxSiteRadiusM = 500;
+const int defaultSiteRadiusM = 50;

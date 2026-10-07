@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
@@ -97,33 +96,44 @@ class _PhoneNumberFormFieldState extends State<PhoneNumberFormField> {
                               .copyWith(fontSize: 14),
                           countryCodeStyle: context.textTheme.displayMedium!
                               .copyWith(
-                                  fontSize: 14, color: customColors.black1),
+                                fontSize: 14,
+                                color: customColors.black1,
+                              ),
                           searchFieldInputDecoration: customInputDecoration(
-                              l10n.searchCountry,
-                              null,
-                              const Icon(Icons.search_rounded),
-                              customColors.black1.withValues(alpha: .8),
-                              widget.radius,
-                              null,
-                              null,
-                              context),
-                          listTileDivider: Divider(
-                            color: customColors.surface,
+                            l10n.searchCountry,
+                            null,
+                            const Icon(Icons.search_rounded),
+                            customColors.black1.withValues(alpha: .8),
+                            widget.radius,
+                            null,
+                            null,
+                            context,
                           ),
+                          listTileDivider: Divider(color: customColors.surface),
                         ),
-                        flagsButtonMargin:
-                            const EdgeInsets.fromLTRB(12, 0, 0, 0),
+                        flagsButtonMargin: const EdgeInsets.fromLTRB(
+                          12,
+                          0,
+                          0,
+                          0,
+                        ),
                         controller: widget.phoneNumberController,
                         initialValue: widget.initialValue,
                         invalidNumberMessage: l10n.validateMobile1,
-                        flagsButtonPadding:
-                            const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                        style: context.textTheme.displaySmall!
-                            .copyWith(color: customColors.black1, fontSize: 14),
+                        flagsButtonPadding: const EdgeInsets.fromLTRB(
+                          8,
+                          0,
+                          0,
+                          0,
+                        ),
+                        style: context.textTheme.displaySmall!.copyWith(
+                          color: customColors.black1,
+                          fontSize: 14,
+                        ),
                         dropdownTextStyle: context.textTheme.displayMedium!
                             .copyWith(fontSize: 14),
                         inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.digitsOnly,
                         ],
                         dropdownDecoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(widget.radius),
@@ -141,14 +151,15 @@ class _PhoneNumberFormFieldState extends State<PhoneNumberFormField> {
                         dropdownIconPosition: IconPosition.trailing,
                         autovalidateMode: AutovalidateMode.disabled,
                         decoration: customInputDecoration(
-                            l10n.tel,
-                            null,
-                            null,
-                            customColors.black1.withValues(alpha: .8),
-                            widget.radius,
-                            null,
-                            null,
-                            context),
+                          l10n.tel,
+                          null,
+                          null,
+                          customColors.black1.withValues(alpha: .8),
+                          widget.radius,
+                          null,
+                          null,
+                          context,
+                        ),
                         initialCountryCode: widget.initialCountryCode,
                         onChanged: (phone) {
                           if (_validateAsUserTypes) {
@@ -193,7 +204,9 @@ class _PhoneNumberFormFieldState extends State<PhoneNumberFormField> {
               ? (value) {
                   log('submit $value'); // Always validate during submission
                   final error = _validatePhoneNumber(
-                      value ?? widget.phoneNumberController?.text, l10n);
+                    value ?? widget.phoneNumberController?.text,
+                    l10n,
+                  );
 
                   if (error != null) {
                     // Enable dynamic validation for subsequent typing

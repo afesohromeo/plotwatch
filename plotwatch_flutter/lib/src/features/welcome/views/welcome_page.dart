@@ -37,11 +37,16 @@ class WelcomePage extends StatelessWidget {
                         semanticsLabel: l10n.logoLabel,
                       ),
                       const Gap.vertical(height: AppSpacing.md),
-                      Text(l10n.appTitle, style: context.textTheme.displaySmall),
+                      Text(
+                        l10n.appTitle,
+                        style: context.textTheme.displaySmall,
+                      ),
                       const Gap.vertical(height: AppSpacing.sm),
                       Text(
                         l10n.welcomeTagline,
-                        style: context.textTheme.bodyMedium?.copyWith(fontSize: 18),
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          fontSize: 18,
+                        ),
                       ),
                     ],
                   ),

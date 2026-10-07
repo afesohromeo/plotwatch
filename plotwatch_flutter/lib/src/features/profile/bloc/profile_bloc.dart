@@ -13,7 +13,7 @@ part 'profile_bloc.freezed.dart';
 /// it, and the app language follows it (decision M1-6).
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc({required this._profileRepository})
-      : super(const ProfileState()) {
+    : super(const ProfileState()) {
     on<_FetchMe>(_onFetchMe);
     on<_UpdateMe>(_onUpdateMe);
     on<_ResetFlowStep>(_onResetFlowStep);
@@ -23,89 +23,116 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository _profileRepository;
 
   Future<void> _onFetchMe(_FetchMe event, Emitter<ProfileState> emit) async {
-    emit(state.copyWith(
-      profileStatus: GenericStatus.loading,
-      profileErrorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        profileStatus: GenericStatus.loading,
+        profileErrorMessage: null,
+      ),
+    );
     try {
       final profile = await _profileRepository.fetchMe();
-      emit(state.copyWith(
-        profileStatus: GenericStatus.success,
-        profile: profile,
-      ));
+      emit(
+        state.copyWith(profileStatus: GenericStatus.success, profile: profile),
+      );
     } on HttpException400 catch (e) {
-      emit(state.copyWith(
-        profileStatus: GenericStatus.failure,
-        profileErrorMessage: e.code.message(LocalizationService.localization),
-      ));
+      emit(
+        state.copyWith(
+          profileStatus: GenericStatus.failure,
+          profileErrorMessage: e.code.message(LocalizationService.localization),
+        ),
+      );
     } on HttpException401 catch (_) {
-      emit(state.copyWith(
-        profileStatus: GenericStatus.failure,
-        profileErrorMessage: LocalizationService.localization.errorUnauthorized,
-      ));
+      emit(
+        state.copyWith(
+          profileStatus: GenericStatus.failure,
+          profileErrorMessage:
+              LocalizationService.localization.errorUnauthorized,
+        ),
+      );
     } on NetworkException catch (_) {
-      emit(state.copyWith(
-        profileStatus: GenericStatus.failure,
-        profileErrorMessage: LocalizationService.localization.networkError,
-      ));
+      emit(
+        state.copyWith(
+          profileStatus: GenericStatus.failure,
+          profileErrorMessage: LocalizationService.localization.networkError,
+        ),
+      );
     } catch (e) {
       log('ProfileBloc._onFetchMe error: $e');
-      emit(state.copyWith(
-        profileStatus: GenericStatus.failure,
-        profileErrorMessage: LocalizationService.localization.errorProfileLoad,
-      ));
+      emit(
+        state.copyWith(
+          profileStatus: GenericStatus.failure,
+          profileErrorMessage:
+              LocalizationService.localization.errorProfileLoad,
+        ),
+      );
     }
   }
 
   Future<void> _onUpdateMe(_UpdateMe event, Emitter<ProfileState> emit) async {
-    emit(state.copyWith(
-      flowStep: GenericFlowStep.updatingItem,
-      profileActionStatus: GenericStatus.loading,
-      profileActionErrorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        flowStep: GenericFlowStep.updatingItem,
+        profileActionStatus: GenericStatus.loading,
+        profileActionErrorMessage: null,
+      ),
+    );
     try {
       final profile = await _profileRepository.updateMe(
         fullName: event.fullName,
         countryCode: event.countryCode,
         locale: event.locale,
       );
-      emit(state.copyWith(
-        profileActionStatus: GenericStatus.success,
-        profile: profile,
-      ));
+      emit(
+        state.copyWith(
+          profileActionStatus: GenericStatus.success,
+          profile: profile,
+        ),
+      );
     } on HttpException400 catch (e) {
-      emit(state.copyWith(
-        profileActionStatus: GenericStatus.failure,
-        profileActionErrorMessage:
-            e.code.message(LocalizationService.localization),
-      ));
+      emit(
+        state.copyWith(
+          profileActionStatus: GenericStatus.failure,
+          profileActionErrorMessage: e.code.message(
+            LocalizationService.localization,
+          ),
+        ),
+      );
     } on HttpException401 catch (_) {
-      emit(state.copyWith(
-        profileActionStatus: GenericStatus.failure,
-        profileActionErrorMessage:
-            LocalizationService.localization.errorUnauthorized,
-      ));
+      emit(
+        state.copyWith(
+          profileActionStatus: GenericStatus.failure,
+          profileActionErrorMessage:
+              LocalizationService.localization.errorUnauthorized,
+        ),
+      );
     } on NetworkException catch (_) {
-      emit(state.copyWith(
-        profileActionStatus: GenericStatus.failure,
-        profileActionErrorMessage: LocalizationService.localization.networkError,
-      ));
+      emit(
+        state.copyWith(
+          profileActionStatus: GenericStatus.failure,
+          profileActionErrorMessage:
+              LocalizationService.localization.networkError,
+        ),
+      );
     } catch (e) {
       log('ProfileBloc._onUpdateMe error: $e');
-      emit(state.copyWith(
-        profileActionStatus: GenericStatus.failure,
-        profileActionErrorMessage:
-            LocalizationService.localization.errorProfileSave,
-      ));
+      emit(
+        state.copyWith(
+          profileActionStatus: GenericStatus.failure,
+          profileActionErrorMessage:
+              LocalizationService.localization.errorProfileSave,
+        ),
+      );
     }
   }
 
   void _onResetFlowStep(_ResetFlowStep event, Emitter<ProfileState> emit) {
-    emit(state.copyWith(
-      flowStep: GenericFlowStep.none,
-      profileActionStatus: GenericStatus.initial,
-      profileActionErrorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        flowStep: GenericFlowStep.none,
+        profileActionStatus: GenericStatus.initial,
+        profileActionErrorMessage: null,
+      ),
+    );
   }
 
   void _onReset(_Reset event, Emitter<ProfileState> emit) {

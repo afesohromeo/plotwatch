@@ -14,10 +14,12 @@ class PasswordResetPage extends StatefulWidget {
   static const passwordFieldKey = Key('passwordReset.password');
   static const confirmPasswordFieldKey = Key('passwordReset.confirmPassword');
   static const submitButtonKey = Key('passwordReset.submit');
-  static const passwordVisibilityButtonKey =
-      Key('passwordReset.passwordVisibility');
-  static const confirmPasswordVisibilityButtonKey =
-      Key('passwordReset.confirmPasswordVisibility');
+  static const passwordVisibilityButtonKey = Key(
+    'passwordReset.passwordVisibility',
+  );
+  static const confirmPasswordVisibilityButtonKey = Key(
+    'passwordReset.confirmPasswordVisibility',
+  );
 
   @override
   State<PasswordResetPage> createState() => _PasswordResetPageState();
@@ -48,8 +50,9 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
       case PasswordResetStep.verifyCode:
         bloc.add(PasswordResetEvent.codeSubmitted(code: _code.text));
       case PasswordResetStep.newPassword:
-        bloc.add(PasswordResetEvent.newPasswordSubmitted(
-            password: _password.text));
+        bloc.add(
+          PasswordResetEvent.newPasswordSubmitted(password: _password.text),
+        );
     }
   }
 
@@ -72,7 +75,10 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
         listener: (context, state) {
           if (state.passwordResetStatus == GenericStatus.failure &&
               state.passwordResetErrorMessage != null) {
-            DialogUtils.handleFailure(context, state.passwordResetErrorMessage!);
+            DialogUtils.handleFailure(
+              context,
+              state.passwordResetErrorMessage!,
+            );
           } else if (state.step == PasswordResetStep.newPassword &&
               state.passwordResetStatus == GenericStatus.success) {
             // The password is set: offer to update the saved login in the
@@ -84,8 +90,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
             previous.step != current.step ||
             previous.passwordResetStatus != current.passwordResetStatus,
         builder: (context, state) {
-          final isLoading =
-              state.passwordResetStatus == GenericStatus.loading;
+          final isLoading = state.passwordResetStatus == GenericStatus.loading;
           return AuthFormLayout(
             title: l10n.passwordResetTitle,
             subtitle: state.step == PasswordResetStep.verifyCode
@@ -121,9 +126,9 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                 TextButton(
                   onPressed: isLoading
                       ? null
-                      : () => context
-                          .read<PasswordResetBloc>()
-                          .add(const PasswordResetEvent.codeResent()),
+                      : () => context.read<PasswordResetBloc>().add(
+                          const PasswordResetEvent.codeResent(),
+                        ),
                   child: Text(l10n.resendCode),
                 ),
               ],
@@ -135,73 +140,75 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
   }
 
   List<Widget> _fields(PasswordResetState state, AppLocalizations l10n) {
-    void toggle(PasswordResetEvent event) => context.read<PasswordResetBloc>().add(event);
+    void toggle(PasswordResetEvent event) =>
+        context.read<PasswordResetBloc>().add(event);
 
     return switch (state.step) {
       PasswordResetStep.email => [
-          InputField(
-            key: PasswordResetPage.emailFieldKey,
-            controller: _email,
-            labelText: l10n.labelEmail,
-            keyboardType: TextInputType.emailAddress,
-            autofillHints: const [AutofillHints.email, AutofillHints.username],
-            validator: (value) => Validators.email(value, l10n),
-          ),
-        ],
+        InputField(
+          key: PasswordResetPage.emailFieldKey,
+          controller: _email,
+          labelText: l10n.labelEmail,
+          keyboardType: TextInputType.emailAddress,
+          autofillHints: const [AutofillHints.email, AutofillHints.username],
+          validator: (value) => Validators.email(value, l10n),
+        ),
+      ],
       PasswordResetStep.verifyCode => [
-          InputField(
-            key: PasswordResetPage.codeFieldKey,
-            controller: _code,
-            labelText: l10n.labelVerificationCode,
-            enableSuggestions: false,
-            validator: (value) => Validators.code(value, l10n),
-          ),
-        ],
+        InputField(
+          key: PasswordResetPage.codeFieldKey,
+          controller: _code,
+          labelText: l10n.labelVerificationCode,
+          enableSuggestions: false,
+          validator: (value) => Validators.code(value, l10n),
+        ),
+      ],
       PasswordResetStep.newPassword => [
-          // The password manager updates the password saved under this email.
-          InputField(
-            key: PasswordResetPage.accountEmailFieldKey,
-            initialValue: state.email,
-            labelText: l10n.labelEmail,
-            readOnly: true,
-            autofillHints: const [AutofillHints.username],
-            validator: null,
+        // The password manager updates the password saved under this email.
+        InputField(
+          key: PasswordResetPage.accountEmailFieldKey,
+          initialValue: state.email,
+          labelText: l10n.labelEmail,
+          readOnly: true,
+          autofillHints: const [AutofillHints.username],
+          validator: null,
+        ),
+        const Gap.vertical(height: AppSpacing.md),
+        InputField(
+          key: PasswordResetPage.passwordFieldKey,
+          controller: _password,
+          labelText: l10n.labelNewPassword,
+          hintText: l10n.passwordRuleHint,
+          obscureText: !state.isPasswordVisible,
+          suffixIcon: PasswordVisibilityButton(
+            key: PasswordResetPage.passwordVisibilityButtonKey,
+            isVisible: state.isPasswordVisible,
+            onPressed: () =>
+                toggle(const PasswordResetEvent.passwordVisibilityToggled()),
           ),
-          const Gap.vertical(height: AppSpacing.md),
-          InputField(
-            key: PasswordResetPage.passwordFieldKey,
-            controller: _password,
-            labelText: l10n.labelNewPassword,
-            hintText: l10n.passwordRuleHint,
-            obscureText: !state.isPasswordVisible,
-            suffixIcon: PasswordVisibilityButton(
-              key: PasswordResetPage.passwordVisibilityButtonKey,
-              isVisible: state.isPasswordVisible,
-              onPressed: () =>
-                  toggle(const PasswordResetEvent.passwordVisibilityToggled()),
+          enableSuggestions: false,
+          autofillHints: const [AutofillHints.newPassword],
+          validator: (value) => Validators.password(value, l10n),
+        ),
+        const Gap.vertical(height: AppSpacing.md),
+        InputField(
+          key: PasswordResetPage.confirmPasswordFieldKey,
+          controller: _confirmPassword,
+          labelText: l10n.labelConfirmNewPassword,
+          obscureText: !state.isConfirmPasswordVisible,
+          suffixIcon: PasswordVisibilityButton(
+            key: PasswordResetPage.confirmPasswordVisibilityButtonKey,
+            isVisible: state.isConfirmPasswordVisible,
+            onPressed: () => toggle(
+              const PasswordResetEvent.confirmPasswordVisibilityToggled(),
             ),
-            enableSuggestions: false,
-            autofillHints: const [AutofillHints.newPassword],
-            validator: (value) => Validators.password(value, l10n),
           ),
-          const Gap.vertical(height: AppSpacing.md),
-          InputField(
-            key: PasswordResetPage.confirmPasswordFieldKey,
-            controller: _confirmPassword,
-            labelText: l10n.labelConfirmNewPassword,
-            obscureText: !state.isConfirmPasswordVisible,
-            suffixIcon: PasswordVisibilityButton(
-              key: PasswordResetPage.confirmPasswordVisibilityButtonKey,
-              isVisible: state.isConfirmPasswordVisible,
-              onPressed: () =>
-                  toggle(const PasswordResetEvent.confirmPasswordVisibilityToggled()),
-            ),
-            enableSuggestions: false,
-            autofillHints: const [AutofillHints.newPassword],
-            validator: (value) =>
-                Validators.confirmPassword(value, _password.text, l10n),
-          ),
-        ],
+          enableSuggestions: false,
+          autofillHints: const [AutofillHints.newPassword],
+          validator: (value) =>
+              Validators.confirmPassword(value, _password.text, l10n),
+        ),
+      ],
     };
   }
 }

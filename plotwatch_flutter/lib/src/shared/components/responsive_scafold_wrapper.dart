@@ -81,7 +81,8 @@ class ResponsiveScaffoldWrapper extends StatelessWidget {
               color: customColors.background,
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: props.showDrawer! ? 10 : 0),
+                  horizontal: props.showDrawer! ? 10 : 0,
+                ),
                 child: ScaffoldWrapper(
                   drawerMode: DrawerMode.fixed,
                   showDrawer: false,
@@ -109,7 +110,7 @@ class ResponsiveScaffoldWrapper extends StatelessWidget {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 class ErrorrWidget extends StatelessWidget {
-  const ErrorrWidget(
-      {super.key,
-      required this.errorMessage,
-      required this.onPressed,
-      required this.refreshText});
+  const ErrorrWidget({
+    super.key,
+    required this.errorMessage,
+    required this.onPressed,
+    required this.refreshText,
+  });
 
   final String errorMessage;
   final VoidCallback onPressed;
@@ -27,24 +28,24 @@ class ErrorrWidget extends StatelessWidget {
               color: customColors.primary,
               size: 35,
             ),
-            const Gap.vertical(
-              height: 10,
-            ),
+            const Gap.vertical(height: 10),
             Text(
               errorMessage,
-              style: context.textTheme.displayMedium!
-                  .copyWith(fontSize: 14, height: 2, wordSpacing: 1.5),
+              style: context.textTheme.displayMedium!.copyWith(
+                fontSize: 14,
+                height: 2,
+                wordSpacing: 1.5,
+              ),
               textAlign: TextAlign.center,
             ),
-            const Gap.vertical(
-              height: 10,
-            ),
+            const Gap.vertical(height: 10),
             TextButton(
-                onPressed: onPressed,
-                child: Text(
-                  refreshText,
-                  style: context.textTheme.displayLarge!.copyWith(fontSize: 16),
-                ))
+              onPressed: onPressed,
+              child: Text(
+                refreshText,
+                style: context.textTheme.displayLarge!.copyWith(fontSize: 16),
+              ),
+            ),
           ],
         ),
       ),

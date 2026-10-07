@@ -31,10 +31,9 @@ class _SignInPageState extends State<SignInPage> {
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-    context.read<SignInBloc>().add(SignInEvent.signInSubmitted(
-          email: _email.text,
-          password: _password.text,
-        ));
+    context.read<SignInBloc>().add(
+      SignInEvent.signInSubmitted(email: _email.text, password: _password.text),
+    );
   }
 
   @override
@@ -72,48 +71,49 @@ class _SignInPageState extends State<SignInPage> {
               AutofillGroup(
                 onDisposeAction: AutofillContextAction.cancel,
                 child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    InputField(
-                      key: SignInPage.emailFieldKey,
-                      controller: _email,
-                      labelText: l10n.labelEmail,
-                      keyboardType: TextInputType.emailAddress,
-                      autofillHints: const [
-                        AutofillHints.email,
-                        AutofillHints.username,
-                      ],
-                      validator: (value) => Validators.email(value, l10n),
-                    ),
-                    const Gap.vertical(height: AppSpacing.md),
-                    InputField(
-                      key: SignInPage.passwordFieldKey,
-                      controller: _password,
-                      labelText: l10n.labelPassword,
-                      obscureText: !state.isPasswordVisible,
-                      enableSuggestions: false,
-                      autofillHints: const [AutofillHints.password],
-                      suffixIcon: PasswordVisibilityButton(
-                        key: SignInPage.passwordVisibilityButtonKey,
-                        isVisible: state.isPasswordVisible,
-                        onPressed: () => context.read<SignInBloc>().add(
-                            const SignInEvent.passwordVisibilityToggled()),
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      InputField(
+                        key: SignInPage.emailFieldKey,
+                        controller: _email,
+                        labelText: l10n.labelEmail,
+                        keyboardType: TextInputType.emailAddress,
+                        autofillHints: const [
+                          AutofillHints.email,
+                          AutofillHints.username,
+                        ],
+                        validator: (value) => Validators.email(value, l10n),
                       ),
-                      validator: (value) => (value ?? '').isEmpty
-                          ? l10n.validatePasswordRequired
-                          : null,
-                    ),
-                    const Gap.vertical(height: AppSpacing.lg),
-                    SubmitButton(
-                      key: SignInPage.submitButtonKey,
-                      label: l10n.signIn,
-                      isLoading: state.signInStatus == GenericStatus.loading,
-                      onPressed: _submit,
-                    ),
-                  ],
-                ),
+                      const Gap.vertical(height: AppSpacing.md),
+                      InputField(
+                        key: SignInPage.passwordFieldKey,
+                        controller: _password,
+                        labelText: l10n.labelPassword,
+                        obscureText: !state.isPasswordVisible,
+                        enableSuggestions: false,
+                        autofillHints: const [AutofillHints.password],
+                        suffixIcon: PasswordVisibilityButton(
+                          key: SignInPage.passwordVisibilityButtonKey,
+                          isVisible: state.isPasswordVisible,
+                          onPressed: () => context.read<SignInBloc>().add(
+                            const SignInEvent.passwordVisibilityToggled(),
+                          ),
+                        ),
+                        validator: (value) => (value ?? '').isEmpty
+                            ? l10n.validatePasswordRequired
+                            : null,
+                      ),
+                      const Gap.vertical(height: AppSpacing.lg),
+                      SubmitButton(
+                        key: SignInPage.submitButtonKey,
+                        label: l10n.signIn,
+                        isLoading: state.signInStatus == GenericStatus.loading,
+                        onPressed: _submit,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const Gap.vertical(height: AppSpacing.sm),

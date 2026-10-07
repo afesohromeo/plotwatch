@@ -12,7 +12,9 @@ class SubmitButton extends StatelessWidget {
   });
 
   final String label;
-  final VoidCallback onPressed;
+
+  /// Null disables the button (e.g. Save until the GPS is accurate enough).
+  final VoidCallback? onPressed;
   final bool isLoading;
 
   @override

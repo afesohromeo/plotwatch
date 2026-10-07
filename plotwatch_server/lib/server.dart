@@ -46,8 +46,21 @@ void run(List<String> args) async {
   // We build this configuration based on the servers api url and serve it to
   // the flutter app.
   pod.webServer.addRoute(
-    AppConfigRoute(apiConfig: pod.config.apiServer),
+    AppConfigRoute(
+      apiConfig: pod.config.apiServer,
+      mapsApiKey: pod.getPassword('googleMapsWebKey'),
+    ),
     '/assets/assets/config.json',
+  );
+
+  // Android App Links (doc/04b F2-2): lets the installed app open
+  // https://plotwatch.serverpod.space/join/... links. Kept outside a dot
+  // folder because Serverpod Cloud doesn't upload hidden folders.
+  pod.webServer.addRoute(
+    StaticRoute.file(
+      File(Uri(path: 'web/app_links/assetlinks.json').toFilePath()),
+    ),
+    '/.well-known/assetlinks.json',
   );
 
   // Checks if the flutter web app has been built and serves it if it has.

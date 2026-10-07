@@ -115,7 +115,8 @@ class RouteManager {
           key: state.pageKey,
           child: BlocProvider(
             create: (context) => PasswordResetBloc(
-                authRepository: context.read<AuthRepository>()),
+              authRepository: context.read<AuthRepository>(),
+            ),
             child: const PasswordResetPage(),
           ),
         ),
@@ -127,7 +128,8 @@ class RouteManager {
           key: state.pageKey,
           child: BlocProvider(
             create: (context) => ProjectListBloc(
-                projectRepository: context.read<ProjectRepository>()),
+              projectRepository: context.read<ProjectRepository>(),
+            ),
             child: const ProjectListPage(),
           ),
         ),
@@ -140,7 +142,8 @@ class RouteManager {
           key: state.pageKey,
           child: BlocProvider(
             create: (context) => CreateProjectBloc(
-                projectRepository: context.read<ProjectRepository>()),
+              projectRepository: context.read<ProjectRepository>(),
+            ),
             child: const CreateProjectPage(),
           ),
         ),
@@ -153,7 +156,8 @@ class RouteManager {
           key: state.pageKey,
           child: BlocProvider(
             create: (context) => ProjectOverviewBloc(
-                projectRepository: context.read<ProjectRepository>()),
+              projectRepository: context.read<ProjectRepository>(),
+            ),
             child: ProjectOverviewPage(projectId: _projectId(state)!),
           ),
         ),
@@ -166,7 +170,8 @@ class RouteManager {
           key: state.pageKey,
           child: BlocProvider(
             create: (context) => ProjectOverviewBloc(
-                projectRepository: context.read<ProjectRepository>()),
+              projectRepository: context.read<ProjectRepository>(),
+            ),
             child: EditProjectPage(projectId: _projectId(state)!),
           ),
         ),
@@ -187,13 +192,44 @@ class RouteManager {
         ),
       ),
       GoRoute(
+        name: localizeSiteRouteName,
+        path: localizeSitePage,
+        redirect: _requireProjectId,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => LocalizeSiteBloc(
+              siteRepository: context.read<SiteRepository>(),
+              projectRepository: context.read<ProjectRepository>(),
+              locationProvider: const LocationProvider(),
+            ),
+            child: LocalizeSitePage(projectId: _projectId(state)!),
+          ),
+        ),
+      ),
+      GoRoute(
+        name: validateSiteRouteName,
+        path: validateSitePage,
+        redirect: _requireProjectId,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => ValidateSiteBloc(
+              siteRepository: context.read<SiteRepository>(),
+            ),
+            child: ValidateSitePage(projectId: _projectId(state)!),
+          ),
+        ),
+      ),
+      GoRoute(
         name: joinRouteName,
         path: joinPage,
         pageBuilder: (context, state) => NoTransitionPage<void>(
           key: state.pageKey,
           child: BlocProvider(
             create: (context) => JoinProjectBloc(
-                membershipRepository: context.read<MembershipRepository>()),
+              membershipRepository: context.read<MembershipRepository>(),
+            ),
             child: const JoinProjectPage(),
           ),
         ),
@@ -206,7 +242,8 @@ class RouteManager {
           key: state.pageKey,
           child: BlocProvider(
             create: (context) => JoinProjectBloc(
-                membershipRepository: context.read<MembershipRepository>()),
+              membershipRepository: context.read<MembershipRepository>(),
+            ),
             child: JoinProjectPage(initialCode: state.pathParameters['code']),
           ),
         ),
@@ -230,22 +267,33 @@ class RouteManager {
       _projectId(state) == null ? homePage : null;
 
   CustomTransitionPage slideTransition(
-      GoRouterState state, Widget child, Offset begin) {
+    GoRouterState state,
+    Widget child,
+    Offset begin,
+  ) {
     return CustomTransitionPage<void>(
-        key: state.pageKey,
-        child: child,
-        transitionsBuilder: (BuildContext context, Animation<double> animation,
-            Animation<double> secondaryAnimation, Widget child) {
-          const end = Offset.zero;
-          const curve = Curves.easeIn;
+      key: state.pageKey,
+      child: child,
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            const end = Offset.zero;
+            const curve = Curves.easeIn;
 
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var tween = Tween(
+              begin: begin,
+              end: end,
+            ).chain(CurveTween(curve: curve));
 
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        });
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+    );
   }
 }

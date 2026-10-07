@@ -15,6 +15,7 @@ import 'package:serverpod_client/serverpod_client.dart' as _isc;
 import 'project.dart' as _ifiazq2p;
 import 'project_role.dart' as _i46wx1t7;
 import 'site.dart' as _iz8v5x4v;
+import 'site_proposal.dart' as _ira79kry;
 
 /// One project as a member sees it: details, validated site and their role.
 abstract class ProjectOverview
@@ -24,6 +25,7 @@ abstract class ProjectOverview
     this.site,
     required this.myRole,
     required this.myCanApprove,
+    this.pendingSiteProposal,
   });
 
   factory ProjectOverview({
@@ -31,6 +33,7 @@ abstract class ProjectOverview
     _iz8v5x4v.Site? site,
     required _i46wx1t7.ProjectRole myRole,
     required bool myCanApprove,
+    _ira79kry.SiteProposal? pendingSiteProposal,
   }) = _ProjectOverviewImpl;
 
   factory ProjectOverview.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -49,6 +52,11 @@ abstract class ProjectOverview
       myCanApprove: _isc.BoolJsonExtension.fromJson(
         jsonSerialization['myCanApprove'],
       ),
+      pendingSiteProposal: jsonSerialization['pendingSiteProposal'] == null
+          ? null
+          : _immd62fm.Protocol().deserialize<_ira79kry.SiteProposal>(
+              jsonSerialization['pendingSiteProposal'],
+            ),
     );
   }
 
@@ -61,6 +69,9 @@ abstract class ProjectOverview
 
   bool myCanApprove;
 
+  /// The proposal waiting for the owner's decision, if any (decision M2-15).
+  _ira79kry.SiteProposal? pendingSiteProposal;
+
   /// Returns a shallow copy of this [ProjectOverview]
   /// with some or all fields replaced by the given arguments.
   @_isc.useResult
@@ -69,6 +80,7 @@ abstract class ProjectOverview
     _iz8v5x4v.Site? site,
     _i46wx1t7.ProjectRole? myRole,
     bool? myCanApprove,
+    _ira79kry.SiteProposal? pendingSiteProposal,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -78,6 +90,8 @@ abstract class ProjectOverview
       if (site != null) 'site': site?.toJson(),
       'myRole': myRole.toJson(),
       'myCanApprove': myCanApprove,
+      if (pendingSiteProposal != null)
+        'pendingSiteProposal': pendingSiteProposal?.toJson(),
     };
   }
 
@@ -89,6 +103,8 @@ abstract class ProjectOverview
       if (site != null) 'site': site?.toJsonForProtocol(),
       'myRole': myRole.toJson(),
       'myCanApprove': myCanApprove,
+      if (pendingSiteProposal != null)
+        'pendingSiteProposal': pendingSiteProposal?.toJsonForProtocol(),
     };
   }
 
@@ -106,11 +122,13 @@ class _ProjectOverviewImpl extends ProjectOverview {
     _iz8v5x4v.Site? site,
     required _i46wx1t7.ProjectRole myRole,
     required bool myCanApprove,
+    _ira79kry.SiteProposal? pendingSiteProposal,
   }) : super._(
          project: project,
          site: site,
          myRole: myRole,
          myCanApprove: myCanApprove,
+         pendingSiteProposal: pendingSiteProposal,
        );
 
   /// Returns a shallow copy of this [ProjectOverview]
@@ -122,12 +140,16 @@ class _ProjectOverviewImpl extends ProjectOverview {
     Object? site = _Undefined,
     _i46wx1t7.ProjectRole? myRole,
     bool? myCanApprove,
+    Object? pendingSiteProposal = _Undefined,
   }) {
     return ProjectOverview(
       project: project ?? this.project.copyWith(),
       site: site is _iz8v5x4v.Site? ? site : this.site?.copyWith(),
       myRole: myRole ?? this.myRole,
       myCanApprove: myCanApprove ?? this.myCanApprove,
+      pendingSiteProposal: pendingSiteProposal is _ira79kry.SiteProposal?
+          ? pendingSiteProposal
+          : this.pendingSiteProposal?.copyWith(),
     );
   }
 }

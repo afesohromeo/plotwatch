@@ -12,106 +12,112 @@ void main() {
 
       expect(
         result,
-        isA<HttpException400>()
-            .having((e) => e.code, 'code', AppErrorCode.permissionDenied),
+        isA<HttpException400>().having(
+          (e) => e.code,
+          'code',
+          AppErrorCode.permissionDenied,
+        ),
       );
     });
 
-    group('auth module exceptions become HttpException400 with an auth code', () {
-      final cases = <String, (Object, AppErrorCode)>{
-        'login invalidCredentials': (
-          EmailAccountLoginException(
-            reason: EmailAccountLoginExceptionReason.invalidCredentials,
+    group(
+      'auth module exceptions become HttpException400 with an auth code',
+      () {
+        final cases = <String, (Object, AppErrorCode)>{
+          'login invalidCredentials': (
+            EmailAccountLoginException(
+              reason: EmailAccountLoginExceptionReason.invalidCredentials,
+            ),
+            AppErrorCode.authInvalidCredentials,
           ),
-          AppErrorCode.authInvalidCredentials,
-        ),
-        'login tooManyAttempts': (
-          EmailAccountLoginException(
-            reason: EmailAccountLoginExceptionReason.tooManyAttempts,
+          'login tooManyAttempts': (
+            EmailAccountLoginException(
+              reason: EmailAccountLoginExceptionReason.tooManyAttempts,
+            ),
+            AppErrorCode.authTooManyAttempts,
           ),
-          AppErrorCode.authTooManyAttempts,
-        ),
-        'login unknown': (
-          EmailAccountLoginException(
-            reason: EmailAccountLoginExceptionReason.unknown,
+          'login unknown': (
+            EmailAccountLoginException(
+              reason: EmailAccountLoginExceptionReason.unknown,
+            ),
+            AppErrorCode.authUnknown,
           ),
-          AppErrorCode.authUnknown,
-        ),
-        'registration expired': (
-          EmailAccountRequestException(
-            reason: EmailAccountRequestExceptionReason.expired,
+          'registration expired': (
+            EmailAccountRequestException(
+              reason: EmailAccountRequestExceptionReason.expired,
+            ),
+            AppErrorCode.authRequestExpired,
           ),
-          AppErrorCode.authRequestExpired,
-        ),
-        'registration invalid': (
-          EmailAccountRequestException(
-            reason: EmailAccountRequestExceptionReason.invalid,
+          'registration invalid': (
+            EmailAccountRequestException(
+              reason: EmailAccountRequestExceptionReason.invalid,
+            ),
+            AppErrorCode.authRequestInvalid,
           ),
-          AppErrorCode.authRequestInvalid,
-        ),
-        'registration policyViolation': (
-          EmailAccountRequestException(
-            reason: EmailAccountRequestExceptionReason.policyViolation,
+          'registration policyViolation': (
+            EmailAccountRequestException(
+              reason: EmailAccountRequestExceptionReason.policyViolation,
+            ),
+            AppErrorCode.authPasswordPolicy,
           ),
-          AppErrorCode.authPasswordPolicy,
-        ),
-        'registration tooManyAttempts': (
-          EmailAccountRequestException(
-            reason: EmailAccountRequestExceptionReason.tooManyAttempts,
+          'registration tooManyAttempts': (
+            EmailAccountRequestException(
+              reason: EmailAccountRequestExceptionReason.tooManyAttempts,
+            ),
+            AppErrorCode.authTooManyAttempts,
           ),
-          AppErrorCode.authTooManyAttempts,
-        ),
-        'registration unknown': (
-          EmailAccountRequestException(
-            reason: EmailAccountRequestExceptionReason.unknown,
+          'registration unknown': (
+            EmailAccountRequestException(
+              reason: EmailAccountRequestExceptionReason.unknown,
+            ),
+            AppErrorCode.authUnknown,
           ),
-          AppErrorCode.authUnknown,
-        ),
-        'password reset expired': (
-          EmailAccountPasswordResetException(
-            reason: EmailAccountPasswordResetExceptionReason.expired,
+          'password reset expired': (
+            EmailAccountPasswordResetException(
+              reason: EmailAccountPasswordResetExceptionReason.expired,
+            ),
+            AppErrorCode.authRequestExpired,
           ),
-          AppErrorCode.authRequestExpired,
-        ),
-        'password reset invalid': (
-          EmailAccountPasswordResetException(
-            reason: EmailAccountPasswordResetExceptionReason.invalid,
+          'password reset invalid': (
+            EmailAccountPasswordResetException(
+              reason: EmailAccountPasswordResetExceptionReason.invalid,
+            ),
+            AppErrorCode.authRequestInvalid,
           ),
-          AppErrorCode.authRequestInvalid,
-        ),
-        'password reset policyViolation': (
-          EmailAccountPasswordResetException(
-            reason: EmailAccountPasswordResetExceptionReason.policyViolation,
+          'password reset policyViolation': (
+            EmailAccountPasswordResetException(
+              reason: EmailAccountPasswordResetExceptionReason.policyViolation,
+            ),
+            AppErrorCode.authPasswordPolicy,
           ),
-          AppErrorCode.authPasswordPolicy,
-        ),
-        'password reset tooManyAttempts': (
-          EmailAccountPasswordResetException(
-            reason: EmailAccountPasswordResetExceptionReason.tooManyAttempts,
+          'password reset tooManyAttempts': (
+            EmailAccountPasswordResetException(
+              reason: EmailAccountPasswordResetExceptionReason.tooManyAttempts,
+            ),
+            AppErrorCode.authTooManyAttempts,
           ),
-          AppErrorCode.authTooManyAttempts,
-        ),
-        'password reset unknown': (
-          EmailAccountPasswordResetException(
-            reason: EmailAccountPasswordResetExceptionReason.unknown,
+          'password reset unknown': (
+            EmailAccountPasswordResetException(
+              reason: EmailAccountPasswordResetExceptionReason.unknown,
+            ),
+            AppErrorCode.authUnknown,
           ),
-          AppErrorCode.authUnknown,
-        ),
-        'user blocked': (
-          AuthUserBlockedException(),
-          AppErrorCode.authUserBlocked,
-        ),
-      };
+          'user blocked': (
+            AuthUserBlockedException(),
+            AppErrorCode.authUserBlocked,
+          ),
+        };
 
-      for (final MapEntry(key: name, value: (error, code)) in cases.entries) {
-        test(name, () {
-          expect(
-            ApiErrorHandler.handle(error),
-            isA<HttpException400>().having((e) => e.code, 'code', code),
-          );
-        });
-      }
-    });
+        for (final MapEntry(key: name, value: (error, code)) in cases.entries) {
+          test(name, () {
+            expect(
+              ApiErrorHandler.handle(error),
+              isA<HttpException400>().having((e) => e.code, 'code', code),
+            );
+          });
+        }
+      },
+    );
 
     test('ServerpodClientUnauthorized becomes HttpException401', () {
       expect(
@@ -120,17 +126,25 @@ void main() {
       );
     });
 
-    test('ServerpodClientForbidden becomes HttpException400 permissionDenied', () {
-      expect(
-        ApiErrorHandler.handle(ServerpodClientForbidden()),
-        isA<HttpException400>()
-            .having((e) => e.code, 'code', AppErrorCode.permissionDenied),
-      );
-    });
+    test(
+      'ServerpodClientForbidden becomes HttpException400 permissionDenied',
+      () {
+        expect(
+          ApiErrorHandler.handle(ServerpodClientForbidden()),
+          isA<HttpException400>().having(
+            (e) => e.code,
+            'code',
+            AppErrorCode.permissionDenied,
+          ),
+        );
+      },
+    );
 
     test('ServerpodClientNetworkException becomes NetworkException', () {
       expect(
-        ApiErrorHandler.handle(const ServerpodClientNetworkException('offline')),
+        ApiErrorHandler.handle(
+          const ServerpodClientNetworkException('offline'),
+        ),
         isA<NetworkException>(),
       );
     });
@@ -149,14 +163,20 @@ void main() {
       );
     });
 
-    test('any other error becomes UnknownApiException keeping the original', () {
-      final original = StateError('unexpected');
+    test(
+      'any other error becomes UnknownApiException keeping the original',
+      () {
+        final original = StateError('unexpected');
 
-      expect(
-        ApiErrorHandler.handle(original),
-        isA<UnknownApiException>()
-            .having((e) => e.error, 'error', same(original)),
-      );
-    });
+        expect(
+          ApiErrorHandler.handle(original),
+          isA<UnknownApiException>().having(
+            (e) => e.error,
+            'error',
+            same(original),
+          ),
+        );
+      },
+    );
   });
 }

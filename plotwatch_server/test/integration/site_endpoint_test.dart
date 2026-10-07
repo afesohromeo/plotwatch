@@ -10,26 +10,33 @@ import 'test_tools/serverpod_test_tools.dart';
 // owner validates it with a radius or rejects it.
 void main() {
   final ownerId = UuidValue.fromString('00000000-0000-4000-8000-000000000001');
-  final managerId =
-      UuidValue.fromString('00000000-0000-4000-8000-000000000002');
-  final coFunderId =
-      UuidValue.fromString('00000000-0000-4000-8000-000000000003');
+  final managerId = UuidValue.fromString(
+    '00000000-0000-4000-8000-000000000002',
+  );
+  final coFunderId = UuidValue.fromString(
+    '00000000-0000-4000-8000-000000000003',
+  );
   final viewerId = UuidValue.fromString('00000000-0000-4000-8000-000000000004');
-  final strangerId =
-      UuidValue.fromString('00000000-0000-4000-8000-000000000005');
+  final strangerId = UuidValue.fromString(
+    '00000000-0000-4000-8000-000000000005',
+  );
 
   // A plot in Bafoussam, Cameroon.
   const lat = 5.4778;
   const lng = 10.4176;
 
-  withServerpod('Given a draft project with a site manager',
-      (sessionBuilder, endpoints) {
+  withServerpod('Given a draft project with a site manager', (
+    sessionBuilder,
+    endpoints,
+  ) {
     late int projectId;
 
     TestSessionBuilder signedInAs(UuidValue userId) => sessionBuilder.copyWith(
-          authentication:
-              AuthenticationOverride.authenticationInfo(userId.uuid, {}),
-        );
+      authentication: AuthenticationOverride.authenticationInfo(
+        userId.uuid,
+        {},
+      ),
+    );
 
     Future<SiteProposal> propose({
       double atLat = lat,
@@ -37,15 +44,14 @@ void main() {
       double accuracyM = 8,
       bool isMocked = false,
       UuidValue? by,
-    }) =>
-        endpoints.site.propose(
-          signedInAs(by ?? managerId),
-          projectId,
-          lat: atLat,
-          lng: atLng,
-          accuracyM: accuracyM,
-          isMocked: isMocked,
-        );
+    }) => endpoints.site.propose(
+      signedInAs(by ?? managerId),
+      projectId,
+      lat: atLat,
+      lng: atLng,
+      accuracyM: accuracyM,
+      isMocked: isMocked,
+    );
 
     Future<Project> storedProject() async =>
         (await Project.db.findById(sessionBuilder.build(), projectId))!;
@@ -58,9 +64,7 @@ void main() {
           type: ProjectType.newHouse,
           currencyCode: 'XAF',
         ),
-      ))
-          .project
-          .id!;
+      )).project.id!;
       final now = DateTime.now().toUtc();
       await ProjectMember.db.insert(sessionBuilder.build(), [
         for (final (userId, role) in [
@@ -80,8 +84,7 @@ void main() {
     });
 
     group('when the site manager proposes the location', () {
-      test('then a pending proposal is saved, audited and announced',
-          () async {
+      test('then a pending proposal is saved, audited and announced', () async {
         final proposal = await propose();
         final session = sessionBuilder.build();
 
@@ -90,16 +93,17 @@ void main() {
         expect(proposal.lat, lat);
         expect(proposal.accuracyM, 8);
         expect(
-          (await AuditLog.db.find(session,
-                  where: (t) => t.action.equals('site.propose')))
-              .single
-              .after?['lat'],
+          (await AuditLog.db.find(
+            session,
+            where: (t) => t.action.equals('site.propose'),
+          )).single.after?['lat'],
           '$lat',
         );
         expect(
-          (await ActivityEvent.db.find(session,
-                  where: (t) => t.type.equals(ActivityType.siteProposed)))
-              .length,
+          (await ActivityEvent.db.find(
+            session,
+            where: (t) => t.type.equals(ActivityType.siteProposed),
+          )).length,
           1,
         );
       });
@@ -110,13 +114,15 @@ void main() {
         expect(proposal.status, SiteProposalStatus.pending);
       });
 
-      test('with an accuracy of 20.1 m then it throws siteAccuracyTooLow',
-          () async {
-        await expectLater(
-          propose(accuracyM: 20.1),
-          throwsA(_appException(AppErrorCode.siteAccuracyTooLow)),
-        );
-      });
+      test(
+        'with an accuracy of 20.1 m then it throws siteAccuracyTooLow',
+        () async {
+          await expectLater(
+            propose(accuracyM: 20.1),
+            throwsA(_appException(AppErrorCode.siteAccuracyTooLow)),
+          );
+        },
+      );
 
       test('from a mocked position then it throws siteMockLocation', () async {
         await expectLater(
@@ -126,13 +132,15 @@ void main() {
       });
 
       for (final (badLat, badLng) in [(90.5, lng), (lat, -180.5)]) {
-        test('at ($badLat, $badLng) then it throws invalidSiteLocation',
-            () async {
-          await expectLater(
-            propose(atLat: badLat, atLng: badLng),
-            throwsA(_appException(AppErrorCode.invalidSiteLocation)),
-          );
-        });
+        test(
+          'at ($badLat, $badLng) then it throws invalidSiteLocation',
+          () async {
+            await expectLater(
+              propose(atLat: badLat, atLng: badLng),
+              throwsA(_appException(AppErrorCode.invalidSiteLocation)),
+            );
+          },
+        );
       }
 
       test('a second time then the first proposal is superseded', () async {
@@ -140,24 +148,42 @@ void main() {
 
         await propose(atLat: lat + 0.0001);
 
-        final stored =
-            await SiteProposal.db.findById(sessionBuilder.build(), first.id!);
+        final stored = await SiteProposal.db.findById(
+          sessionBuilder.build(),
+          first.id!,
+        );
         expect(stored!.status, SiteProposalStatus.superseded);
       });
     });
 
+    // The owner on the plot localizes it too (doc/04b G-12).
+    test('when the owner proposes the location then it is accepted, and the '
+        'owner can validate it', () async {
+      final proposal = await propose(by: ownerId);
+
+      expect(proposal.proposedBy, ownerId);
+      final site = await endpoints.site.validate(
+        signedInAs(ownerId),
+        projectId,
+        proposal.id!,
+        radiusM: 40,
+      );
+      expect(site.validatedBy, ownerId);
+    });
+
     for (final (name, userId) in [
-      ('the owner', ownerId),
       ('a co-funder', coFunderId),
       ('a viewer', viewerId),
     ]) {
-      test('when $name proposes the location then it throws permissionDenied',
-          () async {
-        await expectLater(
-          propose(by: userId),
-          throwsA(_appException(AppErrorCode.permissionDenied)),
-        );
-      });
+      test(
+        'when $name proposes the location then it throws permissionDenied',
+        () async {
+          await expectLater(
+            propose(by: userId),
+            throwsA(_appException(AppErrorCode.permissionDenied)),
+          );
+        },
+      );
     }
 
     test('when a non-member proposes the location then it throws '
@@ -194,42 +220,61 @@ void main() {
           await endpoints.site.get(signedInAs(managerId), projectId),
           isNotNull,
         );
-        final stored = await SiteProposal.db
-            .findById(sessionBuilder.build(), proposal.id!);
+        final stored = await SiteProposal.db.findById(
+          sessionBuilder.build(),
+          proposal.id!,
+        );
         expect(stored!.status, SiteProposalStatus.validated);
         expect(stored.decidedBy, ownerId);
       });
 
-      test('then the change is audited and announced as siteChanged',
-          () async {
-        await endpoints.site
-            .validate(signedInAs(ownerId), projectId, proposal.id!, radiusM: 50);
+      test('then the change is audited and announced as siteChanged', () async {
+        await endpoints.site.validate(
+          signedInAs(ownerId),
+          projectId,
+          proposal.id!,
+          radiusM: 50,
+        );
         final session = sessionBuilder.build();
 
-        final audit = await AuditLog.db.findFirstRow(session,
-            where: (t) => t.action.equals('site.validate'));
+        final audit = await AuditLog.db.findFirstRow(
+          session,
+          where: (t) => t.action.equals('site.validate'),
+        );
         expect(audit!.before, isNull);
         expect(audit.after?['radiusM'], '50');
-        final events = await ActivityEvent.db.find(session,
-            where: (t) => t.type.equals(ActivityType.siteChanged));
+        final events = await ActivityEvent.db.find(
+          session,
+          where: (t) => t.type.equals(ActivityType.siteChanged),
+        );
         expect(events, hasLength(1));
       });
 
       for (final radius in [9, 501]) {
-        test('with a radius of $radius m then it throws invalidSiteRadius',
-            () async {
-          await expectLater(
-            endpoints.site.validate(
-                signedInAs(ownerId), projectId, proposal.id!, radiusM: radius),
-            throwsA(_appException(AppErrorCode.invalidSiteRadius)),
-          );
-        });
+        test(
+          'with a radius of $radius m then it throws invalidSiteRadius',
+          () async {
+            await expectLater(
+              endpoints.site.validate(
+                signedInAs(ownerId),
+                projectId,
+                proposal.id!,
+                radiusM: radius,
+              ),
+              throwsA(_appException(AppErrorCode.invalidSiteRadius)),
+            );
+          },
+        );
       }
 
       test('as the site manager then it throws permissionDenied', () async {
         await expectLater(
           endpoints.site.validate(
-              signedInAs(managerId), projectId, proposal.id!, radiusM: 50),
+            signedInAs(managerId),
+            projectId,
+            proposal.id!,
+            radiusM: 50,
+          ),
           throwsA(_appException(AppErrorCode.permissionDenied)),
         );
       });
@@ -242,13 +287,15 @@ void main() {
             type: ProjectType.other,
             currencyCode: 'XAF',
           ),
-        ))
-            .project
-            .id!;
+        )).project.id!;
 
         await expectLater(
           endpoints.site.validate(
-              signedInAs(ownerId), otherProject, proposal.id!, radiusM: 50),
+            signedInAs(ownerId),
+            otherProject,
+            proposal.id!,
+            radiusM: 50,
+          ),
           throwsA(_appException(AppErrorCode.siteProposalNotFound)),
         );
       });
@@ -257,37 +304,57 @@ void main() {
     group('when the site has already been validated', () {
       setUp(() async {
         final first = await propose();
-        await endpoints.site
-            .validate(signedInAs(ownerId), projectId, first.id!, radiusM: 50);
+        await endpoints.site.validate(
+          signedInAs(ownerId),
+          projectId,
+          first.id!,
+          radiusM: 50,
+        );
       });
 
-      test('then a new validated proposal moves it and keeps the status',
-          () async {
-        await endpoints.project.setStatus(
-            signedInAs(ownerId), projectId, ProjectStatus.paused);
-        final second = await propose(atLat: lat + 0.001);
+      test(
+        'then a new validated proposal moves it and keeps the status',
+        () async {
+          await endpoints.project.setStatus(
+            signedInAs(ownerId),
+            projectId,
+            ProjectStatus.paused,
+          );
+          final second = await propose(atLat: lat + 0.001);
 
-        final site = await endpoints.site
-            .validate(signedInAs(ownerId), projectId, second.id!, radiusM: 30);
+          final site = await endpoints.site.validate(
+            signedInAs(ownerId),
+            projectId,
+            second.id!,
+            radiusM: 30,
+          );
 
-        expect(site.centerLat, lat + 0.001);
-        expect(site.radiusM, 30);
-        expect(await Site.db.count(sessionBuilder.build()), 1);
-        expect((await storedProject()).status, ProjectStatus.paused);
-        final audit = await AuditLog.db.find(sessionBuilder.build(),
+          expect(site.centerLat, lat + 0.001);
+          expect(site.radiusM, 30);
+          expect(await Site.db.count(sessionBuilder.build()), 1);
+          expect((await storedProject()).status, ProjectStatus.paused);
+          final audit = await AuditLog.db.find(
+            sessionBuilder.build(),
             where: (t) => t.action.equals('site.validate'),
-            orderBy: (t) => t.id);
-        expect(audit.last.before?['lat'], '$lat');
-      });
+            orderBy: (t) => t.id,
+          );
+          expect(audit.last.before?['lat'], '$lat');
+        },
+      );
 
       test('then the validated proposal cannot be validated again', () async {
-        final validated = (await endpoints.site
-                .listProposals(signedInAs(ownerId), projectId))
-            .single;
+        final validated = (await endpoints.site.listProposals(
+          signedInAs(ownerId),
+          projectId,
+        )).single;
 
         await expectLater(
           endpoints.site.validate(
-              signedInAs(ownerId), projectId, validated.id!, radiusM: 50),
+            signedInAs(ownerId),
+            projectId,
+            validated.id!,
+            radiusM: 50,
+          ),
           throwsA(_appException(AppErrorCode.siteProposalNotPending)),
         );
       });
@@ -298,72 +365,119 @@ void main() {
 
       setUp(() async => proposal = await propose());
 
-      test('with a reason then it is rejected and the project stays a draft',
-          () async {
+      test(
+        'with a reason then it is rejected and the project stays a draft',
+        () async {
+          await endpoints.site.reject(
+            signedInAs(ownerId),
+            projectId,
+            proposal.id!,
+            reason: 'This is the neighbour\'s plot',
+          );
+
+          final stored = await SiteProposal.db.findById(
+            sessionBuilder.build(),
+            proposal.id!,
+          );
+          expect(stored!.status, SiteProposalStatus.rejected);
+          expect(stored.rejectReason, 'This is the neighbour\'s plot');
+          expect((await storedProject()).status, ProjectStatus.draft);
+          expect(
+            await endpoints.site.get(signedInAs(ownerId), projectId),
+            isNull,
+          );
+          final events = await ActivityEvent.db.find(
+            sessionBuilder.build(),
+            where: (t) => t.type.equals(ActivityType.siteProposalRejected),
+          );
+          expect(events, hasLength(1));
+        },
+      );
+
+      test('without a reason then it is rejected', () async {
         await endpoints.site.reject(
           signedInAs(ownerId),
           projectId,
           proposal.id!,
-          reason: 'This is the neighbour\'s plot',
         );
 
-        final stored = await SiteProposal.db
-            .findById(sessionBuilder.build(), proposal.id!);
-        expect(stored!.status, SiteProposalStatus.rejected);
-        expect(stored.rejectReason, 'This is the neighbour\'s plot');
-        expect((await storedProject()).status, ProjectStatus.draft);
-        expect(await endpoints.site.get(signedInAs(ownerId), projectId),
-            isNull);
-        final events = await ActivityEvent.db.find(sessionBuilder.build(),
-            where: (t) => t.type.equals(ActivityType.siteProposalRejected));
-        expect(events, hasLength(1));
-      });
-
-      test('without a reason then it is rejected', () async {
-        await endpoints.site
-            .reject(signedInAs(ownerId), projectId, proposal.id!);
-
-        final stored = await SiteProposal.db
-            .findById(sessionBuilder.build(), proposal.id!);
+        final stored = await SiteProposal.db.findById(
+          sessionBuilder.build(),
+          proposal.id!,
+        );
         expect(stored!.status, SiteProposalStatus.rejected);
         expect(stored.rejectReason, isNull);
       });
 
-      test('with a reason of 501 characters then it throws textTooLong',
-          () async {
-        await expectLater(
-          endpoints.site.reject(signedInAs(ownerId), projectId, proposal.id!,
-              reason: 'x' * 501),
-          throwsA(_appException(AppErrorCode.textTooLong)),
-        );
-      });
+      test(
+        'with a reason of 501 characters then it throws textTooLong',
+        () async {
+          await expectLater(
+            endpoints.site.reject(
+              signedInAs(ownerId),
+              projectId,
+              proposal.id!,
+              reason: 'x' * 501,
+            ),
+            throwsA(_appException(AppErrorCode.textTooLong)),
+          );
+        },
+      );
 
-      test('that was superseded then it throws siteProposalNotPending',
-          () async {
-        await propose(atLat: lat + 0.0001);
+      test(
+        'that was superseded then it throws siteProposalNotPending',
+        () async {
+          await propose(atLat: lat + 0.0001);
 
-        await expectLater(
-          endpoints.site.reject(signedInAs(ownerId), projectId, proposal.id!),
-          throwsA(_appException(AppErrorCode.siteProposalNotPending)),
-        );
-      });
+          await expectLater(
+            endpoints.site.reject(signedInAs(ownerId), projectId, proposal.id!),
+            throwsA(_appException(AppErrorCode.siteProposalNotPending)),
+          );
+        },
+      );
 
       test('as the site manager then it throws permissionDenied', () async {
         await expectLater(
-          endpoints.site
-              .reject(signedInAs(managerId), projectId, proposal.id!),
+          endpoints.site.reject(signedInAs(managerId), projectId, proposal.id!),
           throwsA(_appException(AppErrorCode.permissionDenied)),
         );
       });
     });
 
-    test('when the proposals are listed then the newest comes first',
-        () async {
+    // The project page shows the owner "review the location" and the site
+    // manager "waiting for validation" (doc/04b group G).
+    test('when a proposal is pending then the project overview carries it, '
+        'and once validated it no longer does', () async {
+      final proposal = await propose();
+
+      final pending = await endpoints.project.get(
+        signedInAs(ownerId),
+        projectId,
+      );
+      expect(pending.pendingSiteProposal?.id, proposal.id);
+
+      await endpoints.site.validate(
+        signedInAs(ownerId),
+        projectId,
+        proposal.id!,
+        radiusM: 50,
+      );
+      final validated = await endpoints.project.get(
+        signedInAs(managerId),
+        projectId,
+      );
+      expect(validated.pendingSiteProposal, isNull);
+      expect(validated.site, isNotNull);
+    });
+
+    test('when the proposals are listed then the newest comes first', () async {
       final first = await propose();
       final second = await propose(atLat: lat + 0.0001);
 
-      final proposals =
-          await endpoints.site.listProposals(signedInAs(viewerId), projectId);
+      final proposals = await endpoints.site.listProposals(
+        signedInAs(viewerId),
+        projectId,
+      );
 
       expect(proposals.map((p) => p.id), [second.id, first.id]);
     });

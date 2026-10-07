@@ -20,75 +20,92 @@ void main() {
 
   withServerpod('Given the project endpoint', (sessionBuilder, endpoints) {
     TestSessionBuilder signedInAs(UuidValue userId) => sessionBuilder.copyWith(
-          authentication:
-              AuthenticationOverride.authenticationInfo(userId.uuid, {}),
-        );
+      authentication: AuthenticationOverride.authenticationInfo(
+        userId.uuid,
+        {},
+      ),
+    );
 
     Future<ProjectMember> addMember(
       int projectId,
       UuidValue userId,
       ProjectRole role, {
       MemberStatus status = MemberStatus.active,
-    }) =>
-        ProjectMember.db.insertRow(
-          sessionBuilder.build(),
-          ProjectMember(
-            projectId: projectId,
-            authUserId: userId,
-            role: role,
-            status: status,
-            joinedAt: DateTime.now().toUtc(),
-          ),
-        );
+    }) => ProjectMember.db.insertRow(
+      sessionBuilder.build(),
+      ProjectMember(
+        projectId: projectId,
+        authUserId: userId,
+        role: role,
+        status: status,
+        joinedAt: DateTime.now().toUtc(),
+      ),
+    );
 
-    Future<void> setStatusInDatabase(int projectId, ProjectStatus status) async {
+    Future<void> setStatusInDatabase(
+      int projectId,
+      ProjectStatus status,
+    ) async {
       final session = sessionBuilder.build();
       final project = await Project.db.findById(session, projectId);
       await Project.db.updateRow(session, project!.copyWith(status: status));
     }
 
     group('when a project is created', () {
-      test('then the caller is its owner and it is a draft without a site',
-          () async {
-        final overview =
-            await endpoints.project.create(signedInAs(ownerId), details);
+      test(
+        'then the caller is its owner and it is a draft without a site',
+        () async {
+          final overview = await endpoints.project.create(
+            signedInAs(ownerId),
+            details,
+          );
 
-        expect(overview.project.name, 'House in Bafoussam');
-        expect(overview.project.status, ProjectStatus.draft);
-        expect(overview.site, isNull);
-        expect(overview.myRole, ProjectRole.owner);
-        final members = await ProjectMember.db.find(
-          sessionBuilder.build(),
-          where: (t) => t.projectId.equals(overview.project.id),
-        );
-        expect(members, hasLength(1));
-        expect(members.single.authUserId, ownerId);
-        expect(members.single.role, ProjectRole.owner);
-        expect(members.single.status, MemberStatus.active);
-      });
+          expect(overview.project.name, 'House in Bafoussam');
+          expect(overview.project.status, ProjectStatus.draft);
+          expect(overview.site, isNull);
+          expect(overview.myRole, ProjectRole.owner);
+          final members = await ProjectMember.db.find(
+            sessionBuilder.build(),
+            where: (t) => t.projectId.equals(overview.project.id),
+          );
+          expect(members, hasLength(1));
+          expect(members.single.authUserId, ownerId);
+          expect(members.single.role, ProjectRole.owner);
+          expect(members.single.status, MemberStatus.active);
+        },
+      );
 
-      test('then one audit entry and one projectCreated event are written',
-          () async {
-        final overview =
-            await endpoints.project.create(signedInAs(ownerId), details);
-        final session = sessionBuilder.build();
+      test(
+        'then one audit entry and one projectCreated event are written',
+        () async {
+          final overview = await endpoints.project.create(
+            signedInAs(ownerId),
+            details,
+          );
+          final session = sessionBuilder.build();
 
-        final audit = await AuditLog.db.find(session,
-            where: (t) => t.projectId.equals(overview.project.id));
-        expect(audit, hasLength(1));
-        expect(audit.single.action, 'project.create');
-        expect(audit.single.actorId, ownerId);
-        expect(audit.single.after?['name'], 'House in Bafoussam');
-        final events = await ActivityEvent.db.find(session,
-            where: (t) => t.projectId.equals(overview.project.id));
-        expect(events.map((e) => e.type), [ActivityType.projectCreated]);
-      });
+          final audit = await AuditLog.db.find(
+            session,
+            where: (t) => t.projectId.equals(overview.project.id),
+          );
+          expect(audit, hasLength(1));
+          expect(audit.single.action, 'project.create');
+          expect(audit.single.actorId, ownerId);
+          expect(audit.single.after?['name'], 'House in Bafoussam');
+          final events = await ActivityEvent.db.find(
+            session,
+            where: (t) => t.projectId.equals(overview.project.id),
+          );
+          expect(events.map((e) => e.type), [ActivityType.projectCreated]);
+        },
+      );
 
       test('without signing in then it is refused', () async {
         await expectLater(
           endpoints.project.create(
             sessionBuilder.copyWith(
-                authentication: AuthenticationOverride.unauthenticated()),
+              authentication: AuthenticationOverride.unauthenticated(),
+            ),
             details,
           ),
           throwsA(isA<ServerpodUnauthenticatedException>()),
@@ -98,38 +115,40 @@ void main() {
       final invalid = {
         'a blank name': (
           details.copyWith(name: '   '),
-          AppErrorCode.invalidProjectName
+          AppErrorCode.invalidProjectName,
         ),
         'a name of 101 characters': (
           details.copyWith(name: 'x' * 101),
-          AppErrorCode.invalidProjectName
+          AppErrorCode.invalidProjectName,
         ),
         'a description of 1,001 characters': (
           details.copyWith(description: 'x' * 1001),
-          AppErrorCode.invalidProjectDescription
+          AppErrorCode.invalidProjectDescription,
         ),
         'an unknown currency': (
           details.copyWith(currencyCode: 'XYZ'),
-          AppErrorCode.invalidCurrencyCode
+          AppErrorCode.invalidCurrencyCode,
         ),
         'a lower-case currency': (
           details.copyWith(currencyCode: 'xaf'),
-          AppErrorCode.invalidCurrencyCode
+          AppErrorCode.invalidCurrencyCode,
         ),
         'an end before the start': (
           details.copyWith(plannedEnd: DateTime.utc(2026, 10, 31)),
-          AppErrorCode.invalidProjectDates
+          AppErrorCode.invalidProjectDates,
         ),
       };
       for (final MapEntry(key: name, value: (input, code)) in invalid.entries) {
-        test('with $name then it throws ${code.name} and nothing is created',
-            () async {
-          await expectLater(
-            endpoints.project.create(signedInAs(ownerId), input),
-            throwsA(_appException(code)),
-          );
-          expect(await Project.db.count(sessionBuilder.build()), 0);
-        });
+        test(
+          'with $name then it throws ${code.name} and nothing is created',
+          () async {
+            await expectLater(
+              endpoints.project.create(signedInAs(ownerId), input),
+              throwsA(_appException(code)),
+            );
+            expect(await Project.db.count(sessionBuilder.build()), 0);
+          },
+        );
       }
     });
 
@@ -139,35 +158,48 @@ void main() {
       setUp(() async {
         ownerProjects = [
           for (final name in ['First', 'Second', 'Third'])
-            (await endpoints.project
-                    .create(signedInAs(ownerId), details.copyWith(name: name)))
-                .project
-                .id!,
+            (await endpoints.project.create(
+              signedInAs(ownerId),
+              details.copyWith(name: name),
+            )).project.id!,
         ];
-        await endpoints.project
-            .create(signedInAs(otherId), details.copyWith(name: 'Other own'));
+        await endpoints.project.create(
+          signedInAs(otherId),
+          details.copyWith(name: 'Other own'),
+        );
         await addMember(ownerProjects[0], otherId, ProjectRole.siteManager);
-        await addMember(ownerProjects[1], otherId, ProjectRole.viewer,
-            status: MemberStatus.removed);
+        await addMember(
+          ownerProjects[1],
+          otherId,
+          ProjectRole.viewer,
+          status: MemberStatus.removed,
+        );
       });
 
-      test(
-          'then each user sees only their active memberships, with their '
+      test('then each user sees only their active memberships, with their '
           'role, newest first', () async {
         final page = await endpoints.project.list(signedInAs(otherId));
 
         expect(
           page.items.map((s) => (s.project.name, s.myRole)),
-          [('Other own', ProjectRole.owner), ('First', ProjectRole.siteManager)],
+          [
+            ('Other own', ProjectRole.owner),
+            ('First', ProjectRole.siteManager),
+          ],
         );
         expect(page.items.map((s) => s.progressPercent), everyElement(0));
       });
 
       test('then the list is split into pages', () async {
-        final first =
-            await endpoints.project.list(signedInAs(ownerId), pageSize: 2);
-        final second = await endpoints.project
-            .list(signedInAs(ownerId), page: 1, pageSize: 2);
+        final first = await endpoints.project.list(
+          signedInAs(ownerId),
+          pageSize: 2,
+        );
+        final second = await endpoints.project.list(
+          signedInAs(ownerId),
+          page: 1,
+          pageSize: 2,
+        );
 
         expect(first.items.map((s) => s.project.name), ['Third', 'Second']);
         expect(second.items.map((s) => s.project.name), ['First']);
@@ -180,17 +212,19 @@ void main() {
       late int projectId;
 
       setUp(() async {
-        projectId = (await endpoints.project.create(signedInAs(ownerId), details))
-            .project
-            .id!;
+        projectId = (await endpoints.project.create(
+          signedInAs(ownerId),
+          details,
+        )).project.id!;
       });
 
-      test('by a member then it returns the project with their role',
-          () async {
+      test('by a member then it returns the project with their role', () async {
         await addMember(projectId, otherId, ProjectRole.siteManager);
 
-        final overview =
-            await endpoints.project.get(signedInAs(otherId), projectId);
+        final overview = await endpoints.project.get(
+          signedInAs(otherId),
+          projectId,
+        );
 
         expect(overview.project.id, projectId);
         expect(overview.myRole, ProjectRole.siteManager);
@@ -208,9 +242,10 @@ void main() {
       late int projectId;
 
       setUp(() async {
-        projectId = (await endpoints.project.create(signedInAs(ownerId), details))
-            .project
-            .id!;
+        projectId = (await endpoints.project.create(
+          signedInAs(ownerId),
+          details,
+        )).project.id!;
       });
 
       test('by the owner then it is saved, audited and announced', () async {
@@ -223,14 +258,20 @@ void main() {
 
         expect(updated.project.name, 'Bigger house');
         expect(updated.project.description, isNull);
-        expect((await Project.db.findById(session, projectId))!.name,
-            'Bigger house');
-        final audit = await AuditLog.db.findFirstRow(session,
-            where: (t) => t.action.equals('project.update'));
+        expect(
+          (await Project.db.findById(session, projectId))!.name,
+          'Bigger house',
+        );
+        final audit = await AuditLog.db.findFirstRow(
+          session,
+          where: (t) => t.action.equals('project.update'),
+        );
         expect(audit!.before?['name'], 'House in Bafoussam');
         expect(audit.after?['name'], 'Bigger house');
-        final events = await ActivityEvent.db.find(session,
-            where: (t) => t.type.equals(ActivityType.projectUpdated));
+        final events = await ActivityEvent.db.find(
+          session,
+          where: (t) => t.type.equals(ActivityType.projectUpdated),
+        );
         expect(events, hasLength(1));
       });
 
@@ -252,7 +293,10 @@ void main() {
       test('with a blank name then it throws invalidProjectName', () async {
         await expectLater(
           endpoints.project.update(
-              signedInAs(ownerId), projectId, details.copyWith(name: ' ')),
+            signedInAs(ownerId),
+            projectId,
+            details.copyWith(name: ' '),
+          ),
           throwsA(_appException(AppErrorCode.invalidProjectName)),
         );
       });
@@ -262,9 +306,10 @@ void main() {
       late int projectId;
 
       setUp(() async {
-        projectId = (await endpoints.project.create(signedInAs(ownerId), details))
-            .project
-            .id!;
+        projectId = (await endpoints.project.create(
+          signedInAs(ownerId),
+          details,
+        )).project.id!;
       });
 
       const allowed = [
@@ -275,18 +320,25 @@ void main() {
         (ProjectStatus.completed, ProjectStatus.archived),
       ];
       for (final (from, to) in allowed) {
-        test('from ${from.name} to ${to.name} then it is saved and announced',
-            () async {
-          await setStatusInDatabase(projectId, from);
+        test(
+          'from ${from.name} to ${to.name} then it is saved and announced',
+          () async {
+            await setStatusInDatabase(projectId, from);
 
-          final updated = await endpoints.project
-              .setStatus(signedInAs(ownerId), projectId, to);
+            final updated = await endpoints.project.setStatus(
+              signedInAs(ownerId),
+              projectId,
+              to,
+            );
 
-          expect(updated.project.status, to);
-          final events = await ActivityEvent.db.find(sessionBuilder.build(),
-              where: (t) => t.type.equals(ActivityType.projectStatusChanged));
-          expect(events.single.payload?['status'], to.name);
-        });
+            expect(updated.project.status, to);
+            final events = await ActivityEvent.db.find(
+              sessionBuilder.build(),
+              where: (t) => t.type.equals(ActivityType.projectStatusChanged),
+            );
+            expect(events.single.payload?['status'], to.name);
+          },
+        );
       }
 
       const refused = [
@@ -316,8 +368,11 @@ void main() {
         await addMember(projectId, otherId, ProjectRole.siteManager);
 
         await expectLater(
-          endpoints.project
-              .setStatus(signedInAs(otherId), projectId, ProjectStatus.paused),
+          endpoints.project.setStatus(
+            signedInAs(otherId),
+            projectId,
+            ProjectStatus.paused,
+          ),
           throwsA(_appException(AppErrorCode.permissionDenied)),
         );
       });

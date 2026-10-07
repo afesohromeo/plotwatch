@@ -12,7 +12,7 @@ part 'password_reset_bloc.freezed.dart';
 /// signs in with the new password.
 class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
   PasswordResetBloc({required this._authRepository})
-      : super(const PasswordResetState()) {
+    : super(const PasswordResetState()) {
     on<_EmailSubmitted>(_onEmailSubmitted);
     on<_CodeSubmitted>(_onCodeSubmitted);
     on<_CodeResent>(_onCodeResent);
@@ -32,12 +32,14 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
     try {
       final email = event.email.trim();
       final requestId = await _authRepository.startPasswordReset(email: email);
-      emit(state.copyWith(
-        passwordResetStatus: GenericStatus.success,
-        step: PasswordResetStep.verifyCode,
-        email: email,
-        passwordResetRequestId: requestId,
-      ));
+      emit(
+        state.copyWith(
+          passwordResetStatus: GenericStatus.success,
+          step: PasswordResetStep.verifyCode,
+          email: email,
+          passwordResetRequestId: requestId,
+        ),
+      );
     } on HttpException400 catch (e) {
       emit(_failure(e.code.message(LocalizationService.localization)));
     } on HttpException401 catch (_) {
@@ -60,11 +62,13 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
         passwordResetRequestId: state.passwordResetRequestId!,
         code: event.code.trim(),
       );
-      emit(state.copyWith(
-        passwordResetStatus: GenericStatus.success,
-        step: PasswordResetStep.newPassword,
-        finishPasswordResetToken: token,
-      ));
+      emit(
+        state.copyWith(
+          passwordResetStatus: GenericStatus.success,
+          step: PasswordResetStep.newPassword,
+          finishPasswordResetToken: token,
+        ),
+      );
     } on HttpException400 catch (e) {
       emit(_failure(e.code.message(LocalizationService.localization)));
     } on HttpException401 catch (_) {
@@ -83,12 +87,15 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
   ) async {
     emit(_loading());
     try {
-      final requestId =
-          await _authRepository.startPasswordReset(email: state.email);
-      emit(state.copyWith(
-        passwordResetStatus: GenericStatus.success,
-        passwordResetRequestId: requestId,
-      ));
+      final requestId = await _authRepository.startPasswordReset(
+        email: state.email,
+      );
+      emit(
+        state.copyWith(
+          passwordResetStatus: GenericStatus.success,
+          passwordResetRequestId: requestId,
+        ),
+      );
     } on HttpException400 catch (e) {
       emit(_failure(e.code.message(LocalizationService.localization)));
     } on HttpException401 catch (_) {
@@ -111,7 +118,10 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
         finishPasswordResetToken: state.finishPasswordResetToken!,
         newPassword: event.password,
       );
-      await _authRepository.signIn(email: state.email, password: event.password);
+      await _authRepository.signIn(
+        email: state.email,
+        password: event.password,
+      );
       emit(state.copyWith(passwordResetStatus: GenericStatus.success));
     } on HttpException400 catch (e) {
       emit(_failure(e.code.message(LocalizationService.localization)));
@@ -136,9 +146,9 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
     _ConfirmPasswordVisibilityToggled event,
     Emitter<PasswordResetState> emit,
   ) {
-    emit(state.copyWith(
-      isConfirmPasswordVisible: !state.isConfirmPasswordVisible,
-    ));
+    emit(
+      state.copyWith(isConfirmPasswordVisible: !state.isConfirmPasswordVisible),
+    );
   }
 
   void _onReset(_Reset event, Emitter<PasswordResetState> emit) {
@@ -146,12 +156,12 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
   }
 
   PasswordResetState _loading() => state.copyWith(
-        passwordResetStatus: GenericStatus.loading,
-        passwordResetErrorMessage: null,
-      );
+    passwordResetStatus: GenericStatus.loading,
+    passwordResetErrorMessage: null,
+  );
 
   PasswordResetState _failure(String message) => state.copyWith(
-        passwordResetStatus: GenericStatus.failure,
-        passwordResetErrorMessage: message,
-      );
+    passwordResetStatus: GenericStatus.failure,
+    passwordResetErrorMessage: message,
+  );
 }

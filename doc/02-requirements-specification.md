@@ -136,7 +136,7 @@ A user can hold different roles on different projects (a site manager on one pro
 |--------|:-----:|:---------:|:------:|:------------:|
 | View project, stages, evidence, ledger | ✅ | ✅ | ✅ | ✅ |
 | Edit project details, currency; validate or reject the site location | ✅ | ❌ | ❌ | ❌ |
-| Propose the site location (GPS on the plot, SITE-04) | ❌ | ❌ | ❌ | ✅ |
+| Propose the site location (GPS on the plot, SITE-04; owner added 2026-10-07, `04b` G-12) | ✅ | ❌ | ❌ | ✅ |
 | Archive / delete project | ✅ | ❌ | ❌ | ❌ |
 | Invite / remove members | ✅ | ❌ | ❌ | ❌ |
 | Create / edit / reorder stages | ✅ | ❌ | ❌ | ❌ *(may propose, P1)* |

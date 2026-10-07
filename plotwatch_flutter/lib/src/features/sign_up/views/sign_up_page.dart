@@ -16,10 +16,10 @@ class SignUpPage extends StatefulWidget {
   static const passwordFieldKey = Key('signUp.password');
   static const confirmPasswordFieldKey = Key('signUp.confirmPassword');
   static const submitButtonKey = Key('signUp.submit');
-  static const passwordVisibilityButtonKey =
-      Key('signUp.passwordVisibility');
-  static const confirmPasswordVisibilityButtonKey =
-      Key('signUp.confirmPasswordVisibility');
+  static const passwordVisibilityButtonKey = Key('signUp.passwordVisibility');
+  static const confirmPasswordVisibilityButtonKey = Key(
+    'signUp.confirmPasswordVisibility',
+  );
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -48,17 +48,21 @@ class _SignUpPageState extends State<SignUpPage> {
     final bloc = context.read<SignUpBloc>();
     switch (step) {
       case SignUpStep.details:
-        bloc.add(SignUpEvent.detailsSubmitted(
-          fullName: _name.text,
-          email: _email.text,
-        ));
+        bloc.add(
+          SignUpEvent.detailsSubmitted(
+            fullName: _name.text,
+            email: _email.text,
+          ),
+        );
       case SignUpStep.verifyCode:
         bloc.add(SignUpEvent.codeSubmitted(code: _code.text));
       case SignUpStep.password:
-        bloc.add(SignUpEvent.passwordSubmitted(
-          password: _password.text,
-          locale: Localizations.localeOf(context).languageCode,
-        ));
+        bloc.add(
+          SignUpEvent.passwordSubmitted(
+            password: _password.text,
+            locale: Localizations.localeOf(context).languageCode,
+          ),
+        );
     }
   }
 
@@ -135,9 +139,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 TextButton(
                   onPressed: isLoading
                       ? null
-                      : () => context
-                          .read<SignUpBloc>()
-                          .add(const SignUpEvent.codeResent()),
+                      : () => context.read<SignUpBloc>().add(
+                          const SignUpEvent.codeResent(),
+                        ),
                   child: Text(l10n.resendCode),
                 ),
               if (state.step == SignUpStep.details)
@@ -157,77 +161,77 @@ class _SignUpPageState extends State<SignUpPage> {
 
     return switch (state.step) {
       SignUpStep.details => [
-          InputField(
-            key: SignUpPage.nameFieldKey,
-            controller: _name,
-            labelText: l10n.labelFullName,
-            autofillHints: const [AutofillHints.name],
-            validator: (value) => Validators.fullName(value, l10n),
-          ),
-          const Gap.vertical(height: AppSpacing.md),
-          InputField(
-            key: SignUpPage.emailFieldKey,
-            controller: _email,
-            labelText: l10n.labelEmail,
-            keyboardType: TextInputType.emailAddress,
-            autofillHints: const [AutofillHints.email, AutofillHints.username],
-            validator: (value) => Validators.email(value, l10n),
-          ),
-        ],
+        InputField(
+          key: SignUpPage.nameFieldKey,
+          controller: _name,
+          labelText: l10n.labelFullName,
+          autofillHints: const [AutofillHints.name],
+          validator: (value) => Validators.fullName(value, l10n),
+        ),
+        const Gap.vertical(height: AppSpacing.md),
+        InputField(
+          key: SignUpPage.emailFieldKey,
+          controller: _email,
+          labelText: l10n.labelEmail,
+          keyboardType: TextInputType.emailAddress,
+          autofillHints: const [AutofillHints.email, AutofillHints.username],
+          validator: (value) => Validators.email(value, l10n),
+        ),
+      ],
       SignUpStep.verifyCode => [
-          InputField(
-            key: SignUpPage.codeFieldKey,
-            controller: _code,
-            labelText: l10n.labelVerificationCode,
-            enableSuggestions: false,
-            validator: (value) => Validators.code(value, l10n),
-          ),
-        ],
+        InputField(
+          key: SignUpPage.codeFieldKey,
+          controller: _code,
+          labelText: l10n.labelVerificationCode,
+          enableSuggestions: false,
+          validator: (value) => Validators.code(value, l10n),
+        ),
+      ],
       SignUpStep.password => [
-          // The password manager saves the new password under this email.
-          InputField(
-            key: SignUpPage.accountEmailFieldKey,
-            initialValue: state.email,
-            labelText: l10n.labelEmail,
-            readOnly: true,
-            autofillHints: const [AutofillHints.username],
-            validator: null,
+        // The password manager saves the new password under this email.
+        InputField(
+          key: SignUpPage.accountEmailFieldKey,
+          initialValue: state.email,
+          labelText: l10n.labelEmail,
+          readOnly: true,
+          autofillHints: const [AutofillHints.username],
+          validator: null,
+        ),
+        const Gap.vertical(height: AppSpacing.md),
+        InputField(
+          key: SignUpPage.passwordFieldKey,
+          controller: _password,
+          labelText: l10n.labelPassword,
+          hintText: l10n.passwordRuleHint,
+          obscureText: !state.isPasswordVisible,
+          suffixIcon: PasswordVisibilityButton(
+            key: SignUpPage.passwordVisibilityButtonKey,
+            isVisible: state.isPasswordVisible,
+            onPressed: () =>
+                toggle(const SignUpEvent.passwordVisibilityToggled()),
           ),
-          const Gap.vertical(height: AppSpacing.md),
-          InputField(
-            key: SignUpPage.passwordFieldKey,
-            controller: _password,
-            labelText: l10n.labelPassword,
-            hintText: l10n.passwordRuleHint,
-            obscureText: !state.isPasswordVisible,
-            suffixIcon: PasswordVisibilityButton(
-              key: SignUpPage.passwordVisibilityButtonKey,
-              isVisible: state.isPasswordVisible,
-              onPressed: () =>
-                  toggle(const SignUpEvent.passwordVisibilityToggled()),
-            ),
-            enableSuggestions: false,
-            autofillHints: const [AutofillHints.newPassword],
-            validator: (value) => Validators.password(value, l10n),
+          enableSuggestions: false,
+          autofillHints: const [AutofillHints.newPassword],
+          validator: (value) => Validators.password(value, l10n),
+        ),
+        const Gap.vertical(height: AppSpacing.md),
+        InputField(
+          key: SignUpPage.confirmPasswordFieldKey,
+          controller: _confirmPassword,
+          labelText: l10n.labelConfirmPassword,
+          obscureText: !state.isConfirmPasswordVisible,
+          suffixIcon: PasswordVisibilityButton(
+            key: SignUpPage.confirmPasswordVisibilityButtonKey,
+            isVisible: state.isConfirmPasswordVisible,
+            onPressed: () =>
+                toggle(const SignUpEvent.confirmPasswordVisibilityToggled()),
           ),
-          const Gap.vertical(height: AppSpacing.md),
-          InputField(
-            key: SignUpPage.confirmPasswordFieldKey,
-            controller: _confirmPassword,
-            labelText: l10n.labelConfirmPassword,
-            obscureText: !state.isConfirmPasswordVisible,
-            suffixIcon: PasswordVisibilityButton(
-              key: SignUpPage.confirmPasswordVisibilityButtonKey,
-              isVisible: state.isConfirmPasswordVisible,
-              onPressed: () =>
-                  toggle(const SignUpEvent.confirmPasswordVisibilityToggled()),
-            ),
-            enableSuggestions: false,
-            autofillHints: const [AutofillHints.newPassword],
-            validator: (value) =>
-                Validators.confirmPassword(value, _password.text, l10n),
-          ),
-        ],
+          enableSuggestions: false,
+          autofillHints: const [AutofillHints.newPassword],
+          validator: (value) =>
+              Validators.confirmPassword(value, _password.text, l10n),
+        ),
+      ],
     };
   }
 }

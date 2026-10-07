@@ -1,11 +1,20 @@
 import 'package:serverpod/serverpod.dart';
 
+/// The web app's `config.json`: the API URL and, when configured, the web
+/// Maps key (Serverpod password `googleMapsWebKey`; doc/04b, M2-11).
 class AppConfigWidget extends JsonWidget {
   final String apiUrl;
+  final String? mapsApiKey;
 
   AppConfigWidget({
     required this.apiUrl,
-  }) : super(object: {'apiUrl': apiUrl});
+    this.mapsApiKey,
+  }) : super(
+         object: {
+           'apiUrl': apiUrl,
+           'mapsApiKey': ?mapsApiKey,
+         },
+       );
 }
 
 class AppConfigRoute extends WidgetRoute {
@@ -13,7 +22,11 @@ class AppConfigRoute extends WidgetRoute {
 
   AppConfigRoute({
     required final ServerConfig apiConfig,
-  }) : widget = AppConfigWidget(apiUrl: apiConfig.apiUrl.toString());
+    String? mapsApiKey,
+  }) : widget = AppConfigWidget(
+         apiUrl: apiConfig.apiUrl.toString(),
+         mapsApiKey: mapsApiKey,
+       );
 
   @override
   Future<WebWidget> build(Session session, Request request) async {

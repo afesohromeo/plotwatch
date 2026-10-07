@@ -22,9 +22,9 @@ class PlotwatchTheme {
     );
 
     OutlineInputBorder outline(Color color, double width) => OutlineInputBorder(
-          borderRadius: BorderRadius.circular(radius),
-          borderSide: BorderSide(color: color, width: width),
-        );
+      borderRadius: BorderRadius.circular(radius),
+      borderSide: BorderSide(color: color, width: width),
+    );
 
     return ThemeData(
       useMaterial3: true,
@@ -61,8 +61,10 @@ class PlotwatchTheme {
         filled: true,
         fillColor: c.surfaceWhite,
         isDense: false,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 15,
+        ),
         hintStyle: textTheme.bodyLarge?.copyWith(color: c.muted),
         labelStyle: textTheme.labelMedium,
         floatingLabelStyle: textTheme.labelMedium?.copyWith(color: c.primary),
@@ -80,12 +82,15 @@ class PlotwatchTheme {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.resolveWith((states) =>
-              states.contains(WidgetState.disabled) ? c.line : c.primary),
-          foregroundColor: WidgetStateProperty.resolveWith((states) =>
-              states.contains(WidgetState.disabled) ? c.muted : c.onPrimary),
-          minimumSize:
-              const WidgetStatePropertyAll(Size(64, controlHeight)),
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) =>
+                states.contains(WidgetState.disabled) ? c.line : c.primary,
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith(
+            (states) =>
+                states.contains(WidgetState.disabled) ? c.muted : c.onPrimary,
+          ),
+          minimumSize: const WidgetStatePropertyAll(Size(64, controlHeight)),
           shape: WidgetStatePropertyAll(controlShape),
           textStyle: WidgetStatePropertyAll(textTheme.labelLarge),
           elevation: const WidgetStatePropertyAll(0),
@@ -94,10 +99,11 @@ class PlotwatchTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
           foregroundColor: WidgetStatePropertyAll(c.primary),
-          minimumSize:
-              const WidgetStatePropertyAll(Size(64, controlHeight)),
+          minimumSize: const WidgetStatePropertyAll(Size(64, controlHeight)),
           shape: WidgetStatePropertyAll(controlShape),
-          side: WidgetStatePropertyAll(BorderSide(color: c.primary, width: 1.5)),
+          side: WidgetStatePropertyAll(
+            BorderSide(color: c.primary, width: 1.5),
+          ),
           textStyle: WidgetStatePropertyAll(textTheme.labelLarge),
         ),
       ),
@@ -128,20 +134,29 @@ class PlotwatchTheme {
 
   /// §3 of the design system: one family, ink text, muted secondary text.
   static TextTheme _textTheme(MyAppColors c) {
-    TextStyle style(double size, FontWeight weight, Color color,
-            {double? height, double? letterSpacing}) =>
-        TextStyle(
-          fontFamily: fontFamily,
-          fontSize: size,
-          fontWeight: weight,
-          color: color,
-          height: height,
-          letterSpacing: letterSpacing,
-        );
+    TextStyle style(
+      double size,
+      FontWeight weight,
+      Color color, {
+      double? height,
+      double? letterSpacing,
+    }) => TextStyle(
+      fontFamily: fontFamily,
+      fontSize: size,
+      fontWeight: weight,
+      color: color,
+      height: height,
+      letterSpacing: letterSpacing,
+    );
 
     return TextTheme(
-      displaySmall:
-          style(34, FontWeight.w800, c.ink, height: 1.15, letterSpacing: -0.5),
+      displaySmall: style(
+        34,
+        FontWeight.w800,
+        c.ink,
+        height: 1.15,
+        letterSpacing: -0.5,
+      ),
       headlineSmall: style(26, FontWeight.w800, c.ink, height: 1.2),
       titleLarge: style(18, FontWeight.w700, c.ink),
       titleMedium: style(16, FontWeight.w700, c.ink),

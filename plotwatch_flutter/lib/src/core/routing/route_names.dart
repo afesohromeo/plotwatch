@@ -11,3 +11,5 @@ const String editProjectRouteName = 'edit-project';
 const String membersRouteName = 'members';
 const String joinRouteName = 'join';
 const String joinWithCodeRouteName = 'join-code';
+const String localizeSiteRouteName = 'localize-site';
+const String validateSiteRouteName = 'validate-site';

@@ -4,6 +4,13 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Keys kept out of git (doc/04b G-3): android/secrets.properties holds
+// MAPS_API_KEY=... . Without the file the app builds; only the map is blank.
+val secrets = java.util.Properties().apply {
+    val file = rootProject.file("secrets.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+
 android {
     namespace = "com.afesohromeo.plotwatch"
     compileSdk = flutter.compileSdkVersion
@@ -27,6 +34,7 @@ android {
         // flag during build.
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["MAPS_API_KEY"] = secrets.getProperty("MAPS_API_KEY", "")
     }
 
     buildTypes {

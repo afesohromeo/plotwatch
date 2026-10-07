@@ -64,14 +64,16 @@ class _ProjectDetailsFormState extends State<ProjectDetailsForm> {
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
     final description = _description.text.trim();
-    widget.onSubmit(ProjectDetails(
-      name: _name.text.trim(),
-      description: description.isEmpty ? null : description,
-      type: _type!,
-      currencyCode: _currency!,
-      plannedStart: _asUtcDate(_start),
-      plannedEnd: _asUtcDate(_end),
-    ));
+    widget.onSubmit(
+      ProjectDetails(
+        name: _name.text.trim(),
+        description: description.isEmpty ? null : description,
+        type: _type!,
+        currencyCode: _currency!,
+        plannedStart: _asUtcDate(_start),
+        plannedEnd: _asUtcDate(_end),
+      ),
+    );
   }
 
   /// A calendar day, independent of the device's time zone.
@@ -142,8 +144,8 @@ class _ProjectDetailsFormState extends State<ProjectDetailsForm> {
             onChanged: (date) => setState(() => _end = date),
             validator: (_) =>
                 _start != null && _end != null && _end!.isBefore(_start!)
-                    ? l10n.validateDatesOrder
-                    : null,
+                ? l10n.validateDatesOrder
+                : null,
           ),
           const Gap.vertical(height: AppSpacing.lg),
           SubmitButton(

@@ -16,14 +16,19 @@ void main() {
     test('when opening the profile page then it goes to the welcome page', () {
       expect(
         RouteManager.redirectFor(
-            AuthenticationStatus.unauthenticated, profilePage),
+          AuthenticationStatus.unauthenticated,
+          profilePage,
+        ),
         welcomePage,
       );
     });
 
     test('when opening the home page then it goes to the welcome page', () {
       expect(
-        RouteManager.redirectFor(AuthenticationStatus.unauthenticated, homePage),
+        RouteManager.redirectFor(
+          AuthenticationStatus.unauthenticated,
+          homePage,
+        ),
         welcomePage,
       );
     });
@@ -31,7 +36,9 @@ void main() {
     test('when opening a project page then it goes to the welcome page', () {
       expect(
         RouteManager.redirectFor(
-            AuthenticationStatus.unauthenticated, '/projects/7'),
+          AuthenticationStatus.unauthenticated,
+          '/projects/7',
+        ),
         welcomePage,
       );
     });
@@ -55,29 +62,34 @@ void main() {
     });
   });
 
-  test('Given an unknown session when opening any page then nothing changes',
-      () {
-    expect(
-      RouteManager.redirectFor(AuthenticationStatus.unknown, homePage),
-      isNull,
-    );
-  });
+  test(
+    'Given an unknown session when opening any page then nothing changes',
+    () {
+      expect(
+        RouteManager.redirectFor(AuthenticationStatus.unknown, homePage),
+        isNull,
+      );
+    },
+  );
 
   // MEMB-03: a signed-out user who opens an invitation link signs in or up
   // first, then lands on the join page (doc/04b, group F).
   group('Given an invitation link', () {
-    test('when signed out then it goes to the welcome page and is remembered',
-        () {
-      expect(
-        RouteManager.redirectFor(
-            AuthenticationStatus.unauthenticated, '/join/ABCD2345'),
-        welcomePage,
-      );
-      expect(RouteManager.isRememberedTarget('/join/ABCD2345'), isTrue);
-    });
+    test(
+      'when signed out then it goes to the welcome page and is remembered',
+      () {
+        expect(
+          RouteManager.redirectFor(
+            AuthenticationStatus.unauthenticated,
+            '/join/ABCD2345',
+          ),
+          welcomePage,
+        );
+        expect(RouteManager.isRememberedTarget('/join/ABCD2345'), isTrue);
+      },
+    );
 
-    test('when the user has signed in then they go to the remembered link',
-        () {
+    test('when the user has signed in then they go to the remembered link', () {
       expect(
         RouteManager.redirectFor(
           AuthenticationStatus.authenticated,
@@ -91,7 +103,9 @@ void main() {
     test('when signed in then the link opens directly', () {
       expect(
         RouteManager.redirectFor(
-            AuthenticationStatus.authenticated, '/join/ABCD2345'),
+          AuthenticationStatus.authenticated,
+          '/join/ABCD2345',
+        ),
         isNull,
       );
     });

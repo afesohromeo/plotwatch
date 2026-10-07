@@ -1,13 +1,12 @@
 import 'dart:developer';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
-
 /// Account and session operations used by the auth BLoCs. Signing in and
 /// finishing registration also store the session. Errors are logged and
 /// rethrown (RULE-012).
 class AuthRepository {
   AuthRepository({AuthApiProvider? apiProvider})
-      : _apiProvider = apiProvider ?? AuthApiProvider();
+    : _apiProvider = apiProvider ?? AuthApiProvider();
 
   final AuthApiProvider _apiProvider;
 
@@ -17,8 +16,10 @@ class AuthRepository {
 
   Future<void> signIn({required String email, required String password}) async {
     try {
-      final authSuccess =
-          await _apiProvider.login(email: email, password: password);
+      final authSuccess = await _apiProvider.login(
+        email: email,
+        password: password,
+      );
       await _apiProvider.saveSession(authSuccess);
     } catch (e) {
       log('Error signing in: $e');

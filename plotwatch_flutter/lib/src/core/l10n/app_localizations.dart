@@ -983,7 +983,7 @@ abstract class AppLocalizations {
   /// Project page, owner: no site yet, what happens next
   ///
   /// In en, this message translates to:
-  /// **'Waiting for the site location. Invite a site manager: standing on the plot, they localize it with their phone, then you validate it.'**
+  /// **'Invite a site manager to localize the plot, or localize it yourself if you\'re on the plot.'**
   String get siteWaitingOwner;
 
   /// Project page, site manager: no site yet, what to do
@@ -1136,6 +1136,24 @@ abstract class AppLocalizations {
   /// **'Send this code or link. It works once and expires in 7 days.'**
   String get invitationReadyText;
 
+  /// Invite sheet: copies the invitation link
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link'**
+  String get copyLinkAction;
+
+  /// Invite sheet: the copy button after copying
+  ///
+  /// In en, this message translates to:
+  /// **'Link copied ✓'**
+  String get linkCopied;
+
+  /// Members page: tooltip of the button that shares a pending invitation again
+  ///
+  /// In en, this message translates to:
+  /// **'Share the invitation'**
+  String get shareInvitationAction;
+
   /// Button opening the system share sheet
   ///
   /// In en, this message translates to:
@@ -1195,6 +1213,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Join the project'**
   String get joinAction;
+
+  /// Title of the localize-site page
+  ///
+  /// In en, this message translates to:
+  /// **'Localize the site'**
+  String get localizeSiteTitle;
+
+  /// Localize page: how to get a good reading
+  ///
+  /// In en, this message translates to:
+  /// **'Stand inside the plot, in the open, and wait until the accuracy is 20 m or better.'**
+  String get localizeSiteHint;
+
+  /// Localize page on the web app: GPS localization is phone-only
+  ///
+  /// In en, this message translates to:
+  /// **'Localize the site with the Plotwatch app on your phone, standing on the plot.'**
+  String get localizePhoneOnly;
+
+  /// Localize page: waiting for the first GPS reading
+  ///
+  /// In en, this message translates to:
+  /// **'Getting your position…'**
+  String get gettingPosition;
+
+  /// Localize page: location permission refused
+  ///
+  /// In en, this message translates to:
+  /// **'Plotwatch needs your location to localize the site.'**
+  String get locationDenied;
+
+  /// Localize page: asks for the location permission again
+  ///
+  /// In en, this message translates to:
+  /// **'Allow location'**
+  String get allowLocation;
+
+  /// Localize page: permission refused for good
+  ///
+  /// In en, this message translates to:
+  /// **'Location is blocked for Plotwatch. Allow it in the app settings.'**
+  String get locationDeniedForever;
+
+  /// Localize page: opens the app settings
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get openSettings;
+
+  /// Localize page: GPS switched off
+  ///
+  /// In en, this message translates to:
+  /// **'Location is turned off on this phone.'**
+  String get locationServiceOff;
+
+  /// Localize page: opens the location settings
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on location'**
+  String get turnOnLocation;
+
+  /// GPS accuracy of a reading
+  ///
+  /// In en, this message translates to:
+  /// **'± {meters} m'**
+  String accuracyMeters(int meters);
+
+  /// Localize page: accuracy is 20 m or better
+  ///
+  /// In en, this message translates to:
+  /// **'Accurate enough. You can save this position.'**
+  String get accuracyGood;
+
+  /// Localize page: accuracy not good enough yet
+  ///
+  /// In en, this message translates to:
+  /// **'Wait for 20 m or better, in the open.'**
+  String get accuracyWaiting;
+
+  /// Localize page: proposes the current reading
+  ///
+  /// In en, this message translates to:
+  /// **'Save this position'**
+  String get saveLocationAction;
+
+  /// After the site manager proposed the location
+  ///
+  /// In en, this message translates to:
+  /// **'Location sent. The owner will review it.'**
+  String get siteProposalSent;
+
+  /// Unexpected error while proposing the location
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save the location. Try again.'**
+  String get errorSiteProposal;
+
+  /// Unexpected error while loading a proposal
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the location. Try again.'**
+  String get errorSiteLoad;
+
+  /// Unexpected error while validating or rejecting
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save your decision. Try again.'**
+  String get errorSiteSave;
+
+  /// The map failed to load (e.g. no Maps key)
+  ///
+  /// In en, this message translates to:
+  /// **'The map can\'t be shown right now.'**
+  String get mapUnavailable;
+
+  /// Title of the validate-site page
+  ///
+  /// In en, this message translates to:
+  /// **'Validate the location'**
+  String get validateSiteTitle;
+
+  /// Validate page: what to check on the map
+  ///
+  /// In en, this message translates to:
+  /// **'Check that the circle covers the plot, with a few metres to spare.'**
+  String get validateSiteHint;
+
+  /// Validate page: nothing to review
+  ///
+  /// In en, this message translates to:
+  /// **'No location is waiting for validation.'**
+  String get noPendingProposal;
+
+  /// Validate page: accuracy of the proposed reading
+  ///
+  /// In en, this message translates to:
+  /// **'GPS accuracy'**
+  String get labelAccuracy;
+
+  /// Validate page: when the reading was taken
+  ///
+  /// In en, this message translates to:
+  /// **'Read on'**
+  String get labelReadAt;
+
+  /// Validate page: address field
+  ///
+  /// In en, this message translates to:
+  /// **'Address or landmark (optional)'**
+  String get labelAddressOptional;
+
+  /// Validate page: accepts the location
+  ///
+  /// In en, this message translates to:
+  /// **'Validate'**
+  String get validateAction;
+
+  /// Validate page: refuses the location
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get rejectAction;
+
+  /// Reject dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Reject this location?'**
+  String get rejectReasonTitle;
+
+  /// Reject dialog: reason field
+  ///
+  /// In en, this message translates to:
+  /// **'Reason (optional)'**
+  String get rejectReasonLabel;
+
+  /// After the owner validated the location
+  ///
+  /// In en, this message translates to:
+  /// **'The site location is validated.'**
+  String get siteValidated;
+
+  /// After the owner rejected the location
+  ///
+  /// In en, this message translates to:
+  /// **'The location was rejected. A new one can be proposed.'**
+  String get siteRejected;
+
+  /// Project page, owner: a proposal is pending
+  ///
+  /// In en, this message translates to:
+  /// **'A location is waiting for your validation.'**
+  String get siteProposalPendingOwner;
+
+  /// Project page, site manager: a proposal is pending
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the owner to validate your location.'**
+  String get siteProposalPendingManager;
+
+  /// Project page, owner: opens the validate page
+  ///
+  /// In en, this message translates to:
+  /// **'Review the location'**
+  String get reviewLocationAction;
+
+  /// Project page: opens the localize page
+  ///
+  /// In en, this message translates to:
+  /// **'Localize the site'**
+  String get localizeSiteAction;
+
+  /// Project page, site manager: a new proposal replaces the pending one
+  ///
+  /// In en, this message translates to:
+  /// **'Localize again'**
+  String get localizeAgainAction;
+
+  /// Project page, site manager: moving a validated site
+  ///
+  /// In en, this message translates to:
+  /// **'Propose a new location'**
+  String get proposeNewLocationAction;
 }
 
 class _AppLocalizationsDelegate

@@ -18,8 +18,10 @@ void main() {
 
   group('Given the auth repository', () {
     test('when signing in succeeds then the session is saved', () async {
-      when(() => apiProvider.login(email: 'ada@example.com', password: 'secret123'))
-          .thenAnswer((_) async => authSuccess);
+      when(
+        () =>
+            apiProvider.login(email: 'ada@example.com', password: 'secret123'),
+      ).thenAnswer((_) async => authSuccess);
       when(() => apiProvider.saveSession(any())).thenAnswer((_) async {});
 
       await repository.signIn(email: 'ada@example.com', password: 'secret123');
@@ -29,8 +31,14 @@ void main() {
 
     test('when signing in fails then the error is rethrown and nothing is '
         'saved', () async {
-      when(() => apiProvider.login(email: any(named: 'email'), password: any(named: 'password')))
-          .thenThrow(const HttpException400(code: AppErrorCode.authInvalidCredentials));
+      when(
+        () => apiProvider.login(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      ).thenThrow(
+        const HttpException400(code: AppErrorCode.authInvalidCredentials),
+      );
 
       await expectLater(
         repository.signIn(email: 'ada@example.com', password: 'wrong-pass'),
@@ -39,15 +47,16 @@ void main() {
       verifyNever(() => apiProvider.saveSession(any()));
     });
 
-    test(
-        'when registration finishes then the name and language go in the same '
+    test('when registration finishes then the name and language go in the same '
         'call and the session is saved after it', () async {
-      when(() => apiProvider.finishRegistration(
-            registrationToken: 'token',
-            password: 'secret123',
-            fullName: 'Ada Lovelace',
-            locale: 'fr',
-          )).thenAnswer((_) async => authSuccess);
+      when(
+        () => apiProvider.finishRegistration(
+          registrationToken: 'token',
+          password: 'secret123',
+          fullName: 'Ada Lovelace',
+          locale: 'fr',
+        ),
+      ).thenAnswer((_) async => authSuccess);
       when(() => apiProvider.saveSession(any())).thenAnswer((_) async {});
 
       await repository.finishRegistration(
@@ -59,22 +68,24 @@ void main() {
 
       verifyInOrder([
         () => apiProvider.finishRegistration(
-              registrationToken: 'token',
-              password: 'secret123',
-              fullName: 'Ada Lovelace',
-              locale: 'fr',
-            ),
+          registrationToken: 'token',
+          password: 'secret123',
+          fullName: 'Ada Lovelace',
+          locale: 'fr',
+        ),
         () => apiProvider.saveSession(authSuccess),
       ]);
     });
 
     test('when registration fails then no session is saved', () async {
-      when(() => apiProvider.finishRegistration(
-            registrationToken: any(named: 'registrationToken'),
-            password: any(named: 'password'),
-            fullName: any(named: 'fullName'),
-            locale: any(named: 'locale'),
-          )).thenThrow(const HttpException400(code: AppErrorCode.invalidFullName));
+      when(
+        () => apiProvider.finishRegistration(
+          registrationToken: any(named: 'registrationToken'),
+          password: any(named: 'password'),
+          fullName: any(named: 'fullName'),
+          locale: any(named: 'locale'),
+        ),
+      ).thenThrow(const HttpException400(code: AppErrorCode.invalidFullName));
 
       await expectLater(
         repository.finishRegistration(
@@ -88,11 +99,13 @@ void main() {
       verifyNever(() => apiProvider.saveSession(any()));
     });
 
-    test('when signed-in state is read then it comes from the API provider',
-        () {
-      when(() => apiProvider.isSignedIn).thenReturn(true);
+    test(
+      'when signed-in state is read then it comes from the API provider',
+      () {
+        when(() => apiProvider.isSignedIn).thenReturn(true);
 
-      expect(repository.isSignedIn, isTrue);
-    });
+        expect(repository.isSignedIn, isTrue);
+      },
+    );
   });
 }

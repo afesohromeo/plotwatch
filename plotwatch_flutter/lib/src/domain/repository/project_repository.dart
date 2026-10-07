@@ -5,7 +5,7 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 /// Projects. Errors are logged and rethrown (RULE-012).
 class ProjectRepository {
   ProjectRepository({ProjectApiProvider? apiProvider})
-      : _apiProvider = apiProvider ?? ProjectApiProvider();
+    : _apiProvider = apiProvider ?? ProjectApiProvider();
 
   final ProjectApiProvider _apiProvider;
 

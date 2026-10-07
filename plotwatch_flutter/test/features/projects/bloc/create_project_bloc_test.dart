@@ -19,8 +19,10 @@ void main() {
 
   CreateProjectBloc build() => CreateProjectBloc(projectRepository: repository);
 
-  final atReview =
-      CreateProjectState(step: CreateProjectStep.review, details: testDetails);
+  final atReview = CreateProjectState(
+    step: CreateProjectStep.review,
+    details: testDetails,
+  );
 
   group('Given the create-project wizard', () {
     blocTest<CreateProjectBloc, CreateProjectState>(
@@ -36,22 +38,24 @@ void main() {
       build: build,
       seed: () => atReview,
       act: (bloc) => bloc.add(const CreateProjectEvent.backToDetails()),
-      expect: () => [
-        CreateProjectState(details: testDetails),
-      ],
+      expect: () => [CreateProjectState(details: testDetails)],
     );
 
     final created = testOverview();
     blocTest<CreateProjectBloc, CreateProjectState>(
       'when the project is created then the new project is kept',
-      setUp: () => when(() => repository.createProject(testDetails))
-          .thenAnswer((_) async => created),
+      setUp: () => when(
+        () => repository.createProject(testDetails),
+      ).thenAnswer((_) async => created),
       build: build,
       seed: () => atReview,
       act: (bloc) => bloc.add(const CreateProjectEvent.createSubmitted()),
       expect: () => [
         atReview.copyWith(createStatus: GenericStatus.loading),
-        atReview.copyWith(createStatus: GenericStatus.success, created: created),
+        atReview.copyWith(
+          createStatus: GenericStatus.success,
+          created: created,
+        ),
       ],
       verify: (_) =>
           verify(() => repository.createProject(testDetails)).called(1),
@@ -60,27 +64,27 @@ void main() {
     final failures = <String, (Object, String Function())>{
       'the server refuses the name': (
         const HttpException400(code: AppErrorCode.invalidProjectName),
-        () => l10n.errorInvalidProjectName
+        () => l10n.errorInvalidProjectName,
       ),
       'the session expired': (
         const HttpException401(),
-        () => l10n.errorUnauthorized
+        () => l10n.errorUnauthorized,
       ),
       'the device is offline': (
         const NetworkException(),
-        () => l10n.networkError
+        () => l10n.networkError,
       ),
       'something unexpected happens': (
         StateError('x'),
-        () => l10n.errorProjectCreate
+        () => l10n.errorProjectCreate,
       ),
     };
     for (final MapEntry(key: when_, value: (error, message))
         in failures.entries) {
       blocTest<CreateProjectBloc, CreateProjectState>(
         'when $when_ then it shows the matching message',
-        setUp: () => when(() => repository.createProject(any()))
-            .thenThrow(error),
+        setUp: () =>
+            when(() => repository.createProject(any())).thenThrow(error),
         build: build,
         seed: () => atReview,
         act: (bloc) => bloc.add(const CreateProjectEvent.createSubmitted()),

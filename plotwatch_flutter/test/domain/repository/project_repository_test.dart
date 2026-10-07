@@ -15,8 +15,7 @@ void main() {
   });
 
   group('Given the project repository', () {
-    test(
-        'when a page of projects is fetched then it becomes a PaginatedList '
+    test('when a page of projects is fetched then it becomes a PaginatedList '
         'with the page size the server used', () async {
       final summary = testSummary();
       when(() => apiProvider.list(page: 2, pageSize: 20)).thenAnswer(
@@ -31,10 +30,12 @@ void main() {
     });
 
     test('when fetching projects fails then the error is rethrown', () async {
-      when(() => apiProvider.list(
-            page: any(named: 'page'),
-            pageSize: any(named: 'pageSize'),
-          )).thenThrow(const NetworkException());
+      when(
+        () => apiProvider.list(
+          page: any(named: 'page'),
+          pageSize: any(named: 'pageSize'),
+        ),
+      ).thenThrow(const NetworkException());
 
       await expectLater(
         repository.fetchProjects(0),
@@ -42,11 +43,11 @@ void main() {
       );
     });
 
-    test('when a project is created then the details are sent once',
-        () async {
+    test('when a project is created then the details are sent once', () async {
       final overview = testOverview();
-      when(() => apiProvider.create(testDetails))
-          .thenAnswer((_) async => overview);
+      when(
+        () => apiProvider.create(testDetails),
+      ).thenAnswer((_) async => overview);
 
       final result = await repository.createProject(testDetails);
 
@@ -58,10 +59,12 @@ void main() {
         'server answer is returned', () async {
       final overview = testOverview();
       when(() => apiProvider.get(1)).thenAnswer((_) async => overview);
-      when(() => apiProvider.update(1, testDetails))
-          .thenAnswer((_) async => overview);
-      when(() => apiProvider.setStatus(1, ProjectStatus.paused))
-          .thenAnswer((_) async => overview);
+      when(
+        () => apiProvider.update(1, testDetails),
+      ).thenAnswer((_) async => overview);
+      when(
+        () => apiProvider.setStatus(1, ProjectStatus.paused),
+      ).thenAnswer((_) async => overview);
 
       expect(await repository.fetchProject(1), overview);
       expect(await repository.updateProject(1, testDetails), overview);

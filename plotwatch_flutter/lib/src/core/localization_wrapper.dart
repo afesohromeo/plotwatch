@@ -9,8 +9,9 @@ class LocalizationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Localizations(
-        delegates: AppLocalizations.localizationsDelegates,
-        locale: const Locale('fr'), // Set the default locale
-        child: child);
+      delegates: AppLocalizations.localizationsDelegates,
+      locale: const Locale('fr'), // Set the default locale
+      child: child,
+    );
   }
 }

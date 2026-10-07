@@ -20,10 +20,12 @@ void main() {
       final members = [testMember()];
       final invitations = [testInvitation()];
       when(() => apiProvider.listMembers(1)).thenAnswer((_) async => members);
-      when(() => apiProvider.listInvitations(1))
-          .thenAnswer((_) async => invitations);
-      when(() => apiProvider.previewInvitation('ABCD2345'))
-          .thenAnswer((_) async => testPreview);
+      when(
+        () => apiProvider.listInvitations(1),
+      ).thenAnswer((_) async => invitations);
+      when(
+        () => apiProvider.previewInvitation('ABCD2345'),
+      ).thenAnswer((_) async => testPreview);
 
       expect(await repository.fetchMembers(1), members);
       expect(await repository.fetchInvitations(1), invitations);
@@ -33,8 +35,13 @@ void main() {
     test('when an invitation is created then the role and approval right are '
         'sent', () async {
       final invitation = testInvitation(role: ProjectRole.coFunder);
-      when(() => apiProvider.createInvitation(1, ProjectRole.coFunder,
-          canApprove: true)).thenAnswer((_) async => invitation);
+      when(
+        () => apiProvider.createInvitation(
+          1,
+          ProjectRole.coFunder,
+          canApprove: true,
+        ),
+      ).thenAnswer((_) async => invitation);
 
       final result = await repository.createInvitation(
         1,
@@ -48,8 +55,9 @@ void main() {
     test('when someone joins, is removed or an invitation is cancelled then '
         'the call goes through', () async {
       final member = testMember(role: ProjectRole.siteManager).member;
-      when(() => apiProvider.acceptInvitation('ABCD2345'))
-          .thenAnswer((_) async => member);
+      when(
+        () => apiProvider.acceptInvitation('ABCD2345'),
+      ).thenAnswer((_) async => member);
       when(() => apiProvider.removeMember(1, 2)).thenAnswer((_) async {});
       when(() => apiProvider.cancelInvitation(1, 3)).thenAnswer((_) async {});
 
@@ -62,8 +70,9 @@ void main() {
     });
 
     test('when a call fails then the error is rethrown', () async {
-      when(() => apiProvider.acceptInvitation(any())).thenThrow(
-          const HttpException400(code: AppErrorCode.invitationExpired));
+      when(
+        () => apiProvider.acceptInvitation(any()),
+      ).thenThrow(const HttpException400(code: AppErrorCode.invitationExpired));
 
       await expectLater(
         repository.acceptInvitation('ABCD2345'),

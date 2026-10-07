@@ -63,25 +63,21 @@ class ScaffoldWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     log('scalfold wrapper $showDrawer');
-    final scaffoldBody = SafeArea(
-      top: false,
-      child: body!,
-    );
+    final scaffoldBody = SafeArea(top: false, child: body!);
     final buildFab = Padding(
       padding: floatingButtonpadding ?? const EdgeInsets.only(top: 65.0),
       child: FloatingActionButton(
-          mini: mini ?? true,
-          backgroundColor:
-              buttonColor ?? customColors.secondary.withValues(alpha: .7),
-          shape: CircleBorder(
-              side: BorderSide(color: buttonColor ?? customColors.secondary)),
-          onPressed: onPressed,
-          child: buttonIcon ??
-              Icon(
-                Icons.add,
-                size: 30,
-                color: customColors.background,
-              )),
+        mini: mini ?? true,
+        backgroundColor:
+            buttonColor ?? customColors.secondary.withValues(alpha: .7),
+        shape: CircleBorder(
+          side: BorderSide(color: buttonColor ?? customColors.secondary),
+        ),
+        onPressed: onPressed,
+        child:
+            buttonIcon ??
+            Icon(Icons.add, size: 30, color: customColors.background),
+      ),
     );
     return Scaffold(
       backgroundColor: bgColor ?? customColors.background,
@@ -112,7 +108,5 @@ class ScaffoldWrapper extends StatelessWidget {
           ? AppDrawer(parentContext: context)
           : null,
     );
-    
   }
-
- }
+}

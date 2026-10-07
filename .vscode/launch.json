@@ -1,12 +1,13 @@
 {
   "version": "0.2.0",
   "configurations": [
+    
     {
       // Debug the app on the Android emulator against the local server.
       // Pick the emulator in VS Code's device selector first. The emulator
       // reaches this PC at 10.0.2.2 (its own `localhost` is the emulator),
-      // so the URL from assets/config.json can't be used here. Starts the
-      // server without its own app (`serverpod_start_server_only`).
+      // so the URL from assets/config.json can't be used here. Start the
+      // server first in a terminal: `serverpod start --no-flutter`.
       "name": "Plotwatch app (mobile debug mode)",
       "type": "dart",
       "request": "launch",
@@ -17,6 +18,28 @@
         "--dart-define=SERVER_URL=http://10.0.2.2:8080/"
       ],
       // "preLaunchTask": "serverpod_start_server_only"
+    },
+    {
+      // Debug the live web app (hot reload) in Chrome against the local
+      // server, always at http://localhost:8083, so an invitation link is
+      // http://localhost:8083/join/<code>. Port 8082 is the server's built
+      // copy (plotwatch_server/web/app), which only changes with
+      // `serverpod run flutter_build`. Start the server first in a terminal:
+      // `serverpod start --no-flutter`.
+      "name": "Plotwatch app (web debug mode)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/plotwatch_flutter",
+      "program": "lib/main.dart",
+      "deviceId": "chrome",
+      "flutterMode": "debug",
+      "args": [
+        "--web-port=8083",
+        "--dart-define=SERVER_URL=http://localhost:8080/",
+        // Web Maps key from your environment, never committed (doc/04b
+        // G-2): set PLOTWATCH_MAPS_WEB_KEY, then restart VS Code.
+        "--dart-define=MAPS_API_KEY=${env:PLOTWATCH_MAPS_WEB_KEY}"
+      ]
     },
     {
       // Debug the app on a device or emulator against Serverpod Cloud

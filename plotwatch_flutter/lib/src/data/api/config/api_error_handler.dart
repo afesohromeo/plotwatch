@@ -1,7 +1,6 @@
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
-
 /// Converts any error from the Serverpod client into the app's exception
 /// types (`_standards/14` §2.3). Used by every API provider:
 /// `catch (e) { throw ApiErrorHandler.handle(e); }`.
@@ -28,38 +27,37 @@ class ApiErrorHandler {
   /// (`_standards/14` §2.3.1); `null` for anything else. The switches are
   /// exhaustive, so a new reason in a Serverpod update fails to compile.
   static AppErrorCode? _authErrorCode(Object e) => switch (e) {
-        EmailAccountLoginException(:final reason) => switch (reason) {
-            EmailAccountLoginExceptionReason.invalidCredentials =>
-              AppErrorCode.authInvalidCredentials,
-            EmailAccountLoginExceptionReason.tooManyAttempts =>
-              AppErrorCode.authTooManyAttempts,
-            EmailAccountLoginExceptionReason.unknown => AppErrorCode.authUnknown,
-          },
-        EmailAccountRequestException(:final reason) => switch (reason) {
-            EmailAccountRequestExceptionReason.expired =>
-              AppErrorCode.authRequestExpired,
-            EmailAccountRequestExceptionReason.invalid =>
-              AppErrorCode.authRequestInvalid,
-            EmailAccountRequestExceptionReason.policyViolation =>
-              AppErrorCode.authPasswordPolicy,
-            EmailAccountRequestExceptionReason.tooManyAttempts =>
-              AppErrorCode.authTooManyAttempts,
-            EmailAccountRequestExceptionReason.unknown =>
-              AppErrorCode.authUnknown,
-          },
-        EmailAccountPasswordResetException(:final reason) => switch (reason) {
-            EmailAccountPasswordResetExceptionReason.expired =>
-              AppErrorCode.authRequestExpired,
-            EmailAccountPasswordResetExceptionReason.invalid =>
-              AppErrorCode.authRequestInvalid,
-            EmailAccountPasswordResetExceptionReason.policyViolation =>
-              AppErrorCode.authPasswordPolicy,
-            EmailAccountPasswordResetExceptionReason.tooManyAttempts =>
-              AppErrorCode.authTooManyAttempts,
-            EmailAccountPasswordResetExceptionReason.unknown =>
-              AppErrorCode.authUnknown,
-          },
-        AuthUserBlockedException() => AppErrorCode.authUserBlocked,
-        _ => null,
-      };
+    EmailAccountLoginException(:final reason) => switch (reason) {
+      EmailAccountLoginExceptionReason.invalidCredentials =>
+        AppErrorCode.authInvalidCredentials,
+      EmailAccountLoginExceptionReason.tooManyAttempts =>
+        AppErrorCode.authTooManyAttempts,
+      EmailAccountLoginExceptionReason.unknown => AppErrorCode.authUnknown,
+    },
+    EmailAccountRequestException(:final reason) => switch (reason) {
+      EmailAccountRequestExceptionReason.expired =>
+        AppErrorCode.authRequestExpired,
+      EmailAccountRequestExceptionReason.invalid =>
+        AppErrorCode.authRequestInvalid,
+      EmailAccountRequestExceptionReason.policyViolation =>
+        AppErrorCode.authPasswordPolicy,
+      EmailAccountRequestExceptionReason.tooManyAttempts =>
+        AppErrorCode.authTooManyAttempts,
+      EmailAccountRequestExceptionReason.unknown => AppErrorCode.authUnknown,
+    },
+    EmailAccountPasswordResetException(:final reason) => switch (reason) {
+      EmailAccountPasswordResetExceptionReason.expired =>
+        AppErrorCode.authRequestExpired,
+      EmailAccountPasswordResetExceptionReason.invalid =>
+        AppErrorCode.authRequestInvalid,
+      EmailAccountPasswordResetExceptionReason.policyViolation =>
+        AppErrorCode.authPasswordPolicy,
+      EmailAccountPasswordResetExceptionReason.tooManyAttempts =>
+        AppErrorCode.authTooManyAttempts,
+      EmailAccountPasswordResetExceptionReason.unknown =>
+        AppErrorCode.authUnknown,
+    },
+    AuthUserBlockedException() => AppErrorCode.authUserBlocked,
+    _ => null,
+  };
 }

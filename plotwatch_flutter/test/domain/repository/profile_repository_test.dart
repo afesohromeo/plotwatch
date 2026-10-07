@@ -26,19 +26,26 @@ void main() {
       expect(await repository.fetchMe(), profile);
     });
 
-    test('when updating then it passes the values and returns the result',
-        () async {
-      when(() => apiProvider.updateMe(
+    test(
+      'when updating then it passes the values and returns the result',
+      () async {
+        when(
+          () => apiProvider.updateMe(
             fullName: 'Ada Lovelace',
             countryCode: 'CM',
             locale: 'fr',
-          )).thenAnswer((_) async => profile);
+          ),
+        ).thenAnswer((_) async => profile);
 
-      final result = await repository.updateMe(
-          fullName: 'Ada Lovelace', countryCode: 'CM', locale: 'fr');
+        final result = await repository.updateMe(
+          fullName: 'Ada Lovelace',
+          countryCode: 'CM',
+          locale: 'fr',
+        );
 
-      expect(result, profile);
-    });
+        expect(result, profile);
+      },
+    );
 
     test('when the API fails then the error is rethrown', () async {
       when(() => apiProvider.getMe()).thenThrow(const NetworkException());

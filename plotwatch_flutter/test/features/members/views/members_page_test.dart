@@ -15,8 +15,11 @@ void main() {
   late MockMembersBloc bloc;
 
   final owner = testMember(id: 1);
-  final manager =
-      testMember(id: 2, fullName: 'Bob Mbarga', role: ProjectRole.siteManager);
+  final manager = testMember(
+    id: 2,
+    fullName: 'Bob Mbarga',
+    role: ProjectRole.siteManager,
+  );
 
   setUpAll(() {
     l10n = setUpTestLocalization();
@@ -26,33 +29,70 @@ void main() {
 
   Future<void> pumpWith(WidgetTester tester, MembersState state) {
     when(() => bloc.state).thenReturn(state);
-    return tester.pumpApp(BlocProvider<MembersBloc>.value(
-      value: bloc,
-      child: const MembersPage(projectId: 1),
-    ));
+    return tester.pumpApp(
+      RepositoryProvider<MembershipRepository>.value(
+        value: MockMembershipRepository(),
+        child: BlocProvider<MembersBloc>.value(
+          value: bloc,
+          child: const MembersPage(projectId: 1),
+        ),
+      ),
+    );
   }
 
-  MembersState loaded(ProjectRole myRole, {List<Invitation> invitations = const []}) =>
-      MembersState(
-        membersStatus: GenericStatus.success,
-        overview: testOverview(role: myRole),
-        members: [owner, manager],
-        invitations: invitations,
-      );
-
-  testWidgets('Given the page opens then it loads the members of that project',
-      (tester) async {
-    await pumpWith(tester, const MembersState());
-
-    verify(() => bloc.add(const MembersEvent.fetchMembers(projectId: 1)))
-        .called(1);
-  });
+  MembersState loaded(
+    ProjectRole myRole, {
+    List<Invitation> invitations = const [],
+  }) => MembersState(
+    membersStatus: GenericStatus.success,
+    overview: testOverview(role: myRole),
+    members: [owner, manager],
+    invitations: invitations,
+  );
 
   testWidgets(
-      'Given the owner then members show with their role, and pending '
+    'Given the page opens then it loads the members of that project',
+    (tester) async {
+      await pumpWith(tester, const MembersState());
+
+      verify(
+        () => bloc.add(const MembersEvent.fetchMembers(projectId: 1)),
+      ).called(1);
+    },
+  );
+
+  testWidgets('Given the page when refresh is tapped then it reloads', (
+    tester,
+  ) async {
+    await pumpWith(tester, loaded(ProjectRole.siteManager));
+
+    await tester.tap(find.byKey(MembersPage.refreshButtonKey));
+    await tester.pump();
+
+    verify(
+      () => bloc.add(const MembersEvent.fetchMembers(projectId: 1)),
+    ).called(2);
+  });
+
+  testWidgets('Given the page when it is pulled down then it reloads', (
+    tester,
+  ) async {
+    await pumpWith(tester, loaded(ProjectRole.siteManager));
+
+    await tester.fling(find.text('Ada Lovelace'), const Offset(0, 400), 1000);
+    await tester.pumpAndSettle();
+
+    verify(
+      () => bloc.add(const MembersEvent.fetchMembers(projectId: 1)),
+    ).called(2);
+  });
+
+  testWidgets('Given the owner then members show with their role, and pending '
       'invitations with their formatted code', (tester) async {
     await pumpWith(
-        tester, loaded(ProjectRole.owner, invitations: [testInvitation()]));
+      tester,
+      loaded(ProjectRole.owner, invitations: [testInvitation()]),
+    );
 
     expect(find.text('Ada Lovelace'), findsOneWidget);
     expect(find.text('Bob Mbarga'), findsOneWidget);
@@ -61,8 +101,9 @@ void main() {
     expect(find.byKey(MembersPage.inviteButtonKey), findsOneWidget);
   });
 
-  testWidgets('Given the owner then only other members can be removed',
-      (tester) async {
+  testWidgets('Given the owner then only other members can be removed', (
+    tester,
+  ) async {
     await pumpWith(tester, loaded(ProjectRole.owner));
 
     expect(find.byKey(MembersPage.removeButtonKey(1)), findsNothing);
@@ -70,14 +111,16 @@ void main() {
   });
 
   testWidgets(
-      'Given a site manager then there is no invite, remove or invitations '
-      'section', (tester) async {
-    await pumpWith(tester, loaded(ProjectRole.siteManager));
+    'Given a site manager then there is no invite, remove or invitations '
+    'section',
+    (tester) async {
+      await pumpWith(tester, loaded(ProjectRole.siteManager));
 
-    expect(find.byKey(MembersPage.inviteButtonKey), findsNothing);
-    expect(find.byKey(MembersPage.removeButtonKey(2)), findsNothing);
-    expect(find.text(l10n.pendingInvitations), findsNothing);
-  });
+      expect(find.byKey(MembersPage.inviteButtonKey), findsNothing);
+      expect(find.byKey(MembersPage.removeButtonKey(2)), findsNothing);
+      expect(find.text(l10n.pendingInvitations), findsNothing);
+    },
+  );
 
   testWidgets('Given the owner removes a member when they confirm then it is '
       'sent', (tester) async {
@@ -88,21 +131,43 @@ void main() {
     await tester.tap(find.text(l10n.confirm));
     await tester.pump();
 
-    verify(() => bloc.add(const MembersEvent.removeMember(memberId: 2)))
-        .called(1);
+    verify(
+      () => bloc.add(const MembersEvent.removeMember(memberId: 2)),
+    ).called(1);
   });
 
-  testWidgets('Given the owner cancels an invitation then it is sent',
-      (tester) async {
+  testWidgets(
+    'Given a pending invitation when the owner taps share then the sheet '
+    'shows its code again (doc/04b F3)',
+    (tester) async {
+      await pumpWith(
+        tester,
+        loaded(ProjectRole.owner, invitations: [testInvitation(id: 5)]),
+      );
+
+      await tester.ensureVisible(find.byKey(MembersPage.shareInvitationKey(5)));
+      await tester.tap(find.byKey(MembersPage.shareInvitationKey(5)));
+      await tester.pumpAndSettle();
+
+      expect(find.text(l10n.invitationReadyTitle), findsOneWidget);
+      expect(find.text('ABCD-2345'), findsWidgets);
+    },
+  );
+
+  testWidgets('Given the owner cancels an invitation then it is sent', (
+    tester,
+  ) async {
     await pumpWith(
-        tester, loaded(ProjectRole.owner, invitations: [testInvitation(id: 5)]));
+      tester,
+      loaded(ProjectRole.owner, invitations: [testInvitation(id: 5)]),
+    );
 
     await tester.ensureVisible(find.byKey(MembersPage.cancelInvitationKey(5)));
     await tester.tap(find.byKey(MembersPage.cancelInvitationKey(5)));
     await tester.pump();
 
-    verify(() =>
-            bloc.add(const MembersEvent.cancelInvitation(invitationId: 5)))
-        .called(1);
+    verify(
+      () => bloc.add(const MembersEvent.cancelInvitation(invitationId: 5)),
+    ).called(1);
   });
 }

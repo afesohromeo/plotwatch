@@ -12,14 +12,16 @@ part 'authentication_bloc.freezed.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc({required AuthRepository authRepository})
-      : _authRepository = authRepository,
-        // The session is restored before the first frame (decision M1-5),
-        // so the initial status is already known.
-        super(AuthenticationState(
+    : _authRepository = authRepository,
+      // The session is restored before the first frame (decision M1-5),
+      // so the initial status is already known.
+      super(
+        AuthenticationState(
           status: authRepository.isSignedIn
               ? AuthenticationStatus.authenticated
               : AuthenticationStatus.unauthenticated,
-        )) {
+        ),
+      ) {
     on<_Started>(_onStarted);
     on<_SignOutRequested>(_onSignOutRequested);
   }
@@ -41,34 +43,45 @@ class AuthenticationBloc
     _SignOutRequested event,
     Emitter<AuthenticationState> emit,
   ) async {
-    emit(state.copyWith(
-      signOutStatus: GenericStatus.loading,
-      signOutErrorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        signOutStatus: GenericStatus.loading,
+        signOutErrorMessage: null,
+      ),
+    );
     try {
       await _authRepository.signOut();
       emit(state.copyWith(signOutStatus: GenericStatus.success));
     } on HttpException400 catch (e) {
-      emit(state.copyWith(
-        signOutStatus: GenericStatus.failure,
-        signOutErrorMessage: e.code.message(LocalizationService.localization),
-      ));
+      emit(
+        state.copyWith(
+          signOutStatus: GenericStatus.failure,
+          signOutErrorMessage: e.code.message(LocalizationService.localization),
+        ),
+      );
     } on HttpException401 catch (_) {
-      emit(state.copyWith(
-        signOutStatus: GenericStatus.failure,
-        signOutErrorMessage: LocalizationService.localization.errorUnauthorized,
-      ));
+      emit(
+        state.copyWith(
+          signOutStatus: GenericStatus.failure,
+          signOutErrorMessage:
+              LocalizationService.localization.errorUnauthorized,
+        ),
+      );
     } on NetworkException catch (_) {
-      emit(state.copyWith(
-        signOutStatus: GenericStatus.failure,
-        signOutErrorMessage: LocalizationService.localization.networkError,
-      ));
+      emit(
+        state.copyWith(
+          signOutStatus: GenericStatus.failure,
+          signOutErrorMessage: LocalizationService.localization.networkError,
+        ),
+      );
     } catch (e) {
       log('AuthenticationBloc._onSignOutRequested error: $e');
-      emit(state.copyWith(
-        signOutStatus: GenericStatus.failure,
-        signOutErrorMessage: LocalizationService.localization.errorSignOut,
-      ));
+      emit(
+        state.copyWith(
+          signOutStatus: GenericStatus.failure,
+          signOutErrorMessage: LocalizationService.localization.errorSignOut,
+        ),
+      );
     }
   }
 }

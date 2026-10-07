@@ -25,8 +25,9 @@ void main() {
   group('Given the project list', () {
     blocTest<ProjectListBloc, ProjectListState>(
       'when the first page is shorter than the page size then it is the last',
-      setUp: () => when(() => repository.fetchProjects(0, size: 20))
-          .thenAnswer((_) async => page([first, second])),
+      setUp: () => when(
+        () => repository.fetchProjects(0, size: 20),
+      ).thenAnswer((_) async => page([first, second])),
       build: build,
       act: (bloc) => bloc.add(const ProjectListEvent.fetchProjects()),
       expect: () => [
@@ -45,16 +46,16 @@ void main() {
     ];
     blocTest<ProjectListBloc, ProjectListState>(
       'when a full next page arrives then it is appended and more may follow',
-      setUp: () => when(() => repository.fetchProjects(1, size: 20))
-          .thenAnswer((_) async => page(fullPage)),
+      setUp: () => when(
+        () => repository.fetchProjects(1, size: 20),
+      ).thenAnswer((_) async => page(fullPage)),
       build: build,
       seed: () => ProjectListState(
         projectsListStatus: GenericStatus.success,
         projects: [first],
         paginatedProjects: [first],
       ),
-      act: (bloc) =>
-          bloc.add(const ProjectListEvent.fetchProjects(pageKey: 1)),
+      act: (bloc) => bloc.add(const ProjectListEvent.fetchProjects(pageKey: 1)),
       skip: 1,
       expect: () => [
         ProjectListState(
@@ -70,27 +71,27 @@ void main() {
     final failures = <String, (Object, String Function())>{
       'the server refuses': (
         const HttpException400(code: AppErrorCode.permissionDenied),
-        () => l10n.errorPermissionDenied
+        () => l10n.errorPermissionDenied,
       ),
       'the session expired': (
         const HttpException401(),
-        () => l10n.errorUnauthorized
+        () => l10n.errorUnauthorized,
       ),
       'the device is offline': (
         const NetworkException(),
-        () => l10n.networkError
+        () => l10n.networkError,
       ),
       'something unexpected happens': (
         StateError('x'),
-        () => l10n.errorProjectsLoad
+        () => l10n.errorProjectsLoad,
       ),
     };
     for (final MapEntry(key: when_, value: (error, message))
         in failures.entries) {
       blocTest<ProjectListBloc, ProjectListState>(
         'when $when_ then it shows the matching message',
-        setUp: () => when(() => repository.fetchProjects(0, size: 20))
-            .thenThrow(error),
+        setUp: () =>
+            when(() => repository.fetchProjects(0, size: 20)).thenThrow(error),
         build: build,
         act: (bloc) => bloc.add(const ProjectListEvent.fetchProjects()),
         skip: 1,
@@ -114,9 +115,7 @@ void main() {
         projectsPageKey: 3,
       ),
       act: (bloc) => bloc.add(const ProjectListEvent.refreshProjects()),
-      expect: () => [
-        const ProjectListState(projectsRefreshController: true),
-      ],
+      expect: () => [const ProjectListState(projectsRefreshController: true)],
     );
   });
 }

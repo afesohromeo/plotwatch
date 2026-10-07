@@ -11,7 +11,9 @@ enum ProjectAction {
   archiveProject,
   manageMembers,
   manageStages,
-  /// The site manager proposes the site from GPS on the plot (SITE-04).
+
+  /// The site manager or the owner proposes the site from GPS on the plot
+  /// (SITE-04; owner added in doc/04b G-12).
   proposeSite,
   captureEvidence,
   postUpdates,
@@ -50,7 +52,6 @@ class PermissionService {
       ProjectAction.archiveProject ||
       ProjectAction.manageMembers ||
       ProjectAction.manageStages => isOwner,
-      ProjectAction.proposeSite ||
       ProjectAction.captureEvidence ||
       ProjectAction.postUpdates ||
       ProjectAction.submitStage ||
@@ -64,6 +65,8 @@ class PermissionService {
       ProjectAction.recordFundReleases ||
       ProjectAction.createShareLinks => isApprover,
       ProjectAction.comment => role != ProjectRole.viewer,
+      // The site manager or the owner, standing on the plot (doc/04b G-12).
+      ProjectAction.proposeSite => isOwner || isSiteManager,
     };
   }
 

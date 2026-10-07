@@ -24,10 +24,12 @@ void main() {
 
   Future<void> pumpAt(WidgetTester tester, CreateProjectState state) {
     when(() => bloc.state).thenReturn(state);
-    return tester.pumpApp(BlocProvider<CreateProjectBloc>.value(
-      value: bloc,
-      child: const CreateProjectPage(),
-    ));
+    return tester.pumpApp(
+      BlocProvider<CreateProjectBloc>.value(
+        value: bloc,
+        child: const CreateProjectPage(),
+      ),
+    );
   }
 
   Future<void> choose(WidgetTester tester, Key field, String item) async {
@@ -40,43 +42,61 @@ void main() {
 
   group('Given the details step', () {
     testWidgets(
-        'when continued empty then it asks for the name, type and currency '
-        'and sends nothing', (tester) async {
-      await pumpAt(tester, const CreateProjectState());
+      'when continued empty then it asks for the name, type and currency '
+      'and sends nothing',
+      (tester) async {
+        await pumpAt(tester, const CreateProjectState());
 
-      await tester.ensureVisible(find.byKey(ProjectDetailsForm.submitButtonKey));
-      await tester.tap(find.byKey(ProjectDetailsForm.submitButtonKey));
-      await tester.pump();
+        await tester.ensureVisible(
+          find.byKey(ProjectDetailsForm.submitButtonKey),
+        );
+        await tester.tap(find.byKey(ProjectDetailsForm.submitButtonKey));
+        await tester.pump();
 
-      expect(find.text(l10n.validateProjectNameRequired), findsOneWidget);
-      expect(find.text(l10n.validateProjectTypeRequired), findsOneWidget);
-      expect(find.text(l10n.validateCurrencyRequired), findsOneWidget);
-      verifyNever(() => bloc.add(any()));
-    });
+        expect(find.text(l10n.validateProjectNameRequired), findsOneWidget);
+        expect(find.text(l10n.validateProjectTypeRequired), findsOneWidget);
+        expect(find.text(l10n.validateCurrencyRequired), findsOneWidget);
+        verifyNever(() => bloc.add(any()));
+      },
+    );
 
-    testWidgets('when filled and continued then the details go to the review',
-        (tester) async {
+    testWidgets('when filled and continued then the details go to the review', (
+      tester,
+    ) async {
       await pumpAt(tester, const CreateProjectState());
 
       await tester.enterText(
-          find.byKey(ProjectDetailsForm.nameFieldKey), '  House in Bafoussam ');
+        find.byKey(ProjectDetailsForm.nameFieldKey),
+        '  House in Bafoussam ',
+      );
       await tester.enterText(
-          find.byKey(ProjectDetailsForm.descriptionFieldKey), 'Four bedrooms');
-      await choose(tester, ProjectDetailsForm.typeFieldKey,
-          l10n.projectTypeNewHouse);
+        find.byKey(ProjectDetailsForm.descriptionFieldKey),
+        'Four bedrooms',
+      );
+      await choose(
+        tester,
+        ProjectDetailsForm.typeFieldKey,
+        l10n.projectTypeNewHouse,
+      );
       await choose(tester, ProjectDetailsForm.currencyFieldKey, 'XAF');
-      await tester.ensureVisible(find.byKey(ProjectDetailsForm.submitButtonKey));
+      await tester.ensureVisible(
+        find.byKey(ProjectDetailsForm.submitButtonKey),
+      );
       await tester.tap(find.byKey(ProjectDetailsForm.submitButtonKey));
       await tester.pump();
 
-      verify(() => bloc.add(CreateProjectEvent.detailsSubmitted(
+      verify(
+        () => bloc.add(
+          CreateProjectEvent.detailsSubmitted(
             details: ProjectDetails(
               name: 'House in Bafoussam',
               description: 'Four bedrooms',
               type: ProjectType.newHouse,
               currencyCode: 'XAF',
             ),
-          ))).called(1);
+          ),
+        ),
+      ).called(1);
     });
   });
 
@@ -94,28 +114,32 @@ void main() {
       expect(find.text('XAF'), findsOneWidget);
     });
 
-    testWidgets('when Create is tapped then the project is created',
-        (tester) async {
+    testWidgets('when Create is tapped then the project is created', (
+      tester,
+    ) async {
       await pumpAt(tester, review);
 
       await tester.ensureVisible(find.byKey(CreateProjectPage.createButtonKey));
       await tester.tap(find.byKey(CreateProjectPage.createButtonKey));
       await tester.pump();
 
-      verify(() => bloc.add(const CreateProjectEvent.createSubmitted()))
-          .called(1);
+      verify(
+        () => bloc.add(const CreateProjectEvent.createSubmitted()),
+      ).called(1);
     });
 
-    testWidgets('when Back is tapped then it returns to the details',
-        (tester) async {
+    testWidgets('when Back is tapped then it returns to the details', (
+      tester,
+    ) async {
       await pumpAt(tester, review);
 
       await tester.ensureVisible(find.byKey(CreateProjectPage.backButtonKey));
       await tester.tap(find.byKey(CreateProjectPage.backButtonKey));
       await tester.pump();
 
-      verify(() => bloc.add(const CreateProjectEvent.backToDetails()))
-          .called(1);
+      verify(
+        () => bloc.add(const CreateProjectEvent.backToDetails()),
+      ).called(1);
     });
   });
 }

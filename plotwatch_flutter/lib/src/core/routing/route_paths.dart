@@ -9,6 +9,8 @@ const String createProjectPage = '/projects/new';
 const String projectPage = '/projects/:projectId';
 const String editProjectPage = '/projects/:projectId/edit';
 const String membersPage = '/projects/:projectId/members';
+const String localizeSitePage = '/projects/:projectId/site/localize';
+const String validateSitePage = '/projects/:projectId/site/validate';
 const String joinPage = '/join';
 const String joinWithCodePage = '/join/:code';
 

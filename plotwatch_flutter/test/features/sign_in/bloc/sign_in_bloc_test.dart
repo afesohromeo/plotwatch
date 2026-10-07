@@ -12,30 +12,38 @@ void main() {
   setUpAll(() => l10n = setUpTestLocalization());
   setUp(() => repository = MockAuthRepository());
 
-  void signInThrows(Object error) => when(() => repository.signIn(
-        email: any(named: 'email'),
-        password: any(named: 'password'),
-      )).thenThrow(error);
+  void signInThrows(Object error) => when(
+    () => repository.signIn(
+      email: any(named: 'email'),
+      password: any(named: 'password'),
+    ),
+  ).thenThrow(error);
 
   SignInBloc build() => SignInBloc(authRepository: repository);
   const submit = SignInEvent.signInSubmitted(
-      email: ' ada@example.com ', password: 'secret123');
+    email: ' ada@example.com ',
+    password: 'secret123',
+  );
 
   group('Given the sign-in bloc', () {
     blocTest<SignInBloc, SignInState>(
       'when the credentials are right then it signs in with the trimmed email',
-      setUp: () => when(() => repository.signIn(
-            email: any(named: 'email'),
-            password: any(named: 'password'),
-          )).thenAnswer((_) async {}),
+      setUp: () => when(
+        () => repository.signIn(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer((_) async {}),
       build: build,
       act: (bloc) => bloc.add(submit),
       expect: () => const [
         SignInState(signInStatus: GenericStatus.loading),
         SignInState(signInStatus: GenericStatus.success),
       ],
-      verify: (_) => verify(() => repository.signIn(
-          email: 'ada@example.com', password: 'secret123')).called(1),
+      verify: (_) => verify(
+        () =>
+            repository.signIn(email: 'ada@example.com', password: 'secret123'),
+      ).called(1),
     );
 
     final failures = <String, (Object, String Function())>{
@@ -51,13 +59,11 @@ void main() {
         const NetworkException(),
         () => l10n.networkError,
       ),
-      'something unexpected happens': (
-        StateError('x'),
-        () => l10n.errorSignIn,
-      ),
+      'something unexpected happens': (StateError('x'), () => l10n.errorSignIn),
     };
 
-    for (final MapEntry(key: when_, value: (error, message)) in failures.entries) {
+    for (final MapEntry(key: when_, value: (error, message))
+        in failures.entries) {
       blocTest<SignInBloc, SignInState>(
         'when $when_ then it shows the matching message',
         setUp: () => signInThrows(error),
@@ -77,7 +83,9 @@ void main() {
       'when reset then it returns to the initial state',
       build: build,
       seed: () => const SignInState(
-          signInStatus: GenericStatus.failure, signInErrorMessage: 'x'),
+        signInStatus: GenericStatus.failure,
+        signInErrorMessage: 'x',
+      ),
       act: (bloc) => bloc.add(const SignInEvent.reset()),
       expect: () => const [SignInState()],
     );

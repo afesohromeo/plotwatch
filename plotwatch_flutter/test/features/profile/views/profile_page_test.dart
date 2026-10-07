@@ -35,81 +35,107 @@ void main() {
     profileBloc = MockProfileBloc();
     authBloc = MockAuthenticationBloc();
     when(() => authBloc.state).thenReturn(
-        const AuthenticationState(status: AuthenticationStatus.authenticated));
+      const AuthenticationState(status: AuthenticationStatus.authenticated),
+    );
   });
 
   Future<void> pumpPage(WidgetTester tester, ProfileState state) {
     when(() => profileBloc.state).thenReturn(state);
-    return tester.pumpApp(MultiBlocProvider(
-      providers: [
-        BlocProvider<ProfileBloc>.value(value: profileBloc),
-        BlocProvider<AuthenticationBloc>.value(value: authBloc),
-      ],
-      child: const ProfilePage(),
-    ));
+    return tester.pumpApp(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<ProfileBloc>.value(value: profileBloc),
+          BlocProvider<AuthenticationBloc>.value(value: authBloc),
+        ],
+        child: const ProfilePage(),
+      ),
+    );
   }
 
-  final loaded =
-      ProfileState(profileStatus: GenericStatus.success, profile: profile);
-
-  testWidgets('Given the profile is loading then it shows a progress indicator',
-      (tester) async {
-    await pumpPage(tester, const ProfileState(profileStatus: GenericStatus.loading));
-
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-  });
+  final loaded = ProfileState(
+    profileStatus: GenericStatus.success,
+    profile: profile,
+  );
 
   testWidgets(
-      'Given a loaded profile then it shows the name, email, country and '
-      'language', (tester) async {
-    await pumpPage(tester, loaded);
+    'Given the profile is loading then it shows a progress indicator',
+    (tester) async {
+      await pumpPage(
+        tester,
+        const ProfileState(profileStatus: GenericStatus.loading),
+      );
 
-    expect(fieldText(tester, ProfilePage.nameFieldKey), 'Ada Lovelace');
-    expect(find.text('ada@example.com'), findsOneWidget);
-    expect(fieldText(tester, ProfilePage.countryFieldKey), contains('Cameroon'));
-    final languages = tester.widget<SegmentedButton<String>>(
-        find.byKey(ProfilePage.languageSelectorKey));
-    expect(languages.selected, {'fr'});
-  });
-
-  testWidgets(
-      'Given a loaded profile when the name and language change and it is '
-      'saved then the new values are sent', (tester) async {
-    await pumpPage(tester, loaded);
-
-    await tester.enterText(find.byKey(ProfilePage.nameFieldKey), 'Ada King');
-    await tester.tap(find.text(l10n.languageEnglish));
-    await tester.pump();
-    await tester.ensureVisible(find.byKey(ProfilePage.saveButtonKey));
-    await tester.tap(find.byKey(ProfilePage.saveButtonKey));
-    await tester.pump();
-
-    verify(() => profileBloc.add(const ProfileEvent.updateMe(
-          fullName: 'Ada King',
-          countryCode: 'CM',
-          locale: 'en',
-        ))).called(1);
-  });
-
-  testWidgets('Given a loaded profile when the name is cleared then it is not saved',
-      (tester) async {
-    await pumpPage(tester, loaded);
-
-    await tester.enterText(find.byKey(ProfilePage.nameFieldKey), '   ');
-    await tester.ensureVisible(find.byKey(ProfilePage.saveButtonKey));
-    await tester.tap(find.byKey(ProfilePage.saveButtonKey));
-    await tester.pump();
-
-    expect(find.text(l10n.validateNameRequired), findsOneWidget);
-    verifyNever(() => profileBloc.add(any()));
-  });
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    },
+  );
 
   testWidgets(
-      'Given a loaded profile then the name field is marked for autofill',
-      (tester) async {
-    await pumpPage(tester, loaded);
+    'Given a loaded profile then it shows the name, email, country and '
+    'language',
+    (tester) async {
+      await pumpPage(tester, loaded);
 
-    expect(autofillHintsOf(tester, ProfilePage.nameFieldKey),
-        [AutofillHints.name]);
-  });
+      expect(fieldText(tester, ProfilePage.nameFieldKey), 'Ada Lovelace');
+      expect(find.text('ada@example.com'), findsOneWidget);
+      expect(
+        fieldText(tester, ProfilePage.countryFieldKey),
+        contains('Cameroon'),
+      );
+      final languages = tester.widget<SegmentedButton<String>>(
+        find.byKey(ProfilePage.languageSelectorKey),
+      );
+      expect(languages.selected, {'fr'});
+    },
+  );
+
+  testWidgets(
+    'Given a loaded profile when the name and language change and it is '
+    'saved then the new values are sent',
+    (tester) async {
+      await pumpPage(tester, loaded);
+
+      await tester.enterText(find.byKey(ProfilePage.nameFieldKey), 'Ada King');
+      await tester.tap(find.text(l10n.languageEnglish));
+      await tester.pump();
+      await tester.ensureVisible(find.byKey(ProfilePage.saveButtonKey));
+      await tester.tap(find.byKey(ProfilePage.saveButtonKey));
+      await tester.pump();
+
+      verify(
+        () => profileBloc.add(
+          const ProfileEvent.updateMe(
+            fullName: 'Ada King',
+            countryCode: 'CM',
+            locale: 'en',
+          ),
+        ),
+      ).called(1);
+    },
+  );
+
+  testWidgets(
+    'Given a loaded profile when the name is cleared then it is not saved',
+    (tester) async {
+      await pumpPage(tester, loaded);
+
+      await tester.enterText(find.byKey(ProfilePage.nameFieldKey), '   ');
+      await tester.ensureVisible(find.byKey(ProfilePage.saveButtonKey));
+      await tester.tap(find.byKey(ProfilePage.saveButtonKey));
+      await tester.pump();
+
+      expect(find.text(l10n.validateNameRequired), findsOneWidget);
+      verifyNever(() => profileBloc.add(any()));
+    },
+  );
+
+  testWidgets(
+    'Given a loaded profile then the name field is marked for autofill',
+    (tester) async {
+      await pumpPage(tester, loaded);
+
+      expect(autofillHintsOf(tester, ProfilePage.nameFieldKey), [
+        AutofillHints.name,
+      ]);
+    },
+  );
 }

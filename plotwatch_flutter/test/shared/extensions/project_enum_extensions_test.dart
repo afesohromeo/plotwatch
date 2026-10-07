@@ -9,12 +9,18 @@ void main() {
       final l10n = lookupAppLocalizations(locale);
 
       test('then every project type, status and role has a label', () {
-        expect(ProjectType.values.map((v) => v.label(l10n)),
-            everyElement(isNotEmpty));
-        expect(ProjectStatus.values.map((v) => v.label(l10n)),
-            everyElement(isNotEmpty));
-        expect(ProjectRole.values.map((v) => v.label(l10n)),
-            everyElement(isNotEmpty));
+        expect(
+          ProjectType.values.map((v) => v.label(l10n)),
+          everyElement(isNotEmpty),
+        );
+        expect(
+          ProjectStatus.values.map((v) => v.label(l10n)),
+          everyElement(isNotEmpty),
+        );
+        expect(
+          ProjectRole.values.map((v) => v.label(l10n)),
+          everyElement(isNotEmpty),
+        );
       });
     });
   }
@@ -22,8 +28,11 @@ void main() {
   test('Given the site manager role then English and French differ', () {
     expect(
       ProjectRole.siteManager.label(lookupAppLocalizations(const Locale('fr'))),
-      isNot(ProjectRole.siteManager
-          .label(lookupAppLocalizations(const Locale('en')))),
+      isNot(
+        ProjectRole.siteManager.label(
+          lookupAppLocalizations(const Locale('en')),
+        ),
+      ),
     );
   });
 

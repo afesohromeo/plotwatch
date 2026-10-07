@@ -22,11 +22,11 @@ class MyAppColors extends AppColors {
     required this.unverified,
     required this.unverifiedSoft,
   }) : super(
-          secondary: accent,
-          background: surfaceWhite,
-          surface: muted,
-          error: unverified,
-        );
+         secondary: accent,
+         background: surfaceWhite,
+         surface: muted,
+         error: unverified,
+       );
 
   /// Text and icons on [primary].
   final Color onPrimary;

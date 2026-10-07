@@ -22,3 +22,11 @@ class MockMembershipApiProvider extends Mock implements MembershipApiProvider {}
 class MockMembershipRepository extends Mock implements MembershipRepository {}
 
 class MockShareProvider extends Mock implements ShareProvider {}
+
+class MockClipboardProvider extends Mock implements ClipboardProvider {}
+
+class MockSiteApiProvider extends Mock implements SiteApiProvider {}
+
+class MockSiteRepository extends Mock implements SiteRepository {}
+
+class MockLocationProvider extends Mock implements LocationProvider {}

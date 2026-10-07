@@ -29,9 +29,22 @@ class _JoinProjectPageState extends State<JoinProjectPage> {
     final initialCode = widget.initialCode;
     if (initialCode != null && initialCode.isNotEmpty) {
       _code.text = initialCode;
-      context
-          .read<JoinProjectBloc>()
-          .add(JoinProjectEvent.previewRequested(code: initialCode));
+      context.read<JoinProjectBloc>().add(
+        JoinProjectEvent.previewRequested(code: initialCode),
+      );
+    }
+    _code.addListener(_onCodeChanged);
+  }
+
+  /// Editing the code after a check drops the preview (doc/04b F2-1). The
+  /// BLoC ignores edits that keep the checked code.
+  void _onCodeChanged() {
+    final state = context.read<JoinProjectBloc>().state;
+    if (state.previewStatus != GenericStatus.initial &&
+        _code.text.trim() != state.code) {
+      context.read<JoinProjectBloc>().add(
+        JoinProjectEvent.codeEdited(code: _code.text),
+      );
     }
   }
 
@@ -43,9 +56,9 @@ class _JoinProjectPageState extends State<JoinProjectPage> {
 
   void _check() {
     if (!_formKey.currentState!.validate()) return;
-    context
-        .read<JoinProjectBloc>()
-        .add(JoinProjectEvent.previewRequested(code: _code.text.trim()));
+    context.read<JoinProjectBloc>().add(
+      JoinProjectEvent.previewRequested(code: _code.text.trim()),
+    );
   }
 
   @override
@@ -107,8 +120,9 @@ class _JoinProjectPageState extends State<JoinProjectPage> {
                 const Gap.vertical(height: AppSpacing.md),
                 Text(
                   state.previewErrorMessage!,
-                  style: context.textTheme.bodyMedium
-                      ?.copyWith(color: customColors.unverified),
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: customColors.unverified,
+                  ),
                 ),
               ],
               if (state.previewStatus == GenericStatus.success &&
@@ -126,7 +140,8 @@ class _JoinProjectPageState extends State<JoinProjectPage> {
                 ],
                 Text(
                   l10n.invitationExpires(
-                      formatDate(preview.expiresAt.toLocal())),
+                    formatDate(preview.expiresAt.toLocal()),
+                  ),
                   style: context.textTheme.bodySmall,
                 ),
                 const Gap.vertical(height: AppSpacing.lg),

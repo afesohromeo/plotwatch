@@ -43,14 +43,8 @@ Future<void> showSuccessErrorDialog(
         useRootNavigator: true,
         barrierDismissible: true,
         builder: (_) => isSuccess
-            ? Congratulations(
-                message: message,
-                parentContext: dialogContext,
-              )
-            : ErrorDialog(
-                message: message,
-                parentContext: dialogContext,
-              ),
+            ? Congratulations(message: message, parentContext: dialogContext)
+            : ErrorDialog(message: message, parentContext: dialogContext),
       ).then((_) {
         if (!completer.isCompleted) completer.complete();
       });

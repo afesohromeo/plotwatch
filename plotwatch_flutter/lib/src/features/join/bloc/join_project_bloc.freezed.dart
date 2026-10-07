@@ -56,11 +56,12 @@ extension JoinProjectEventPatterns on JoinProjectEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _PreviewRequested value)?  previewRequested,TResult Function( _JoinRequested value)?  joinRequested,TResult Function( _ResetFlowStep value)?  resetFlowStep,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _PreviewRequested value)?  previewRequested,TResult Function( _CodeEdited value)?  codeEdited,TResult Function( _JoinRequested value)?  joinRequested,TResult Function( _ResetFlowStep value)?  resetFlowStep,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _PreviewRequested() when previewRequested != null:
-return previewRequested(_that);case _JoinRequested() when joinRequested != null:
+return previewRequested(_that);case _CodeEdited() when codeEdited != null:
+return codeEdited(_that);case _JoinRequested() when joinRequested != null:
 return joinRequested(_that);case _ResetFlowStep() when resetFlowStep != null:
 return resetFlowStep(_that);case _:
   return orElse();
@@ -80,11 +81,12 @@ return resetFlowStep(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _PreviewRequested value)  previewRequested,required TResult Function( _JoinRequested value)  joinRequested,required TResult Function( _ResetFlowStep value)  resetFlowStep,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _PreviewRequested value)  previewRequested,required TResult Function( _CodeEdited value)  codeEdited,required TResult Function( _JoinRequested value)  joinRequested,required TResult Function( _ResetFlowStep value)  resetFlowStep,}){
 final _that = this;
 switch (_that) {
 case _PreviewRequested():
-return previewRequested(_that);case _JoinRequested():
+return previewRequested(_that);case _CodeEdited():
+return codeEdited(_that);case _JoinRequested():
 return joinRequested(_that);case _ResetFlowStep():
 return resetFlowStep(_that);}
 }
@@ -100,11 +102,12 @@ return resetFlowStep(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _PreviewRequested value)?  previewRequested,TResult? Function( _JoinRequested value)?  joinRequested,TResult? Function( _ResetFlowStep value)?  resetFlowStep,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _PreviewRequested value)?  previewRequested,TResult? Function( _CodeEdited value)?  codeEdited,TResult? Function( _JoinRequested value)?  joinRequested,TResult? Function( _ResetFlowStep value)?  resetFlowStep,}){
 final _that = this;
 switch (_that) {
 case _PreviewRequested() when previewRequested != null:
-return previewRequested(_that);case _JoinRequested() when joinRequested != null:
+return previewRequested(_that);case _CodeEdited() when codeEdited != null:
+return codeEdited(_that);case _JoinRequested() when joinRequested != null:
 return joinRequested(_that);case _ResetFlowStep() when resetFlowStep != null:
 return resetFlowStep(_that);case _:
   return null;
@@ -123,10 +126,11 @@ return resetFlowStep(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String code)?  previewRequested,TResult Function()?  joinRequested,TResult Function()?  resetFlowStep,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String code)?  previewRequested,TResult Function( String code)?  codeEdited,TResult Function()?  joinRequested,TResult Function()?  resetFlowStep,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PreviewRequested() when previewRequested != null:
-return previewRequested(_that.code);case _JoinRequested() when joinRequested != null:
+return previewRequested(_that.code);case _CodeEdited() when codeEdited != null:
+return codeEdited(_that.code);case _JoinRequested() when joinRequested != null:
 return joinRequested();case _ResetFlowStep() when resetFlowStep != null:
 return resetFlowStep();case _:
   return orElse();
@@ -146,10 +150,11 @@ return resetFlowStep();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String code)  previewRequested,required TResult Function()  joinRequested,required TResult Function()  resetFlowStep,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String code)  previewRequested,required TResult Function( String code)  codeEdited,required TResult Function()  joinRequested,required TResult Function()  resetFlowStep,}) {final _that = this;
 switch (_that) {
 case _PreviewRequested():
-return previewRequested(_that.code);case _JoinRequested():
+return previewRequested(_that.code);case _CodeEdited():
+return codeEdited(_that.code);case _JoinRequested():
 return joinRequested();case _ResetFlowStep():
 return resetFlowStep();}
 }
@@ -165,10 +170,11 @@ return resetFlowStep();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String code)?  previewRequested,TResult? Function()?  joinRequested,TResult? Function()?  resetFlowStep,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String code)?  previewRequested,TResult? Function( String code)?  codeEdited,TResult? Function()?  joinRequested,TResult? Function()?  resetFlowStep,}) {final _that = this;
 switch (_that) {
 case _PreviewRequested() when previewRequested != null:
-return previewRequested(_that.code);case _JoinRequested() when joinRequested != null:
+return previewRequested(_that.code);case _CodeEdited() when codeEdited != null:
+return codeEdited(_that.code);case _JoinRequested() when joinRequested != null:
 return joinRequested();case _ResetFlowStep() when resetFlowStep != null:
 return resetFlowStep();case _:
   return null;
@@ -238,6 +244,74 @@ class __$PreviewRequestedCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? code = null,}) {
   return _then(_PreviewRequested(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _CodeEdited implements JoinProjectEvent {
+  const _CodeEdited({required this.code});
+  
+
+ final  String code;
+
+/// Create a copy of JoinProjectEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CodeEditedCopyWith<_CodeEdited> get copyWith => __$CodeEditedCopyWithImpl<_CodeEdited>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CodeEdited&&(identical(other.code, code) || other.code == code));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,code);
+}
+
+@override
+String toString() {
+    return 'JoinProjectEvent.codeEdited(code: $code)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CodeEditedCopyWith<$Res> implements $JoinProjectEventCopyWith<$Res> {
+  factory _$CodeEditedCopyWith(_CodeEdited value, $Res Function(_CodeEdited) _then) = __$CodeEditedCopyWithImpl;
+@useResult
+$Res call({
+ String code
+});
+
+
+
+
+}
+/// @nodoc
+class __$CodeEditedCopyWithImpl<$Res>
+    implements _$CodeEditedCopyWith<$Res> {
+  __$CodeEditedCopyWithImpl(this._self, this._then);
+
+  final _CodeEdited _self;
+  final $Res Function(_CodeEdited) _then;
+
+/// Create a copy of JoinProjectEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? code = null,}) {
+  return _then(_CodeEdited(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,
   ));

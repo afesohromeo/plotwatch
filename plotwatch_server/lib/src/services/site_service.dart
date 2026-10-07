@@ -60,8 +60,10 @@ class SiteService {
   static String? validateRejectReason(String? reason) =>
       _optionalText(reason, maxRejectReasonLength);
 
-  Future<Site?> get(Session session, int projectId) =>
-      Site.db.findFirstRow(session, where: (t) => t.projectId.equals(projectId));
+  Future<Site?> get(Session session, int projectId) => Site.db.findFirstRow(
+    session,
+    where: (t) => t.projectId.equals(projectId),
+  );
 
   /// Saves a pending proposal; a pending one is superseded (decision M2-18).
   Future<SiteProposal> propose(
@@ -330,11 +332,11 @@ class SiteService {
   }
 
   static Map<String, String> _siteFields(Site site) => {
-        'lat': '${site.centerLat}',
-        'lng': '${site.centerLng}',
-        'plusCode': site.plusCode,
-        'radiusM': '${site.radiusM}',
-        'addressText': ?site.addressText,
-        'validatedProposalId': '${site.validatedProposalId}',
-      };
+    'lat': '${site.centerLat}',
+    'lng': '${site.centerLng}',
+    'plusCode': site.plusCode,
+    'radiusM': '${site.radiusM}',
+    'addressText': ?site.addressText,
+    'validatedProposalId': '${site.validatedProposalId}',
+  };
 }

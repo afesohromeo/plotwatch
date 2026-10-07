@@ -21,45 +21,61 @@ void main() {
   setUp(() => bloc = MockProjectOverviewBloc());
 
   Future<void> pumpPage(WidgetTester tester) {
-    when(() => bloc.state).thenReturn(ProjectOverviewState(
-      overviewStatus: GenericStatus.success,
-      overview: testOverview(
-        project: testProject(description: 'Four bedrooms'),
+    when(() => bloc.state).thenReturn(
+      ProjectOverviewState(
+        overviewStatus: GenericStatus.success,
+        overview: testOverview(
+          project: testProject(description: 'Four bedrooms'),
+        ),
       ),
-    ));
-    return tester.pumpApp(BlocProvider<ProjectOverviewBloc>.value(
-      value: bloc,
-      child: const EditProjectPage(projectId: 1),
-    ));
+    );
+    return tester.pumpApp(
+      BlocProvider<ProjectOverviewBloc>.value(
+        value: bloc,
+        child: const EditProjectPage(projectId: 1),
+      ),
+    );
   }
 
-  testWidgets('Given the edit page then the form shows the current details',
-      (tester) async {
+  testWidgets('Given the edit page then the form shows the current details', (
+    tester,
+  ) async {
     await pumpPage(tester);
 
-    expect(fieldText(tester, ProjectDetailsForm.nameFieldKey),
-        'House in Bafoussam');
-    expect(fieldText(tester, ProjectDetailsForm.descriptionFieldKey),
-        'Four bedrooms');
+    expect(
+      fieldText(tester, ProjectDetailsForm.nameFieldKey),
+      'House in Bafoussam',
+    );
+    expect(
+      fieldText(tester, ProjectDetailsForm.descriptionFieldKey),
+      'Four bedrooms',
+    );
   });
 
-  testWidgets('Given a new name when saved then the new details are sent',
-      (tester) async {
+  testWidgets('Given a new name when saved then the new details are sent', (
+    tester,
+  ) async {
     await pumpPage(tester);
 
     await tester.enterText(
-        find.byKey(ProjectDetailsForm.nameFieldKey), 'Bigger house');
+      find.byKey(ProjectDetailsForm.nameFieldKey),
+      'Bigger house',
+    );
     await tester.ensureVisible(find.byKey(ProjectDetailsForm.submitButtonKey));
     await tester.tap(find.byKey(ProjectDetailsForm.submitButtonKey));
     await tester.pump();
 
-    verify(() => bloc.add(ProjectOverviewEvent.updateProject(
+    verify(
+      () => bloc.add(
+        ProjectOverviewEvent.updateProject(
           details: ProjectDetails(
             name: 'Bigger house',
             description: 'Four bedrooms',
             type: ProjectType.newHouse,
             currencyCode: 'XAF',
           ),
-        ))).called(1);
+        ),
+      ),
+    ).called(1);
   });
 }

@@ -2,14 +2,15 @@ import 'package:flutter/widgets.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class CustomPaginatedGridList<T> extends StatelessWidget {
-  const CustomPaginatedGridList(
-      {super.key,
-      required this.pagingController,
-      required this.pagedChildBuilderDelegate,
-      required this.gridDelegate,
-      this.pageKey,
-      this.wrap = false,
-      this.physics});
+  const CustomPaginatedGridList({
+    super.key,
+    required this.pagingController,
+    required this.pagedChildBuilderDelegate,
+    required this.gridDelegate,
+    this.pageKey,
+    this.wrap = false,
+    this.physics,
+  });
   final PagingController<int, T> pagingController;
   final PagedChildBuilderDelegate<T> pagedChildBuilderDelegate;
   final SliverGridDelegate gridDelegate;

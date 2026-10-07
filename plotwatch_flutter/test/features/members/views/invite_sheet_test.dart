@@ -23,44 +23,51 @@ void main() {
 
   Future<void> pumpWith(WidgetTester tester, InvitationState state) {
     when(() => bloc.state).thenReturn(state);
-    return tester.pumpApp(Scaffold(
-      body: BlocProvider<InvitationBloc>.value(
-        value: bloc,
-        child: const InviteSheet(projectId: 1),
+    return tester.pumpApp(
+      Scaffold(
+        body: BlocProvider<InvitationBloc>.value(
+          value: bloc,
+          child: const InviteSheet(projectId: 1),
+        ),
       ),
-    ));
+    );
   }
 
-  testWidgets('Given the sheet when a role is chosen then it is sent',
-      (tester) async {
+  testWidgets('Given the sheet when a role is chosen then it is sent', (
+    tester,
+  ) async {
     await pumpWith(tester, const InvitationState());
 
     await tester.tap(find.text(l10n.projectRoleCoFunder));
     await tester.pump();
 
-    verify(() => bloc.add(
-            const InvitationEvent.roleChanged(role: ProjectRole.coFunder)))
-        .called(1);
+    verify(
+      () => bloc.add(
+        const InvitationEvent.roleChanged(role: ProjectRole.coFunder),
+      ),
+    ).called(1);
   });
 
   testWidgets(
-      'Given a site-manager invitation then there is no approval switch '
-      '(approval rights are for co-funders only)', (tester) async {
-    await pumpWith(tester, const InvitationState());
+    'Given a site-manager invitation then there is no approval switch '
+    '(approval rights are for co-funders only)',
+    (tester) async {
+      await pumpWith(tester, const InvitationState());
 
-    expect(find.byKey(InviteSheet.canApproveKey), findsNothing);
-  });
+      expect(find.byKey(InviteSheet.canApproveKey), findsNothing);
+    },
+  );
 
   testWidgets('Given a co-funder role when the approval switch is turned on '
       'then it is sent', (tester) async {
-    await pumpWith(
-        tester, const InvitationState(role: ProjectRole.coFunder));
+    await pumpWith(tester, const InvitationState(role: ProjectRole.coFunder));
 
     await tester.tap(find.byKey(InviteSheet.canApproveKey));
     await tester.pump();
 
-    verify(() => bloc.add(
-        const InvitationEvent.canApproveChanged(canApprove: true))).called(1);
+    verify(
+      () => bloc.add(const InvitationEvent.canApproveChanged(canApprove: true)),
+    ).called(1);
   });
 
   testWidgets('Given the sheet when Create is tapped then the invitation is '
@@ -70,12 +77,12 @@ void main() {
     await tester.tap(find.byKey(InviteSheet.createButtonKey));
     await tester.pump();
 
-    verify(() => bloc.add(const InvitationEvent.createSubmitted(projectId: 1)))
-        .called(1);
+    verify(
+      () => bloc.add(const InvitationEvent.createSubmitted(projectId: 1)),
+    ).called(1);
   });
 
-  testWidgets(
-      'Given a created invitation then its code is shown and it can be '
+  testWidgets('Given a created invitation then its code is shown and it can be '
       'shared', (tester) async {
     await pumpWith(
       tester,
@@ -90,5 +97,37 @@ void main() {
     await tester.pump();
 
     verify(() => bloc.add(const InvitationEvent.shareRequested())).called(1);
+  });
+
+  testWidgets('Given a created invitation when Copy link is tapped then it is '
+      'sent', (tester) async {
+    await pumpWith(
+      tester,
+      InvitationState(
+        createStatus: GenericStatus.success,
+        invitation: testInvitation(),
+      ),
+    );
+
+    await tester.ensureVisible(find.byKey(InviteSheet.copyLinkButtonKey));
+    await tester.tap(find.byKey(InviteSheet.copyLinkButtonKey));
+    await tester.pump();
+
+    verify(() => bloc.add(const InvitationEvent.linkCopyRequested())).called(1);
+  });
+
+  testWidgets('Given the link was copied then the button says so', (
+    tester,
+  ) async {
+    await pumpWith(
+      tester,
+      InvitationState(
+        createStatus: GenericStatus.success,
+        invitation: testInvitation(),
+        linkCopied: true,
+      ),
+    );
+
+    expect(find.text(l10n.linkCopied), findsOneWidget);
   });
 }

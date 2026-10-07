@@ -14,6 +14,9 @@ class ProjectOverviewPage extends StatefulWidget {
   static const editButtonKey = Key('project.edit');
   static const statusButtonKey = Key('project.status');
   static const membersButtonKey = Key('project.members');
+  static const refreshButtonKey = Key('project.refresh');
+  static const localizeButtonKey = Key('project.localizeSite');
+  static const reviewSiteButtonKey = Key('project.reviewSite');
 
   @override
   State<ProjectOverviewPage> createState() => _ProjectOverviewPageState();
@@ -26,9 +29,9 @@ class _ProjectOverviewPageState extends State<ProjectOverviewPage> {
     _load();
   }
 
-  void _load() => context
-      .read<ProjectOverviewBloc>()
-      .add(ProjectOverviewEvent.fetchProject(projectId: widget.projectId));
+  void _load() => context.read<ProjectOverviewBloc>().add(
+    ProjectOverviewEvent.fetchProject(projectId: widget.projectId),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -64,19 +67,31 @@ class _ProjectOverviewPageState extends State<ProjectOverviewPage> {
         final overview = state.overview;
         return ResponsiveScaffoldWrapper(
           props: ScaffoldWrapperProps(
-            leading:
-                BackButton(onPressed: () => context.goNamed(homeRouteName)),
+            leading: BackButton(
+              onPressed: () => context.goNamed(homeRouteName),
+            ),
             title: Text(overview?.project.name ?? l10n.projectsTitle),
-            actions: overview == null ? null : _ownerActions(overview, l10n),
-          ),
-          mobileBody: switch (state.overviewStatus) {
-            _ when overview != null => _OverviewBody(overview: overview),
-            GenericStatus.failure => ErrorrWidget(
-                errorMessage:
-                    state.overviewErrorMessage ?? l10n.errorProjectLoad,
-                refreshText: l10n.refresh,
+            actions: [
+              IconButton(
+                key: ProjectOverviewPage.refreshButtonKey,
+                tooltip: l10n.refresh,
+                color: customColors.primary,
+                icon: const Icon(Icons.refresh_rounded),
                 onPressed: _load,
               ),
+              if (overview != null) ...?_ownerActions(overview, l10n),
+            ],
+          ),
+          mobileBody: switch (state.overviewStatus) {
+            _ when overview != null => _OverviewBody(
+              overview: overview,
+              onRefresh: () async => _load(),
+            ),
+            GenericStatus.failure => ErrorrWidget(
+              errorMessage: state.overviewErrorMessage ?? l10n.errorProjectLoad,
+              refreshText: l10n.refresh,
+              onPressed: _load,
+            ),
             _ => const Center(child: CircularProgressIndicator()),
           },
         );
@@ -106,9 +121,9 @@ class _ProjectOverviewPageState extends State<ProjectOverviewPage> {
           key: ProjectOverviewPage.statusButtonKey,
           tooltip: l10n.changeStatus,
           icon: Icon(Icons.flag_outlined, color: customColors.primary),
-          onSelected: (status) => context
-              .read<ProjectOverviewBloc>()
-              .add(ProjectOverviewEvent.changeStatus(status: status)),
+          onSelected: (status) => context.read<ProjectOverviewBloc>().add(
+            ProjectOverviewEvent.changeStatus(status: status),
+          ),
           itemBuilder: (context) => [
             for (final status in nextStatuses)
               PopupMenuItem(value: status, child: Text(status.label(l10n))),
@@ -119,9 +134,10 @@ class _ProjectOverviewPageState extends State<ProjectOverviewPage> {
 }
 
 class _OverviewBody extends StatelessWidget {
-  const _OverviewBody({required this.overview});
+  const _OverviewBody({required this.overview, required this.onRefresh});
 
   final ProjectOverview overview;
+  final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -133,6 +149,7 @@ class _OverviewBody extends StatelessWidget {
     return AuthFormLayout(
       title: project.name,
       subtitle: project.type.label(l10n),
+      onRefresh: onRefresh,
       children: [
         Wrap(
           spacing: AppSpacing.sm,
@@ -172,21 +189,82 @@ class _OverviewBody extends StatelessWidget {
     );
   }
 
+  /// What each role sees and can do about the site (doc/04b G-7, G-12).
   List<Widget> _site(BuildContext context, AppLocalizations l10n) {
     final site = overview.site;
-    if (site == null) {
-      final message = switch (overview.myRole) {
-        ProjectRole.owner => l10n.siteWaitingOwner,
-        ProjectRole.siteManager => l10n.siteWaitingManager,
-        _ => l10n.siteWaiting,
-      };
-      return [Text(message, style: context.textTheme.bodyMedium)];
-    }
+    final pending = overview.pendingSiteProposal;
+    final role = overview.myRole;
+    final pathParameters = {'projectId': '${overview.project.id}'};
+
+    Widget button(Key key, String label, String routeName) => Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.sm),
+      child: PrimaryButton(
+        key: key,
+        width: double.infinity,
+        onPressed: () =>
+            context.goNamed(routeName, pathParameters: pathParameters),
+        child: Text(label),
+      ),
+    );
+    Widget text(String message) =>
+        Text(message, style: context.textTheme.bodyMedium);
+
     return [
-      DetailRow(label: l10n.labelPlusCode, value: site.plusCode),
-      DetailRow(label: l10n.labelRadius, value: l10n.radiusMeters(site.radiusM)),
-      if (site.addressText != null)
-        DetailRow(label: l10n.labelAddress, value: site.addressText!),
+      if (site != null) ...[
+        DetailRow(label: l10n.labelPlusCode, value: site.plusCode),
+        DetailRow(
+          label: l10n.labelRadius,
+          value: l10n.radiusMeters(site.radiusM),
+        ),
+        if (site.addressText != null)
+          DetailRow(label: l10n.labelAddress, value: site.addressText!),
+      ],
+      if (pending != null)
+        ...switch (role) {
+          ProjectRole.owner => [
+            text(l10n.siteProposalPendingOwner),
+            button(
+              ProjectOverviewPage.reviewSiteButtonKey,
+              l10n.reviewLocationAction,
+              validateSiteRouteName,
+            ),
+          ],
+          ProjectRole.siteManager => [
+            text(l10n.siteProposalPendingManager),
+            button(
+              ProjectOverviewPage.localizeButtonKey,
+              l10n.localizeAgainAction,
+              localizeSiteRouteName,
+            ),
+          ],
+          _ => [if (site == null) text(l10n.siteWaiting)],
+        }
+      else if (site == null)
+        ...switch (role) {
+          ProjectRole.owner => [
+            text(l10n.siteWaitingOwner),
+            button(
+              ProjectOverviewPage.localizeButtonKey,
+              l10n.localizeSiteAction,
+              localizeSiteRouteName,
+            ),
+          ],
+          ProjectRole.siteManager => [
+            text(l10n.siteWaitingManager),
+            button(
+              ProjectOverviewPage.localizeButtonKey,
+              l10n.localizeSiteAction,
+              localizeSiteRouteName,
+            ),
+          ],
+          _ => [text(l10n.siteWaiting)],
+        }
+      else if (role == ProjectRole.siteManager)
+        button(
+          ProjectOverviewPage.localizeButtonKey,
+          l10n.proposeNewLocationAction,
+          localizeSiteRouteName,
+        ),
     ];
   }
 }

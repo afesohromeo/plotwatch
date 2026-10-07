@@ -232,8 +232,7 @@ class MembershipService {
       orderBy: (t) => t.joinedAt,
     );
     return [
-      for (final member in members)
-        await _view(session, member),
+      for (final member in members) await _view(session, member),
     ];
   }
 
@@ -333,20 +332,22 @@ class MembershipService {
   }
 
   Future<UserProfileModel?> _profile(Session session, UuidValue userId) =>
-      AuthServices.instance.userProfiles
-          .maybeFindUserProfileByUserId(session, userId);
+      AuthServices.instance.userProfiles.maybeFindUserProfileByUserId(
+        session,
+        userId,
+      );
 
   static Map<String, String> _invitationFields(Invitation invitation) => {
-        'role': invitation.role.name,
-        'canApprove': '${invitation.canApprove}',
-        'status': invitation.status.name,
-        'expiresAt': invitation.expiresAt.toIso8601String(),
-      };
+    'role': invitation.role.name,
+    'canApprove': '${invitation.canApprove}',
+    'status': invitation.status.name,
+    'expiresAt': invitation.expiresAt.toIso8601String(),
+  };
 
   static Map<String, String> _memberFields(ProjectMember member) => {
-        'authUserId': member.authUserId.uuid,
-        'role': member.role.name,
-        'canApprove': '${member.canApprove}',
-        'status': member.status.name,
-      };
+    'authUserId': member.authUserId.uuid,
+    'role': member.role.name,
+    'canApprove': '${member.canApprove}',
+    'status': member.status.name,
+  };
 }

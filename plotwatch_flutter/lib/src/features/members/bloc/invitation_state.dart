@@ -10,5 +10,8 @@ sealed class InvitationState with _$InvitationState {
 
     /// The created invitation; the sheet then shows its code and link.
     Invitation? invitation,
+
+    /// The link was copied; the Copy button says so.
+    @Default(false) bool linkCopied,
   }) = _InvitationState;
 }

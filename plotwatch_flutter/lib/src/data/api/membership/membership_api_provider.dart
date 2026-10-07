@@ -10,8 +10,11 @@ class MembershipApiProvider {
     bool? canApprove,
   }) async {
     try {
-      return await _client.membership
-          .createInvitation(projectId, role, canApprove: canApprove);
+      return await _client.membership.createInvitation(
+        projectId,
+        role,
+        canApprove: canApprove,
+      );
     } catch (e) {
       throw ApiErrorHandler.handle(e);
     }

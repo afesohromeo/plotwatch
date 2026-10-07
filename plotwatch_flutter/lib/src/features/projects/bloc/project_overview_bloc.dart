@@ -13,7 +13,7 @@ part 'project_overview_bloc.freezed.dart';
 class ProjectOverviewBloc
     extends Bloc<ProjectOverviewEvent, ProjectOverviewState> {
   ProjectOverviewBloc({required this._projectRepository})
-      : super(const ProjectOverviewState()) {
+    : super(const ProjectOverviewState()) {
     on<_FetchProject>(_onFetchProject);
     on<_UpdateProject>(_onUpdateProject);
     on<_ChangeStatus>(_onChangeStatus);
@@ -27,16 +27,20 @@ class ProjectOverviewBloc
     Emitter<ProjectOverviewState> emit,
   ) async {
     final l10n = LocalizationService.localization;
-    emit(state.copyWith(
-      overviewStatus: GenericStatus.loading,
-      overviewErrorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        overviewStatus: GenericStatus.loading,
+        overviewErrorMessage: null,
+      ),
+    );
     try {
       final overview = await _projectRepository.fetchProject(event.projectId);
-      emit(state.copyWith(
-        overviewStatus: GenericStatus.success,
-        overview: overview,
-      ));
+      emit(
+        state.copyWith(
+          overviewStatus: GenericStatus.success,
+          overview: overview,
+        ),
+      );
     } on HttpException400 catch (e) {
       emit(_loadFailure(e.code.message(l10n)));
     } on HttpException401 catch (_) {
@@ -52,24 +56,20 @@ class ProjectOverviewBloc
   Future<void> _onUpdateProject(
     _UpdateProject event,
     Emitter<ProjectOverviewState> emit,
-  ) =>
-      _runAction(
-        emit,
-        (projectId) =>
-            _projectRepository.updateProject(projectId, event.details),
-        'ProjectOverviewBloc._onUpdateProject',
-      );
+  ) => _runAction(
+    emit,
+    (projectId) => _projectRepository.updateProject(projectId, event.details),
+    'ProjectOverviewBloc._onUpdateProject',
+  );
 
   Future<void> _onChangeStatus(
     _ChangeStatus event,
     Emitter<ProjectOverviewState> emit,
-  ) =>
-      _runAction(
-        emit,
-        (projectId) =>
-            _projectRepository.setProjectStatus(projectId, event.status),
-        'ProjectOverviewBloc._onChangeStatus',
-      );
+  ) => _runAction(
+    emit,
+    (projectId) => _projectRepository.setProjectStatus(projectId, event.status),
+    'ProjectOverviewBloc._onChangeStatus',
+  );
 
   /// An owner action on the loaded project; the answer replaces the overview.
   Future<void> _runAction(
@@ -81,17 +81,18 @@ class ProjectOverviewBloc
     if (projectId == null) return;
 
     final l10n = LocalizationService.localization;
-    emit(state.copyWith(
-      flowStep: GenericFlowStep.updatingItem,
-      actionStatus: GenericStatus.loading,
-      actionErrorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        flowStep: GenericFlowStep.updatingItem,
+        actionStatus: GenericStatus.loading,
+        actionErrorMessage: null,
+      ),
+    );
     try {
       final overview = await action(projectId);
-      emit(state.copyWith(
-        actionStatus: GenericStatus.success,
-        overview: overview,
-      ));
+      emit(
+        state.copyWith(actionStatus: GenericStatus.success, overview: overview),
+      );
     } on HttpException400 catch (e) {
       emit(_actionFailure(e.code.message(l10n)));
     } on HttpException401 catch (_) {
@@ -108,20 +109,22 @@ class ProjectOverviewBloc
     _ResetFlowStep event,
     Emitter<ProjectOverviewState> emit,
   ) {
-    emit(state.copyWith(
-      flowStep: GenericFlowStep.none,
-      actionStatus: GenericStatus.initial,
-      actionErrorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        flowStep: GenericFlowStep.none,
+        actionStatus: GenericStatus.initial,
+        actionErrorMessage: null,
+      ),
+    );
   }
 
   ProjectOverviewState _loadFailure(String message) => state.copyWith(
-        overviewStatus: GenericStatus.failure,
-        overviewErrorMessage: message,
-      );
+    overviewStatus: GenericStatus.failure,
+    overviewErrorMessage: message,
+  );
 
   ProjectOverviewState _actionFailure(String message) => state.copyWith(
-        actionStatus: GenericStatus.failure,
-        actionErrorMessage: message,
-      );
+    actionStatus: GenericStatus.failure,
+    actionErrorMessage: message,
+  );
 }

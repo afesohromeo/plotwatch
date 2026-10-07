@@ -9,7 +9,6 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     // final rootContext = Navigator.of(context, rootNavigator: true).context;
 
-
     return Drawer(
       elevation: 20,
       backgroundColor: customColors.background,

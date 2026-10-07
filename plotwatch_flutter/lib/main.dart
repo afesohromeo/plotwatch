@@ -20,11 +20,7 @@ void main() {
 
       await appInitializer.preAppRun();
 
-      runApp(
-        AppRestart(
-          child: const Application(),
-        ),
-      );
+      runApp(AppRestart(child: const Application()));
       appInitializer.postAppRun();
     },
     (error, stack) {

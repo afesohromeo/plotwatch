@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
-
 /// Email sign-in and session calls on the generated Serverpod client
 /// (`client.emailIdp`, `client.auth`). No business logic; every error is
 /// converted by [ApiErrorHandler] (`_standards/14` §2.4).

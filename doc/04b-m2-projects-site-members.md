@@ -336,3 +336,70 @@ Changes and decisions taken while implementing:
 | `share_plus` | **13.3.1**, not PlusLocate's 10.x | 10.x needs `win32` 5; Serverpod 4.0.3 needs `win32` 6 |
 | Confirmation dialog | New shared `showConfirmDialog` | The kit has none; removing a member is destructive |
 | Removal and cancelling | The lists update locally after the server confirms; no reload | One request each |
+
+---
+
+## Group F2: join page fix and Android App Links (approved 2026-10-07)
+Found by the developer while testing group F.
+
+| # | Decision |
+|---|----------|
+| F2-1 | **Join page:** Join used the code saved at check time, so after editing the field the preview (and Join) still belonged to the old code. Not a security issue (the server checks every code), but misleading. Fix: as soon as the field no longer matches the checked code, the preview, errors and Join button disappear until the code is checked again (`JoinProjectEvent.codeEdited`). |
+| F2-2 | **Android App Links now, not in M8** (changes M2-8): the invitation link `https://plotwatch.serverpod.space/join/<code>` opens the installed app on the join page; without the app it still opens the web app. An `autoVerify` intent filter for `/join` in the Android manifest, and `/.well-known/assetlinks.json` served by the Serverpod web server with the package name and the **debug** key's SHA-256 fingerprint. The release fingerprint is added in M8. The file lives in `plotwatch_server/web/app_links/` (not a dot folder: Serverpod Cloud skips hidden folders on upload). Verified on Cloud after a deploy (Android only verifies the real domain). |
+
+## Group F3: re-share an invitation, copy the link (approved 2026-10-07)
+Found by the developer while testing group F: the code could only be shared from the sheet right after creating it (a mis-click on Done lost it), and the share sheet isn't always available in desktop browsers.
+
+| # | Decision |
+|---|----------|
+| F3-1 | Each pending invitation on the members page has a **share** button that opens the "Invitation ready" sheet for that invitation (`InvitationBloc` can start from an existing invitation). |
+| F3-2 | The sheet has **Copy link** next to Share; after copying, the button reads "Link copied ✓" (no dialog, no snackbar). The clipboard sits behind a `ClipboardProvider` (`data/device`), like sharing. |
+| F3-3 | The share error seen while testing (`MissingPluginException`) was a running app built before `share_plus` was added: a new plugin needs a full rebuild, not a hot restart. |
+
+---
+
+## Group G: detailed plan (approved 2026-10-07)
+Expands the group G section above. Written after Claude had started (developer's remark: plan first). Already drafted, uncommitted, kept or changed according to this approval: the server change and its tests (G-1, G-2), the app's repository and BLoC tests, the fixtures, and the `SubmitButton` change (G-9).
+
+### Decisions
+| # | Decision | Proposal |
+|---|----------|----------|
+| G-1 | **Pending proposal on the project page** | `ProjectOverview` gains `pendingSiteProposal` (server: one more read of `site_proposal` in `ProjectService`; no table change). The project page then shows the owner **Review the location** and the site manager **Waiting for the owner**, without an extra request. |
+| G-2 | **Web Maps key** | Served in `config.json` as `mapsApiKey`, from the Serverpod password `googleMapsWebKey` (Cloud: `serverpod cloud password set`; locally: `config/passwords.yaml`, gitignored). For the local web debug run (`flutter run`, which doesn't use the server's `config.json`), `--dart-define=MAPS_API_KEY=…` in the web launch configuration. The app loads the Maps script with the key the first time a map opens. |
+| G-3 | **Android Maps key** | In a gitignored `plotwatch_flutter/android/secrets.properties` (`MAPS_API_KEY=…`), read by `build.gradle.kts` into a manifest placeholder for `com.google.android.geo.API_KEY`. Without the file the app builds, and only the map stays blank. |
+| G-4 | **Where each screen runs** | **Localize site:** phone app only. On web it shows "Localize the site with the Plotwatch app on your phone, standing on the plot" (browsers' GPS is coarse and can't report mocked positions). **Validate site:** web and phone. |
+| G-5 | **Localize site screen** | Asks for location permission when it opens. States: checking; denied (button **Allow location**, asks again); denied for good (button **Open settings**); GPS off (button **Turn on location**); live reading. The reading shows the accuracy large (e.g. "± 8 m"), green at 20 m or better, amber otherwise, with "Wait for 20 m or better, in the open". A mocked position shows the refusal reason. **Save** is enabled only at ≤ 20 m and not mocked, mirroring the server (decision M2-17). After saving, a success dialog, then back to the project page. |
+| G-6 | **Validate site screen** | Satellite map with the proposed point and the circle; radius slider 10–500 m (starts at the current site's radius, else 50); the reading's accuracy and time; optional address or landmark (≤ 200 characters); **Validate** and **Reject**; Reject asks for an optional reason in a dialog. After either, a success dialog, then back to the project page (the first validation makes the project active). No pending proposal: "No location is waiting for validation". |
+| G-7 | **Project page, site section** | No site, nothing pending: owner "waiting for the site manager" (current text); site manager **Localize site**. Proposal pending: owner **Review the location**; site manager "Waiting for the owner" and **Localize again** (a new proposal supersedes the pending one). Site validated: Plus Code, radius, address; site manager **Propose a new location** (moving the site, M2-15 step 6). |
+| G-8 | **Map in tests** | Google maps can't render in widget tests: `ValidateSitePage` takes the map as a builder (default: the real `SiteMap`); tests pass a plain box. `LocationProvider` (geolocator: permission, service, position stream with accuracy and mock flag) is mocked like `ShareProvider`. |
+| G-9 | **`SubmitButton` can be disabled** | `onPressed` becomes nullable (null disables it), for Save until the accuracy is good. Existing callers are unchanged. |
+| G-10 | **Permissions declared** | Android: `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`. iOS (untested, D-4): `NSLocationWhenInUseUsageDescription`, so an iOS build doesn't crash when asking. |
+| G-11 | **Packages** | `geolocator`, `google_maps_flutter`: the newest versions that resolve with Serverpod 4.0.3 (the `share_plus` lesson: `win32` 6). |
+| G-12 | **The owner can localize too** (developer, 2026-10-07) | An owner standing on the plot localizes the site themselves: "propose the site location" becomes **owner and site manager** (`02` §3.2; co-funders and viewers still can't). After saving, the owner goes straight to the Validate screen for that proposal (radius, address, validate). If they stop there, the proposal stays pending and the project page shows **Review the location**. Project page without a site, owner: "Invite a site manager to localize the plot, or localize it yourself if you're on the plot." plus **Localize site**. No new endpoint; the audit log shows the owner proposed and validated. The M2-19 safeguard (owner validation) targets the site manager, so it isn't needed against the owner. Tests: permission matrix row and the server test that refused the owner change. |
+
+### Files
+- Server: `models/project_overview.spy.yaml` (+ `pendingSiteProposal`), `services/project_service.dart`, `web/routes/app_config_route.dart` (+ `mapsApiKey`), `server.dart`; tests `site_endpoint_test.dart` (+ overview carries the pending proposal), `test/unit/app_config_route_test.dart`.
+- App data: `data/api/site/site_api_provider.dart`, `data/device/location_provider.dart`, `domain/repository/site_repository.dart`, `domain/models/gps_reading.dart` (Freezed: lat, lng, accuracy, mocked) and `LocationAccess` (granted, denied, deniedForever, serviceDisabled).
+- App features `site/`: `LocalizeSiteBloc`, `ValidateSiteBloc`, `LocalizeSitePage`, `ValidateSitePage`, `widgets/site_map.dart`; `core/maps/maps_loader.dart` (web: loads the Maps script; elsewhere nothing).
+- Routes: `/projects/:projectId/site/localize`, `/projects/:projectId/site/validate`. Project page site section (G-7). EN + FR texts.
+- Android: `AndroidManifest.xml` (permissions, Maps key placeholder), `build.gradle.kts` (reads `secrets.properties`), `.gitignore`. iOS: `Info.plist`.
+
+### Tests first
+- Server: the overview carries the pending proposal and drops it once validated; `config.json` with and without a Maps key.
+- Repository: propose sends position, accuracy and mock flag; list, validate, reject; errors rethrown.
+- `LocalizeSiteBloc`: allowed → readings stream in; denied, denied for good, GPS off → no readings; `canPropose` at exactly 20 m, not at 20.5 m, not when mocked; save success; server refusal (`siteAccuracyTooLow`); unexpected failure; nothing sent with a poor reading.
+- `ValidateSiteBloc`: pending proposal with default radius; existing site's radius as the start; nothing pending; radius clamped to 10–500; validate sends radius and address; reject sends the reason; `siteProposalNotPending`.
+- Widgets: Localize (each permission state and its button; accuracy colours; Save disabled until ≤ 20 m; mocked message; web message), Validate (map placeholder, slider, Validate and Reject with reason), project page site section (each role × each state of G-7).
+
+### You'll need
+The Google Maps keys (group G above). Without them everything is testable; only the real map stays blank.
+
+### You run (one batch)
+`serverpod generate` (server); `flutter pub add geolocator google_maps_flutter`, `flutter gen-l10n`, `dart run build_runner build --delete-conflicting-outputs`, `dart format`, `dart analyze` (app). Then Claude runs both test suites, and you check on the emulator (localize, using its virtual location set inside a plot) and in Chrome (validate).
+
+### Groups F2, F3 and G outcome (2026-10-07)
+Done: join fix (F2-1), Android App Links with the debug fingerprint (F2-2; to verify on Cloud), refresh button and pull-to-refresh on the members and project pages, re-share and copy link (F3), site localization and validation (G, with G-12: the owner can localize too). `dart test` **205/205**, `flutter test` **395/395**.
+
+Found by the tests and fixed: the reject dialog disposed its text controller while its closing animation still used it (now a small widget that owns the controller).
+
+Also: the GitHub Format workflow had failed since group B because some server files were committed unformatted; both packages are now formatted with `dart format .`, and every "You run" batch formats whole packages from now on.

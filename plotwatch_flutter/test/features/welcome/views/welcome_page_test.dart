@@ -11,12 +11,14 @@ void main() {
   setUpAll(() => l10n = setUpTestLocalization());
 
   testWidgets(
-      'Given the welcome page then it shows the Plotwatch logo, labelled for '
-      'screen readers', (tester) async {
-    await tester.pumpApp(const WelcomePage());
+    'Given the welcome page then it shows the Plotwatch logo, labelled for '
+    'screen readers',
+    (tester) async {
+      await tester.pumpApp(const WelcomePage());
 
-    final logo = tester.widget<SvgPicture>(find.byKey(WelcomePage.logoKey));
-    expect(logo.semanticsLabel, l10n.logoLabel);
-    expect(find.text(l10n.appTitle), findsOneWidget);
-  });
+      final logo = tester.widget<SvgPicture>(find.byKey(WelcomePage.logoKey));
+      expect(logo.semanticsLabel, l10n.logoLabel);
+      expect(find.text(l10n.appTitle), findsOneWidget);
+    },
+  );
 }

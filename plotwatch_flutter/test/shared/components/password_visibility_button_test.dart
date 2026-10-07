@@ -13,27 +13,36 @@ void main() {
   setUpAll(() => l10n = setUpTestLocalization());
 
   Future<void> pumpButton(WidgetTester tester, {required bool isVisible}) =>
-      tester.pumpApp(Scaffold(
-        body: PasswordVisibilityButton(isVisible: isVisible, onPressed: () {}),
-      ));
+      tester.pumpApp(
+        Scaffold(
+          body: PasswordVisibilityButton(
+            isVisible: isVisible,
+            onPressed: () {},
+          ),
+        ),
+      );
 
   testWidgets(
-      'Given a hidden password then it shows the crossed eye and offers to '
-      'show it', (tester) async {
-    await pumpButton(tester, isVisible: false);
+    'Given a hidden password then it shows the crossed eye and offers to '
+    'show it',
+    (tester) async {
+      await pumpButton(tester, isVisible: false);
 
-    expect(find.byIcon(Icons.visibility_off_outlined), findsOneWidget);
-    expect(find.byIcon(Icons.visibility_outlined), findsNothing);
-    expect(find.byTooltip(l10n.showPassword), findsOneWidget);
-  });
+      expect(find.byIcon(Icons.visibility_off_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.visibility_outlined), findsNothing);
+      expect(find.byTooltip(l10n.showPassword), findsOneWidget);
+    },
+  );
 
   testWidgets(
-      'Given a visible password then it shows the open eye and offers to hide '
-      'it', (tester) async {
-    await pumpButton(tester, isVisible: true);
+    'Given a visible password then it shows the open eye and offers to hide '
+    'it',
+    (tester) async {
+      await pumpButton(tester, isVisible: true);
 
-    expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
-    expect(find.byIcon(Icons.visibility_off_outlined), findsNothing);
-    expect(find.byTooltip(l10n.hidePassword), findsOneWidget);
-  });
+      expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.visibility_off_outlined), findsNothing);
+      expect(find.byTooltip(l10n.hidePassword), findsOneWidget);
+    },
+  );
 }

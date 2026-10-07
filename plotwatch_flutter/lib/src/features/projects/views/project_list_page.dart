@@ -30,9 +30,9 @@ class _ProjectListPageState extends State<ProjectListPage> {
 
   void _fetchPage(int pageKey) {
     if (!mounted) return;
-    context
-        .read<ProjectListBloc>()
-        .add(ProjectListEvent.fetchProjects(pageKey: pageKey));
+    context.read<ProjectListBloc>().add(
+      ProjectListEvent.fetchProjects(pageKey: pageKey),
+    );
   }
 
   @override
@@ -41,9 +41,9 @@ class _ProjectListPageState extends State<ProjectListPage> {
     super.dispose();
   }
 
-  void _refresh() => context
-      .read<ProjectListBloc>()
-      .add(const ProjectListEvent.refreshProjects());
+  void _refresh() => context.read<ProjectListBloc>().add(
+    const ProjectListEvent.refreshProjects(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -83,9 +83,9 @@ class _ProjectListPageState extends State<ProjectListPage> {
               key: ProjectListPage.signOutButtonKey,
               tooltip: l10n.signOut,
               color: customColors.primary,
-              onPressed: () => context
-                  .read<AuthenticationBloc>()
-                  .add(const AuthenticationEvent.signOutRequested()),
+              onPressed: () => context.read<AuthenticationBloc>().add(
+                const AuthenticationEvent.signOutRequested(),
+              ),
               icon: const Icon(Icons.logout),
             ),
           ],
@@ -125,8 +125,9 @@ class _ProjectListPageState extends State<ProjectListPage> {
             onRefresh: () async => _refresh(),
             child: Center(
               child: ConstrainedBox(
-                constraints:
-                    const BoxConstraints(maxWidth: AuthFormLayout.maxWidth * 2),
+                constraints: const BoxConstraints(
+                  maxWidth: AuthFormLayout.maxWidth * 2,
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   child: CustomPaginatedList<ProjectSummary>(
@@ -134,43 +135,47 @@ class _ProjectListPageState extends State<ProjectListPage> {
                     seperator: const Gap.vertical(height: AppSpacing.sm),
                     pagedChildBuilderDelegate:
                         PagedChildBuilderDelegate<ProjectSummary>(
-                      itemBuilder: (context, summary, index) => ProjectCard(
-                        summary: summary,
-                        onTap: () => context.goNamed(
-                          projectRouteName,
-                          pathParameters: {
-                            'projectId': '${summary.project.id}',
-                          },
+                          itemBuilder: (context, summary, index) => ProjectCard(
+                            summary: summary,
+                            onTap: () => context.goNamed(
+                              projectRouteName,
+                              pathParameters: {
+                                'projectId': '${summary.project.id}',
+                              },
+                            ),
+                          ),
+                          firstPageProgressIndicatorBuilder: (context) =>
+                              LoadingWidget(loadingText: l10n.loading),
+                          newPageProgressIndicatorBuilder: (context) =>
+                              const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(AppSpacing.md),
+                                  child: CircularProgressIndicator.adaptive(),
+                                ),
+                              ),
+                          firstPageErrorIndicatorBuilder: (context) =>
+                              ErrorrWidget(
+                                errorMessage:
+                                    _pagingController.error?.toString() ??
+                                    l10n.errorProjectsLoad,
+                                refreshText: l10n.refresh,
+                                onPressed: _refresh,
+                              ),
+                          newPageErrorIndicatorBuilder: (context) =>
+                              ErrorrWidget(
+                                errorMessage:
+                                    _pagingController.error?.toString() ??
+                                    l10n.errorProjectsLoad,
+                                refreshText: l10n.refresh,
+                                onPressed: () =>
+                                    _pagingController.retryLastFailedRequest(),
+                              ),
+                          noItemsFoundIndicatorBuilder: (context) =>
+                              EmptyWidget(
+                                emptyText: l10n.projectsEmpty,
+                                onPressed: _refresh,
+                              ),
                         ),
-                      ),
-                      firstPageProgressIndicatorBuilder: (context) =>
-                          LoadingWidget(loadingText: l10n.loading),
-                      newPageProgressIndicatorBuilder: (context) =>
-                          const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(AppSpacing.md),
-                          child: CircularProgressIndicator.adaptive(),
-                        ),
-                      ),
-                      firstPageErrorIndicatorBuilder: (context) =>
-                          ErrorrWidget(
-                        errorMessage: _pagingController.error?.toString() ??
-                            l10n.errorProjectsLoad,
-                        refreshText: l10n.refresh,
-                        onPressed: _refresh,
-                      ),
-                      newPageErrorIndicatorBuilder: (context) => ErrorrWidget(
-                        errorMessage: _pagingController.error?.toString() ??
-                            l10n.errorProjectsLoad,
-                        refreshText: l10n.refresh,
-                        onPressed: () =>
-                            _pagingController.retryLastFailedRequest(),
-                      ),
-                      noItemsFoundIndicatorBuilder: (context) => EmptyWidget(
-                        emptyText: l10n.projectsEmpty,
-                        onPressed: _refresh,
-                      ),
-                    ),
                   ),
                 ),
               ),

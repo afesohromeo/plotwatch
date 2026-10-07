@@ -27,7 +27,8 @@ void main() {
   group('Given the profile is fetched', () {
     blocTest<ProfileBloc, ProfileState>(
       'when it loads then the profile is kept',
-      setUp: () => when(() => repository.fetchMe()).thenAnswer((_) async => profile),
+      setUp: () =>
+          when(() => repository.fetchMe()).thenAnswer((_) async => profile),
       build: build,
       act: (bloc) => bloc.add(const ProfileEvent.fetchMe()),
       expect: () => [
@@ -37,11 +38,21 @@ void main() {
     );
 
     final failures = <String, (Object, String Function())>{
-      'the session expired': (const HttpException401(), () => l10n.errorUnauthorized),
-      'the device is offline': (const NetworkException(), () => l10n.networkError),
-      'something unexpected happens': (StateError('x'), () => l10n.errorProfileLoad),
+      'the session expired': (
+        const HttpException401(),
+        () => l10n.errorUnauthorized,
+      ),
+      'the device is offline': (
+        const NetworkException(),
+        () => l10n.networkError,
+      ),
+      'something unexpected happens': (
+        StateError('x'),
+        () => l10n.errorProfileLoad,
+      ),
     };
-    for (final MapEntry(key: when_, value: (error, message)) in failures.entries) {
+    for (final MapEntry(key: when_, value: (error, message))
+        in failures.entries) {
       blocTest<ProfileBloc, ProfileState>(
         'when $when_ then it shows the matching message',
         setUp: () => when(() => repository.fetchMe()).thenThrow(error),
@@ -59,19 +70,29 @@ void main() {
   });
 
   group('Given a loaded profile', () {
-    final loaded = ProfileState(profileStatus: GenericStatus.success, profile: profile);
+    final loaded = ProfileState(
+      profileStatus: GenericStatus.success,
+      profile: profile,
+    );
 
     blocTest<ProfileBloc, ProfileState>(
       'when it is saved then the server result replaces it',
-      setUp: () => when(() => repository.updateMe(
-            fullName: 'Ada King',
-            countryCode: 'CM',
-            locale: 'en',
-          )).thenAnswer((_) async => updated),
+      setUp: () => when(
+        () => repository.updateMe(
+          fullName: 'Ada King',
+          countryCode: 'CM',
+          locale: 'en',
+        ),
+      ).thenAnswer((_) async => updated),
       build: build,
       seed: () => loaded,
-      act: (bloc) => bloc.add(const ProfileEvent.updateMe(
-          fullName: 'Ada King', countryCode: 'CM', locale: 'en')),
+      act: (bloc) => bloc.add(
+        const ProfileEvent.updateMe(
+          fullName: 'Ada King',
+          countryCode: 'CM',
+          locale: 'en',
+        ),
+      ),
       expect: () => [
         loaded.copyWith(
           flowStep: GenericFlowStep.updatingItem,
@@ -88,37 +109,55 @@ void main() {
     blocTest<ProfileBloc, ProfileState>(
       'when the server rejects the country then it shows that message and '
       'keeps the old profile',
-      setUp: () => when(() => repository.updateMe(
-            fullName: any(named: 'fullName'),
-            countryCode: any(named: 'countryCode'),
-            locale: any(named: 'locale'),
-          )).thenThrow(const HttpException400(code: AppErrorCode.invalidCountryCode)),
+      setUp: () =>
+          when(
+            () => repository.updateMe(
+              fullName: any(named: 'fullName'),
+              countryCode: any(named: 'countryCode'),
+              locale: any(named: 'locale'),
+            ),
+          ).thenThrow(
+            const HttpException400(code: AppErrorCode.invalidCountryCode),
+          ),
       build: build,
       seed: () => loaded,
-      act: (bloc) => bloc.add(const ProfileEvent.updateMe(
-          fullName: 'Ada', countryCode: 'XX', locale: 'en')),
+      act: (bloc) => bloc.add(
+        const ProfileEvent.updateMe(
+          fullName: 'Ada',
+          countryCode: 'XX',
+          locale: 'en',
+        ),
+      ),
       skip: 1,
       expect: () => [
         loaded.copyWith(
           flowStep: GenericFlowStep.updatingItem,
           profileActionStatus: GenericStatus.failure,
-          profileActionErrorMessage:
-              AppErrorCode.invalidCountryCode.message(l10n),
+          profileActionErrorMessage: AppErrorCode.invalidCountryCode.message(
+            l10n,
+          ),
         ),
       ],
     );
 
     blocTest<ProfileBloc, ProfileState>(
       'when saving fails unexpectedly then it shows the save message',
-      setUp: () => when(() => repository.updateMe(
-            fullName: any(named: 'fullName'),
-            countryCode: any(named: 'countryCode'),
-            locale: any(named: 'locale'),
-          )).thenThrow(StateError('x')),
+      setUp: () => when(
+        () => repository.updateMe(
+          fullName: any(named: 'fullName'),
+          countryCode: any(named: 'countryCode'),
+          locale: any(named: 'locale'),
+        ),
+      ).thenThrow(StateError('x')),
       build: build,
       seed: () => loaded,
-      act: (bloc) => bloc.add(const ProfileEvent.updateMe(
-          fullName: 'Ada', countryCode: null, locale: 'en')),
+      act: (bloc) => bloc.add(
+        const ProfileEvent.updateMe(
+          fullName: 'Ada',
+          countryCode: null,
+          locale: 'en',
+        ),
+      ),
       skip: 1,
       expect: () => [
         loaded.copyWith(

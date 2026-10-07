@@ -1,11 +1,10 @@
 import 'dart:developer';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
-
 /// The signed-in user's profile. Errors are logged and rethrown (RULE-012).
 class ProfileRepository {
   ProfileRepository({ProfileApiProvider? apiProvider})
-      : _apiProvider = apiProvider ?? ProfileApiProvider();
+    : _apiProvider = apiProvider ?? ProfileApiProvider();
 
   final ProfileApiProvider _apiProvider;
 

@@ -16,6 +16,7 @@ class InviteSheet extends StatelessWidget {
   static const canApproveKey = Key('invite.canApprove');
   static const createButtonKey = Key('invite.create');
   static const shareButtonKey = Key('invite.share');
+  static const copyLinkButtonKey = Key('invite.copyLink');
 
   /// Roles that can be invited; the owner role can't (decision M2-6).
   static const _roles = [
@@ -56,7 +57,7 @@ class InviteSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: invitation == null
                   ? _form(context, state, bloc, l10n)
-                  : _created(context, invitation, bloc, l10n),
+                  : _created(context, state, invitation, bloc, l10n),
             ),
           ),
         );
@@ -109,6 +110,7 @@ class InviteSheet extends StatelessWidget {
 
   List<Widget> _created(
     BuildContext context,
+    InvitationState state,
     Invitation invitation,
     InvitationBloc bloc,
     AppLocalizations l10n,
@@ -140,6 +142,14 @@ class InviteSheet extends StatelessWidget {
         key: shareButtonKey,
         label: l10n.shareAction,
         onPressed: () => bloc.add(const InvitationEvent.shareRequested()),
+      ),
+      const Gap.vertical(height: AppSpacing.sm),
+      PrimaryButton(
+        key: copyLinkButtonKey,
+        withBg: false,
+        width: double.infinity,
+        onPressed: () => bloc.add(const InvitationEvent.linkCopyRequested()),
+        child: Text(state.linkCopied ? l10n.linkCopied : l10n.copyLinkAction),
       ),
       const Gap.vertical(height: AppSpacing.sm),
       PrimaryButton(

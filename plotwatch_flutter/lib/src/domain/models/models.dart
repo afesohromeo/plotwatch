@@ -3,3 +3,4 @@
 // models (_standards/14 §1); client-only Freezed models are added here.
 export 'package:plotwatch_client/plotwatch_client.dart';
 export 'paginated_list.dart';
+export 'gps_reading.dart';

@@ -14,8 +14,11 @@ void main() {
   final ownerOverview = testOverview();
   final managerOverview = testOverview(role: ProjectRole.siteManager);
   final owner = testMember(id: 1);
-  final manager =
-      testMember(id: 2, fullName: 'Bob Mbarga', role: ProjectRole.siteManager);
+  final manager = testMember(
+    id: 2,
+    fullName: 'Bob Mbarga',
+    role: ProjectRole.siteManager,
+  );
   final invitation = testInvitation(id: 5);
 
   setUpAll(() => l10n = setUpTestLocalization());
@@ -25,9 +28,9 @@ void main() {
   });
 
   MembersBloc build() => MembersBloc(
-        projectRepository: projectRepository,
-        membershipRepository: membershipRepository,
-      );
+    projectRepository: projectRepository,
+    membershipRepository: membershipRepository,
+  );
 
   final ownerLoaded = MembersState(
     membersStatus: GenericStatus.success,
@@ -40,12 +43,15 @@ void main() {
     blocTest<MembersBloc, MembersState>(
       'when the owner opens it then members and pending invitations load',
       setUp: () {
-        when(() => projectRepository.fetchProject(1))
-            .thenAnswer((_) async => ownerOverview);
-        when(() => membershipRepository.fetchMembers(1))
-            .thenAnswer((_) async => [owner, manager]);
-        when(() => membershipRepository.fetchInvitations(1))
-            .thenAnswer((_) async => [invitation]);
+        when(
+          () => projectRepository.fetchProject(1),
+        ).thenAnswer((_) async => ownerOverview);
+        when(
+          () => membershipRepository.fetchMembers(1),
+        ).thenAnswer((_) async => [owner, manager]);
+        when(
+          () => membershipRepository.fetchInvitations(1),
+        ).thenAnswer((_) async => [invitation]);
       },
       build: build,
       act: (bloc) => bloc.add(const MembersEvent.fetchMembers(projectId: 1)),
@@ -58,10 +64,12 @@ void main() {
     blocTest<MembersBloc, MembersState>(
       'when a site manager opens it then invitations are not asked for',
       setUp: () {
-        when(() => projectRepository.fetchProject(1))
-            .thenAnswer((_) async => managerOverview);
-        when(() => membershipRepository.fetchMembers(1))
-            .thenAnswer((_) async => [owner, manager]);
+        when(
+          () => projectRepository.fetchProject(1),
+        ).thenAnswer((_) async => managerOverview);
+        when(
+          () => membershipRepository.fetchMembers(1),
+        ).thenAnswer((_) async => [owner, manager]);
       },
       build: build,
       act: (bloc) => bloc.add(const MembersEvent.fetchMembers(projectId: 1)),
@@ -80,15 +88,15 @@ void main() {
     final failures = <String, (Object, String Function())>{
       'the user is not a member': (
         const HttpException400(code: AppErrorCode.projectNotFound),
-        () => l10n.errorProjectNotFound
+        () => l10n.errorProjectNotFound,
       ),
       'the device is offline': (
         const NetworkException(),
-        () => l10n.networkError
+        () => l10n.networkError,
       ),
       'something unexpected happens': (
         StateError('x'),
-        () => l10n.errorMembersLoad
+        () => l10n.errorMembersLoad,
       ),
     };
     for (final MapEntry(key: when_, value: (error, message))
@@ -113,8 +121,9 @@ void main() {
   group('Given the owner manages the members', () {
     blocTest<MembersBloc, MembersState>(
       'when a member is removed then they leave the list',
-      setUp: () => when(() => membershipRepository.removeMember(1, 2))
-          .thenAnswer((_) async {}),
+      setUp: () => when(
+        () => membershipRepository.removeMember(1, 2),
+      ).thenAnswer((_) async {}),
       build: build,
       seed: () => ownerLoaded,
       act: (bloc) => bloc.add(const MembersEvent.removeMember(memberId: 2)),
@@ -130,8 +139,9 @@ void main() {
 
     blocTest<MembersBloc, MembersState>(
       'when an invitation is cancelled then it leaves the list',
-      setUp: () => when(() => membershipRepository.cancelInvitation(1, 5))
-          .thenAnswer((_) async {}),
+      setUp: () => when(
+        () => membershipRepository.cancelInvitation(1, 5),
+      ).thenAnswer((_) async {}),
       build: build,
       seed: () => ownerLoaded,
       act: (bloc) =>
@@ -148,9 +158,9 @@ void main() {
 
     blocTest<MembersBloc, MembersState>(
       'when removing the owner is refused then it shows why',
-      setUp: () => when(() => membershipRepository.removeMember(any(), any()))
-          .thenThrow(
-              const HttpException400(code: AppErrorCode.cannotRemoveOwner)),
+      setUp: () => when(
+        () => membershipRepository.removeMember(any(), any()),
+      ).thenThrow(const HttpException400(code: AppErrorCode.cannotRemoveOwner)),
       build: build,
       seed: () => ownerLoaded,
       act: (bloc) => bloc.add(const MembersEvent.removeMember(memberId: 1)),

@@ -608,7 +608,7 @@
     "@siteWaiting": {
         "description": "Project page, other members: no site yet"
     },
-    "siteWaitingOwner": "Waiting for the site location. Invite a site manager: standing on the plot, they localize it with their phone, then you validate it.",
+    "siteWaitingOwner": "Invite a site manager to localize the plot, or localize it yourself if you're on the plot.",
     "@siteWaitingOwner": {
         "description": "Project page, owner: no site yet, what happens next"
     },
@@ -723,6 +723,18 @@
     "@invitationReadyText": {
         "description": "Invite sheet: how the code is used"
     },
+    "copyLinkAction": "Copy link",
+    "@copyLinkAction": {
+        "description": "Invite sheet: copies the invitation link"
+    },
+    "linkCopied": "Link copied ✓",
+    "@linkCopied": {
+        "description": "Invite sheet: the copy button after copying"
+    },
+    "shareInvitationAction": "Share the invitation",
+    "@shareInvitationAction": {
+        "description": "Members page: tooltip of the button that shares a pending invitation again"
+    },
     "shareAction": "Share",
     "@shareAction": {
         "description": "Button opening the system share sheet"
@@ -769,5 +781,82 @@
     "joinAction": "Join the project",
     "@joinAction": {
         "description": "Join page: button that accepts the invitation"
-    }
+    },
+    "localizeSiteTitle": "Localize the site",
+    "@localizeSiteTitle": {"description": "Title of the localize-site page"},
+    "localizeSiteHint": "Stand inside the plot, in the open, and wait until the accuracy is 20 m or better.",
+    "@localizeSiteHint": {"description": "Localize page: how to get a good reading"},
+    "localizePhoneOnly": "Localize the site with the Plotwatch app on your phone, standing on the plot.",
+    "@localizePhoneOnly": {"description": "Localize page on the web app: GPS localization is phone-only"},
+    "gettingPosition": "Getting your position…",
+    "@gettingPosition": {"description": "Localize page: waiting for the first GPS reading"},
+    "locationDenied": "Plotwatch needs your location to localize the site.",
+    "@locationDenied": {"description": "Localize page: location permission refused"},
+    "allowLocation": "Allow location",
+    "@allowLocation": {"description": "Localize page: asks for the location permission again"},
+    "locationDeniedForever": "Location is blocked for Plotwatch. Allow it in the app settings.",
+    "@locationDeniedForever": {"description": "Localize page: permission refused for good"},
+    "openSettings": "Open settings",
+    "@openSettings": {"description": "Localize page: opens the app settings"},
+    "locationServiceOff": "Location is turned off on this phone.",
+    "@locationServiceOff": {"description": "Localize page: GPS switched off"},
+    "turnOnLocation": "Turn on location",
+    "@turnOnLocation": {"description": "Localize page: opens the location settings"},
+    "accuracyMeters": "± {meters} m",
+    "@accuracyMeters": {
+        "description": "GPS accuracy of a reading",
+        "placeholders": {"meters": {"type": "int"}}
+    },
+    "accuracyGood": "Accurate enough. You can save this position.",
+    "@accuracyGood": {"description": "Localize page: accuracy is 20 m or better"},
+    "accuracyWaiting": "Wait for 20 m or better, in the open.",
+    "@accuracyWaiting": {"description": "Localize page: accuracy not good enough yet"},
+    "saveLocationAction": "Save this position",
+    "@saveLocationAction": {"description": "Localize page: proposes the current reading"},
+    "siteProposalSent": "Location sent. The owner will review it.",
+    "@siteProposalSent": {"description": "After the site manager proposed the location"},
+    "errorSiteProposal": "Could not save the location. Try again.",
+    "@errorSiteProposal": {"description": "Unexpected error while proposing the location"},
+    "errorSiteLoad": "Could not load the location. Try again.",
+    "@errorSiteLoad": {"description": "Unexpected error while loading a proposal"},
+    "errorSiteSave": "Could not save your decision. Try again.",
+    "@errorSiteSave": {"description": "Unexpected error while validating or rejecting"},
+    "mapUnavailable": "The map can't be shown right now.",
+    "@mapUnavailable": {"description": "The map failed to load (e.g. no Maps key)"},
+    "validateSiteTitle": "Validate the location",
+    "@validateSiteTitle": {"description": "Title of the validate-site page"},
+    "validateSiteHint": "Check that the circle covers the plot, with a few metres to spare.",
+    "@validateSiteHint": {"description": "Validate page: what to check on the map"},
+    "noPendingProposal": "No location is waiting for validation.",
+    "@noPendingProposal": {"description": "Validate page: nothing to review"},
+    "labelAccuracy": "GPS accuracy",
+    "@labelAccuracy": {"description": "Validate page: accuracy of the proposed reading"},
+    "labelReadAt": "Read on",
+    "@labelReadAt": {"description": "Validate page: when the reading was taken"},
+    "labelAddressOptional": "Address or landmark (optional)",
+    "@labelAddressOptional": {"description": "Validate page: address field"},
+    "validateAction": "Validate",
+    "@validateAction": {"description": "Validate page: accepts the location"},
+    "rejectAction": "Reject",
+    "@rejectAction": {"description": "Validate page: refuses the location"},
+    "rejectReasonTitle": "Reject this location?",
+    "@rejectReasonTitle": {"description": "Reject dialog title"},
+    "rejectReasonLabel": "Reason (optional)",
+    "@rejectReasonLabel": {"description": "Reject dialog: reason field"},
+    "siteValidated": "The site location is validated.",
+    "@siteValidated": {"description": "After the owner validated the location"},
+    "siteRejected": "The location was rejected. A new one can be proposed.",
+    "@siteRejected": {"description": "After the owner rejected the location"},
+    "siteProposalPendingOwner": "A location is waiting for your validation.",
+    "@siteProposalPendingOwner": {"description": "Project page, owner: a proposal is pending"},
+    "siteProposalPendingManager": "Waiting for the owner to validate your location.",
+    "@siteProposalPendingManager": {"description": "Project page, site manager: a proposal is pending"},
+    "reviewLocationAction": "Review the location",
+    "@reviewLocationAction": {"description": "Project page, owner: opens the validate page"},
+    "localizeSiteAction": "Localize the site",
+    "@localizeSiteAction": {"description": "Project page: opens the localize page"},
+    "localizeAgainAction": "Localize again",
+    "@localizeAgainAction": {"description": "Project page, site manager: a new proposal replaces the pending one"},
+    "proposeNewLocationAction": "Propose a new location",
+    "@proposeNewLocationAction": {"description": "Project page, site manager: moving a validated site"}
 }

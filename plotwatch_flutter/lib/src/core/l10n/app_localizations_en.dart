@@ -482,7 +482,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get siteWaitingOwner =>
-      'Waiting for the site location. Invite a site manager: standing on the plot, they localize it with their phone, then you validate it.';
+      'Invite a site manager to localize the plot, or localize it yourself if you\'re on the plot.';
 
   @override
   String get siteWaitingManager =>
@@ -569,6 +569,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Send this code or link. It works once and expires in 7 days.';
 
   @override
+  String get copyLinkAction => 'Copy link';
+
+  @override
+  String get linkCopied => 'Link copied ✓';
+
+  @override
+  String get shareInvitationAction => 'Share the invitation';
+
+  @override
   String get shareAction => 'Share';
 
   @override
@@ -601,4 +610,125 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get joinAction => 'Join the project';
+
+  @override
+  String get localizeSiteTitle => 'Localize the site';
+
+  @override
+  String get localizeSiteHint =>
+      'Stand inside the plot, in the open, and wait until the accuracy is 20 m or better.';
+
+  @override
+  String get localizePhoneOnly =>
+      'Localize the site with the Plotwatch app on your phone, standing on the plot.';
+
+  @override
+  String get gettingPosition => 'Getting your position…';
+
+  @override
+  String get locationDenied =>
+      'Plotwatch needs your location to localize the site.';
+
+  @override
+  String get allowLocation => 'Allow location';
+
+  @override
+  String get locationDeniedForever =>
+      'Location is blocked for Plotwatch. Allow it in the app settings.';
+
+  @override
+  String get openSettings => 'Open settings';
+
+  @override
+  String get locationServiceOff => 'Location is turned off on this phone.';
+
+  @override
+  String get turnOnLocation => 'Turn on location';
+
+  @override
+  String accuracyMeters(int meters) {
+    return '± $meters m';
+  }
+
+  @override
+  String get accuracyGood => 'Accurate enough. You can save this position.';
+
+  @override
+  String get accuracyWaiting => 'Wait for 20 m or better, in the open.';
+
+  @override
+  String get saveLocationAction => 'Save this position';
+
+  @override
+  String get siteProposalSent => 'Location sent. The owner will review it.';
+
+  @override
+  String get errorSiteProposal => 'Could not save the location. Try again.';
+
+  @override
+  String get errorSiteLoad => 'Could not load the location. Try again.';
+
+  @override
+  String get errorSiteSave => 'Could not save your decision. Try again.';
+
+  @override
+  String get mapUnavailable => 'The map can\'t be shown right now.';
+
+  @override
+  String get validateSiteTitle => 'Validate the location';
+
+  @override
+  String get validateSiteHint =>
+      'Check that the circle covers the plot, with a few metres to spare.';
+
+  @override
+  String get noPendingProposal => 'No location is waiting for validation.';
+
+  @override
+  String get labelAccuracy => 'GPS accuracy';
+
+  @override
+  String get labelReadAt => 'Read on';
+
+  @override
+  String get labelAddressOptional => 'Address or landmark (optional)';
+
+  @override
+  String get validateAction => 'Validate';
+
+  @override
+  String get rejectAction => 'Reject';
+
+  @override
+  String get rejectReasonTitle => 'Reject this location?';
+
+  @override
+  String get rejectReasonLabel => 'Reason (optional)';
+
+  @override
+  String get siteValidated => 'The site location is validated.';
+
+  @override
+  String get siteRejected =>
+      'The location was rejected. A new one can be proposed.';
+
+  @override
+  String get siteProposalPendingOwner =>
+      'A location is waiting for your validation.';
+
+  @override
+  String get siteProposalPendingManager =>
+      'Waiting for the owner to validate your location.';
+
+  @override
+  String get reviewLocationAction => 'Review the location';
+
+  @override
+  String get localizeSiteAction => 'Localize the site';
+
+  @override
+  String get localizeAgainAction => 'Localize again';
+
+  @override
+  String get proposeNewLocationAction => 'Propose a new location';
 }

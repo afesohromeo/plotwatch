@@ -12,7 +12,10 @@ class MembersPage extends StatefulWidget {
   final int projectId;
 
   static const inviteButtonKey = Key('members.invite');
+  static const refreshButtonKey = Key('members.refresh');
   static Key removeButtonKey(int memberId) => Key('members.remove.$memberId');
+  static Key shareInvitationKey(int invitationId) =>
+      Key('members.shareInvitation.$invitationId');
   static Key cancelInvitationKey(int invitationId) =>
       Key('members.cancelInvitation.$invitationId');
 
@@ -27,11 +30,13 @@ class _MembersPageState extends State<MembersPage> {
     _load();
   }
 
-  void _load() => context
-      .read<MembersBloc>()
-      .add(MembersEvent.fetchMembers(projectId: widget.projectId));
+  void _load() => context.read<MembersBloc>().add(
+    MembersEvent.fetchMembers(projectId: widget.projectId),
+  );
 
-  Future<void> _openInviteSheet() async {
+  /// Opens the invite sheet: empty to create an invitation, or showing an
+  /// existing [invitation] to share it again (doc/04b F3-1).
+  Future<void> _openInviteSheet({Invitation? invitation}) async {
     final membersBloc = context.read<MembersBloc>();
     await showModalBottomSheet<void>(
       context: context,
@@ -41,11 +46,14 @@ class _MembersPageState extends State<MembersPage> {
         create: (_) => InvitationBloc(
           membershipRepository: context.read<MembershipRepository>(),
           shareProvider: const ShareProvider(),
+          clipboardProvider: const ClipboardProvider(),
+          invitation: invitation,
         ),
         child: InviteSheet(
           projectId: widget.projectId,
-          onCreated: (invitation) => membersBloc
-              .add(MembersEvent.invitationCreated(invitation: invitation)),
+          onCreated: (invitation) => membersBloc.add(
+            MembersEvent.invitationCreated(invitation: invitation),
+          ),
         ),
       ),
     );
@@ -99,6 +107,15 @@ class _MembersPageState extends State<MembersPage> {
               ),
             ),
             title: Text(l10n.membersTitle),
+            actions: [
+              IconButton(
+                key: MembersPage.refreshButtonKey,
+                tooltip: l10n.refresh,
+                color: customColors.primary,
+                icon: const Icon(Icons.refresh_rounded),
+                onPressed: _load,
+              ),
+            ],
             showFloatingButton: state.isOwner,
             onPressed: _openInviteSheet,
             buttonIcon: Icon(
@@ -109,18 +126,20 @@ class _MembersPageState extends State<MembersPage> {
           ),
           mobileBody: switch (state.membersStatus) {
             _ when state.overview != null => _MembersList(
-                state: state,
-                onRemove: (view) => _confirmRemove(view, l10n),
-                onCancelInvitation: (invitation) => bloc.add(
-                  MembersEvent.cancelInvitation(invitationId: invitation.id!),
-                ),
+              state: state,
+              onRefresh: () async => _load(),
+              onRemove: (view) => _confirmRemove(view, l10n),
+              onShareInvitation: (invitation) =>
+                  _openInviteSheet(invitation: invitation),
+              onCancelInvitation: (invitation) => bloc.add(
+                MembersEvent.cancelInvitation(invitationId: invitation.id!),
               ),
+            ),
             GenericStatus.failure => ErrorrWidget(
-                errorMessage:
-                    state.membersErrorMessage ?? l10n.errorMembersLoad,
-                refreshText: l10n.refresh,
-                onPressed: _load,
-              ),
+              errorMessage: state.membersErrorMessage ?? l10n.errorMembersLoad,
+              refreshText: l10n.refresh,
+              onPressed: _load,
+            ),
             _ => const Center(child: CircularProgressIndicator()),
           },
         );
@@ -134,11 +153,15 @@ class _MembersList extends StatelessWidget {
     required this.state,
     required this.onRemove,
     required this.onCancelInvitation,
+    required this.onShareInvitation,
+    required this.onRefresh,
   });
 
   final MembersState state;
   final ValueChanged<MemberView> onRemove;
   final ValueChanged<Invitation> onCancelInvitation;
+  final ValueChanged<Invitation> onShareInvitation;
+  final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -147,6 +170,7 @@ class _MembersList extends StatelessWidget {
     return AuthFormLayout(
       title: state.overview!.project.name,
       subtitle: l10n.membersTitle,
+      onRefresh: onRefresh,
       children: [
         for (final view in state.members)
           _Row(
@@ -171,14 +195,27 @@ class _MembersList extends StatelessWidget {
             _Row(
               title: formatInvitationCode(invitation.code),
               subtitle: l10n.invitationExpires(
-                  formatDate(invitation.expiresAt.toLocal())),
+                formatDate(invitation.expiresAt.toLocal()),
+              ),
               chip: ProjectChip(label: invitation.role.label(l10n)),
-              action: IconButton(
-                key: MembersPage.cancelInvitationKey(invitation.id!),
-                tooltip: l10n.cancelInvitationAction,
-                color: customColors.unverified,
-                icon: const Icon(Icons.close_rounded),
-                onPressed: () => onCancelInvitation(invitation),
+              action: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    key: MembersPage.shareInvitationKey(invitation.id!),
+                    tooltip: l10n.shareInvitationAction,
+                    color: customColors.primary,
+                    icon: const Icon(Icons.ios_share_rounded),
+                    onPressed: () => onShareInvitation(invitation),
+                  ),
+                  IconButton(
+                    key: MembersPage.cancelInvitationKey(invitation.id!),
+                    tooltip: l10n.cancelInvitationAction,
+                    color: customColors.unverified,
+                    icon: const Icon(Icons.close_rounded),
+                    onPressed: () => onCancelInvitation(invitation),
+                  ),
+                ],
               ),
             ),
         ],

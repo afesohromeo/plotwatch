@@ -279,23 +279,32 @@ class ProjectService {
       where: (t) => t.projectId.equals(project.id),
       transaction: transaction,
     );
+    // A new proposal supersedes the pending one, so there is at most one.
+    final pendingProposal = await SiteProposal.db.findFirstRow(
+      session,
+      where: (t) =>
+          t.projectId.equals(project.id) &
+          t.status.equals(SiteProposalStatus.pending),
+      transaction: transaction,
+    );
     return ProjectOverview(
       project: project,
       site: site,
       myRole: member.role,
       myCanApprove: member.canApprove,
+      pendingSiteProposal: pendingProposal,
     );
   }
 
   static Map<String, String> _auditFields(Project project) => {
-        'name': project.name,
-        if (project.description != null) 'description': project.description!,
-        'type': project.type.name,
-        'status': project.status.name,
-        'currencyCode': project.currencyCode,
-        if (project.plannedStart != null)
-          'plannedStart': project.plannedStart!.toIso8601String(),
-        if (project.plannedEnd != null)
-          'plannedEnd': project.plannedEnd!.toIso8601String(),
-      };
+    'name': project.name,
+    if (project.description != null) 'description': project.description!,
+    'type': project.type.name,
+    'status': project.status.name,
+    'currencyCode': project.currencyCode,
+    if (project.plannedStart != null)
+      'plannedStart': project.plannedStart!.toIso8601String(),
+    if (project.plannedEnd != null)
+      'plannedEnd': project.plannedEnd!.toIso8601String(),
+  };
 }

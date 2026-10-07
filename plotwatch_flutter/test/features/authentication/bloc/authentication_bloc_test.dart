@@ -14,18 +14,22 @@ void main() {
   setUp(() {
     repository = MockAuthRepository();
     when(() => repository.isSignedIn).thenReturn(false);
-    when(() => repository.signedInChanges).thenAnswer((_) => const Stream.empty());
+    when(
+      () => repository.signedInChanges,
+    ).thenAnswer((_) => const Stream.empty());
   });
 
   group('Given the authentication bloc', () {
-    test('when the saved session is signed in then it starts authenticated',
-        () {
-      when(() => repository.isSignedIn).thenReturn(true);
+    test(
+      'when the saved session is signed in then it starts authenticated',
+      () {
+        when(() => repository.isSignedIn).thenReturn(true);
 
-      final bloc = AuthenticationBloc(authRepository: repository);
+        final bloc = AuthenticationBloc(authRepository: repository);
 
-      expect(bloc.state.status, AuthenticationStatus.authenticated);
-    });
+        expect(bloc.state.status, AuthenticationStatus.authenticated);
+      },
+    );
 
     test('when there is no saved session then it starts unauthenticated', () {
       final bloc = AuthenticationBloc(authRepository: repository);
@@ -35,8 +39,9 @@ void main() {
 
     blocTest<AuthenticationBloc, AuthenticationState>(
       'when started and the session changes then the status follows it',
-      setUp: () => when(() => repository.signedInChanges)
-          .thenAnswer((_) => Stream.fromIterable([true, false])),
+      setUp: () => when(
+        () => repository.signedInChanges,
+      ).thenAnswer((_) => Stream.fromIterable([true, false])),
       build: () => AuthenticationBloc(authRepository: repository),
       act: (bloc) => bloc.add(const AuthenticationEvent.started()),
       expect: () => const [

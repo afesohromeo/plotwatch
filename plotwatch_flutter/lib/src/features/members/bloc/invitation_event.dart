@@ -12,6 +12,9 @@ sealed class InvitationEvent with _$InvitationEvent {
   const factory InvitationEvent.createSubmitted({required int projectId}) =
       _CreateSubmitted;
 
+  /// Copies the link (doc/04b F3-2).
+  const factory InvitationEvent.linkCopyRequested() = _LinkCopyRequested;
+
   /// Opens the share sheet with the link and the code.
   const factory InvitationEvent.shareRequested() = _ShareRequested;
 }

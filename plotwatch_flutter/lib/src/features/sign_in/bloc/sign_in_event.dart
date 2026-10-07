@@ -6,6 +6,7 @@ sealed class SignInEvent with _$SignInEvent {
     required String email,
     required String password,
   }) = _SignInSubmitted;
+
   /// Shows or hides the password typed in the password field.
   const factory SignInEvent.passwordVisibilityToggled() =
       _PasswordVisibilityToggled;

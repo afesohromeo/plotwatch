@@ -12,19 +12,23 @@ void main() {
     expect(formatInvitationCode('ABC'), 'ABC');
   });
 
-  test('Given a code then the link points at the join page of the web app',
-      () {
+  test('Given a code then the link points at the join page of the web app', () {
     expect(
-      invitationLink('ABCD2345', webAppUrl: 'https://plotwatch.serverpod.space'),
+      invitationLink(
+        'ABCD2345',
+        webAppUrl: 'https://plotwatch.serverpod.space',
+      ),
       'https://plotwatch.serverpod.space/join/ABCD2345',
     );
   });
 
-  test('Given a web app URL with a trailing slash then the link has one slash',
-      () {
-    expect(
-      invitationLink('ABCD2345', webAppUrl: 'http://localhost:8082/'),
-      'http://localhost:8082/join/ABCD2345',
-    );
-  });
+  test(
+    'Given a web app URL with a trailing slash then the link has one slash',
+    () {
+      expect(
+        invitationLink('ABCD2345', webAppUrl: 'http://localhost:8082/'),
+        'http://localhost:8082/join/ABCD2345',
+      );
+    },
+  );
 }

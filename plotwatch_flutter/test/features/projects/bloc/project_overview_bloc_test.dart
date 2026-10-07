@@ -29,8 +29,9 @@ void main() {
   group('Given a project is opened', () {
     blocTest<ProjectOverviewBloc, ProjectOverviewState>(
       'when it loads then the overview is kept',
-      setUp: () =>
-          when(() => repository.fetchProject(1)).thenAnswer((_) async => overview),
+      setUp: () => when(
+        () => repository.fetchProject(1),
+      ).thenAnswer((_) async => overview),
       build: build,
       act: (bloc) =>
           bloc.add(const ProjectOverviewEvent.fetchProject(projectId: 1)),
@@ -43,19 +44,19 @@ void main() {
     final failures = <String, (Object, String Function())>{
       'the user is not a member': (
         const HttpException400(code: AppErrorCode.projectNotFound),
-        () => l10n.errorProjectNotFound
+        () => l10n.errorProjectNotFound,
       ),
       'the session expired': (
         const HttpException401(),
-        () => l10n.errorUnauthorized
+        () => l10n.errorUnauthorized,
       ),
       'the device is offline': (
         const NetworkException(),
-        () => l10n.networkError
+        () => l10n.networkError,
       ),
       'something unexpected happens': (
         StateError('x'),
-        () => l10n.errorProjectLoad
+        () => l10n.errorProjectLoad,
       ),
     };
     for (final MapEntry(key: when_, value: (error, message))
@@ -82,8 +83,9 @@ void main() {
 
     blocTest<ProjectOverviewBloc, ProjectOverviewState>(
       'when the owner saves new details then the overview is replaced',
-      setUp: () => when(() => repository.updateProject(1, testDetails))
-          .thenAnswer((_) async => renamed),
+      setUp: () => when(
+        () => repository.updateProject(1, testDetails),
+      ).thenAnswer((_) async => renamed),
       build: build,
       seed: () => loaded,
       act: (bloc) =>
@@ -102,15 +104,18 @@ void main() {
     );
 
     final paused = testOverview(
-        project: testProject(status: ProjectStatus.paused));
+      project: testProject(status: ProjectStatus.paused),
+    );
     blocTest<ProjectOverviewBloc, ProjectOverviewState>(
       'when the owner changes the status then the overview is replaced',
-      setUp: () => when(() => repository.setProjectStatus(1, ProjectStatus.paused))
-          .thenAnswer((_) async => paused),
+      setUp: () => when(
+        () => repository.setProjectStatus(1, ProjectStatus.paused),
+      ).thenAnswer((_) async => paused),
       build: build,
       seed: () => loaded,
       act: (bloc) => bloc.add(
-          const ProjectOverviewEvent.changeStatus(status: ProjectStatus.paused)),
+        const ProjectOverviewEvent.changeStatus(status: ProjectStatus.paused),
+      ),
       skip: 1,
       expect: () => [
         loaded.copyWith(
@@ -123,13 +128,15 @@ void main() {
 
     blocTest<ProjectOverviewBloc, ProjectOverviewState>(
       'when the server refuses the status then it shows why',
-      setUp: () => when(() => repository.setProjectStatus(any(), any()))
-          .thenThrow(const HttpException400(
-              code: AppErrorCode.invalidStatusTransition)),
+      setUp: () =>
+          when(() => repository.setProjectStatus(any(), any())).thenThrow(
+            const HttpException400(code: AppErrorCode.invalidStatusTransition),
+          ),
       build: build,
       seed: () => loaded,
       act: (bloc) => bloc.add(
-          const ProjectOverviewEvent.changeStatus(status: ProjectStatus.active)),
+        const ProjectOverviewEvent.changeStatus(status: ProjectStatus.active),
+      ),
       skip: 1,
       expect: () => [
         loaded.copyWith(
@@ -142,8 +149,9 @@ void main() {
 
     blocTest<ProjectOverviewBloc, ProjectOverviewState>(
       'when saving fails unexpectedly then it shows the save message',
-      setUp: () => when(() => repository.updateProject(any(), any()))
-          .thenThrow(StateError('x')),
+      setUp: () => when(
+        () => repository.updateProject(any(), any()),
+      ).thenThrow(StateError('x')),
       build: build,
       seed: () => loaded,
       act: (bloc) =>

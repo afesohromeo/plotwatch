@@ -12,7 +12,7 @@ part 'create_project_bloc.freezed.dart';
 /// (PROJ-01, PROJ-08; decision M2-3). The project starts as a draft.
 class CreateProjectBloc extends Bloc<CreateProjectEvent, CreateProjectState> {
   CreateProjectBloc({required this._projectRepository})
-      : super(const CreateProjectState()) {
+    : super(const CreateProjectState()) {
     on<_DetailsSubmitted>(_onDetailsSubmitted);
     on<_BackToDetails>(_onBackToDetails);
     on<_CreateSubmitted>(_onCreateSubmitted);
@@ -25,10 +25,9 @@ class CreateProjectBloc extends Bloc<CreateProjectEvent, CreateProjectState> {
     _DetailsSubmitted event,
     Emitter<CreateProjectState> emit,
   ) {
-    emit(state.copyWith(
-      step: CreateProjectStep.review,
-      details: event.details,
-    ));
+    emit(
+      state.copyWith(step: CreateProjectStep.review, details: event.details),
+    );
   }
 
   void _onBackToDetails(
@@ -46,16 +45,17 @@ class CreateProjectBloc extends Bloc<CreateProjectEvent, CreateProjectState> {
     if (details == null) return;
 
     final l10n = LocalizationService.localization;
-    emit(state.copyWith(
-      createStatus: GenericStatus.loading,
-      createErrorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        createStatus: GenericStatus.loading,
+        createErrorMessage: null,
+      ),
+    );
     try {
       final created = await _projectRepository.createProject(details);
-      emit(state.copyWith(
-        createStatus: GenericStatus.success,
-        created: created,
-      ));
+      emit(
+        state.copyWith(createStatus: GenericStatus.success, created: created),
+      );
     } on HttpException400 catch (e) {
       emit(_failure(e.code.message(l10n)));
     } on HttpException401 catch (_) {
@@ -72,14 +72,16 @@ class CreateProjectBloc extends Bloc<CreateProjectEvent, CreateProjectState> {
     _ResetFlowStep event,
     Emitter<CreateProjectState> emit,
   ) {
-    emit(state.copyWith(
-      createStatus: GenericStatus.initial,
-      createErrorMessage: null,
-    ));
+    emit(
+      state.copyWith(
+        createStatus: GenericStatus.initial,
+        createErrorMessage: null,
+      ),
+    );
   }
 
   CreateProjectState _failure(String message) => state.copyWith(
-        createStatus: GenericStatus.failure,
-        createErrorMessage: message,
-      );
+    createStatus: GenericStatus.failure,
+    createErrorMessage: message,
+  );
 }
