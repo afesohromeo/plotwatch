@@ -8,3 +8,6 @@ const String profileRouteName = 'profile';
 const String createProjectRouteName = 'new-project';
 const String projectRouteName = 'project';
 const String editProjectRouteName = 'edit-project';
+const String membersRouteName = 'members';
+const String joinRouteName = 'join';
+const String joinWithCodeRouteName = 'join-code';

@@ -65,3 +65,46 @@ final testDetails = ProjectDetails(
   type: ProjectType.newHouse,
   currencyCode: 'XAF',
 );
+
+Invitation testInvitation({
+  int id = 1,
+  ProjectRole role = ProjectRole.siteManager,
+  String code = 'ABCD2345',
+}) =>
+    Invitation(
+      id: id,
+      projectId: 1,
+      role: role,
+      code: code,
+      status: InvitationStatus.pending,
+      expiresAt: DateTime.utc(2026, 10, 14),
+      createdBy: UuidValue.fromString('00000000-0000-4000-8000-000000000001'),
+      createdAt: DateTime.utc(2026, 10, 7),
+    );
+
+MemberView testMember({
+  int id = 1,
+  String fullName = 'Ada Lovelace',
+  ProjectRole role = ProjectRole.owner,
+}) =>
+    MemberView(
+      member: ProjectMember(
+        id: id,
+        projectId: 1,
+        authUserId: UuidValue.fromString(
+            '00000000-0000-4000-8000-${id.toString().padLeft(12, '0')}'),
+        role: role,
+        status: MemberStatus.active,
+        joinedAt: DateTime.utc(2026, 10, 7),
+      ),
+      fullName: fullName,
+      email: '${fullName.split(' ').first.toLowerCase()}@example.com',
+    );
+
+final testPreview = InvitationPreview(
+  projectName: 'House in Bafoussam',
+  role: ProjectRole.siteManager,
+  canApprove: false,
+  inviterName: 'Ada Lovelace',
+  expiresAt: DateTime.utc(2026, 10, 14),
+);

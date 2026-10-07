@@ -8,6 +8,9 @@ const String profilePage = '/profile';
 const String createProjectPage = '/projects/new';
 const String projectPage = '/projects/:projectId';
 const String editProjectPage = '/projects/:projectId/edit';
+const String membersPage = '/projects/:projectId/members';
+const String joinPage = '/join';
+const String joinWithCodePage = '/join/:code';
 
 /// Pages reachable without signing in (auth guard in `route_manager.dart`).
 const Set<String> publicPages = {

@@ -10,6 +10,7 @@ class ProjectListPage extends StatefulWidget {
   const ProjectListPage({super.key});
 
   static const newProjectButtonKey = Key('projects.new');
+  static const joinButtonKey = Key('projects.join');
   static const profileButtonKey = Key('projects.profile');
   static const signOutButtonKey = Key('projects.signOut');
 
@@ -64,6 +65,13 @@ class _ProjectListPageState extends State<ProjectListPage> {
             child: Text(l10n.projectsTitle),
           ),
           actions: [
+            IconButton(
+              key: ProjectListPage.joinButtonKey,
+              tooltip: l10n.joinTitle,
+              color: customColors.primary,
+              onPressed: () => context.goNamed(joinRouteName),
+              icon: const Icon(Icons.group_add_outlined),
+            ),
             IconButton(
               key: ProjectListPage.profileButtonKey,
               tooltip: l10n.profileTitle,

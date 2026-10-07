@@ -13,6 +13,7 @@ class ProjectOverviewPage extends StatefulWidget {
 
   static const editButtonKey = Key('project.edit');
   static const statusButtonKey = Key('project.status');
+  static const membersButtonKey = Key('project.members');
 
   @override
   State<ProjectOverviewPage> createState() => _ProjectOverviewPageState();
@@ -156,6 +157,17 @@ class _OverviewBody extends StatelessWidget {
         Text(l10n.siteTitle, style: context.textTheme.titleMedium),
         const Gap.vertical(height: AppSpacing.sm),
         ..._site(context, l10n),
+        const Gap.vertical(height: AppSpacing.lg),
+        PrimaryButton(
+          key: ProjectOverviewPage.membersButtonKey,
+          withBg: false,
+          width: double.infinity,
+          onPressed: () => context.goNamed(
+            membersRouteName,
+            pathParameters: {'projectId': '${project.id}'},
+          ),
+          child: Text(l10n.membersTitle),
+        ),
       ],
     );
   }

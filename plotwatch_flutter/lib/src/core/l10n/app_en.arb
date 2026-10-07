@@ -648,5 +648,126 @@
     "statusChanged": "The status has been changed.",
     "@statusChanged": {
         "description": "Confirmation after the project status was changed"
+    },
+    "membersTitle": "Members",
+    "@membersTitle": {
+        "description": "Title of the members page and the project page's button to it"
+    },
+    "inviteAction": "Invite",
+    "@inviteAction": {
+        "description": "Screen-reader label of the members page's invite button"
+    },
+    "pendingInvitations": "Pending invitations",
+    "@pendingInvitations": {
+        "description": "Members page, owner: heading of the unused invitations"
+    },
+    "invitationExpires": "Expires {date}",
+    "@invitationExpires": {
+        "description": "Expiry date of an invitation",
+        "placeholders": {
+            "date": {"type": "String"}
+        }
+    },
+    "removeMemberTitle": "Remove {name}?",
+    "@removeMemberTitle": {
+        "description": "Confirmation dialog title before removing a member",
+        "placeholders": {
+            "name": {"type": "String"}
+        }
+    },
+    "removeMemberMessage": "They lose access to the project at once.",
+    "@removeMemberMessage": {
+        "description": "Confirmation dialog text before removing a member"
+    },
+    "cancelInvitationAction": "Cancel the invitation",
+    "@cancelInvitationAction": {
+        "description": "Tooltip of the button that cancels a pending invitation"
+    },
+    "errorMembersLoad": "Could not load the members. Try again.",
+    "@errorMembersLoad": {
+        "description": "Unexpected error while loading members and invitations"
+    },
+    "errorMembersSave": "Could not change the members. Try again.",
+    "@errorMembersSave": {
+        "description": "Unexpected error while removing a member or cancelling an invitation"
+    },
+    "errorInvitationCreate": "Could not create the invitation. Try again.",
+    "@errorInvitationCreate": {
+        "description": "Unexpected error while creating an invitation"
+    },
+    "errorJoinProject": "Could not join the project. Try again.",
+    "@errorJoinProject": {
+        "description": "Unexpected error while checking a code or joining"
+    },
+    "inviteTitle": "Invite someone",
+    "@inviteTitle": {
+        "description": "Title of the invite sheet"
+    },
+    "labelRole": "Role",
+    "@labelRole": {
+        "description": "Invite sheet: role selector label"
+    },
+    "canApproveLabel": "Can approve stages and record releases",
+    "@canApproveLabel": {
+        "description": "Invite sheet: approval rights switch for a co-funder"
+    },
+    "createInvitationAction": "Create the invitation",
+    "@createInvitationAction": {
+        "description": "Invite sheet: button that creates the code"
+    },
+    "invitationReadyTitle": "Invitation ready",
+    "@invitationReadyTitle": {
+        "description": "Invite sheet: title once the code exists"
+    },
+    "invitationReadyText": "Send this code or link. It works once and expires in 7 days.",
+    "@invitationReadyText": {
+        "description": "Invite sheet: how the code is used"
+    },
+    "shareAction": "Share",
+    "@shareAction": {
+        "description": "Button opening the system share sheet"
+    },
+    "doneAction": "Done",
+    "@doneAction": {
+        "description": "Button closing a sheet"
+    },
+    "invitationShareText": "Join my construction project on Plotwatch: {link} (invitation code {code})",
+    "@invitationShareText": {
+        "description": "Message shared with the invitation",
+        "placeholders": {
+            "link": {"type": "String"},
+            "code": {"type": "String"}
+        }
+    },
+    "joinTitle": "Join a project",
+    "@joinTitle": {
+        "description": "Title of the join page and the project list's button to it"
+    },
+    "joinHeading": "Enter your invitation code",
+    "@joinHeading": {
+        "description": "Join page heading"
+    },
+    "labelInvitationCode": "Invitation code",
+    "@labelInvitationCode": {
+        "description": "Join page: code field label"
+    },
+    "checkCodeAction": "Check the code",
+    "@checkCodeAction": {
+        "description": "Join page: button that previews the invitation"
+    },
+    "validateInvitationCodeRequired": "Enter the code you received",
+    "@validateInvitationCodeRequired": {
+        "description": "Join page: code field left empty"
+    },
+    "invitedBy": "Invited by {name}",
+    "@invitedBy": {
+        "description": "Join page: who sent the invitation",
+        "placeholders": {
+            "name": {"type": "String"}
+        }
+    },
+    "joinAction": "Join the project",
+    "@joinAction": {
+        "description": "Join page: button that accepts the invitation"
     }
 }

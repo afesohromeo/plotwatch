@@ -510,4 +510,95 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusChanged => 'The status has been changed.';
+
+  @override
+  String get membersTitle => 'Members';
+
+  @override
+  String get inviteAction => 'Invite';
+
+  @override
+  String get pendingInvitations => 'Pending invitations';
+
+  @override
+  String invitationExpires(String date) {
+    return 'Expires $date';
+  }
+
+  @override
+  String removeMemberTitle(String name) {
+    return 'Remove $name?';
+  }
+
+  @override
+  String get removeMemberMessage => 'They lose access to the project at once.';
+
+  @override
+  String get cancelInvitationAction => 'Cancel the invitation';
+
+  @override
+  String get errorMembersLoad => 'Could not load the members. Try again.';
+
+  @override
+  String get errorMembersSave => 'Could not change the members. Try again.';
+
+  @override
+  String get errorInvitationCreate =>
+      'Could not create the invitation. Try again.';
+
+  @override
+  String get errorJoinProject => 'Could not join the project. Try again.';
+
+  @override
+  String get inviteTitle => 'Invite someone';
+
+  @override
+  String get labelRole => 'Role';
+
+  @override
+  String get canApproveLabel => 'Can approve stages and record releases';
+
+  @override
+  String get createInvitationAction => 'Create the invitation';
+
+  @override
+  String get invitationReadyTitle => 'Invitation ready';
+
+  @override
+  String get invitationReadyText =>
+      'Send this code or link. It works once and expires in 7 days.';
+
+  @override
+  String get shareAction => 'Share';
+
+  @override
+  String get doneAction => 'Done';
+
+  @override
+  String invitationShareText(String link, String code) {
+    return 'Join my construction project on Plotwatch: $link (invitation code $code)';
+  }
+
+  @override
+  String get joinTitle => 'Join a project';
+
+  @override
+  String get joinHeading => 'Enter your invitation code';
+
+  @override
+  String get labelInvitationCode => 'Invitation code';
+
+  @override
+  String get checkCodeAction => 'Check the code';
+
+  @override
+  String get validateInvitationCodeRequired => 'Enter the code you received';
+
+  @override
+  String invitedBy(String name) {
+    return 'Invited by $name';
+  }
+
+  @override
+  String get joinAction => 'Join the project';
 }

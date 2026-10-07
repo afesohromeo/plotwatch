@@ -323,3 +323,16 @@ Also fixed with this group:
 - **Debug manifest:** `usesCleartextTraffic` for debug builds only, so the emulator can reach the local server over `http://10.0.2.2:8080`.
 - **VS Code:** launch configurations for the Android emulator (local server) and for Cloud; a local `serverpod_start_server_only` task (`serverpod start --no-flutter`).
 - SVG → PNG export runs with `tool/export_brand_pngs.cmd` (headless Chrome).
+
+### Group F outcome (2026-10-07)
+Done and verified: members page (members with role; owner: invite, remove with confirmation, pending invitations with formatted code and cancel), invite sheet (role, approval rights for a co-funder, code + link + share), join page (code or `/join/:code` link → preview → join → opens the project), entry points (Members button on the project page, Join action on the project list). `flutter test` **338/338**. Seen red first (missing classes); then two rules were broken on purpose and the tests caught both (owner-only actions, and remembering the invitation link through sign-in).
+
+Changes and decisions taken while implementing:
+| Item | Change | Reason |
+|------|--------|--------|
+| Invitation link through sign-in (MEMB-03) | The router remembers a `/join/…` address opened while signed out, sends to the welcome page, and returns there after sign-in or sign-up | Plan's "the auth guard keeps the target"; kept in the `RouteManager` instance, cleared once used |
+| Web URLs | `usePathUrlStrategy()` (`flutter_web_plugins`): no `#` in addresses | So the link reads `https://plotwatch.serverpod.space/join/ABCD2345`; the server's `FlutterRoute` already falls back to `index.html` for any path |
+| Link base | `--dart-define=WEB_APP_URL`, else the current site on web, else the Cloud web app | The Android app has no site of its own |
+| `share_plus` | **13.3.1**, not PlusLocate's 10.x | 10.x needs `win32` 5; Serverpod 4.0.3 needs `win32` 6 |
+| Confirmation dialog | New shared `showConfirmDialog` | The kit has none; removing a member is destructive |
+| Removal and cancelling | The lists update locally after the server confirms; no reload | One request each |

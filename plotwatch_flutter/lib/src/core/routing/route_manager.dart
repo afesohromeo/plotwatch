@@ -24,21 +24,50 @@ class RouteManager {
       debugLogDiagnostics: kDebugMode,
       initialLocation: homePage,
       refreshListenable: GoRouterRefreshStream(_authBloc.stream),
-      redirect: (context, state) =>
-          redirectFor(_authBloc.state.status, state.matchedLocation),
+      redirect: (context, state) {
+        final status = _authBloc.state.status;
+        final location = state.matchedLocation;
+        if (status == AuthenticationStatus.unauthenticated &&
+            isRememberedTarget(location)) {
+          _rememberedTarget = location;
+        }
+        final target = redirectFor(
+          status,
+          location,
+          rememberedTarget: _rememberedTarget,
+        );
+        if (target != null && target == _rememberedTarget) {
+          _rememberedTarget = null;
+        }
+        return target;
+      },
       routes: [...shellSubRoutes],
     );
   }
 
-  /// Signed out: only [publicPages]; signed in: never the public pages.
-  static String? redirectFor(AuthenticationStatus status, String location) {
+  /// An invitation link opened while signed out, kept until the user has
+  /// signed in or up (MEMB-03).
+  String? _rememberedTarget;
+
+  /// Signed out: only [publicPages]; signed in: never the public pages, and
+  /// a [rememberedTarget] (an invitation link) before the home page.
+  static String? redirectFor(
+    AuthenticationStatus status,
+    String location, {
+    String? rememberedTarget,
+  }) {
     final isPublic = publicPages.contains(location);
     return switch (status) {
       AuthenticationStatus.unknown => null,
       AuthenticationStatus.unauthenticated => isPublic ? null : welcomePage,
-      AuthenticationStatus.authenticated => isPublic ? homePage : null,
+      AuthenticationStatus.authenticated =>
+        isPublic ? (rememberedTarget ?? homePage) : null,
     };
   }
+
+  /// Pages worth coming back to after signing in: the join links.
+  static bool isRememberedTarget(String location) =>
+      location == joinPage || location.startsWith('$joinPage/');
 
   static List<RouteBase> get shellSubRoutes {
     return [
@@ -139,6 +168,46 @@ class RouteManager {
             create: (context) => ProjectOverviewBloc(
                 projectRepository: context.read<ProjectRepository>()),
             child: EditProjectPage(projectId: _projectId(state)!),
+          ),
+        ),
+      ),
+      GoRoute(
+        name: membersRouteName,
+        path: membersPage,
+        redirect: _requireProjectId,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => MembersBloc(
+              projectRepository: context.read<ProjectRepository>(),
+              membershipRepository: context.read<MembershipRepository>(),
+            ),
+            child: MembersPage(projectId: _projectId(state)!),
+          ),
+        ),
+      ),
+      GoRoute(
+        name: joinRouteName,
+        path: joinPage,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => JoinProjectBloc(
+                membershipRepository: context.read<MembershipRepository>()),
+            child: const JoinProjectPage(),
+          ),
+        ),
+      ),
+      // The invitation link (decision M2-8).
+      GoRoute(
+        name: joinWithCodeRouteName,
+        path: joinWithCodePage,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => JoinProjectBloc(
+                membershipRepository: context.read<MembershipRepository>()),
+            child: JoinProjectPage(initialCode: state.pathParameters['code']),
           ),
         ),
       ),

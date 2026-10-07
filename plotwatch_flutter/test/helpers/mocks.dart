@@ -16,3 +16,9 @@ class FakeAuthSuccess extends Fake implements AuthSuccess {}
 class MockProjectApiProvider extends Mock implements ProjectApiProvider {}
 
 class MockProjectRepository extends Mock implements ProjectRepository {}
+
+class MockMembershipApiProvider extends Mock implements MembershipApiProvider {}
+
+class MockMembershipRepository extends Mock implements MembershipRepository {}
+
+class MockShareProvider extends Mock implements ShareProvider {}

@@ -65,6 +65,14 @@ class Validators {
     return null;
   }
 
+  /// The server normalises and checks the code itself (decision M2-6).
+  static String? invitationCode(String? value, AppLocalizations l10n) {
+    if ((value?.trim() ?? '').isEmpty) {
+      return l10n.validateInvitationCodeRequired;
+    }
+    return null;
+  }
+
   /// Optional: only the length is checked.
   static String? projectDescription(String? value, AppLocalizations l10n) {
     if ((value?.trim() ?? '').length > maxProjectDescriptionLength) {

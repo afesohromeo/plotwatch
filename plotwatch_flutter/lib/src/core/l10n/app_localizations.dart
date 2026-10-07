@@ -1033,6 +1033,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The status has been changed.'**
   String get statusChanged;
+
+  /// Title of the members page and the project page's button to it
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get membersTitle;
+
+  /// Screen-reader label of the members page's invite button
+  ///
+  /// In en, this message translates to:
+  /// **'Invite'**
+  String get inviteAction;
+
+  /// Members page, owner: heading of the unused invitations
+  ///
+  /// In en, this message translates to:
+  /// **'Pending invitations'**
+  String get pendingInvitations;
+
+  /// Expiry date of an invitation
+  ///
+  /// In en, this message translates to:
+  /// **'Expires {date}'**
+  String invitationExpires(String date);
+
+  /// Confirmation dialog title before removing a member
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name}?'**
+  String removeMemberTitle(String name);
+
+  /// Confirmation dialog text before removing a member
+  ///
+  /// In en, this message translates to:
+  /// **'They lose access to the project at once.'**
+  String get removeMemberMessage;
+
+  /// Tooltip of the button that cancels a pending invitation
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel the invitation'**
+  String get cancelInvitationAction;
+
+  /// Unexpected error while loading members and invitations
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the members. Try again.'**
+  String get errorMembersLoad;
+
+  /// Unexpected error while removing a member or cancelling an invitation
+  ///
+  /// In en, this message translates to:
+  /// **'Could not change the members. Try again.'**
+  String get errorMembersSave;
+
+  /// Unexpected error while creating an invitation
+  ///
+  /// In en, this message translates to:
+  /// **'Could not create the invitation. Try again.'**
+  String get errorInvitationCreate;
+
+  /// Unexpected error while checking a code or joining
+  ///
+  /// In en, this message translates to:
+  /// **'Could not join the project. Try again.'**
+  String get errorJoinProject;
+
+  /// Title of the invite sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Invite someone'**
+  String get inviteTitle;
+
+  /// Invite sheet: role selector label
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get labelRole;
+
+  /// Invite sheet: approval rights switch for a co-funder
+  ///
+  /// In en, this message translates to:
+  /// **'Can approve stages and record releases'**
+  String get canApproveLabel;
+
+  /// Invite sheet: button that creates the code
+  ///
+  /// In en, this message translates to:
+  /// **'Create the invitation'**
+  String get createInvitationAction;
+
+  /// Invite sheet: title once the code exists
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation ready'**
+  String get invitationReadyTitle;
+
+  /// Invite sheet: how the code is used
+  ///
+  /// In en, this message translates to:
+  /// **'Send this code or link. It works once and expires in 7 days.'**
+  String get invitationReadyText;
+
+  /// Button opening the system share sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareAction;
+
+  /// Button closing a sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get doneAction;
+
+  /// Message shared with the invitation
+  ///
+  /// In en, this message translates to:
+  /// **'Join my construction project on Plotwatch: {link} (invitation code {code})'**
+  String invitationShareText(String link, String code);
+
+  /// Title of the join page and the project list's button to it
+  ///
+  /// In en, this message translates to:
+  /// **'Join a project'**
+  String get joinTitle;
+
+  /// Join page heading
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your invitation code'**
+  String get joinHeading;
+
+  /// Join page: code field label
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation code'**
+  String get labelInvitationCode;
+
+  /// Join page: button that previews the invitation
+  ///
+  /// In en, this message translates to:
+  /// **'Check the code'**
+  String get checkCodeAction;
+
+  /// Join page: code field left empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code you received'**
+  String get validateInvitationCodeRequired;
+
+  /// Join page: who sent the invitation
+  ///
+  /// In en, this message translates to:
+  /// **'Invited by {name}'**
+  String invitedBy(String name);
+
+  /// Join page: button that accepts the invitation
+  ///
+  /// In en, this message translates to:
+  /// **'Join the project'**
+  String get joinAction;
 }
 
 class _AppLocalizationsDelegate

@@ -523,4 +523,100 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get statusChanged => 'Le statut a été modifié.';
+
+  @override
+  String get membersTitle => 'Membres';
+
+  @override
+  String get inviteAction => 'Inviter';
+
+  @override
+  String get pendingInvitations => 'Invitations en attente';
+
+  @override
+  String invitationExpires(String date) {
+    return 'Expire le $date';
+  }
+
+  @override
+  String removeMemberTitle(String name) {
+    return 'Retirer $name ?';
+  }
+
+  @override
+  String get removeMemberMessage =>
+      'Cette personne perd immédiatement l\'accès au projet.';
+
+  @override
+  String get cancelInvitationAction => 'Annuler l\'invitation';
+
+  @override
+  String get errorMembersLoad =>
+      'Impossible de charger les membres. Réessayez.';
+
+  @override
+  String get errorMembersSave =>
+      'Impossible de modifier les membres. Réessayez.';
+
+  @override
+  String get errorInvitationCreate =>
+      'Impossible de créer l\'invitation. Réessayez.';
+
+  @override
+  String get errorJoinProject =>
+      'Impossible de rejoindre le projet. Réessayez.';
+
+  @override
+  String get inviteTitle => 'Inviter une personne';
+
+  @override
+  String get labelRole => 'Rôle';
+
+  @override
+  String get canApproveLabel =>
+      'Peut approuver les étapes et enregistrer les versements';
+
+  @override
+  String get createInvitationAction => 'Créer l\'invitation';
+
+  @override
+  String get invitationReadyTitle => 'Invitation prête';
+
+  @override
+  String get invitationReadyText =>
+      'Envoyez ce code ou ce lien. Il ne sert qu\'une fois et expire dans 7 jours.';
+
+  @override
+  String get shareAction => 'Partager';
+
+  @override
+  String get doneAction => 'Terminé';
+
+  @override
+  String invitationShareText(String link, String code) {
+    return 'Rejoignez mon projet de construction sur Plotwatch : $link (code d\'invitation $code)';
+  }
+
+  @override
+  String get joinTitle => 'Rejoindre un projet';
+
+  @override
+  String get joinHeading => 'Saisissez votre code d\'invitation';
+
+  @override
+  String get labelInvitationCode => 'Code d\'invitation';
+
+  @override
+  String get checkCodeAction => 'Vérifier le code';
+
+  @override
+  String get validateInvitationCodeRequired => 'Saisissez le code reçu';
+
+  @override
+  String invitedBy(String name) {
+    return 'Invité par $name';
+  }
+
+  @override
+  String get joinAction => 'Rejoindre le projet';
 }

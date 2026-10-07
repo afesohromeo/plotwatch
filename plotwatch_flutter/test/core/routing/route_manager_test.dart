@@ -62,4 +62,42 @@ void main() {
       isNull,
     );
   });
+
+  // MEMB-03: a signed-out user who opens an invitation link signs in or up
+  // first, then lands on the join page (doc/04b, group F).
+  group('Given an invitation link', () {
+    test('when signed out then it goes to the welcome page and is remembered',
+        () {
+      expect(
+        RouteManager.redirectFor(
+            AuthenticationStatus.unauthenticated, '/join/ABCD2345'),
+        welcomePage,
+      );
+      expect(RouteManager.isRememberedTarget('/join/ABCD2345'), isTrue);
+    });
+
+    test('when the user has signed in then they go to the remembered link',
+        () {
+      expect(
+        RouteManager.redirectFor(
+          AuthenticationStatus.authenticated,
+          signInPage,
+          rememberedTarget: '/join/ABCD2345',
+        ),
+        '/join/ABCD2345',
+      );
+    });
+
+    test('when signed in then the link opens directly', () {
+      expect(
+        RouteManager.redirectFor(
+            AuthenticationStatus.authenticated, '/join/ABCD2345'),
+        isNull,
+      );
+    });
+
+    test('Given an ordinary page then it is not remembered', () {
+      expect(RouteManager.isRememberedTarget('/projects/7'), isFalse);
+    });
+  });
 }
