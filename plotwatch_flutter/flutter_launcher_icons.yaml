@@ -1,0 +1,19 @@
+# App icon from logo D1 (doc/04b, group E2). Sources: assets/brand/*.svg,
+# exported by tool/export_brand_pngs.cmd. Run: dart run flutter_launcher_icons
+flutter_launcher_icons:
+  # Legacy Android launchers, iOS and the web: teal square + launcher mark.
+  image_path: "assets/brand/icon_launcher.png"
+  android: true
+  min_sdk_android: 21
+  # Android 8+ adaptive icon; Android 13+ themed (monochrome) icon.
+  adaptive_icon_background: "#0E5A52"
+  adaptive_icon_foreground: "assets/brand/mark_launcher_foreground.png"
+  adaptive_icon_monochrome: "assets/brand/mark_monochrome.png"
+  # Built from the same code, not tested for the hackathon (D-4).
+  ios: true
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/brand/icon_launcher.png"
+    background_color: "#0E5A52"
+    theme_color: "#0E5A52"

@@ -60,6 +60,10 @@
     "@operationError": {
         "description": "Generic operation error message"
     },
+    "logoLabel": "Plotwatch logo",
+    "@logoLabel": {
+        "description": "Screen-reader label of the logo on the welcome page"
+    },
     "welcomeTagline": "Fund construction you can't watch, with verified progress.",
     "@welcomeTagline": {
         "description": "Welcome page subtitle under the app name"

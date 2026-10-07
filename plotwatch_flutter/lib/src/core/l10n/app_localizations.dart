@@ -188,6 +188,12 @@ abstract class AppLocalizations {
   /// **'An error occurred'**
   String get operationError;
 
+  /// Screen-reader label of the logo on the welcome page
+  ///
+  /// In en, this message translates to:
+  /// **'Plotwatch logo'**
+  String get logoLabel;
+
   /// Welcome page subtitle under the app name
   ///
   /// In en, this message translates to:

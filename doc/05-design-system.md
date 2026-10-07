@@ -17,6 +17,7 @@ All colours live in `MyAppColors` (`lib/src/core/my_app_colors.dart`), with the 
 | `onPrimary` | `#FFFFFF` | Text and icons on `primary` |
 | `accent` | `#A44A24` | Photo thumbnails, highlights (secondary brand) |
 | `accentSoft` | `#F6E7DE` | Background behind `accent` icons |
+| `accentOnDark` | `#E8A27E` | The accent on `primary` backgrounds (app icon, splash): `accent` is too dark there. Brand assets only, not in `MyAppColors` |
 | `ink` | `#15201E` | Main text, icons, app bar title |
 | `muted` | `#55625F` | Secondary text, hints, captions (≥ 4.5:1 on white) |
 | `line` | `#D3DAD7` | Borders, dividers, input outlines, progress track |
@@ -95,5 +96,18 @@ Widget tests for `ErrorDialog` cover the message, the icon and the OK button clo
 
 ## 7. Later (not in the MVP)
 - Dark theme.
-- App icon and splash in the brand colours (D10 polish).
+- ~~App icon and splash in the brand colours.~~ Done 2026-10-07 (§8).
 - A Stitch project with `.stitch/DESIGN.md` mirroring this file, if UI generation is used.
+
+## 8. Logo, app icon and splash (2026-10-07)
+**Logo D1** (chosen by the developer on the [concept canvas](https://claude.ai/artifact/SzFhi7nQJVq31FcmB3heEi); plan in [`04b` group E2](04b-m2-projects-site-members.md)): a location pin (the site) whose head holds an outlined house with two stage bars (built in stages); the current stage is in the accent.
+
+| Level | Detail | Used for | Source in `plotwatch_flutter/assets/brand/` |
+|-------|--------|----------|----------------------------------------------|
+| Full | Two stage bars | Welcome page (`primary` lines, `accent` stage); splash before Android 12, iOS and web (white on the full-screen `primary`) | `mark_full.svg`, `splash_mark.svg` |
+| Launcher | One `accentOnDark` stage bar, thicker lines | App icon: adaptive foreground, legacy/iOS/web icon, Android 12 splash icon | `mark_launcher_foreground.svg`, `icon_launcher.svg`, `splash_android12.svg` |
+| Monochrome | Launcher geometry, one colour | Android 13 themed icon | `mark_monochrome.svg` |
+| Tiny | The pin only | Favicon | `mark_tiny.svg` |
+
+- The SVGs are the source. `tool/export_brand_pngs.cmd` exports the PNGs with headless Chrome; `flutter_launcher_icons.yaml` and `flutter_native_splash.yaml` turn them into platform icons and splash screens. The PNGs are committed so a clone builds without Chrome.
+- Icon and splash background `primary` (the whole screen on the splash, developer's choice); marks white on `primary`.

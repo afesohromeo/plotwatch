@@ -1,0 +1,19 @@
+# Splash screen from logo D1 (doc/04b, group E2). Sources: assets/brand/*.svg,
+# exported by tool/export_brand_pngs.cmd. Run: dart run flutter_native_splash:create
+# The whole screen in the brand colour with the white logo on it (developer's
+# choice, as in SmartDrive).
+flutter_native_splash:
+  color: "#0E5A52"
+  image: assets/brand/splash_mark.png
+  android_gravity: center
+  ios_content_mode: center
+  fullscreen: false
+  # Android 12+: the system's round icon area takes the same teal, so no
+  # circle shows.
+  android_12:
+    color: "#0E5A52"
+    image: assets/brand/splash_android12.png
+    icon_background_color: "#0E5A52"
+  android: true
+  ios: true
+  web: true

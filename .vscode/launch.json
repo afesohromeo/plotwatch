@@ -1,6 +1,35 @@
 {
   "version": "0.2.0",
   "configurations": [
+    {
+      // Debug the app on the Android emulator against the local server.
+      // Pick the emulator in VS Code's device selector first. The emulator
+      // reaches this PC at 10.0.2.2 (its own `localhost` is the emulator),
+      // so the URL from assets/config.json can't be used here. Starts the
+      // server without its own app (`serverpod_start_server_only`).
+      "name": "Plotwatch app (mobile debug mode)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/plotwatch_flutter",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "args": [
+        "--dart-define=SERVER_URL=http://10.0.2.2:8080/"
+      ],
+      // "preLaunchTask": "serverpod_start_server_only"
+    },
+    {
+      // Debug the app on a device or emulator against Serverpod Cloud
+      // (M1 check "Android against Cloud"). No local server needed.
+      "name": "Plotwatch app (Cloud server)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/plotwatch_flutter",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=SERVER_URL=https://plotwatch.api.serverpod.space/"
+      ]
+    },
     // If the server pubspec configures multiple Flutter apps, add an attach
     // configuration like this for each app and add every configuration name
     // to the compound below. Use the VM-service info file pattern

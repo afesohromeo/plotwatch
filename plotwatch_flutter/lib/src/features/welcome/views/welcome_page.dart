@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
@@ -6,6 +7,8 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 /// the two actions at the bottom (design canvas, direction A).
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
+
+  static const logoKey = Key('welcome.logo');
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +29,12 @@ class WelcomePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.where_to_vote_rounded,
-                        size: 64,
-                        color: customColors.primary,
+                      SvgPicture.asset(
+                        brandMarkAsset,
+                        key: logoKey,
+                        width: 72,
+                        height: 72,
+                        semanticsLabel: l10n.logoLabel,
                       ),
                       const Gap.vertical(height: AppSpacing.md),
                       Text(l10n.appTitle, style: context.textTheme.displaySmall),

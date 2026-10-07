@@ -1,0 +1,10 @@
+<!-- Splash for Android before 12, iOS and the web: the full mark in white
+     (accent stage in accentOnDark), transparent; the generator centres it
+     on the teal background (developer's choice: as in SmartDrive). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="576" height="576" viewBox="0 0 64 64" fill="none">
+  <path d="M32 5.5c-10.8 0-19.5 8.5-19.5 19.1C12.5 38.9 32 58.5 32 58.5S51.5 38.9 51.5 24.6C51.5 14 42.8 5.5 32 5.5z" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M20.5 25.5L32 15.8l11.5 9.7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="24.5" y="24.5" width="15" height="11.5" rx="1.5" stroke="#FFFFFF" stroke-width="3"/>
+  <rect x="27.5" y="31" width="9" height="2.4" rx="1.2" fill="#FFFFFF"/>
+  <rect x="27.5" y="27.4" width="9" height="2.4" rx="1.2" fill="#E8A27E"/>
+</svg>

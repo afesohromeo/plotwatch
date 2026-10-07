@@ -285,3 +285,41 @@ Changes and fixes found along the way:
 | Home page | M1's placeholder `HomePage` and its two texts removed; the project list keeps the profile and sign-out buttons | Decision M1-8 said the project list replaces it in M2 |
 | Site on the project page | Three texts: owner (what happens next), site manager (go and localize), other members (waiting) | The owner's text didn't fit viewers and co-funders. The proposal state and actions come with group G |
 | Currencies | 19 codes (`supportedCurrencyCodes`), mirroring the server | Decision M2-13 |
+
+---
+
+## Group E2: brand: logo, app icon, splash (approved 2026-10-07)
+Inserted before group F at the developer's request ("a splash screen and a logo before deploying"). Logo chosen on the [concept canvas](https://claude.ai/artifact/SzFhi7nQJVq31FcmB3heEi): **D1**, a location pin whose head holds an outlined house with two stage bars (the current stage in the accent): concept A (plot pin) combined with concept C (built in stages), the developer's proposal.
+
+### Decisions in this draft
+| # | Decision | Proposal |
+|---|----------|----------|
+| E2-1 | **One mark, three levels of detail** | D1's bars disappear at small sizes, so the master SVGs come in three levels: **full** (two bars) for the splash and the welcome page; **launcher** (one accent bar, thicker strokes) for the app icon, which Android shows at 48–192 px; **tiny** (pin only) for the 16–32 px favicon. |
+| E2-2 | **Colours** | Icon background `primary` `#0E5A52`; mark white; the current-stage bar in a light accent tint **`#E8A27E` (`accentOnDark`)**, because `#A44A24` is too dark on teal. The token is added to `doc/05` §2. Splash and web background: `ground` `#F4F6F4`. |
+| E2-3 | **App icon** | `flutter_launcher_icons` (new dev dependency). Android **adaptive icon**: teal background plus the launcher mark as foreground inside the 66 % safe zone; **monochrome** layer for Android 13 themed icons; legacy icon for older launchers. Web: `Icon-192/512` and the maskable versions. |
+| E2-4 | **Splash** | `flutter_native_splash` (already a dependency). **Revised by the developer (2026-10-07), as in SmartDrive:** the whole screen in `primary` with the white mark on it (no circle); on Android 12+ the round icon area takes the same teal. No wordmark at the bottom (it would need the Manrope text converted to outlines; P1). |
+| E2-5 | **Web details** | `favicon.png` from the tiny mark; `manifest.json`: `theme_color` `#0E5A52`, `background_color` `#F4F6F4`, a real description; `index.html` description too. |
+| E2-6 | **Logo in the app** | The full mark above the title on the welcome page, through `flutter_svg` (new dependency; `flutter_gen` already has its integration switched on, so the SVG gets a typed `Assets.brand…` accessor). Widget test: the welcome page shows the logo with its semantic label. |
+| E2-7 | **SVG → PNG** | The two generators need PNGs. They are exported from the committed SVGs with **headless Chrome** (already installed), one command per file in a "You run" step: no new tool. The SVGs are the source; the PNGs are committed too, so a clone builds without Chrome. |
+
+### Files
+- `plotwatch_flutter/assets/brand/`: `mark_full.svg`, `mark_launcher_foreground.svg` (mark in the adaptive safe zone, transparent background), `mark_monochrome.svg`, `icon_launcher.svg` (teal rounded square plus mark: legacy and web), `mark_tiny.svg`, `splash_mark.svg` (full mark in a teal circle); the exported `*.png` beside them.
+- `plotwatch_flutter/flutter_launcher_icons.yaml`, `plotwatch_flutter/flutter_native_splash.yaml`.
+- `web/manifest.json`, `web/index.html`; `lib/src/features/welcome/views/welcome_page.dart`; `doc/05-design-system.md` (logo section, `accentOnDark`).
+
+### You run (after Claude writes the SVGs and configs)
+1. The PNG exports (headless Chrome, commands given with the files).
+2. `flutter pub add flutter_svg dev:flutter_launcher_icons`
+3. `dart run flutter_launcher_icons` and `dart run flutter_native_splash:create`
+4. `dart run build_runner build --delete-conflicting-outputs` (asset accessors), `dart format`, `dart analyze`.
+
+Then Claude runs `flutter test`, and you check the icon and splash on the emulator and in Chrome.
+
+### Group E2 outcome (2026-10-07)
+Done and checked by the developer on the Android emulator and in Chrome: app icon (adaptive, monochrome, legacy, iOS, web), splash (full-screen `primary` with the white mark, revised by the developer as in SmartDrive), favicon (pin only), web manifest colours and description, and the logo on the welcome page. `flutter test` **286/286** (new: the welcome page shows the logo with its screen-reader label).
+
+Also fixed with this group:
+- **Release manifest:** `android.permission.INTERNET` was missing from `main/AndroidManifest.xml` (only the debug manifest had it), so a release APK couldn't reach Serverpod Cloud.
+- **Debug manifest:** `usesCleartextTraffic` for debug builds only, so the emulator can reach the local server over `http://10.0.2.2:8080`.
+- **VS Code:** launch configurations for the Android emulator (local server) and for Cloud; a local `serverpod_start_server_only` task (`serverpod start --no-flutter`).
+- SVG → PNG export runs with `tool/export_brand_pngs.cmd` (headless Chrome).

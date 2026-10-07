@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Release builds talk to Serverpod Cloud; debug builds also get this
+         from the debug manifest. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="Plotwatch"
         android:name="${applicationName}"

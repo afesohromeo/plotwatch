@@ -54,6 +54,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get operationError => 'An error occurred';
 
   @override
+  String get logoLabel => 'Plotwatch logo';
+
+  @override
   String get welcomeTagline =>
       'Fund construction you can\'t watch, with verified progress.';
 

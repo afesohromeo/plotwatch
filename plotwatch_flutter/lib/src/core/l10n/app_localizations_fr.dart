@@ -54,6 +54,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get operationError => 'Une erreur est survenue';
 
   @override
+  String get logoLabel => 'Logo de Plotwatch';
+
+  @override
   String get welcomeTagline =>
       'Financez une construction que vous ne pouvez pas surveiller, avec des preuves vérifiées.';
 

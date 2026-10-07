@@ -38,6 +38,7 @@ dependencies:
   flutter_secure_storage: ^10.0.0
   app_theme_kit: ^0.1.0
   web: ^1.1.1
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +55,7 @@ dev_dependencies:
   flutter_gen_runner: ^5.4.0
   bloc_test: ^10.0.0
   mocktail: ^1.0.5
+  flutter_launcher_icons: ^0.14.4
 
 # Serverpod 4 auth needs flutter_secure_storage 10+ on Android (template override).
 dependency_overrides:
@@ -64,6 +66,9 @@ flutter:
   generate: true
   assets:
     - assets/config.json
+    # Logo for the welcome page; the other assets/brand files are inputs of
+    # the icon and splash generators, not bundled.
+    - assets/brand/mark_full.svg
 
   # Design system font (doc/05-design-system.md §3), bundled so it works
   # offline. SIL Open Font License: assets/fonts/Manrope-OFL.txt.

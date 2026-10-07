@@ -1,0 +1,7 @@
+<!-- Favicon (16-32 px): the pin only, on a rounded teal square. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="12" fill="#0E5A52"/>
+  <g transform="translate(6.4 6.4) scale(0.8)">
+    <path d="M32 5.5c-10.8 0-19.5 8.5-19.5 19.1C12.5 38.9 32 58.5 32 58.5S51.5 38.9 51.5 24.6C51.5 14 42.8 5.5 32 5.5z" stroke="#FFFFFF" stroke-width="7" stroke-linejoin="round"/>
+  </g>
+</svg>

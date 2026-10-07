@@ -107,3 +107,6 @@ const List<String> supportedCurrencyCodes = [
   'XAF', 'XOF', 'NGN', 'GHS', 'KES', 'UGX', 'TZS', 'RWF', 'CDF', 'GNF', //
   'ZAR', 'MAD', 'EGP', 'ETB', 'EUR', 'USD', 'GBP', 'CAD', 'CHF',
 ];
+
+/// Logo D1, full detail, for light backgrounds (doc/04b, group E2).
+const String brandMarkAsset = 'assets/brand/mark_full.svg';

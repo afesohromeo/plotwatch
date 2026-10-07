@@ -31,15 +31,18 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     emit(_loading());
     try {
       final email = event.email.trim();
-      final accountRequestId =
-          await _authRepository.startRegistration(email: email);
-      emit(state.copyWith(
-        signUpStatus: GenericStatus.success,
-        step: SignUpStep.verifyCode,
-        fullName: event.fullName.trim(),
+      final accountRequestId = await _authRepository.startRegistration(
         email: email,
-        accountRequestId: accountRequestId,
-      ));
+      );
+      emit(
+        state.copyWith(
+          signUpStatus: GenericStatus.success,
+          step: SignUpStep.verifyCode,
+          fullName: event.fullName.trim(),
+          email: email,
+          accountRequestId: accountRequestId,
+        ),
+      );
     } on HttpException400 catch (e) {
       emit(_failure(e.code.message(LocalizationService.localization)));
     } on HttpException401 catch (_) {
@@ -62,11 +65,13 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         accountRequestId: state.accountRequestId!,
         code: event.code.trim(),
       );
-      emit(state.copyWith(
-        signUpStatus: GenericStatus.success,
-        step: SignUpStep.password,
-        registrationToken: registrationToken,
-      ));
+      emit(
+        state.copyWith(
+          signUpStatus: GenericStatus.success,
+          step: SignUpStep.password,
+          registrationToken: registrationToken,
+        ),
+      );
     } on HttpException400 catch (e) {
       emit(_failure(e.code.message(LocalizationService.localization)));
     } on HttpException401 catch (_) {
@@ -85,12 +90,15 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   ) async {
     emit(_loading());
     try {
-      final accountRequestId =
-          await _authRepository.startRegistration(email: state.email);
-      emit(state.copyWith(
-        signUpStatus: GenericStatus.success,
-        accountRequestId: accountRequestId,
-      ));
+      final accountRequestId = await _authRepository.startRegistration(
+        email: state.email,
+      );
+      emit(
+        state.copyWith(
+          signUpStatus: GenericStatus.success,
+          accountRequestId: accountRequestId,
+        ),
+      );
     } on HttpException400 catch (e) {
       emit(_failure(e.code.message(LocalizationService.localization)));
     } on HttpException401 catch (_) {
@@ -139,9 +147,9 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     _ConfirmPasswordVisibilityToggled event,
     Emitter<SignUpState> emit,
   ) {
-    emit(state.copyWith(
-      isConfirmPasswordVisible: !state.isConfirmPasswordVisible,
-    ));
+    emit(
+      state.copyWith(isConfirmPasswordVisible: !state.isConfirmPasswordVisible),
+    );
   }
 
   void _onReset(_Reset event, Emitter<SignUpState> emit) {
@@ -149,12 +157,12 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   }
 
   SignUpState _loading() => state.copyWith(
-        signUpStatus: GenericStatus.loading,
-        signUpErrorMessage: null,
-      );
+    signUpStatus: GenericStatus.loading,
+    signUpErrorMessage: null,
+  );
 
   SignUpState _failure(String message) => state.copyWith(
-        signUpStatus: GenericStatus.failure,
-        signUpErrorMessage: message,
-      );
+    signUpStatus: GenericStatus.failure,
+    signUpErrorMessage: message,
+  );
 }

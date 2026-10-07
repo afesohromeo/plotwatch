@@ -4,4 +4,8 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Debug builds only: the local server is plain http
+         (http://10.0.2.2:8080 from the emulator). Release builds keep
+         Android's default and only talk HTTPS (Serverpod Cloud). -->
+    <application android:usesCleartextTraffic="true"/>
 </manifest>
