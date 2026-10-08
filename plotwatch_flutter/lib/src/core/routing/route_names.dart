@@ -13,3 +13,7 @@ const String joinWithCodeRouteName = 'join-code';
 const String localizeSiteRouteName = 'localize-site';
 const String validateSiteRouteName = 'validate-site';
 const String editSiteRouteName = 'edit-site';
+const String stagesRouteName = 'stages';
+const String createStageRouteName = 'new-stage';
+const String stageRouteName = 'stage';
+const String editStageRouteName = 'edit-stage';

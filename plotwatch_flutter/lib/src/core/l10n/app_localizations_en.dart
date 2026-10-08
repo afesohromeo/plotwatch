@@ -809,4 +809,329 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorProjectNotEditable =>
       'A completed or archived project can\'t be changed.';
+
+  @override
+  String get labelBudget => 'Budget';
+
+  @override
+  String get validateBudgetInvalid => 'Enter an amount, e.g. 1500000';
+
+  @override
+  String get stageStatusNotStarted => 'Not started';
+
+  @override
+  String get stageStatusInProgress => 'In progress';
+
+  @override
+  String get stageStatusSubmitted => 'Submitted';
+
+  @override
+  String get stageStatusChangesRequested => 'Changes requested';
+
+  @override
+  String get stageStatusApproved => 'Approved';
+
+  @override
+  String get templateHouse => 'Single-storey house';
+
+  @override
+  String get templateHouseHint =>
+      '10 stages, from site preparation to finishing';
+
+  @override
+  String get templateRenovation => 'Renovation';
+
+  @override
+  String get templateRenovationHint =>
+      '6 stages, from the condition before work to handover';
+
+  @override
+  String get templateCustom => 'Custom';
+
+  @override
+  String get templateCustomHint => 'Start empty and add your own stages';
+
+  @override
+  String get tplHouse1 => 'Site preparation and setting out';
+
+  @override
+  String get tplHouse1a => 'Cleared plot (wide shot)';
+
+  @override
+  String get tplHouse1b => 'Setting-out pegs and lines';
+
+  @override
+  String get tplHouse2 => 'Foundation excavation';
+
+  @override
+  String get tplHouse2a => 'Trenches with a measuring tape showing the depth';
+
+  @override
+  String get tplHouse2b => 'All four corners of the trenches';
+
+  @override
+  String get tplHouse3 => 'Foundation and substructure';
+
+  @override
+  String get tplHouse3a => 'Reinforcement before pouring';
+
+  @override
+  String get tplHouse3b => 'Poured footing';
+
+  @override
+  String get tplHouse4 => 'Walls to lintel level';
+
+  @override
+  String get tplHouse4a => 'Each external wall';
+
+  @override
+  String get tplHouse4b => 'Openings for doors and windows';
+
+  @override
+  String get tplHouse5 => 'Lintel and ring beam';
+
+  @override
+  String get tplHouse5a => 'Reinforcement before pouring';
+
+  @override
+  String get tplHouse5b => 'Finished beam';
+
+  @override
+  String get tplHouse6 => 'Roofing';
+
+  @override
+  String get tplHouse6a => 'Roof structure (trusses)';
+
+  @override
+  String get tplHouse6b => 'Roof covering complete';
+
+  @override
+  String get tplHouse7 => 'Doors and windows';
+
+  @override
+  String get tplHouse7a => 'Installed frames';
+
+  @override
+  String get tplHouse7b => 'Installed doors and windows';
+
+  @override
+  String get tplHouse8 => 'Electrical and plumbing (first fix)';
+
+  @override
+  String get tplHouse8a => 'Conduits and pipes in the walls before plastering';
+
+  @override
+  String get tplHouse9 => 'Plastering and screeding';
+
+  @override
+  String get tplHouse9a => 'Interior walls';
+
+  @override
+  String get tplHouse9b => 'Floors';
+
+  @override
+  String get tplHouse10 => 'Finishing';
+
+  @override
+  String get tplHouse10a => 'Painting, tiling and fittings';
+
+  @override
+  String get tplHouse10b => 'Final walkthrough';
+
+  @override
+  String get tplReno1 => 'Condition before renovation';
+
+  @override
+  String get tplReno1a => 'Every room before work starts';
+
+  @override
+  String get tplReno1b => 'Existing damage close up';
+
+  @override
+  String get tplReno2 => 'Demolition and removal';
+
+  @override
+  String get tplReno2a => 'Areas cleared';
+
+  @override
+  String get tplReno2b => 'Debris removed from the site';
+
+  @override
+  String get tplReno3 => 'Structural repairs';
+
+  @override
+  String get tplReno3a => 'Repairs before they are covered';
+
+  @override
+  String get tplReno3b => 'Finished repairs';
+
+  @override
+  String get tplReno4 => 'Services (electrical and plumbing)';
+
+  @override
+  String get tplReno4a => 'New wiring and pipes before the walls are closed';
+
+  @override
+  String get tplReno5 => 'Finishing';
+
+  @override
+  String get tplReno5a => 'Painting, tiling and fittings';
+
+  @override
+  String get tplReno6 => 'Final handover';
+
+  @override
+  String get tplReno6a => 'Every room after the work';
+
+  @override
+  String get tplReno6b => 'Keys and documents handed over';
+
+  @override
+  String get stepStagesTitle => 'Stages';
+
+  @override
+  String get templateCustomEmpty =>
+      'The plan starts empty. Add stages after creating the project.';
+
+  @override
+  String get templateEditableNote =>
+      'You can change, add, move or delete stages after creating the project.';
+
+  @override
+  String get labelStages => 'Stages';
+
+  @override
+  String templateWithCount(String name, int count) {
+    return '$name ($count stages)';
+  }
+
+  @override
+  String get stagesTitle => 'Stages';
+
+  @override
+  String get addStageAction => 'Add a stage';
+
+  @override
+  String get labelTotalBudget => 'Total budget';
+
+  @override
+  String get labelProgress => 'Progress';
+
+  @override
+  String progressPercent(int percent) {
+    return '$percent% approved';
+  }
+
+  @override
+  String get stagesEmpty => 'No stages yet. The owner plans them.';
+
+  @override
+  String get stagesEmptyOwner =>
+      'No stages yet. Start from a template or add your own.';
+
+  @override
+  String useTemplateAction(String name) {
+    return 'Start from “$name”';
+  }
+
+  @override
+  String itemsCovered(int covered, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$covered of $total items covered',
+      one: '$covered of 1 item covered',
+      zero: 'No checklist items',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reorderStageHint => 'Drag to move the stage';
+
+  @override
+  String get errorStagesLoad => 'Could not load the stages. Try again.';
+
+  @override
+  String get errorStagesSave => 'Could not save the stages. Try again.';
+
+  @override
+  String stageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count stages',
+      one: '1 stage',
+      zero: 'No stages yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editStageAction => 'Edit the stage';
+
+  @override
+  String deleteStageTitle(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String get deleteStageMessage => 'Its checklist is deleted too.';
+
+  @override
+  String get stageStarted => 'The stage has started.';
+
+  @override
+  String stageNumber(int number) {
+    return 'Stage $number';
+  }
+
+  @override
+  String get checklistTitle => 'Required evidence';
+
+  @override
+  String get checklistOptional => 'Optional';
+
+  @override
+  String get checklistRequired => 'Required';
+
+  @override
+  String get startStageAction => 'Start the stage';
+
+  @override
+  String get stageStartNeedsSite =>
+      'The stage can start once the owner has validated the site location.';
+
+  @override
+  String get labelStageName => 'Stage name';
+
+  @override
+  String get checklistHint =>
+      'The photos the site manager must take for this stage.';
+
+  @override
+  String labelChecklistItem(int number) {
+    return 'Item $number';
+  }
+
+  @override
+  String get moveUpAction => 'Move up';
+
+  @override
+  String get removeItemAction => 'Remove';
+
+  @override
+  String get addChecklistItemAction => 'Add an item';
+
+  @override
+  String get validateStageNameRequired => 'Enter a stage name';
+
+  @override
+  String get validateStageNameTooLong => 'Use 100 characters at most';
+
+  @override
+  String get validateChecklistLabelRequired => 'Describe the photo needed';
+
+  @override
+  String get validateChecklistLabelTooLong => 'Use 200 characters at most';
 }

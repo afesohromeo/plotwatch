@@ -30,3 +30,7 @@ class MockSiteApiProvider extends Mock implements SiteApiProvider {}
 class MockSiteRepository extends Mock implements SiteRepository {}
 
 class MockLocationProvider extends Mock implements LocationProvider {}
+
+class MockStageApiProvider extends Mock implements StageApiProvider {}
+
+class MockStageRepository extends Mock implements StageRepository {}

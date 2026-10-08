@@ -7,3 +7,4 @@ export 'profile/profile_api_provider.dart';
 export 'project/project_api_provider.dart';
 export 'membership/membership_api_provider.dart';
 export 'site/site_api_provider.dart';
+export 'stage/stage_api_provider.dart';

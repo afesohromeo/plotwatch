@@ -115,4 +115,38 @@ void main() {
       );
     });
   });
+
+  // Mirrors the server's StageService.validateDraft (doc/04c M3-4, M3-5).
+  group('Given the stage name validator', () {
+    test('when blank then it asks for a stage name', () {
+      expect(Validators.stageName('  ', l10n), l10n.validateStageNameRequired);
+    });
+    test('when longer than 100 characters then it says too long', () {
+      expect(
+        Validators.stageName('x' * 101, l10n),
+        l10n.validateStageNameTooLong,
+      );
+    });
+    test('when 1 to 100 characters then it passes', () {
+      expect(Validators.stageName('Foundation', l10n), isNull);
+    });
+  });
+
+  group('Given the checklist item validator', () {
+    test('when blank then it asks for a label', () {
+      expect(
+        Validators.checklistLabel(' ', l10n),
+        l10n.validateChecklistLabelRequired,
+      );
+    });
+    test('when longer than 200 characters then it says too long', () {
+      expect(
+        Validators.checklistLabel('x' * 201, l10n),
+        l10n.validateChecklistLabelTooLong,
+      );
+    });
+    test('when 1 to 200 characters then it passes', () {
+      expect(Validators.checklistLabel('Wide shot', l10n), isNull);
+    });
+  });
 }

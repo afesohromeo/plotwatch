@@ -55,6 +55,23 @@ void main() {
       verify(() => apiProvider.create(testDetails)).called(1);
     });
 
+    // doc/04c M3-3: the wizard sends the template's stages with the project.
+    test(
+      'when a project is created with stages then they are sent with it',
+      () async {
+        final overview = testOverview(stageCount: 1);
+        final stages = [testStageDraft()];
+        when(
+          () => apiProvider.create(testDetails, stages: stages),
+        ).thenAnswer((_) async => overview);
+
+        expect(
+          await repository.createProject(testDetails, stages: stages),
+          overview,
+        );
+      },
+    );
+
     test('when a project is fetched, updated or its status changed then the '
         'server answer is returned', () async {
       final overview = testOverview();

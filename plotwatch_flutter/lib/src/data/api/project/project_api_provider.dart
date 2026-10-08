@@ -4,9 +4,14 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 class ProjectApiProvider {
   Client get _client => ApiProvider().client;
 
-  Future<ProjectOverview> create(ProjectDetails details) async {
+  /// [stages]: the chosen template's plan, created with the project
+  /// (decision M3-3).
+  Future<ProjectOverview> create(
+    ProjectDetails details, {
+    List<StageDraft>? stages,
+  }) async {
     try {
-      return await _client.project.create(details);
+      return await _client.project.create(details, stages: stages);
     } catch (e) {
       throw ApiErrorHandler.handle(e);
     }

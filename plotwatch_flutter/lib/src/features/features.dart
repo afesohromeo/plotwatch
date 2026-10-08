@@ -8,3 +8,4 @@ export 'projects/projects.dart';
 export 'members/members.dart';
 export 'join/join.dart';
 export 'site/site.dart';
+export 'stages/stages.dart';

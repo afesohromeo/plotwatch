@@ -837,4 +837,332 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get errorProjectNotEditable =>
       'Un projet terminé ou archivé ne peut pas être modifié.';
+
+  @override
+  String get labelBudget => 'Budget';
+
+  @override
+  String get validateBudgetInvalid => 'Saisissez un montant, par ex. 1500000';
+
+  @override
+  String get stageStatusNotStarted => 'Pas commencée';
+
+  @override
+  String get stageStatusInProgress => 'En cours';
+
+  @override
+  String get stageStatusSubmitted => 'Soumise';
+
+  @override
+  String get stageStatusChangesRequested => 'Modifications demandées';
+
+  @override
+  String get stageStatusApproved => 'Approuvée';
+
+  @override
+  String get templateHouse => 'Maison de plain-pied';
+
+  @override
+  String get templateHouseHint =>
+      '10 étapes, de la préparation du terrain aux finitions';
+
+  @override
+  String get templateRenovation => 'Rénovation';
+
+  @override
+  String get templateRenovationHint =>
+      '6 étapes, de l\'état avant travaux à la remise';
+
+  @override
+  String get templateCustom => 'Personnalisé';
+
+  @override
+  String get templateCustomHint => 'Commencez sans étape et ajoutez les vôtres';
+
+  @override
+  String get tplHouse1 => 'Préparation du terrain et implantation';
+
+  @override
+  String get tplHouse1a => 'Terrain dégagé (vue d\'ensemble)';
+
+  @override
+  String get tplHouse1b => 'Piquets et cordeaux d\'implantation';
+
+  @override
+  String get tplHouse2 => 'Fouilles des fondations';
+
+  @override
+  String get tplHouse2a => 'Tranchées avec un mètre montrant la profondeur';
+
+  @override
+  String get tplHouse2b => 'Les quatre coins des tranchées';
+
+  @override
+  String get tplHouse3 => 'Fondations et soubassement';
+
+  @override
+  String get tplHouse3a => 'Ferraillage avant coulage';
+
+  @override
+  String get tplHouse3b => 'Semelle coulée';
+
+  @override
+  String get tplHouse4 => 'Murs jusqu\'au niveau des linteaux';
+
+  @override
+  String get tplHouse4a => 'Chaque mur extérieur';
+
+  @override
+  String get tplHouse4b => 'Ouvertures des portes et fenêtres';
+
+  @override
+  String get tplHouse5 => 'Linteaux et chaînage';
+
+  @override
+  String get tplHouse5a => 'Ferraillage avant coulage';
+
+  @override
+  String get tplHouse5b => 'Chaînage terminé';
+
+  @override
+  String get tplHouse6 => 'Toiture';
+
+  @override
+  String get tplHouse6a => 'Charpente (fermes)';
+
+  @override
+  String get tplHouse6b => 'Couverture terminée';
+
+  @override
+  String get tplHouse7 => 'Portes et fenêtres';
+
+  @override
+  String get tplHouse7a => 'Cadres posés';
+
+  @override
+  String get tplHouse7b => 'Portes et fenêtres posées';
+
+  @override
+  String get tplHouse8 => 'Électricité et plomberie (réseaux encastrés)';
+
+  @override
+  String get tplHouse8a => 'Gaines et tuyaux dans les murs avant l\'enduit';
+
+  @override
+  String get tplHouse9 => 'Enduits et chapes';
+
+  @override
+  String get tplHouse9a => 'Murs intérieurs';
+
+  @override
+  String get tplHouse9b => 'Sols';
+
+  @override
+  String get tplHouse10 => 'Finitions';
+
+  @override
+  String get tplHouse10a => 'Peinture, carrelage et équipements';
+
+  @override
+  String get tplHouse10b => 'Visite finale';
+
+  @override
+  String get tplReno1 => 'État avant rénovation';
+
+  @override
+  String get tplReno1a => 'Chaque pièce avant les travaux';
+
+  @override
+  String get tplReno1b => 'Dégâts existants en gros plan';
+
+  @override
+  String get tplReno2 => 'Démolition et évacuation';
+
+  @override
+  String get tplReno2a => 'Zones dégagées';
+
+  @override
+  String get tplReno2b => 'Gravats évacués du chantier';
+
+  @override
+  String get tplReno3 => 'Réparations structurelles';
+
+  @override
+  String get tplReno3a => 'Réparations avant d\'être recouvertes';
+
+  @override
+  String get tplReno3b => 'Réparations terminées';
+
+  @override
+  String get tplReno4 => 'Réseaux (électricité et plomberie)';
+
+  @override
+  String get tplReno4a =>
+      'Nouveaux câbles et tuyaux avant la fermeture des murs';
+
+  @override
+  String get tplReno5 => 'Finitions';
+
+  @override
+  String get tplReno5a => 'Peinture, carrelage et équipements';
+
+  @override
+  String get tplReno6 => 'Remise des travaux';
+
+  @override
+  String get tplReno6a => 'Chaque pièce après les travaux';
+
+  @override
+  String get tplReno6b => 'Clés et documents remis';
+
+  @override
+  String get stepStagesTitle => 'Étapes';
+
+  @override
+  String get templateCustomEmpty =>
+      'Le plan commence vide. Ajoutez des étapes après avoir créé le projet.';
+
+  @override
+  String get templateEditableNote =>
+      'Vous pourrez modifier, ajouter, déplacer ou supprimer des étapes après la création du projet.';
+
+  @override
+  String get labelStages => 'Étapes';
+
+  @override
+  String templateWithCount(String name, int count) {
+    return '$name ($count étapes)';
+  }
+
+  @override
+  String get stagesTitle => 'Étapes';
+
+  @override
+  String get addStageAction => 'Ajouter une étape';
+
+  @override
+  String get labelTotalBudget => 'Budget total';
+
+  @override
+  String get labelProgress => 'Avancement';
+
+  @override
+  String progressPercent(int percent) {
+    return '$percent % approuvé';
+  }
+
+  @override
+  String get stagesEmpty =>
+      'Aucune étape pour l\'instant. Le propriétaire les planifie.';
+
+  @override
+  String get stagesEmptyOwner =>
+      'Aucune étape pour l\'instant. Partez d\'un modèle ou ajoutez les vôtres.';
+
+  @override
+  String useTemplateAction(String name) {
+    return 'Partir de « $name »';
+  }
+
+  @override
+  String itemsCovered(int covered, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$covered sur $total éléments couverts',
+      one: '$covered sur 1 élément couvert',
+      zero: 'Aucun élément de liste',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reorderStageHint => 'Faites glisser pour déplacer l\'étape';
+
+  @override
+  String get errorStagesLoad => 'Impossible de charger les étapes. Réessayez.';
+
+  @override
+  String get errorStagesSave =>
+      'Impossible d\'enregistrer les étapes. Réessayez.';
+
+  @override
+  String stageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count étapes',
+      one: '1 étape',
+      zero: 'Aucune étape pour l\'instant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editStageAction => 'Modifier l\'étape';
+
+  @override
+  String deleteStageTitle(String name) {
+    return 'Supprimer $name ?';
+  }
+
+  @override
+  String get deleteStageMessage => 'Sa liste d\'éléments est aussi supprimée.';
+
+  @override
+  String get stageStarted => 'L\'étape a commencé.';
+
+  @override
+  String stageNumber(int number) {
+    return 'Étape $number';
+  }
+
+  @override
+  String get checklistTitle => 'Preuves demandées';
+
+  @override
+  String get checklistOptional => 'Facultatif';
+
+  @override
+  String get checklistRequired => 'Obligatoire';
+
+  @override
+  String get startStageAction => 'Commencer l\'étape';
+
+  @override
+  String get stageStartNeedsSite =>
+      'L\'étape pourra commencer une fois l\'emplacement du chantier validé par le propriétaire.';
+
+  @override
+  String get labelStageName => 'Nom de l\'étape';
+
+  @override
+  String get checklistHint =>
+      'Les photos que le chef de chantier doit prendre pour cette étape.';
+
+  @override
+  String labelChecklistItem(int number) {
+    return 'Élément $number';
+  }
+
+  @override
+  String get moveUpAction => 'Monter';
+
+  @override
+  String get removeItemAction => 'Retirer';
+
+  @override
+  String get addChecklistItemAction => 'Ajouter un élément';
+
+  @override
+  String get validateStageNameRequired => 'Saisissez un nom d\'étape';
+
+  @override
+  String get validateStageNameTooLong => 'Utilisez 100 caractères au plus';
+
+  @override
+  String get validateChecklistLabelRequired => 'Décrivez la photo attendue';
+
+  @override
+  String get validateChecklistLabelTooLong => 'Utilisez 200 caractères au plus';
 }

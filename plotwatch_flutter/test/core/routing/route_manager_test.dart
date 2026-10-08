@@ -150,6 +150,17 @@ void main() {
       (localizeSiteRouteName, [homeRouteName, projectRouteName]),
       (validateSiteRouteName, [homeRouteName, projectRouteName]),
       (editSiteRouteName, [homeRouteName, projectRouteName]),
+      // doc/04c M3-11.
+      (stagesRouteName, [homeRouteName, projectRouteName]),
+      (
+        createStageRouteName,
+        [homeRouteName, projectRouteName, stagesRouteName],
+      ),
+      (stageRouteName, [homeRouteName, projectRouteName, stagesRouteName]),
+      (
+        editStageRouteName,
+        [homeRouteName, projectRouteName, stagesRouteName, stageRouteName],
+      ),
       (joinRouteName, [homeRouteName]),
       (joinWithCodeRouteName, [homeRouteName, joinRouteName]),
       (profileRouteName, [homeRouteName]),

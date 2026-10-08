@@ -8,13 +8,16 @@ part 'create_project_event.dart';
 part 'create_project_state.dart';
 part 'create_project_bloc.freezed.dart';
 
-/// The create-project wizard: Details → Review, then one create request
-/// (PROJ-01, PROJ-08; decision M2-3). The project starts as a draft.
+/// The create-project wizard: Details → Stages → Review, then one create
+/// request with the chosen template's stages (PROJ-01, PROJ-08; decisions
+/// M2-3, M3-3). The project starts as a draft.
 class CreateProjectBloc extends Bloc<CreateProjectEvent, CreateProjectState> {
   CreateProjectBloc({required this._projectRepository})
     : super(const CreateProjectState()) {
     on<_DetailsSubmitted>(_onDetailsSubmitted);
-    on<_BackToDetails>(_onBackToDetails);
+    on<_TemplateChosen>(_onTemplateChosen);
+    on<_StagesSubmitted>(_onStagesSubmitted);
+    on<_StepBack>(_onStepBack);
     on<_CreateSubmitted>(_onCreateSubmitted);
     on<_ResetFlowStep>(_onResetFlowStep);
   }
@@ -26,15 +29,30 @@ class CreateProjectBloc extends Bloc<CreateProjectEvent, CreateProjectState> {
     Emitter<CreateProjectState> emit,
   ) {
     emit(
-      state.copyWith(step: CreateProjectStep.review, details: event.details),
+      state.copyWith(step: CreateProjectStep.stages, details: event.details),
     );
   }
 
-  void _onBackToDetails(
-    _BackToDetails event,
+  void _onTemplateChosen(
+    _TemplateChosen event,
     Emitter<CreateProjectState> emit,
   ) {
-    emit(state.copyWith(step: CreateProjectStep.details));
+    emit(state.copyWith(template: event.template));
+  }
+
+  void _onStagesSubmitted(
+    _StagesSubmitted event,
+    Emitter<CreateProjectState> emit,
+  ) {
+    emit(state.copyWith(step: CreateProjectStep.review));
+  }
+
+  void _onStepBack(_StepBack event, Emitter<CreateProjectState> emit) {
+    final previous = switch (state.step) {
+      CreateProjectStep.review => CreateProjectStep.stages,
+      _ => CreateProjectStep.details,
+    };
+    emit(state.copyWith(step: previous));
   }
 
   Future<void> _onCreateSubmitted(
@@ -52,7 +70,10 @@ class CreateProjectBloc extends Bloc<CreateProjectEvent, CreateProjectState> {
       ),
     );
     try {
-      final created = await _projectRepository.createProject(details);
+      final created = await _projectRepository.createProject(
+        details,
+        stages: state.template.stages(l10n),
+      );
       emit(
         state.copyWith(createStatus: GenericStatus.success, created: created),
       );

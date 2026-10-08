@@ -1567,6 +1567,582 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A completed or archived project can\'t be changed.'**
   String get errorProjectNotEditable;
+
+  /// Stage budget field label (doc/04c M3-9)
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get labelBudget;
+
+  /// An amount that is not valid for the currency
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount, e.g. 1500000'**
+  String get validateBudgetInvalid;
+
+  /// Stage status
+  ///
+  /// In en, this message translates to:
+  /// **'Not started'**
+  String get stageStatusNotStarted;
+
+  /// Stage status
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get stageStatusInProgress;
+
+  /// Stage status
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get stageStatusSubmitted;
+
+  /// Stage status
+  ///
+  /// In en, this message translates to:
+  /// **'Changes requested'**
+  String get stageStatusChangesRequested;
+
+  /// Stage status
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get stageStatusApproved;
+
+  /// Built-in stage template name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Single-storey house'**
+  String get templateHouse;
+
+  /// Built-in stage template summary
+  ///
+  /// In en, this message translates to:
+  /// **'10 stages, from site preparation to finishing'**
+  String get templateHouseHint;
+
+  /// Built-in stage template name
+  ///
+  /// In en, this message translates to:
+  /// **'Renovation'**
+  String get templateRenovation;
+
+  /// Built-in stage template summary
+  ///
+  /// In en, this message translates to:
+  /// **'6 stages, from the condition before work to handover'**
+  String get templateRenovationHint;
+
+  /// Built-in stage template name: an empty plan
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get templateCustom;
+
+  /// Built-in stage template summary
+  ///
+  /// In en, this message translates to:
+  /// **'Start empty and add your own stages'**
+  String get templateCustomHint;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Site preparation and setting out'**
+  String get tplHouse1;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Cleared plot (wide shot)'**
+  String get tplHouse1a;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Setting-out pegs and lines'**
+  String get tplHouse1b;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Foundation excavation'**
+  String get tplHouse2;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Trenches with a measuring tape showing the depth'**
+  String get tplHouse2a;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'All four corners of the trenches'**
+  String get tplHouse2b;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Foundation and substructure'**
+  String get tplHouse3;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Reinforcement before pouring'**
+  String get tplHouse3a;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Poured footing'**
+  String get tplHouse3b;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Walls to lintel level'**
+  String get tplHouse4;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Each external wall'**
+  String get tplHouse4a;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Openings for doors and windows'**
+  String get tplHouse4b;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Lintel and ring beam'**
+  String get tplHouse5;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Reinforcement before pouring'**
+  String get tplHouse5a;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Finished beam'**
+  String get tplHouse5b;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Roofing'**
+  String get tplHouse6;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Roof structure (trusses)'**
+  String get tplHouse6a;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Roof covering complete'**
+  String get tplHouse6b;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Doors and windows'**
+  String get tplHouse7;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Installed frames'**
+  String get tplHouse7a;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Installed doors and windows'**
+  String get tplHouse7b;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Electrical and plumbing (first fix)'**
+  String get tplHouse8;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Conduits and pipes in the walls before plastering'**
+  String get tplHouse8a;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Plastering and screeding'**
+  String get tplHouse9;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Interior walls'**
+  String get tplHouse9a;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Floors'**
+  String get tplHouse9b;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Finishing'**
+  String get tplHouse10;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Painting, tiling and fittings'**
+  String get tplHouse10a;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Final walkthrough'**
+  String get tplHouse10b;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Condition before renovation'**
+  String get tplReno1;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Every room before work starts'**
+  String get tplReno1a;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Existing damage close up'**
+  String get tplReno1b;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Demolition and removal'**
+  String get tplReno2;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Areas cleared'**
+  String get tplReno2a;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Debris removed from the site'**
+  String get tplReno2b;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Structural repairs'**
+  String get tplReno3;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Repairs before they are covered'**
+  String get tplReno3a;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Finished repairs'**
+  String get tplReno3b;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Services (electrical and plumbing)'**
+  String get tplReno4;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'New wiring and pipes before the walls are closed'**
+  String get tplReno4a;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Finishing'**
+  String get tplReno5;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Painting, tiling and fittings'**
+  String get tplReno5a;
+
+  /// Template stage name (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Final handover'**
+  String get tplReno6;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Every room after the work'**
+  String get tplReno6a;
+
+  /// Template checklist item (doc/02 §12.1)
+  ///
+  /// In en, this message translates to:
+  /// **'Keys and documents handed over'**
+  String get tplReno6b;
+
+  /// Wizard step 2 title (doc/04c M3-3)
+  ///
+  /// In en, this message translates to:
+  /// **'Stages'**
+  String get stepStagesTitle;
+
+  /// Wizard: Custom template chosen
+  ///
+  /// In en, this message translates to:
+  /// **'The plan starts empty. Add stages after creating the project.'**
+  String get templateCustomEmpty;
+
+  /// Wizard: stages stay editable
+  ///
+  /// In en, this message translates to:
+  /// **'You can change, add, move or delete stages after creating the project.'**
+  String get templateEditableNote;
+
+  /// Review row: the chosen template
+  ///
+  /// In en, this message translates to:
+  /// **'Stages'**
+  String get labelStages;
+
+  /// Review row value: template and its stage count
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({count} stages)'**
+  String templateWithCount(String name, int count);
+
+  /// Stage plan page title and project page card title
+  ///
+  /// In en, this message translates to:
+  /// **'Stages'**
+  String get stagesTitle;
+
+  /// Owner: add a stage (button and form title)
+  ///
+  /// In en, this message translates to:
+  /// **'Add a stage'**
+  String get addStageAction;
+
+  /// Sum of the stage budgets (BUD-01)
+  ///
+  /// In en, this message translates to:
+  /// **'Total budget'**
+  String get labelTotalBudget;
+
+  /// Budget-weighted share of approved stages (STG-09)
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get labelProgress;
+
+  /// Project progress value
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% approved'**
+  String progressPercent(int percent);
+
+  /// Empty plan, not the owner
+  ///
+  /// In en, this message translates to:
+  /// **'No stages yet. The owner plans them.'**
+  String get stagesEmpty;
+
+  /// Empty plan, owner
+  ///
+  /// In en, this message translates to:
+  /// **'No stages yet. Start from a template or add your own.'**
+  String get stagesEmptyOwner;
+
+  /// Empty plan: apply a built-in template
+  ///
+  /// In en, this message translates to:
+  /// **'Start from “{name}”'**
+  String useTemplateAction(String name);
+
+  /// Stage checklist progress (STG-08)
+  ///
+  /// In en, this message translates to:
+  /// **'{total, plural, =0{No checklist items} =1{{covered} of 1 item covered} other{{covered} of {total} items covered}}'**
+  String itemsCovered(int covered, int total);
+
+  /// Screen reader label of the drag handle
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to move the stage'**
+  String get reorderStageHint;
+
+  /// Stage plan or stage failed to load
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the stages. Try again.'**
+  String get errorStagesLoad;
+
+  /// A stage change failed for an unexpected reason
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save the stages. Try again.'**
+  String get errorStagesSave;
+
+  /// Project page card: number of stages
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No stages yet} =1{1 stage} other{{count} stages}}'**
+  String stageCount(int count);
+
+  /// Owner: edit a stage (button and form title)
+  ///
+  /// In en, this message translates to:
+  /// **'Edit the stage'**
+  String get editStageAction;
+
+  /// Confirmation before deleting a stage
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name}?'**
+  String deleteStageTitle(String name);
+
+  /// Confirmation message before deleting a stage
+  ///
+  /// In en, this message translates to:
+  /// **'Its checklist is deleted too.'**
+  String get deleteStageMessage;
+
+  /// After the site manager started a stage
+  ///
+  /// In en, this message translates to:
+  /// **'The stage has started.'**
+  String get stageStarted;
+
+  /// Stage page subtitle: its position
+  ///
+  /// In en, this message translates to:
+  /// **'Stage {number}'**
+  String stageNumber(int number);
+
+  /// Stage checklist section title (STG-04)
+  ///
+  /// In en, this message translates to:
+  /// **'Required evidence'**
+  String get checklistTitle;
+
+  /// A checklist item that isn't required
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get checklistOptional;
+
+  /// A checklist item that is required
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get checklistRequired;
+
+  /// Site manager: start a stage (STG-06)
+  ///
+  /// In en, this message translates to:
+  /// **'Start the stage'**
+  String get startStageAction;
+
+  /// Site manager: the project is not active yet
+  ///
+  /// In en, this message translates to:
+  /// **'The stage can start once the owner has validated the site location.'**
+  String get stageStartNeedsSite;
+
+  /// Stage form field
+  ///
+  /// In en, this message translates to:
+  /// **'Stage name'**
+  String get labelStageName;
+
+  /// Stage form: checklist explanation
+  ///
+  /// In en, this message translates to:
+  /// **'The photos the site manager must take for this stage.'**
+  String get checklistHint;
+
+  /// Stage form: checklist item field
+  ///
+  /// In en, this message translates to:
+  /// **'Item {number}'**
+  String labelChecklistItem(int number);
+
+  /// Stage form: move a checklist item up
+  ///
+  /// In en, this message translates to:
+  /// **'Move up'**
+  String get moveUpAction;
+
+  /// Stage form: remove a checklist item
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removeItemAction;
+
+  /// Stage form: add a checklist item
+  ///
+  /// In en, this message translates to:
+  /// **'Add an item'**
+  String get addChecklistItemAction;
+
+  /// Stage name empty
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a stage name'**
+  String get validateStageNameRequired;
+
+  /// Stage name too long
+  ///
+  /// In en, this message translates to:
+  /// **'Use 100 characters at most'**
+  String get validateStageNameTooLong;
+
+  /// Checklist item label empty
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the photo needed'**
+  String get validateChecklistLabelRequired;
+
+  /// Checklist item label too long
+  ///
+  /// In en, this message translates to:
+  /// **'Use 200 characters at most'**
+  String get validateChecklistLabelTooLong;
 }
 
 class _AppLocalizationsDelegate

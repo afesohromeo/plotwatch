@@ -281,8 +281,85 @@ class RouteManager {
           ),
         ),
       ),
+      // The stage plan (doc/04c M3-11).
+      GoRoute(
+        name: stagesRouteName,
+        path: stagesPage,
+        redirect: _requireProjectId,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => StagePlanBloc(
+              stageRepository: context.read<StageRepository>(),
+              projectRepository: context.read<ProjectRepository>(),
+            ),
+            child: StagePlanPage(projectId: _projectId(state)!),
+          ),
+        ),
+        routes: [
+          // Before `stagePage`, so "new" isn't read as a stage ID.
+          GoRoute(
+            name: createStageRouteName,
+            path: createStagePage,
+            redirect: _requireProjectId,
+            pageBuilder: (context, state) => NoTransitionPage<void>(
+              key: state.pageKey,
+              child: _stageForm(context, state),
+            ),
+          ),
+          GoRoute(
+            name: stageRouteName,
+            path: stagePage,
+            redirect: _requireStageId,
+            pageBuilder: (context, state) => NoTransitionPage<void>(
+              key: state.pageKey,
+              child: BlocProvider(
+                create: (context) => StageBloc(
+                  stageRepository: context.read<StageRepository>(),
+                  projectRepository: context.read<ProjectRepository>(),
+                ),
+                child: StagePage(
+                  projectId: _projectId(state)!,
+                  stageId: _stageId(state)!,
+                ),
+              ),
+            ),
+            routes: [
+              GoRoute(
+                name: editStageRouteName,
+                path: editStagePage,
+                redirect: _requireStageId,
+                pageBuilder: (context, state) => NoTransitionPage<void>(
+                  key: state.pageKey,
+                  child: _stageForm(context, state),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     ];
   }
+
+  /// The stage form: a new stage, or the stage in the address (edit).
+  static Widget _stageForm(BuildContext context, GoRouterState state) =>
+      BlocProvider(
+        create: (context) => StageFormBloc(
+          stageRepository: context.read<StageRepository>(),
+          projectRepository: context.read<ProjectRepository>(),
+        ),
+        child: StageFormPage(
+          projectId: _projectId(state)!,
+          stageId: _stageId(state),
+        ),
+      );
+
+  static int? _stageId(GoRouterState state) =>
+      int.tryParse(state.pathParameters['stageId'] ?? '');
+
+  /// A malformed stage ID in the URL goes back to the project list.
+  static String? _requireStageId(BuildContext context, GoRouterState state) =>
+      _projectId(state) == null || _stageId(state) == null ? homePage : null;
 
   static int? _projectId(GoRouterState state) =>
       int.tryParse(state.pathParameters['projectId'] ?? '');

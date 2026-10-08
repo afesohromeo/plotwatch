@@ -11,14 +11,15 @@ class MockCreateProjectBloc
     extends MockBloc<CreateProjectEvent, CreateProjectState>
     implements CreateProjectBloc {}
 
-// Plan: doc/04b-m2-projects-site-members.md, group E (PROJ-01, PROJ-08).
+// Plans: doc/04b-m2-projects-site-members.md, group E (PROJ-01, PROJ-08);
+// doc/04c-m3-stages.md, group C (the Stages step, M3-3).
 void main() {
   late AppLocalizations l10n;
   late MockCreateProjectBloc bloc;
 
   setUpAll(() {
     l10n = setUpTestLocalization();
-    registerFallbackValue(const CreateProjectEvent.backToDetails());
+    registerFallbackValue(const CreateProjectEvent.stepBack());
   });
   setUp(() => bloc = MockCreateProjectBloc());
 
@@ -100,18 +101,94 @@ void main() {
     });
   });
 
+  group('Given the stages step', () {
+    final stages = CreateProjectState(
+      step: CreateProjectStep.stages,
+      details: testDetails,
+    );
+
+    testWidgets('then the three templates are offered and the chosen one'
+        's '
+        'stages are listed', (tester) async {
+      await pumpAt(tester, stages);
+
+      for (final template in StageTemplate.values) {
+        expect(
+          find.byKey(CreateProjectPage.templateCardKey(template)),
+          findsOneWidget,
+        );
+      }
+      // Listed with their number.
+      expect(
+        find.text(
+          '1. ${StageTemplate.singleStoreyHouse.stages(l10n).first.name}',
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('when another template is tapped then it is chosen', (
+      tester,
+    ) async {
+      await pumpAt(tester, stages);
+
+      await tester.tap(
+        find.byKey(CreateProjectPage.templateCardKey(StageTemplate.renovation)),
+      );
+      await tester.pump();
+
+      verify(
+        () => bloc.add(
+          const CreateProjectEvent.templateChosen(
+            template: StageTemplate.renovation,
+          ),
+        ),
+      ).called(1);
+    });
+
+    testWidgets('Given Custom then it says the plan starts empty', (
+      tester,
+    ) async {
+      await pumpAt(tester, stages.copyWith(template: StageTemplate.custom));
+
+      expect(find.text(l10n.templateCustomEmpty), findsOneWidget);
+    });
+
+    testWidgets('when Continue is tapped then it moves to the review', (
+      tester,
+    ) async {
+      await pumpAt(tester, stages);
+
+      await tester.ensureVisible(
+        find.byKey(CreateProjectPage.continueStagesKey),
+      );
+      await tester.tap(find.byKey(CreateProjectPage.continueStagesKey));
+      await tester.pump();
+
+      verify(
+        () => bloc.add(const CreateProjectEvent.stagesSubmitted()),
+      ).called(1);
+    });
+  });
+
   group('Given the review step', () {
     final review = CreateProjectState(
       step: CreateProjectStep.review,
       details: testDetails,
     );
 
-    testWidgets('then it shows what will be created', (tester) async {
+    testWidgets('then it shows what will be created, with the template', (
+      tester,
+    ) async {
       await pumpAt(tester, review);
 
       expect(find.text('House in Bafoussam'), findsOneWidget);
       expect(find.text(l10n.projectTypeNewHouse), findsOneWidget);
       expect(find.text('XAF'), findsOneWidget);
+      expect(
+        find.text(l10n.templateWithCount(l10n.templateHouse, 10)),
+        findsOneWidget,
+      );
     });
 
     testWidgets('when Create is tapped then the project is created', (
@@ -128,7 +205,7 @@ void main() {
       ).called(1);
     });
 
-    testWidgets('when Back is tapped then it returns to the details', (
+    testWidgets('when Back is tapped then it returns to the stages', (
       tester,
     ) async {
       await pumpAt(tester, review);
@@ -137,9 +214,7 @@ void main() {
       await tester.tap(find.byKey(CreateProjectPage.backButtonKey));
       await tester.pump();
 
-      verify(
-        () => bloc.add(const CreateProjectEvent.backToDetails()),
-      ).called(1);
+      verify(() => bloc.add(const CreateProjectEvent.stepBack())).called(1);
     });
   });
 }

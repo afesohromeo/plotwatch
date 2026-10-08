@@ -75,3 +75,16 @@ Nothing new: no new packages (`intl` is already in the app), no keys.
 
 ## Exit (M3)
 On the deployed build: AC-1 completely. The owner creates a project from the *Single-storey house* template and sees its 10 stages and their checklists; edits a stage's budget, dates and checklist, reorders and deletes a stage; the total budget follows. The site manager sees the plan and starts a stage once the site is validated. Co-funders and viewers see everything and change nothing. English and French complete; all tests pass; CI green.
+
+---
+
+## Outcome (2026-10-08)
+Groups A to D done as planned. `dart test` **275/275** (51 new), `flutter test` **581/581** (new: money, templates, `MoneyField`, stage status labels, stage repository, wizard Stages step, `StagePlanBloc` and page, `StageBloc` and page, `StageFormBloc` and page, validators, routes, the project page's Stages card). Seen red first: every new test failed to compile until the code existed.
+
+Notes:
+- `intl` writes `FCFA1,500,000` in English (no space between letters and digits); `formatMoney` adds a no-break space. French groups digits with a narrow no-break space (U+202F); `parseMoney` ignores every kind of space and accepts a dot as well as a comma for the decimals in French.
+- `ReorderableListView.onReorder` is deprecated in Flutter 3.47; the plan uses `onReorderItem`, which gives the final position.
+- Serverpod models have no value equality (also found in group H), so bloc tests build each state once and compare against it.
+- Found by the tests and fixed in the tests: `MoneyField` needs a `Material` ancestor in a widget test; the wizard lists stages with their number.
+
+To check on the emulator and in Chrome, then on Cloud for the M3 exit: see "Exit (M3)" above.

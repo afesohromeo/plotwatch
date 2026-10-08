@@ -135,3 +135,75 @@ GpsReading testReading({double accuracyM = 8, bool isMocked = false}) =>
       accuracyM: accuracyM,
       isMocked: isMocked,
     );
+
+// Stages (doc/04c).
+StageDraft testStageDraft({String name = 'Foundation', int budgetMinor = 0}) =>
+    StageDraft(
+      name: name,
+      budgetMinor: budgetMinor,
+      items: [ChecklistItemDraft(label: 'Wide shot', isRequired: true)],
+    );
+
+Stage testStage({
+  int id = 1,
+  String name = 'Foundation',
+  int orderIndex = 0,
+  int budgetMinor = 1500000,
+  StageStatus status = StageStatus.notStarted,
+}) => Stage(
+  id: id,
+  projectId: 1,
+  orderIndex: orderIndex,
+  name: name,
+  budgetMinor: budgetMinor,
+  status: status,
+  createdAt: DateTime.utc(2026, 10, 8),
+  updatedAt: DateTime.utc(2026, 10, 8),
+);
+
+StageView testStageView({
+  int id = 1,
+  String name = 'Foundation',
+  int orderIndex = 0,
+  int budgetMinor = 1500000,
+  StageStatus status = StageStatus.notStarted,
+}) => StageView(
+  stage: testStage(
+    id: id,
+    name: name,
+    orderIndex: orderIndex,
+    budgetMinor: budgetMinor,
+    status: status,
+  ),
+  items: [
+    ChecklistItem(
+      id: id * 10,
+      stageId: id,
+      orderIndex: 0,
+      label: 'Wide shot',
+      isRequired: true,
+    ),
+    ChecklistItem(
+      id: id * 10 + 1,
+      stageId: id,
+      orderIndex: 1,
+      label: 'Detail',
+      isRequired: false,
+    ),
+  ],
+  itemsCovered: 0,
+);
+
+StagePlan testStagePlan({List<StageView>? stages, int progressPercent = 0}) {
+  final views =
+      stages ??
+      [
+        testStageView(id: 1, name: 'Foundation', budgetMinor: 1500000),
+        testStageView(id: 2, name: 'Walls', orderIndex: 1, budgetMinor: 500000),
+      ];
+  return StagePlan(
+    stages: views,
+    budgetTotalMinor: views.fold(0, (sum, v) => sum + v.stage.budgetMinor),
+    progressPercent: progressPercent,
+  );
+}

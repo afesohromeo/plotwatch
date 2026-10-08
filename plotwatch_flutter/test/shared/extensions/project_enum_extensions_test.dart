@@ -22,6 +22,18 @@ void main() {
           everyElement(isNotEmpty),
         );
       });
+
+      // doc/04c M3-11.
+      test('then every stage status has a label', () {
+        expect(
+          StageStatus.values.map((v) => v.label(l10n)),
+          everyElement(isNotEmpty),
+        );
+        expect(
+          StageStatus.values.map((v) => v.label(l10n)).toSet(),
+          hasLength(StageStatus.values.length),
+        );
+      });
     });
   }
 

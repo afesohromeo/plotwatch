@@ -140,6 +140,30 @@ void main() {
     );
   }
 
+  // doc/04c M3-11: the plan in short, opening the stage plan.
+  testWidgets('Given a stage plan then the card shows the stage count, the '
+      'total budget and the progress', (tester) async {
+    await pumpWith(
+      tester,
+      loaded(
+        testOverview(
+          role: ProjectRole.viewer,
+          stageCount: 10,
+          budgetTotalMinor: 1500000,
+          progressPercent: 40,
+        ),
+      ),
+    );
+
+    expect(find.byKey(ProjectOverviewPage.stagesCardKey), findsOneWidget);
+    expect(find.text(l10n.stageCount(10)), findsOneWidget);
+    expect(
+      find.text(formatMoney(1500000, 'XAF', locale: 'en')),
+      findsOneWidget,
+    );
+    expect(find.text(l10n.progressPercent(40)), findsOneWidget);
+  });
+
   // G-7, G-12 and H-2/H-3: which site buttons each role sees in each state.
   const localize = ProjectOverviewPage.localizeButtonKey;
   const review = ProjectOverviewPage.reviewSiteButtonKey;

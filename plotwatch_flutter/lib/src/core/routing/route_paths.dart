@@ -21,6 +21,14 @@ const String membersPage = 'members';
 const String localizeSitePage = 'site/localize';
 const String validateSitePage = 'site/validate';
 const String editSitePage = 'site/edit';
+const String stagesPage = 'stages';
+
+// Under the stage plan (doc/04c M3-11).
+const String createStagePage = 'new';
+const String stagePage = ':stageId';
+
+// Under one stage.
+const String editStagePage = 'edit';
 
 // Under the join page: the invitation link (decision M2-8).
 const String joinWithCodePage = ':code';

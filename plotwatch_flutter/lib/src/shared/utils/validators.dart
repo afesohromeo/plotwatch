@@ -55,12 +55,33 @@ class Validators {
   // Project rules mirror the server's ProjectService.validateDetails.
   static const maxProjectNameLength = 100;
   static const maxProjectDescriptionLength = 1000;
+  static const maxStageNameLength = 100;
+  static const maxChecklistLabelLength = 200;
+  static const maxChecklistItems = 30;
 
   static String? projectName(String? value, AppLocalizations l10n) {
     final name = value?.trim() ?? '';
     if (name.isEmpty) return l10n.validateProjectNameRequired;
     if (name.length > maxProjectNameLength) {
       return l10n.validateProjectNameTooLong;
+    }
+    return null;
+  }
+
+  /// Mirrors `StageService.validateDraft` (doc/04c M3-4).
+  static String? stageName(String? value, AppLocalizations l10n) {
+    final name = value?.trim() ?? '';
+    if (name.isEmpty) return l10n.validateStageNameRequired;
+    if (name.length > maxStageNameLength) return l10n.validateStageNameTooLong;
+    return null;
+  }
+
+  /// Mirrors `StageService.validateDraft` (doc/04c M3-5).
+  static String? checklistLabel(String? value, AppLocalizations l10n) {
+    final label = value?.trim() ?? '';
+    if (label.isEmpty) return l10n.validateChecklistLabelRequired;
+    if (label.length > maxChecklistLabelLength) {
+      return l10n.validateChecklistLabelTooLong;
     }
     return null;
   }

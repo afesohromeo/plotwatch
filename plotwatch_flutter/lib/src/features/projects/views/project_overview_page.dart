@@ -18,6 +18,7 @@ class ProjectOverviewPage extends StatefulWidget {
   static const localizeButtonKey = Key('project.localizeSite');
   static const reviewSiteButtonKey = Key('project.reviewSite');
   static const editSiteButtonKey = Key('project.editSite');
+  static const stagesCardKey = Key('project.stages');
 
   @override
   State<ProjectOverviewPage> createState() => _ProjectOverviewPageState();
@@ -177,7 +178,9 @@ class _OverviewBody extends StatelessWidget {
           label: l10n.labelPlannedDates,
           value: '${date(project.plannedStart)} – ${date(project.plannedEnd)}',
         ),
-        const Gap.vertical(height: AppSpacing.sm),
+        const Gap.vertical(height: AppSpacing.md),
+        _StagesCard(overview: overview),
+        const Gap.vertical(height: AppSpacing.lg),
         Text(l10n.siteTitle, style: context.textTheme.titleMedium),
         const Gap.vertical(height: AppSpacing.sm),
         ..._site(context, l10n),
@@ -283,5 +286,65 @@ class _OverviewBody extends StatelessWidget {
           editSiteRouteName,
         ),
     ];
+  }
+}
+
+/// The stage plan in short: count, total budget and progress; opens the
+/// plan (doc/04c M3-11).
+class _StagesCard extends StatelessWidget {
+  const _StagesCard({required this.overview});
+
+  final ProjectOverview overview;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
+
+    return InkWell(
+      key: ProjectOverviewPage.stagesCardKey,
+      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+      onTap: () => context.goNamed(
+        stagesRouteName,
+        pathParameters: {'projectId': '${overview.project.id}'},
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          border: Border.all(color: customColors.primary.withValues(alpha: .3)),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.stagesTitle, style: context.textTheme.titleMedium),
+                  const Gap.vertical(height: AppSpacing.xs),
+                  Text(
+                    l10n.stageCount(overview.stageCount),
+                    style: context.textTheme.bodyMedium,
+                  ),
+                  Text(
+                    formatMoney(
+                      overview.budgetTotalMinor,
+                      overview.project.currencyCode,
+                      locale: locale,
+                    ),
+                    style: context.textTheme.bodyMedium,
+                  ),
+                  Text(
+                    l10n.progressPercent(overview.progressPercent),
+                    style: context.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right_rounded, color: customColors.primary),
+          ],
+        ),
+      ),
+    );
   }
 }

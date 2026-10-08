@@ -26,9 +26,17 @@ class ProjectRepository {
     }
   }
 
-  Future<ProjectOverview> createProject(ProjectDetails details) async {
+  /// Creates the project with its first [stages], if any, in one request
+  /// (decision M3-3).
+  Future<ProjectOverview> createProject(
+    ProjectDetails details, {
+    List<StageDraft> stages = const [],
+  }) async {
     try {
-      return await _apiProvider.create(details);
+      return await _apiProvider.create(
+        details,
+        stages: stages.isEmpty ? null : stages,
+      );
     } catch (e) {
       log('Error creating project: $e');
       rethrow;
