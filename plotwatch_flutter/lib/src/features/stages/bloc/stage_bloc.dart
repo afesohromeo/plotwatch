@@ -105,16 +105,20 @@ class StageBloc extends Bloc<StageEvent, StageState> {
     );
     try {
       final updated = await action(projectId, stageId);
-      emit(updated.copyWith(actionStatus: GenericStatus.success));
+      // The flow step is set again: a reload meanwhile resets it, and the
+      // page would take the result for another action (doc/04c M3-F1).
+      emit(
+        updated.copyWith(flowStep: flowStep, actionStatus: GenericStatus.success),
+      );
     } on HttpException400 catch (e) {
-      emit(_actionFailure(e.code.message(l10n)));
+      emit(_actionFailure(e.code.message(l10n), flowStep));
     } on HttpException401 catch (_) {
-      emit(_actionFailure(l10n.errorUnauthorized));
+      emit(_actionFailure(l10n.errorUnauthorized, flowStep));
     } on NetworkException catch (_) {
-      emit(_actionFailure(l10n.networkError));
+      emit(_actionFailure(l10n.networkError, flowStep));
     } catch (e) {
       log('$logTag error: $e');
-      emit(_actionFailure(l10n.errorStagesSave));
+      emit(_actionFailure(l10n.errorStagesSave, flowStep));
     }
   }
 
@@ -133,8 +137,10 @@ class StageBloc extends Bloc<StageEvent, StageState> {
     loadErrorMessage: message,
   );
 
-  StageState _actionFailure(String message) => state.copyWith(
-    actionStatus: GenericStatus.failure,
-    actionErrorMessage: message,
-  );
+  StageState _actionFailure(String message, GenericFlowStep flowStep) =>
+      state.copyWith(
+        flowStep: flowStep,
+        actionStatus: GenericStatus.failure,
+        actionErrorMessage: message,
+      );
 }

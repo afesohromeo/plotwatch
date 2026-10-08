@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 // doc/04b H-1a: with nested routes the page below stays alive, so it reloads
-// when it is shown again.
+// when it is shown again. doc/04c M3-F1: only when the address comes back to
+// it, not when a dialog on it closes.
 void main() {
   late int returns;
   late GoRouter router;
@@ -67,5 +68,34 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(returns, 1);
+  });
+
+  testWidgets('Given a dialog on the page when it closes then nothing '
+      'reloads', (tester) async {
+    await pump(tester);
+
+    showDialog<void>(
+      context: tester.element(find.text('parent')),
+      builder: (_) => const Text('dialog'),
+    );
+    await tester.pumpAndSettle();
+    Navigator.of(tester.element(find.text('dialog'))).pop();
+    await tester.pumpAndSettle();
+
+    expect(find.text('dialog'), findsNothing);
+    expect(returns, 0);
+  });
+
+  testWidgets('Given no router (a widget test) then it just shows its child', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ReloadOnReturn(onReturn: () => returns++, child: const Text('x')),
+      ),
+    );
+
+    expect(find.text('x'), findsOneWidget);
+    expect(returns, 0);
   });
 }

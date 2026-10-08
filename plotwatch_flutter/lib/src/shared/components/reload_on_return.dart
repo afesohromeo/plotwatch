@@ -1,11 +1,15 @@
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 
-/// Calls [onReturn] when its page becomes the top page again, after the page
-/// above it was closed (Back, or going to this page's address). With nested
-/// routes the page below stays alive, so without this it would show what it
-/// loaded before (doc/04b H-1a). Not called when the page is first shown.
-/// A dialog or menu opened on the page counts as a page above it, so closing
-/// one also reloads: one extra request, accepted to keep this simple.
+/// Calls [onReturn] when the router's address comes back to its page, after
+/// a page above it was closed (Back, or going to this page's address). With
+/// nested routes the page below stays alive, so without this it would show
+/// what it loaded before (doc/04b H-1a). Not called when the page is first
+/// shown.
+///
+/// It follows the address, not the route stack: dialogs, menus and sheets
+/// don't change the address, so closing one doesn't reload. Reloading then
+/// raced with the action the dialog had confirmed (doc/04c M3-F1).
 class ReloadOnReturn extends StatefulWidget {
   const ReloadOnReturn({
     super.key,
@@ -21,15 +25,38 @@ class ReloadOnReturn extends StatefulWidget {
 }
 
 class _ReloadOnReturnState extends State<ReloadOnReturn> {
-  bool? _wasCurrent;
+  GoRouter? _router;
+
+  /// The address of this widget's page, e.g. `/projects/7`.
+  String? _location;
+  bool _isShown = true;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Rebuilds this widget whenever the route's "is on top" status changes.
-    final isCurrent = ModalRoute.isCurrentOf(context) ?? true;
-    if (_wasCurrent == false && isCurrent) widget.onReturn();
-    _wasCurrent = isCurrent;
+    final router = GoRouter.maybeOf(context);
+    if (router == _router) return;
+    _router?.routerDelegate.removeListener(_onAddressChanged);
+    _router = router;
+    // No router in some widget tests: nothing to follow.
+    if (router == null) return;
+    _location = GoRouterState.of(context).matchedLocation;
+    router.routerDelegate.addListener(_onAddressChanged);
+  }
+
+  void _onAddressChanged() {
+    final router = _router;
+    if (router == null || !mounted) return;
+    final isShown =
+        router.routerDelegate.currentConfiguration.uri.path == _location;
+    if (isShown && !_isShown) widget.onReturn();
+    _isShown = isShown;
+  }
+
+  @override
+  void dispose() {
+    _router?.routerDelegate.removeListener(_onAddressChanged);
+    super.dispose();
   }
 
   @override

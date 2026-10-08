@@ -1,6 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
@@ -121,5 +123,49 @@ void main() {
 
     expect(find.byKey(StagePage.startButtonKey), findsNothing);
     expect(find.text(l10n.stageStartNeedsSite), findsOneWidget);
+  });
+
+  // doc/04c M3-F1: the app stayed on the deleted stage.
+  testWidgets('Given the owner when the delete succeeds then the stage plan '
+      'opens', (tester) async {
+    final owner = loaded();
+    final deleting = owner.copyWith(
+      flowStep: GenericFlowStep.deletingItem,
+      actionStatus: GenericStatus.loading,
+    );
+    when(() => bloc.state).thenReturn(owner);
+    whenListen(
+      bloc,
+      Stream.fromIterable([
+        deleting,
+        deleting.copyWith(actionStatus: GenericStatus.success),
+      ]),
+      initialState: owner,
+    );
+    final router = GoRouter(
+      initialLocation: '/projects/1/stages/2',
+      routes: [
+        GoRoute(
+          name: stagesRouteName,
+          path: '/projects/:projectId/stages',
+          builder: (context, state) => const Text('the plan'),
+          routes: [
+            GoRoute(
+              path: ':stageId',
+              builder: (context, state) => BlocProvider<StageBloc>.value(
+                value: bloc,
+                child: const StagePage(projectId: 1, stageId: 2),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+
+    await tester.pumpRouterApp(router);
+    await tester.pumpAndSettle();
+
+    expect(find.text('the plan'), findsOneWidget);
+    expect(router.routerDelegate.currentConfiguration.uri.path, '/projects/1/stages');
   });
 }

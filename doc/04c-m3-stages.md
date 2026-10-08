@@ -88,3 +88,12 @@ Notes:
 - Found by the tests and fixed in the tests: `MoneyField` needs a `Material` ancestor in a widget test; the wizard lists stages with their number.
 
 To check on the emulator and in Chrome, then on Cloud for the M3 exit: see "Exit (M3)" above.
+
+## Fixes found in testing (approved 2026-10-08)
+| # | Found | Cause | Fix |
+|---|-------|-------|-----|
+| M3-F1 | After deleting a stage, the app stayed on the deleted stage's page. | `ReloadOnReturn` (group H, H-1a) reloads when its page becomes the top route again, and a dialog counts as a route. Closing the confirm dialog therefore started a reload **at the same time** as the delete. The reload reset the page state, so the delete finished with its marker ("deleting") lost and the page took it for another action. The "one extra request, accepted" of H-1a was in fact a race. | **(a) Root cause:** `ReloadOnReturn` follows the **router's address** instead of the route stack: it reloads when the address comes back to its page's address (Back, or going to the parent). Dialogs, menus and sheets don't change the address, so they no longer trigger a reload, and H-1a's side effect disappears. **(b) Hardening:** `StageBloc`, `StagePlanBloc` and `MembersBloc` keep the action's flow step when they report its result, so a reload can never relabel an action. Tests first: a dialog closing doesn't reload; Back and going to the parent still do; the delete flow ends on the stage plan; a concurrent reload doesn't change the reported flow step. |
+| M3-F2 | No Edit or Delete on the stage page on the emulator. | Not reproduced in the code: the app bar shows its actions on mobile as on the web, and the icons appear for the **owner** only (M3-6). The emulator account was the site manager in the M2 tests. | Confirmed by the developer: the emulator account was the site manager. Working as designed, no change. |
+
+### Fixes outcome (2026-10-08)
+M3-F1 done. Seen red first: the new `ReloadOnReturn` test (a dialog closing reloaded the page) and the new `StageBloc` test (a reload during a delete reset the flow step to `none`) both failed before the fix. `ReloadOnReturn` now follows the router's address (`routerDelegate.currentConfiguration`) instead of the route stack; `StageBloc`, `StagePlanBloc` and `MembersBloc` set the action's flow step again when they report its result. A navigation test with a real router checks that a successful delete opens the stage plan. `flutter test` **585/585**. M3-F2: working as designed (the emulator account was the site manager).

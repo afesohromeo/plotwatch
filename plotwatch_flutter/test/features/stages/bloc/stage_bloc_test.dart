@@ -163,6 +163,34 @@ void main() {
       ],
     );
 
+    // doc/04c M3-F1: a reload during the delete reset the flow step, so
+    // the page took the result for another action and stayed put.
+    blocTest<StageBloc, StageState>(
+      'when a reload runs during the delete then the result is still '
+      'reported as a delete',
+      setUp: () {
+        when(() => stageRepository.deleteStage(1, 2)).thenAnswer(
+          (_) => Future<void>.delayed(const Duration(milliseconds: 50)),
+        );
+        when(
+          () => projectRepository.fetchProject(1),
+        ).thenAnswer((_) async => asOwner.overview!);
+        when(
+          () => stageRepository.fetchStage(1, 2),
+        ).thenAnswer((_) async => view);
+      },
+      build: build,
+      seed: () => asOwner,
+      act: (bloc) => bloc
+        ..add(const StageEvent.deleteRequested())
+        ..add(const StageEvent.load(projectId: 1, stageId: 2)),
+      wait: const Duration(milliseconds: 100),
+      verify: (bloc) {
+        expect(bloc.state.actionStatus, GenericStatus.success);
+        expect(bloc.state.flowStep, GenericFlowStep.deletingItem);
+      },
+    );
+
     blocTest<StageBloc, StageState>(
       'when the stage has started meanwhile then it shows why',
       setUp: () => when(
