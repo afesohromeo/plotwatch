@@ -3,6 +3,7 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 import 'activity_service.dart';
 import 'audit_service.dart';
+import 'stage_service.dart';
 
 /// Projects: creation, the caller's list, details and status (PROJ-01–05).
 /// Callers check permissions first with `PermissionService`.
@@ -11,6 +12,7 @@ class ProjectService {
 
   static const _audit = AuditService();
   static const _activity = ActivityService();
+  static const _stages = StageService();
 
   static const maxNameLength = 100;
   static const maxDescriptionLength = 1000;
@@ -55,13 +57,15 @@ class ProjectService {
     );
   }
 
-  /// Creates the project and its owner membership in one transaction
-  /// (decision M2-3). The project starts as a draft without a site.
+  /// Creates the project, its owner membership and its validated [stages]
+  /// in one transaction (decisions M2-3, M3-3). The project starts as a
+  /// draft without a site.
   Future<ProjectOverview> create(
     Session session,
     UuidValue ownerId,
-    ProjectDetails details,
-  ) {
+    ProjectDetails details, {
+    List<StageDraft> stages = const [],
+  }) {
     return session.db.transaction((transaction) async {
       final now = DateTime.now().toUtc();
       final project = await Project.db.insertRow(
@@ -79,7 +83,7 @@ class ProjectService {
         ),
         transaction: transaction,
       );
-      await ProjectMember.db.insertRow(
+      final owner = await ProjectMember.db.insertRow(
         session,
         ProjectMember(
           projectId: project.id!,
@@ -110,11 +114,14 @@ class ProjectService {
         payload: {'name': project.name},
         transaction: transaction,
       );
-      return ProjectOverview(
-        project: project,
-        myRole: ProjectRole.owner,
-        myCanApprove: false,
+      await _stages.insertPlan(
+        session,
+        project.id!,
+        ownerId,
+        stages,
+        transaction,
       );
+      return _overview(session, project, owner, transaction: transaction);
     });
   }
 
@@ -143,13 +150,18 @@ class ProjectService {
             limit: safeSize,
             offset: safePage * safeSize,
           );
+    final stages = await _stages.stagesByProject(session, {
+      for (final p in projects) p.id!,
+    });
     return ProjectSummaryPage(
       items: [
         for (final project in projects)
           ProjectSummary(
             project: project,
             myRole: roles[project.id]!,
-            progressPercent: 0,
+            progressPercent: StageService.progressPercent(
+              stages[project.id] ?? [],
+            ),
           ),
       ],
       page: safePage,
@@ -287,12 +299,20 @@ class ProjectService {
           t.status.equals(SiteProposalStatus.pending),
       transaction: transaction,
     );
+    final stages = await Stage.db.find(
+      session,
+      where: (t) => t.projectId.equals(project.id),
+      transaction: transaction,
+    );
     return ProjectOverview(
       project: project,
       site: site,
       myRole: member.role,
       myCanApprove: member.canApprove,
       pendingSiteProposal: pendingProposal,
+      stageCount: stages.length,
+      budgetTotalMinor: StageService.budgetTotal(stages),
+      progressPercent: StageService.progressPercent(stages),
     );
   }
 

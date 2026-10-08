@@ -26,6 +26,9 @@ abstract class ProjectOverview
     required this.myRole,
     required this.myCanApprove,
     this.pendingSiteProposal,
+    required this.stageCount,
+    required this.budgetTotalMinor,
+    required this.progressPercent,
   });
 
   factory ProjectOverview({
@@ -34,6 +37,9 @@ abstract class ProjectOverview
     required _i46wx1t7.ProjectRole myRole,
     required bool myCanApprove,
     _ira79kry.SiteProposal? pendingSiteProposal,
+    required int stageCount,
+    required int budgetTotalMinor,
+    required int progressPercent,
   }) = _ProjectOverviewImpl;
 
   factory ProjectOverview.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -57,6 +63,9 @@ abstract class ProjectOverview
           : _irbavk3a.Protocol().deserialize<_ira79kry.SiteProposal>(
               jsonSerialization['pendingSiteProposal'],
             ),
+      stageCount: jsonSerialization['stageCount'] as int,
+      budgetTotalMinor: jsonSerialization['budgetTotalMinor'] as int,
+      progressPercent: jsonSerialization['progressPercent'] as int,
     );
   }
 
@@ -72,6 +81,15 @@ abstract class ProjectOverview
   /// The proposal waiting for the owner's decision, if any (decision M2-15).
   _ira79kry.SiteProposal? pendingSiteProposal;
 
+  /// The stage plan in short (doc/04c M3-11).
+  int stageCount;
+
+  /// Sum of the stage budgets, in minor units (BUD-01).
+  int budgetTotalMinor;
+
+  /// 0–100, the budget-weighted share of approved stages (STG-09).
+  int progressPercent;
+
   /// Returns a shallow copy of this [ProjectOverview]
   /// with some or all fields replaced by the given arguments.
   @_is.useResult
@@ -81,6 +99,9 @@ abstract class ProjectOverview
     _i46wx1t7.ProjectRole? myRole,
     bool? myCanApprove,
     _ira79kry.SiteProposal? pendingSiteProposal,
+    int? stageCount,
+    int? budgetTotalMinor,
+    int? progressPercent,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -92,6 +113,9 @@ abstract class ProjectOverview
       'myCanApprove': myCanApprove,
       if (pendingSiteProposal != null)
         'pendingSiteProposal': pendingSiteProposal?.toJson(),
+      'stageCount': stageCount,
+      'budgetTotalMinor': budgetTotalMinor,
+      'progressPercent': progressPercent,
     };
   }
 
@@ -105,6 +129,9 @@ abstract class ProjectOverview
       'myCanApprove': myCanApprove,
       if (pendingSiteProposal != null)
         'pendingSiteProposal': pendingSiteProposal?.toJsonForProtocol(),
+      'stageCount': stageCount,
+      'budgetTotalMinor': budgetTotalMinor,
+      'progressPercent': progressPercent,
     };
   }
 
@@ -123,12 +150,18 @@ class _ProjectOverviewImpl extends ProjectOverview {
     required _i46wx1t7.ProjectRole myRole,
     required bool myCanApprove,
     _ira79kry.SiteProposal? pendingSiteProposal,
+    required int stageCount,
+    required int budgetTotalMinor,
+    required int progressPercent,
   }) : super._(
          project: project,
          site: site,
          myRole: myRole,
          myCanApprove: myCanApprove,
          pendingSiteProposal: pendingSiteProposal,
+         stageCount: stageCount,
+         budgetTotalMinor: budgetTotalMinor,
+         progressPercent: progressPercent,
        );
 
   /// Returns a shallow copy of this [ProjectOverview]
@@ -141,6 +174,9 @@ class _ProjectOverviewImpl extends ProjectOverview {
     _i46wx1t7.ProjectRole? myRole,
     bool? myCanApprove,
     Object? pendingSiteProposal = _Undefined,
+    int? stageCount,
+    int? budgetTotalMinor,
+    int? progressPercent,
   }) {
     return ProjectOverview(
       project: project ?? this.project.copyWith(),
@@ -150,6 +186,9 @@ class _ProjectOverviewImpl extends ProjectOverview {
       pendingSiteProposal: pendingSiteProposal is _ira79kry.SiteProposal?
           ? pendingSiteProposal
           : this.pendingSiteProposal?.copyWith(),
+      stageCount: stageCount ?? this.stageCount,
+      budgetTotalMinor: budgetTotalMinor ?? this.budgetTotalMinor,
+      progressPercent: progressPercent ?? this.progressPercent,
     );
   }
 }

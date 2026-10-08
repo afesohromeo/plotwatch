@@ -786,4 +786,55 @@ class AppLocalizationsFr extends AppLocalizations {
   String changeRoleTitle(String name) {
     return 'Changer le rôle de $name';
   }
+
+  @override
+  String get errorStageNotFound => 'Cette étape n\'existe pas dans ce projet.';
+
+  @override
+  String get errorStageLocked =>
+      'Cette étape ne peut plus être modifiée : elle a commencé ou a été soumise.';
+
+  @override
+  String get errorInvalidStageName =>
+      'Saisissez un nom d\'étape de 100 caractères au plus.';
+
+  @override
+  String get errorInvalidStageDescription =>
+      'Utilisez 1 000 caractères au plus pour la description.';
+
+  @override
+  String get errorInvalidBudget => 'Saisissez un budget de 0 ou plus.';
+
+  @override
+  String get errorInvalidStageDates =>
+      'La fin doit être le même jour que le début ou après.';
+
+  @override
+  String get errorInvalidChecklistItem =>
+      'Chaque élément de la liste doit avoir un libellé de 200 caractères au plus.';
+
+  @override
+  String get errorTooManyStages => 'Un projet peut avoir 50 étapes au plus.';
+
+  @override
+  String get errorTooManyChecklistItems =>
+      'Une étape peut avoir 30 éléments de liste au plus.';
+
+  @override
+  String get errorInvalidStageOrder =>
+      'Les étapes ont changé entre-temps. Actualisez et réessayez.';
+
+  @override
+  String get errorStagePlanNotEmpty => 'Ce projet a déjà des étapes.';
+
+  @override
+  String get errorInvalidStageTransition => 'Cette étape a déjà commencé.';
+
+  @override
+  String get errorProjectNotActive =>
+      'Les travaux peuvent commencer une fois l\'emplacement du chantier validé.';
+
+  @override
+  String get errorProjectNotEditable =>
+      'Un projet terminé ou archivé ne peut pas être modifié.';
 }

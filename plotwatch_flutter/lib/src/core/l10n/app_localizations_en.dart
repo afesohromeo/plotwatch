@@ -759,4 +759,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String changeRoleTitle(String name) {
     return 'Change the role of $name';
   }
+
+  @override
+  String get errorStageNotFound => 'This stage doesn\'t exist in this project.';
+
+  @override
+  String get errorStageLocked =>
+      'This stage can\'t be changed any more: it has started or been submitted.';
+
+  @override
+  String get errorInvalidStageName =>
+      'Enter a stage name of 100 characters at most.';
+
+  @override
+  String get errorInvalidStageDescription =>
+      'Use 1,000 characters at most for the description.';
+
+  @override
+  String get errorInvalidBudget => 'Enter a budget of 0 or more.';
+
+  @override
+  String get errorInvalidStageDates => 'The end must be on or after the start.';
+
+  @override
+  String get errorInvalidChecklistItem =>
+      'Each checklist item needs a label of 200 characters at most.';
+
+  @override
+  String get errorTooManyStages => 'A project can have 50 stages at most.';
+
+  @override
+  String get errorTooManyChecklistItems =>
+      'A stage can have 30 checklist items at most.';
+
+  @override
+  String get errorInvalidStageOrder =>
+      'The stages changed meanwhile. Refresh and try again.';
+
+  @override
+  String get errorStagePlanNotEmpty => 'This project already has stages.';
+
+  @override
+  String get errorInvalidStageTransition => 'This stage has already started.';
+
+  @override
+  String get errorProjectNotActive =>
+      'Work can start once the site location is validated.';
+
+  @override
+  String get errorProjectNotEditable =>
+      'A completed or archived project can\'t be changed.';
 }

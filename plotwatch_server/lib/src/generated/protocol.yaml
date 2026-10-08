@@ -35,3 +35,12 @@ site:
   - validate:
   - update:
   - reject:
+stage:
+  - plan:
+  - get:
+  - createPlan:
+  - create:
+  - update:
+  - delete:
+  - reorder:
+  - start:

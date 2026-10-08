@@ -1,0 +1,9 @@
+### A checklist item as the owner enters it (doc/04c M3-5). Immutable: a
+### value object compared by its fields (==).
+class: ChecklistItemDraft
+immutable: true
+fields:
+  ### The existing item's ID, which it keeps; none for a new item.
+  itemId: int?
+  label: String
+  isRequired: bool

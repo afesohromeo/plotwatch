@@ -1,0 +1,28 @@
+### A milestone of the build with a budget, planned dates and a checklist of
+### required evidence (STG-01, doc/04c M3-4).
+class: Stage
+table: stage
+fields:
+  projectId: int, relation(parent=project, onDelete=Cascade)
+  ### 0…n−1 without gaps within the project (decision M3-7).
+  orderIndex: int
+  ### 1–100 characters after trimming.
+  name: String
+  ### At most 1,000 characters; blank is saved as none.
+  description: String?
+  ### Minor units of the project currency, 0 to 10^15 (BUD-02).
+  budgetMinor: int
+  plannedStart: DateTime?
+  ### On or after [plannedStart] when both are set.
+  plannedEnd: DateTime?
+  status: StageStatus
+  startedAt: DateTime?
+  ### Set by the review loop from M5 on.
+  submittedAt: DateTime?
+  approvedAt: DateTime?
+  approvedBy: UuidValue?
+  createdAt: DateTime
+  updatedAt: DateTime
+indexes:
+  stage_project_idx:
+    fields: projectId, orderIndex

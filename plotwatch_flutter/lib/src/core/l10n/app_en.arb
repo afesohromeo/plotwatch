@@ -879,5 +879,33 @@
         "placeholders": {
             "name": {"type": "String"}
         }
-    }
+    },
+    "errorStageNotFound": "This stage doesn't exist in this project.",
+    "@errorStageNotFound": {"description": "AppErrorCode.stageNotFound"},
+    "errorStageLocked": "This stage can't be changed any more: it has started or been submitted.",
+    "@errorStageLocked": {"description": "AppErrorCode.stageLocked"},
+    "errorInvalidStageName": "Enter a stage name of 100 characters at most.",
+    "@errorInvalidStageName": {"description": "AppErrorCode.invalidStageName"},
+    "errorInvalidStageDescription": "Use 1,000 characters at most for the description.",
+    "@errorInvalidStageDescription": {"description": "AppErrorCode.invalidStageDescription"},
+    "errorInvalidBudget": "Enter a budget of 0 or more.",
+    "@errorInvalidBudget": {"description": "AppErrorCode.invalidBudget"},
+    "errorInvalidStageDates": "The end must be on or after the start.",
+    "@errorInvalidStageDates": {"description": "AppErrorCode.invalidStageDates"},
+    "errorInvalidChecklistItem": "Each checklist item needs a label of 200 characters at most.",
+    "@errorInvalidChecklistItem": {"description": "AppErrorCode.invalidChecklistItem"},
+    "errorTooManyStages": "A project can have 50 stages at most.",
+    "@errorTooManyStages": {"description": "AppErrorCode.tooManyStages"},
+    "errorTooManyChecklistItems": "A stage can have 30 checklist items at most.",
+    "@errorTooManyChecklistItems": {"description": "AppErrorCode.tooManyChecklistItems"},
+    "errorInvalidStageOrder": "The stages changed meanwhile. Refresh and try again.",
+    "@errorInvalidStageOrder": {"description": "AppErrorCode.invalidStageOrder"},
+    "errorStagePlanNotEmpty": "This project already has stages.",
+    "@errorStagePlanNotEmpty": {"description": "AppErrorCode.stagePlanNotEmpty"},
+    "errorInvalidStageTransition": "This stage has already started.",
+    "@errorInvalidStageTransition": {"description": "AppErrorCode.invalidStageTransition"},
+    "errorProjectNotActive": "Work can start once the site location is validated.",
+    "@errorProjectNotActive": {"description": "AppErrorCode.projectNotActive"},
+    "errorProjectNotEditable": "A completed or archived project can't be changed.",
+    "@errorProjectNotEditable": {"description": "AppErrorCode.projectNotEditable"}
 }

@@ -1,0 +1,9 @@
+### A project's stages in order, with the total budget (BUD-01) and the
+### progress (STG-09, doc/04c M3-10). Not paginated: at most 50 stages.
+class: StagePlan
+fields:
+  stages: List<StageView>
+  ### Sum of the stage budgets, in minor units.
+  budgetTotalMinor: int
+  ### 0–100, the budget-weighted share of approved stages.
+  progressPercent: int

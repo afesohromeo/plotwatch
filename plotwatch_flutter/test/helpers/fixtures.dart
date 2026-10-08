@@ -37,12 +37,18 @@ ProjectOverview testOverview({
   Site? site,
   ProjectRole role = ProjectRole.owner,
   SiteProposal? pendingSiteProposal,
+  int stageCount = 0,
+  int budgetTotalMinor = 0,
+  int progressPercent = 0,
 }) => ProjectOverview(
   project: project ?? testProject(),
   site: site,
   myRole: role,
   myCanApprove: false,
   pendingSiteProposal: pendingSiteProposal,
+  stageCount: stageCount,
+  budgetTotalMinor: budgetTotalMinor,
+  progressPercent: progressPercent,
 );
 
 Site testSite({int projectId = 1}) => Site(

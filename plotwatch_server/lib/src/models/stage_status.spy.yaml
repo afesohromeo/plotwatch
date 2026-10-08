@@ -1,0 +1,10 @@
+### Where a stage is in its review cycle (STG-05, doc/02 §10.1). M3 uses
+### notStarted and inProgress; the review states come in M5.
+enum: StageStatus
+serialized: byName
+values:
+  - notStarted
+  - inProgress
+  - submitted
+  - changesRequested
+  - approved

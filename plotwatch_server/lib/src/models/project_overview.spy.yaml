@@ -8,3 +8,9 @@ fields:
   myCanApprove: bool
   ### The proposal waiting for the owner's decision, if any (decision M2-15).
   pendingSiteProposal: SiteProposal?
+  ### The stage plan in short (doc/04c M3-11).
+  stageCount: int
+  ### Sum of the stage budgets, in minor units (BUD-01).
+  budgetTotalMinor: int
+  ### 0–100, the budget-weighted share of approved stages (STG-09).
+  progressPercent: int

@@ -45,6 +45,20 @@ enum AppErrorCode implements _is.SerializableModel {
   siteAccuracyTooLow,
   siteMockLocation,
   siteNotFound,
+  stageNotFound,
+  stageLocked,
+  invalidStageName,
+  invalidStageDescription,
+  invalidBudget,
+  invalidStageDates,
+  invalidChecklistItem,
+  tooManyStages,
+  tooManyChecklistItems,
+  invalidStageOrder,
+  stagePlanNotEmpty,
+  invalidStageTransition,
+  projectNotActive,
+  projectNotEditable,
   textTooLong,
   authInvalidCredentials,
   authTooManyAttempts,
@@ -108,6 +122,34 @@ enum AppErrorCode implements _is.SerializableModel {
         return AppErrorCode.siteMockLocation;
       case 'siteNotFound':
         return AppErrorCode.siteNotFound;
+      case 'stageNotFound':
+        return AppErrorCode.stageNotFound;
+      case 'stageLocked':
+        return AppErrorCode.stageLocked;
+      case 'invalidStageName':
+        return AppErrorCode.invalidStageName;
+      case 'invalidStageDescription':
+        return AppErrorCode.invalidStageDescription;
+      case 'invalidBudget':
+        return AppErrorCode.invalidBudget;
+      case 'invalidStageDates':
+        return AppErrorCode.invalidStageDates;
+      case 'invalidChecklistItem':
+        return AppErrorCode.invalidChecklistItem;
+      case 'tooManyStages':
+        return AppErrorCode.tooManyStages;
+      case 'tooManyChecklistItems':
+        return AppErrorCode.tooManyChecklistItems;
+      case 'invalidStageOrder':
+        return AppErrorCode.invalidStageOrder;
+      case 'stagePlanNotEmpty':
+        return AppErrorCode.stagePlanNotEmpty;
+      case 'invalidStageTransition':
+        return AppErrorCode.invalidStageTransition;
+      case 'projectNotActive':
+        return AppErrorCode.projectNotActive;
+      case 'projectNotEditable':
+        return AppErrorCode.projectNotEditable;
       case 'textTooLong':
         return AppErrorCode.textTooLong;
       case 'authInvalidCredentials':

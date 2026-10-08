@@ -14,6 +14,7 @@
 import 'package:plotwatch_client/src/protocol/invitation.dart' as _idw8kw5i;
 import 'package:plotwatch_client/src/protocol/member_view.dart' as _ifqht5qj;
 import 'package:plotwatch_client/src/protocol/site_proposal.dart' as _irbyqz3h;
+import 'package:plotwatch_client/src/protocol/stage_draft.dart' as _inenhxrz;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
@@ -23,6 +24,8 @@ import 'activity_event.dart' as _iwse5pgb;
 import 'activity_type.dart' as _iorr0e24;
 import 'app_error_code.dart' as _imu8gbx5;
 import 'app_exception.dart' as _it4z223c;
+import 'checklist_item.dart' as _ifywsnp6;
+import 'checklist_item_draft.dart' as _iuwh2s2t;
 import 'invitation.dart' as _ix00wubs;
 import 'invitation_preview.dart' as _i8l83u67;
 import 'invitation_status.dart' as _ifbgrtog;
@@ -41,11 +44,18 @@ import 'project_type.dart' as _irluonl0;
 import 'site.dart' as _iz8v5x4v;
 import 'site_proposal.dart' as _ira79kry;
 import 'site_proposal_status.dart' as _i8b5g94r;
+import 'stage.dart' as _igkbma1f;
+import 'stage_draft.dart' as _i7mtby60;
+import 'stage_plan.dart' as _iwmsx3av;
+import 'stage_status.dart' as _iblg1lql;
+import 'stage_view.dart' as _iobwm8xj;
 import 'user_settings.dart' as _iy88a0nt;
 export 'activity_event.dart';
 export 'activity_type.dart';
 export 'app_error_code.dart';
 export 'app_exception.dart';
+export 'checklist_item.dart';
+export 'checklist_item_draft.dart';
 export 'invitation.dart';
 export 'invitation_preview.dart';
 export 'invitation_status.dart';
@@ -64,6 +74,11 @@ export 'project_type.dart';
 export 'site.dart';
 export 'site_proposal.dart';
 export 'site_proposal_status.dart';
+export 'stage.dart';
+export 'stage_draft.dart';
+export 'stage_plan.dart';
+export 'stage_status.dart';
+export 'stage_view.dart';
 export 'user_settings.dart';
 export 'client.dart';
 
@@ -112,6 +127,12 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _it4z223c.AppException) {
       return _it4z223c.AppException.fromJson(data) as T;
+    }
+    if (t == _ifywsnp6.ChecklistItem) {
+      return _ifywsnp6.ChecklistItem.fromJson(data) as T;
+    }
+    if (t == _iuwh2s2t.ChecklistItemDraft) {
+      return _iuwh2s2t.ChecklistItemDraft.fromJson(data) as T;
     }
     if (t == _ix00wubs.Invitation) {
       return _ix00wubs.Invitation.fromJson(data) as T;
@@ -167,6 +188,21 @@ class Protocol extends _isc.SerializationManager {
     if (t == _i8b5g94r.SiteProposalStatus) {
       return _i8b5g94r.SiteProposalStatus.fromJson(data) as T;
     }
+    if (t == _igkbma1f.Stage) {
+      return _igkbma1f.Stage.fromJson(data) as T;
+    }
+    if (t == _i7mtby60.StageDraft) {
+      return _i7mtby60.StageDraft.fromJson(data) as T;
+    }
+    if (t == _iwmsx3av.StagePlan) {
+      return _iwmsx3av.StagePlan.fromJson(data) as T;
+    }
+    if (t == _iblg1lql.StageStatus) {
+      return _iblg1lql.StageStatus.fromJson(data) as T;
+    }
+    if (t == _iobwm8xj.StageView) {
+      return _iobwm8xj.StageView.fromJson(data) as T;
+    }
     if (t == _iy88a0nt.UserSettings) {
       return _iy88a0nt.UserSettings.fromJson(data) as T;
     }
@@ -182,6 +218,14 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _isc.getType<_it4z223c.AppException?>()) {
       return (data != null ? _it4z223c.AppException.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_ifywsnp6.ChecklistItem?>()) {
+      return (data != null ? _ifywsnp6.ChecklistItem.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_iuwh2s2t.ChecklistItemDraft?>()) {
+      return (data != null ? _iuwh2s2t.ChecklistItemDraft.fromJson(data) : null)
+          as T;
     }
     if (t == _isc.getType<_ix00wubs.Invitation?>()) {
       return (data != null ? _ix00wubs.Invitation.fromJson(data) : null) as T;
@@ -246,6 +290,21 @@ class Protocol extends _isc.SerializationManager {
       return (data != null ? _i8b5g94r.SiteProposalStatus.fromJson(data) : null)
           as T;
     }
+    if (t == _isc.getType<_igkbma1f.Stage?>()) {
+      return (data != null ? _igkbma1f.Stage.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_i7mtby60.StageDraft?>()) {
+      return (data != null ? _i7mtby60.StageDraft.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_iwmsx3av.StagePlan?>()) {
+      return (data != null ? _iwmsx3av.StagePlan.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_iblg1lql.StageStatus?>()) {
+      return (data != null ? _iblg1lql.StageStatus.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_iobwm8xj.StageView?>()) {
+      return (data != null ? _iobwm8xj.StageView.fromJson(data) : null) as T;
+    }
     if (t == _isc.getType<_iy88a0nt.UserSettings?>()) {
       return (data != null ? _iy88a0nt.UserSettings.fromJson(data) : null) as T;
     }
@@ -270,6 +329,24 @@ class Protocol extends _isc.SerializationManager {
               .toList()
           as T;
     }
+    if (t == List<_iuwh2s2t.ChecklistItemDraft>) {
+      return (data as List)
+              .map((e) => deserialize<_iuwh2s2t.ChecklistItemDraft>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_iobwm8xj.StageView>) {
+      return (data as List)
+              .map((e) => deserialize<_iobwm8xj.StageView>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_ifywsnp6.ChecklistItem>) {
+      return (data as List)
+              .map((e) => deserialize<_ifywsnp6.ChecklistItem>(e))
+              .toList()
+          as T;
+    }
     if (t == List<_idw8kw5i.Invitation>) {
       return (data as List)
               .map((e) => deserialize<_idw8kw5i.Invitation>(e))
@@ -282,11 +359,28 @@ class Protocol extends _isc.SerializationManager {
               .toList()
           as T;
     }
+    if (t == List<_inenhxrz.StageDraft>) {
+      return (data as List)
+              .map((e) => deserialize<_inenhxrz.StageDraft>(e))
+              .toList()
+          as T;
+    }
+    if (t == _isc.getType<List<_inenhxrz.StageDraft>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_inenhxrz.StageDraft>(e))
+                    .toList()
+              : null)
+          as T;
+    }
     if (t == List<_irbyqz3h.SiteProposal>) {
       return (data as List)
               .map((e) => deserialize<_irbyqz3h.SiteProposal>(e))
               .toList()
           as T;
+    }
+    if (t == List<int>) {
+      return (data as List).map((e) => deserialize<int>(e)).toList() as T;
     }
     try {
       return _iaic.Protocol().deserialize<T>(data, t);
@@ -303,6 +397,8 @@ class Protocol extends _isc.SerializationManager {
       _iorr0e24.ActivityType => 'ActivityType',
       _imu8gbx5.AppErrorCode => 'AppErrorCode',
       _it4z223c.AppException => 'AppException',
+      _ifywsnp6.ChecklistItem => 'ChecklistItem',
+      _iuwh2s2t.ChecklistItemDraft => 'ChecklistItemDraft',
       _ix00wubs.Invitation => 'Invitation',
       _i8l83u67.InvitationPreview => 'InvitationPreview',
       _ifbgrtog.InvitationStatus => 'InvitationStatus',
@@ -321,6 +417,11 @@ class Protocol extends _isc.SerializationManager {
       _iz8v5x4v.Site => 'Site',
       _ira79kry.SiteProposal => 'SiteProposal',
       _i8b5g94r.SiteProposalStatus => 'SiteProposalStatus',
+      _igkbma1f.Stage => 'Stage',
+      _i7mtby60.StageDraft => 'StageDraft',
+      _iwmsx3av.StagePlan => 'StagePlan',
+      _iblg1lql.StageStatus => 'StageStatus',
+      _iobwm8xj.StageView => 'StageView',
       _iy88a0nt.UserSettings => 'UserSettings',
       _ => null,
     };
@@ -344,6 +445,10 @@ class Protocol extends _isc.SerializationManager {
         return 'AppErrorCode';
       case _it4z223c.AppException():
         return 'AppException';
+      case _ifywsnp6.ChecklistItem():
+        return 'ChecklistItem';
+      case _iuwh2s2t.ChecklistItemDraft():
+        return 'ChecklistItemDraft';
       case _ix00wubs.Invitation():
         return 'Invitation';
       case _i8l83u67.InvitationPreview():
@@ -380,6 +485,16 @@ class Protocol extends _isc.SerializationManager {
         return 'SiteProposal';
       case _i8b5g94r.SiteProposalStatus():
         return 'SiteProposalStatus';
+      case _igkbma1f.Stage():
+        return 'Stage';
+      case _i7mtby60.StageDraft():
+        return 'StageDraft';
+      case _iwmsx3av.StagePlan():
+        return 'StagePlan';
+      case _iblg1lql.StageStatus():
+        return 'StageStatus';
+      case _iobwm8xj.StageView():
+        return 'StageView';
       case _iy88a0nt.UserSettings():
         return 'UserSettings';
     }
@@ -415,6 +530,12 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'AppException') {
       return deserialize<_it4z223c.AppException>(data['data']);
+    }
+    if (dataClassName == 'ChecklistItem') {
+      return deserialize<_ifywsnp6.ChecklistItem>(data['data']);
+    }
+    if (dataClassName == 'ChecklistItemDraft') {
+      return deserialize<_iuwh2s2t.ChecklistItemDraft>(data['data']);
     }
     if (dataClassName == 'Invitation') {
       return deserialize<_ix00wubs.Invitation>(data['data']);
@@ -469,6 +590,21 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'SiteProposalStatus') {
       return deserialize<_i8b5g94r.SiteProposalStatus>(data['data']);
+    }
+    if (dataClassName == 'Stage') {
+      return deserialize<_igkbma1f.Stage>(data['data']);
+    }
+    if (dataClassName == 'StageDraft') {
+      return deserialize<_i7mtby60.StageDraft>(data['data']);
+    }
+    if (dataClassName == 'StagePlan') {
+      return deserialize<_iwmsx3av.StagePlan>(data['data']);
+    }
+    if (dataClassName == 'StageStatus') {
+      return deserialize<_iblg1lql.StageStatus>(data['data']);
+    }
+    if (dataClassName == 'StageView') {
+      return deserialize<_iobwm8xj.StageView>(data['data']);
     }
     if (dataClassName == 'UserSettings') {
       return deserialize<_iy88a0nt.UserSettings>(data['data']);

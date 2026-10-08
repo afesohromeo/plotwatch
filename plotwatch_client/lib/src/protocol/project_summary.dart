@@ -46,7 +46,7 @@ abstract class ProjectSummary
 
   _i46wx1t7.ProjectRole myRole;
 
-  /// 0–100; computed from the stages from M3 on, 0 until then.
+  /// 0–100, the budget-weighted share of approved stages (STG-09).
   int progressPercent;
 
   /// Returns a shallow copy of this [ProjectSummary]

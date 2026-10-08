@@ -4,6 +4,7 @@ import 'package:serverpod_auth_idp_server/core.dart';
 import '../generated/protocol.dart';
 import '../services/permission_service.dart';
 import '../services/project_service.dart';
+import '../services/stage_service.dart';
 
 /// Projects (PROJ-01–05). Thin: sign-in → permission → validate → one
 /// service call (`_standards/14` §4.2).
@@ -14,13 +15,20 @@ class ProjectEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  /// Any signed-in user can create a project and becomes its owner.
-  Future<ProjectOverview> create(Session session, ProjectDetails details) =>
-      _service.create(
-        session,
-        session.authenticated!.authUserId,
-        ProjectService.validateDetails(details),
-      );
+  /// Any signed-in user can create a project and becomes its owner. The
+  /// wizard sends the chosen template's [stages] with it, so the project and
+  /// its plan are created together (decision M3-3). Nullable instead of a
+  /// default value: see [list].
+  Future<ProjectOverview> create(
+    Session session,
+    ProjectDetails details, {
+    List<StageDraft>? stages,
+  }) => _service.create(
+    session,
+    session.authenticated!.authUserId,
+    ProjectService.validateDetails(details),
+    stages: StageService.validatePlan(stages ?? []),
+  );
 
   /// The caller's projects, a page at a time (`_standards/14` §3.1).
   /// Nullable instead of default values: the generated client makes a named

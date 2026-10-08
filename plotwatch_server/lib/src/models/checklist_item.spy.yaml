@@ -1,0 +1,15 @@
+### One piece of evidence a stage requires (STG-04, doc/04c M3-5). Its ID
+### stays stable when the stage is edited, because captures attach to it
+### from M4 on.
+class: ChecklistItem
+table: checklist_item
+fields:
+  stageId: int, relation(parent=stage, onDelete=Cascade)
+  ### 0…n−1 within the stage.
+  orderIndex: int
+  ### 1–200 characters after trimming.
+  label: String
+  isRequired: bool
+indexes:
+  checklist_item_stage_idx:
+    fields: stageId, orderIndex

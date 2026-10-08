@@ -15,6 +15,7 @@ import 'package:plotwatch_server/src/generated/project_details.dart'
 import 'package:plotwatch_server/src/generated/project_role.dart' as _izsiizob;
 import 'package:plotwatch_server/src/generated/project_status.dart'
     as _ipfaavrx;
+import 'package:plotwatch_server/src/generated/stage_draft.dart' as _ieegu8zj;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
@@ -26,6 +27,7 @@ import '../endpoints/membership_endpoint.dart' as _it8meaj6;
 import '../endpoints/profile_endpoint.dart' as _i2cx2pww;
 import '../endpoints/project_endpoint.dart' as _iemg8ri2;
 import '../endpoints/site_endpoint.dart' as _iisfmjap;
+import '../endpoints/stage_endpoint.dart' as _id8pc9av;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
@@ -65,6 +67,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'site',
+          null,
+        ),
+      'stage': _id8pc9av.StageEndpoint()
+        ..initialize(
+          server,
+          'stage',
           null,
         ),
     };
@@ -572,6 +580,11 @@ class Endpoints extends _is.EndpointDispatch {
               type: _is.getType<_i4y7utee.ProjectDetails>(),
               nullable: false,
             ),
+            'stages': _is.ParameterDescription(
+              name: 'stages',
+              type: _is.getType<List<_ieegu8zj.StageDraft>?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -581,6 +594,7 @@ class Endpoints extends _is.EndpointDispatch {
                   (endpoints['project'] as _iemg8ri2.ProjectEndpoint).create(
                     session,
                     params['details'],
+                    stages: params['stages'],
                   ),
         ),
         'list': _is.MethodConnector(
@@ -856,6 +870,206 @@ class Endpoints extends _is.EndpointDispatch {
                 params['projectId'],
                 params['proposalId'],
                 reason: params['reason'],
+              ),
+        ),
+      },
+    );
+    connectors['stage'] = _is.EndpointConnector(
+      name: 'stage',
+      endpoint: endpoints['stage']!,
+      methodConnectors: {
+        'plan': _is.MethodConnector(
+          name: 'plan',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['stage'] as _id8pc9av.StageEndpoint).plan(
+                session,
+                params['projectId'],
+              ),
+        ),
+        'get': _is.MethodConnector(
+          name: 'get',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'stageId': _is.ParameterDescription(
+              name: 'stageId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['stage'] as _id8pc9av.StageEndpoint).get(
+                session,
+                params['projectId'],
+                params['stageId'],
+              ),
+        ),
+        'createPlan': _is.MethodConnector(
+          name: 'createPlan',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'stages': _is.ParameterDescription(
+              name: 'stages',
+              type: _is.getType<List<_ieegu8zj.StageDraft>>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['stage'] as _id8pc9av.StageEndpoint).createPlan(
+                    session,
+                    params['projectId'],
+                    params['stages'],
+                  ),
+        ),
+        'create': _is.MethodConnector(
+          name: 'create',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'draft': _is.ParameterDescription(
+              name: 'draft',
+              type: _is.getType<_ieegu8zj.StageDraft>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['stage'] as _id8pc9av.StageEndpoint).create(
+                session,
+                params['projectId'],
+                params['draft'],
+              ),
+        ),
+        'update': _is.MethodConnector(
+          name: 'update',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'stageId': _is.ParameterDescription(
+              name: 'stageId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'draft': _is.ParameterDescription(
+              name: 'draft',
+              type: _is.getType<_ieegu8zj.StageDraft>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['stage'] as _id8pc9av.StageEndpoint).update(
+                session,
+                params['projectId'],
+                params['stageId'],
+                params['draft'],
+              ),
+        ),
+        'delete': _is.MethodConnector(
+          name: 'delete',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'stageId': _is.ParameterDescription(
+              name: 'stageId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['stage'] as _id8pc9av.StageEndpoint).delete(
+                session,
+                params['projectId'],
+                params['stageId'],
+              ),
+        ),
+        'reorder': _is.MethodConnector(
+          name: 'reorder',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'stageIds': _is.ParameterDescription(
+              name: 'stageIds',
+              type: _is.getType<List<int>>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['stage'] as _id8pc9av.StageEndpoint).reorder(
+                    session,
+                    params['projectId'],
+                    params['stageIds'],
+                  ),
+        ),
+        'start': _is.MethodConnector(
+          name: 'start',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'stageId': _is.ParameterDescription(
+              name: 'stageId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['stage'] as _id8pc9av.StageEndpoint).start(
+                session,
+                params['projectId'],
+                params['stageId'],
               ),
         ),
       },

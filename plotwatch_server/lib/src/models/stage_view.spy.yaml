@@ -1,0 +1,8 @@
+### One stage with its checklist, as members see it (STG-08).
+class: StageView
+fields:
+  stage: Stage
+  ### In order.
+  items: List<ChecklistItem>
+  ### Items with at least one capture; 0 until captures exist (M4).
+  itemsCovered: int

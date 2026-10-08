@@ -15,3 +15,7 @@ values:
   - memberRemoved
   # doc/04b H-4
   - memberRoleChanged
+  # A stage was added, edited, deleted or moved, or a plan was created
+  # (doc/04c M3-11).
+  - stagePlanChanged
+  - stageStarted

@@ -28,6 +28,9 @@ import 'package:plotwatch_client/src/protocol/project_summary_page.dart'
     as _i5ea8tcf;
 import 'package:plotwatch_client/src/protocol/site.dart' as _iw3fvswq;
 import 'package:plotwatch_client/src/protocol/site_proposal.dart' as _irbyqz3h;
+import 'package:plotwatch_client/src/protocol/stage_draft.dart' as _inenhxrz;
+import 'package:plotwatch_client/src/protocol/stage_plan.dart' as _i60snhcg;
+import 'package:plotwatch_client/src/protocol/stage_view.dart' as _ilm4jwcv;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
@@ -414,13 +417,20 @@ class EndpointProject extends _isc.EndpointRef {
   @override
   String get name => 'project';
 
-  /// Any signed-in user can create a project and becomes its owner.
+  /// Any signed-in user can create a project and becomes its owner. The
+  /// wizard sends the chosen template's [stages] with it, so the project and
+  /// its plan are created together (decision M3-3). Nullable instead of a
+  /// default value: see [list].
   _ida.Future<_ixsm3hkh.ProjectOverview> create(
-    _iailnz8l.ProjectDetails details,
-  ) => caller.callServerEndpoint<_ixsm3hkh.ProjectOverview>(
+    _iailnz8l.ProjectDetails details, {
+    List<_inenhxrz.StageDraft>? stages,
+  }) => caller.callServerEndpoint<_ixsm3hkh.ProjectOverview>(
     'project',
     'create',
-    {'details': details},
+    {
+      'details': details,
+      'stages': stages,
+    },
   );
 
   /// The caller's projects, a page at a time (`_standards/14` §3.1).
@@ -560,6 +570,113 @@ class EndpointSite extends _isc.EndpointRef {
   );
 }
 
+/// The stage plan (STG-01–09, BUD-01–02; doc/04c). Thin: sign-in →
+/// permission → validate → one service call (`_standards/14` §4.2).
+/// {@category Endpoint}
+class EndpointStage extends _isc.EndpointRef {
+  EndpointStage(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'stage';
+
+  /// The stages in order, the total budget and the progress.
+  _ida.Future<_i60snhcg.StagePlan> plan(int projectId) =>
+      caller.callServerEndpoint<_i60snhcg.StagePlan>(
+        'stage',
+        'plan',
+        {'projectId': projectId},
+      );
+
+  _ida.Future<_ilm4jwcv.StageView> get(
+    int projectId,
+    int stageId,
+  ) => caller.callServerEndpoint<_ilm4jwcv.StageView>(
+    'stage',
+    'get',
+    {
+      'projectId': projectId,
+      'stageId': stageId,
+    },
+  );
+
+  /// Fills an empty plan, e.g. from a template (decision M3-3).
+  _ida.Future<_i60snhcg.StagePlan> createPlan(
+    int projectId,
+    List<_inenhxrz.StageDraft> stages,
+  ) => caller.callServerEndpoint<_i60snhcg.StagePlan>(
+    'stage',
+    'createPlan',
+    {
+      'projectId': projectId,
+      'stages': stages,
+    },
+  );
+
+  _ida.Future<_ilm4jwcv.StageView> create(
+    int projectId,
+    _inenhxrz.StageDraft draft,
+  ) => caller.callServerEndpoint<_ilm4jwcv.StageView>(
+    'stage',
+    'create',
+    {
+      'projectId': projectId,
+      'draft': draft,
+    },
+  );
+
+  _ida.Future<_ilm4jwcv.StageView> update(
+    int projectId,
+    int stageId,
+    _inenhxrz.StageDraft draft,
+  ) => caller.callServerEndpoint<_ilm4jwcv.StageView>(
+    'stage',
+    'update',
+    {
+      'projectId': projectId,
+      'stageId': stageId,
+      'draft': draft,
+    },
+  );
+
+  _ida.Future<void> delete(
+    int projectId,
+    int stageId,
+  ) => caller.callServerEndpoint<void>(
+    'stage',
+    'delete',
+    {
+      'projectId': projectId,
+      'stageId': stageId,
+    },
+  );
+
+  /// [stageIds] lists every stage of the project once, in the new order.
+  _ida.Future<_i60snhcg.StagePlan> reorder(
+    int projectId,
+    List<int> stageIds,
+  ) => caller.callServerEndpoint<_i60snhcg.StagePlan>(
+    'stage',
+    'reorder',
+    {
+      'projectId': projectId,
+      'stageIds': stageIds,
+    },
+  );
+
+  /// The site manager starts work on a stage (STG-06).
+  _ida.Future<_ilm4jwcv.StageView> start(
+    int projectId,
+    int stageId,
+  ) => caller.callServerEndpoint<_ilm4jwcv.StageView>(
+    'stage',
+    'start',
+    {
+      'projectId': projectId,
+      'stageId': stageId,
+    },
+  );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _iaic.Caller(client);
@@ -604,6 +721,7 @@ class Client extends _isc.ServerpodClientShared {
     profile = EndpointProfile(this);
     project = EndpointProject(this);
     site = EndpointSite(this);
+    stage = EndpointStage(this);
     modules = Modules(this);
   }
 
@@ -619,6 +737,8 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointSite site;
 
+  late final EndpointStage stage;
+
   late final Modules modules;
 
   @override
@@ -629,6 +749,7 @@ class Client extends _isc.ServerpodClientShared {
     'profile': profile,
     'project': project,
     'site': site,
+    'stage': stage,
   };
 
   @override

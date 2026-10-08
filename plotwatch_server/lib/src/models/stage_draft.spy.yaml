@@ -1,0 +1,13 @@
+### A stage as the owner enters it, or as a template fills it in
+### (doc/04c M3-2 to M3-5). Immutable: a value object compared by its
+### fields (==), e.g. in BLoC events.
+class: StageDraft
+immutable: true
+fields:
+  name: String
+  description: String?
+  budgetMinor: int
+  plannedStart: DateTime?
+  plannedEnd: DateTime?
+  ### In order; at most 30.
+  items: List<ChecklistItemDraft>

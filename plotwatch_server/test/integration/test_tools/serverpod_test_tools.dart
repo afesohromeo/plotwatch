@@ -31,6 +31,9 @@ import 'package:plotwatch_server/src/generated/project_summary_page.dart'
     as _it5xgdwy;
 import 'package:plotwatch_server/src/generated/site.dart' as _iiew30c8;
 import 'package:plotwatch_server/src/generated/site_proposal.dart' as _iarrohmg;
+import 'package:plotwatch_server/src/generated/stage_draft.dart' as _ieegu8zj;
+import 'package:plotwatch_server/src/generated/stage_plan.dart' as _i1eb67b4;
+import 'package:plotwatch_server/src/generated/stage_view.dart' as _ijufkpie;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
@@ -179,6 +182,8 @@ class TestEndpoints {
   late final _ProjectEndpoint project;
 
   late final _SiteEndpoint site;
+
+  late final _StageEndpoint stage;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -209,6 +214,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     site = _SiteEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    stage = _StageEndpoint(
       endpoints,
       serializationManager,
     );
@@ -941,8 +950,9 @@ class _ProjectEndpoint {
 
   _ida.Future<_ixpv9kns.ProjectOverview> create(
     _ist.TestSessionBuilder sessionBuilder,
-    _i4y7utee.ProjectDetails details,
-  ) async {
+    _i4y7utee.ProjectDetails details, {
+    List<_ieegu8zj.StageDraft>? stages,
+  }) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
           (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
@@ -954,7 +964,10 @@ class _ProjectEndpoint {
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'project',
           methodName: 'create',
-          parameters: _ist.testObjectToJson({'details': details}),
+          parameters: _ist.testObjectToJson({
+            'details': details,
+            'stages': stages,
+          }),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =
@@ -1326,6 +1339,295 @@ class _SiteEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _StageEndpoint {
+  _StageEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<_i1eb67b4.StagePlan> plan(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'stage',
+            method: 'plan',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'stage',
+          methodName: 'plan',
+          parameters: _ist.testObjectToJson({'projectId': projectId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i1eb67b4.StagePlan>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ijufkpie.StageView> get(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    int stageId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'stage',
+            method: 'get',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'stage',
+          methodName: 'get',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'stageId': stageId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ijufkpie.StageView>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_i1eb67b4.StagePlan> createPlan(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    List<_ieegu8zj.StageDraft> stages,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'stage',
+            method: 'createPlan',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'stage',
+          methodName: 'createPlan',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'stages': stages,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i1eb67b4.StagePlan>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ijufkpie.StageView> create(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    _ieegu8zj.StageDraft draft,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'stage',
+            method: 'create',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'stage',
+          methodName: 'create',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'draft': draft,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ijufkpie.StageView>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ijufkpie.StageView> update(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    int stageId,
+    _ieegu8zj.StageDraft draft,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'stage',
+            method: 'update',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'stage',
+          methodName: 'update',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'stageId': stageId,
+            'draft': draft,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ijufkpie.StageView>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<void> delete(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    int stageId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'stage',
+            method: 'delete',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'stage',
+          methodName: 'delete',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'stageId': stageId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_i1eb67b4.StagePlan> reorder(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    List<int> stageIds,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'stage',
+            method: 'reorder',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'stage',
+          methodName: 'reorder',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'stageIds': stageIds,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_i1eb67b4.StagePlan>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ijufkpie.StageView> start(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    int stageId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'stage',
+            method: 'start',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'stage',
+          methodName: 'start',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'stageId': stageId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ijufkpie.StageView>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

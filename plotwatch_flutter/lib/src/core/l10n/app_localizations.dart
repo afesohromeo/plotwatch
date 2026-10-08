@@ -1483,6 +1483,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change the role of {name}'**
   String changeRoleTitle(String name);
+
+  /// AppErrorCode.stageNotFound
+  ///
+  /// In en, this message translates to:
+  /// **'This stage doesn\'t exist in this project.'**
+  String get errorStageNotFound;
+
+  /// AppErrorCode.stageLocked
+  ///
+  /// In en, this message translates to:
+  /// **'This stage can\'t be changed any more: it has started or been submitted.'**
+  String get errorStageLocked;
+
+  /// AppErrorCode.invalidStageName
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a stage name of 100 characters at most.'**
+  String get errorInvalidStageName;
+
+  /// AppErrorCode.invalidStageDescription
+  ///
+  /// In en, this message translates to:
+  /// **'Use 1,000 characters at most for the description.'**
+  String get errorInvalidStageDescription;
+
+  /// AppErrorCode.invalidBudget
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a budget of 0 or more.'**
+  String get errorInvalidBudget;
+
+  /// AppErrorCode.invalidStageDates
+  ///
+  /// In en, this message translates to:
+  /// **'The end must be on or after the start.'**
+  String get errorInvalidStageDates;
+
+  /// AppErrorCode.invalidChecklistItem
+  ///
+  /// In en, this message translates to:
+  /// **'Each checklist item needs a label of 200 characters at most.'**
+  String get errorInvalidChecklistItem;
+
+  /// AppErrorCode.tooManyStages
+  ///
+  /// In en, this message translates to:
+  /// **'A project can have 50 stages at most.'**
+  String get errorTooManyStages;
+
+  /// AppErrorCode.tooManyChecklistItems
+  ///
+  /// In en, this message translates to:
+  /// **'A stage can have 30 checklist items at most.'**
+  String get errorTooManyChecklistItems;
+
+  /// AppErrorCode.invalidStageOrder
+  ///
+  /// In en, this message translates to:
+  /// **'The stages changed meanwhile. Refresh and try again.'**
+  String get errorInvalidStageOrder;
+
+  /// AppErrorCode.stagePlanNotEmpty
+  ///
+  /// In en, this message translates to:
+  /// **'This project already has stages.'**
+  String get errorStagePlanNotEmpty;
+
+  /// AppErrorCode.invalidStageTransition
+  ///
+  /// In en, this message translates to:
+  /// **'This stage has already started.'**
+  String get errorInvalidStageTransition;
+
+  /// AppErrorCode.projectNotActive
+  ///
+  /// In en, this message translates to:
+  /// **'Work can start once the site location is validated.'**
+  String get errorProjectNotActive;
+
+  /// AppErrorCode.projectNotEditable
+  ///
+  /// In en, this message translates to:
+  /// **'A completed or archived project can\'t be changed.'**
+  String get errorProjectNotEditable;
 }
 
 class _AppLocalizationsDelegate

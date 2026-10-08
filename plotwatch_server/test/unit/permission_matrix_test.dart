@@ -16,6 +16,8 @@ const _matrix = <ProjectAction, List<bool>>{
   ProjectAction.archiveProject: [_y, _n, _n, _n, _n],
   ProjectAction.manageMembers: [_y, _n, _n, _n, _n],
   ProjectAction.manageStages: [_y, _n, _n, _n, _n],
+  // STG-06, added 2026-10-08 (doc/04c M3-8).
+  ProjectAction.startStage: [_n, _n, _n, _n, _y],
   // Owner added 2026-10-07 (doc/04b G-12).
   ProjectAction.proposeSite: [_y, _n, _n, _n, _y],
   ProjectAction.captureEvidence: [_n, _n, _n, _n, _y],

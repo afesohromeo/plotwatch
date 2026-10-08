@@ -39,6 +39,21 @@ values:
   - siteMockLocation
   # Site edit (doc/04b H-3)
   - siteNotFound
+  # Stages (doc/04c)
+  - stageNotFound
+  - stageLocked
+  - invalidStageName
+  - invalidStageDescription
+  - invalidBudget
+  - invalidStageDates
+  - invalidChecklistItem
+  - tooManyStages
+  - tooManyChecklistItems
+  - invalidStageOrder
+  - stagePlanNotEmpty
+  - invalidStageTransition
+  - projectNotActive
+  - projectNotEditable
   # Free text longer than its limit
   - textTooLong
   # Set by the client from the auth module's exceptions

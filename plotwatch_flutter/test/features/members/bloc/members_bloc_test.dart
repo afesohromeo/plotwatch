@@ -204,7 +204,11 @@ void main() {
               'member roles',
               [(1, ProjectRole.owner), (2, ProjectRole.viewer)],
             )
-            .having((s) => s.actionStatus, 'actionStatus', GenericStatus.success)
+            .having(
+              (s) => s.actionStatus,
+              'actionStatus',
+              GenericStatus.success,
+            )
             .having(
               (s) => s.flowStep,
               'flowStep',
