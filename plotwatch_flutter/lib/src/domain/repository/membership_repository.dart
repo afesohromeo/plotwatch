@@ -44,6 +44,16 @@ class MembershipRepository {
     () => _apiProvider.acceptInvitation(code),
   );
 
+  /// Gives a member another role (doc/04b H-4).
+  Future<ProjectMember> changeRole(
+    int projectId,
+    int memberId,
+    ProjectRole role,
+  ) => _logged(
+    "changing a member's role",
+    () => _apiProvider.changeRole(projectId, memberId, role),
+  );
+
   Future<void> removeMember(int projectId, int memberId) => _logged(
     'removing a member',
     () => _apiProvider.removeMember(projectId, memberId),

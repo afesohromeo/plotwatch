@@ -222,5 +222,13 @@
     "reviewLocationAction": "Vérifier l'emplacement",
     "localizeSiteAction": "Localiser le chantier",
     "localizeAgainAction": "Localiser à nouveau",
-    "proposeNewLocationAction": "Proposer un nouvel emplacement"
+    "proposeNewLocationAction": "Proposer un nouvel emplacement",
+    "errorCannotChangeOwnerRole": "Le rôle du propriétaire du projet ne peut pas être modifié.",
+    "errorInvalidMemberRole": "Un membre ne peut pas devenir propriétaire.",
+    "errorSiteNotFound": "Ce projet n'a pas encore de chantier validé.",
+    "editSiteAction": "Modifier le chantier",
+    "editSiteTitle": "Modifier le chantier",
+    "editSiteHint": "Modifiez le cercle ou l'adresse. Pour déplacer le point, proposez un nouvel emplacement depuis le terrain.",
+    "siteUpdated": "Le chantier a été mis à jour.",
+    "changeRoleTitle": "Changer le rôle de {name}"
 }

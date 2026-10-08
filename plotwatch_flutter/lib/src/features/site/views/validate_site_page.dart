@@ -51,9 +51,9 @@ class _ValidateSitePageState extends State<ValidateSitePage> {
 
   /// Null when cancelled; an empty reason is allowed (decision M2-18).
   Future<String?> _askRejectReason() => showDialog<String>(
-        context: context,
-        builder: (context) => const _RejectReasonDialog(),
-      );
+    context: context,
+    builder: (context) => const _RejectReasonDialog(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -147,27 +147,11 @@ class _ValidateSitePageState extends State<ValidateSitePage> {
           label: l10n.labelReadAt,
           value: formatDate(proposal.proposedAt.toLocal(), withTime: true),
         ),
-        Text(l10n.labelRadius, style: context.textTheme.labelMedium),
-        Row(
-          children: [
-            Expanded(
-              child: Slider(
-                key: ValidateSitePage.radiusSliderKey,
-                min: minSiteRadiusM.toDouble(),
-                max: maxSiteRadiusM.toDouble(),
-                divisions: (maxSiteRadiusM - minSiteRadiusM) ~/ 5,
-                value: state.radiusM.toDouble(),
-                label: l10n.radiusMeters(state.radiusM),
-                onChanged: (value) => bloc.add(
-                  ValidateSiteEvent.radiusChanged(radiusM: value.round()),
-                ),
-              ),
-            ),
-            Text(
-              l10n.radiusMeters(state.radiusM),
-              style: context.textTheme.bodyLarge,
-            ),
-          ],
+        SiteRadiusField(
+          sliderKey: ValidateSitePage.radiusSliderKey,
+          radiusM: state.radiusM,
+          onChanged: (radiusM) =>
+              bloc.add(ValidateSiteEvent.radiusChanged(radiusM: radiusM)),
         ),
         const Gap.vertical(height: AppSpacing.md),
         InputField(

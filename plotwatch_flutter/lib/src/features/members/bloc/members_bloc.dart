@@ -17,6 +17,7 @@ class MembersBloc extends Bloc<MembersEvent, MembersState> {
   }) : super(const MembersState()) {
     on<_FetchMembers>(_onFetchMembers);
     on<_RemoveMember>(_onRemoveMember);
+    on<_ChangeRole>(_onChangeRole);
     on<_CancelInvitation>(_onCancelInvitation);
     on<_InvitationCreated>(_onInvitationCreated);
     on<_ResetFlowStep>(_onResetFlowStep);
@@ -75,6 +76,23 @@ class MembersBloc extends Bloc<MembersEvent, MembersState> {
     );
   });
 
+  Future<void> _onChangeRole(_ChangeRole event, Emitter<MembersState> emit) =>
+      _runAction(emit, 'MembersBloc._onChangeRole', (projectId) async {
+        final changed = await _membershipRepository.changeRole(
+          projectId,
+          event.memberId,
+          event.role,
+        );
+        return state.copyWith(
+          members: [
+            for (final view in state.members)
+              view.member.id == event.memberId
+                  ? view.copyWith(member: changed)
+                  : view,
+          ],
+        );
+      }, flowStep: GenericFlowStep.updatingItem);
+
   Future<void> _onCancelInvitation(
     _CancelInvitation event,
     Emitter<MembersState> emit,
@@ -99,15 +117,16 @@ class MembersBloc extends Bloc<MembersEvent, MembersState> {
   Future<void> _runAction(
     Emitter<MembersState> emit,
     String logTag,
-    Future<MembersState> Function(int projectId) action,
-  ) async {
+    Future<MembersState> Function(int projectId) action, {
+    GenericFlowStep flowStep = GenericFlowStep.deletingItem,
+  }) async {
     final projectId = state.overview?.project.id;
     if (projectId == null) return;
 
     final l10n = LocalizationService.localization;
     emit(
       state.copyWith(
-        flowStep: GenericFlowStep.deletingItem,
+        flowStep: flowStep,
         actionStatus: GenericStatus.loading,
         actionErrorMessage: null,
       ),

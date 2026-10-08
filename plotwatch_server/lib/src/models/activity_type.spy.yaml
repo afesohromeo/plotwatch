@@ -8,7 +8,10 @@ values:
   - projectStatusChanged
   - siteProposed
   - siteProposalRejected
-  # A proposal was validated: the site was set or moved.
+  # A proposal was validated (the site was set or moved), or the owner
+  # edited the radius or address (doc/04b H-3).
   - siteChanged
   - memberJoined
   - memberRemoved
+  # doc/04b H-4
+  - memberRoleChanged

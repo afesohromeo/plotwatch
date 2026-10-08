@@ -58,6 +58,23 @@ class SiteApiProvider {
     }
   }
 
+  /// The radius and address of the validated site (doc/04b H-3).
+  Future<Site> update(
+    int projectId, {
+    required int radiusM,
+    String? addressText,
+  }) async {
+    try {
+      return await _client.site.update(
+        projectId,
+        radiusM: radiusM,
+        addressText: addressText,
+      );
+    } catch (e) {
+      throw ApiErrorHandler.handle(e);
+    }
+  }
+
   Future<void> reject(int projectId, int proposalId, {String? reason}) async {
     try {
       await _client.site.reject(projectId, proposalId, reason: reason);

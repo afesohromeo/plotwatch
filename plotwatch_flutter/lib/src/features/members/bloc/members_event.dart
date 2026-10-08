@@ -10,6 +10,12 @@ sealed class MembersEvent with _$MembersEvent {
   const factory MembersEvent.removeMember({required int memberId}) =
       _RemoveMember;
 
+  /// The owner gives a member another role (doc/04b H-4).
+  const factory MembersEvent.changeRole({
+    required int memberId,
+    required ProjectRole role,
+  }) = _ChangeRole;
+
   const factory MembersEvent.cancelInvitation({required int invitationId}) =
       _CancelInvitation;
 

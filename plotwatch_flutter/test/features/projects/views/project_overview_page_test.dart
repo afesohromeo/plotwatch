@@ -140,57 +140,78 @@ void main() {
     );
   }
 
-  // G-7 and G-12: which site button each role sees in each state.
-  final buttons = <String, (ProjectOverview, Key?)>{
-    'the owner, no site': (
-      testOverview(),
-      ProjectOverviewPage.localizeButtonKey,
-    ),
+  // G-7, G-12 and H-2/H-3: which site buttons each role sees in each state.
+  const localize = ProjectOverviewPage.localizeButtonKey;
+  const review = ProjectOverviewPage.reviewSiteButtonKey;
+  const editSite = ProjectOverviewPage.editSiteButtonKey;
+  final buttons = <String, (ProjectOverview, Set<Key>)>{
+    'the owner, no site': (testOverview(), {localize}),
     'the site manager, no site': (
       testOverview(role: ProjectRole.siteManager),
-      ProjectOverviewPage.localizeButtonKey,
+      {localize},
     ),
     'the owner, a proposal pending': (
       testOverview(pendingSiteProposal: testProposal()),
-      ProjectOverviewPage.reviewSiteButtonKey,
+      {review},
     ),
     'the site manager, a proposal pending': (
       testOverview(
         role: ProjectRole.siteManager,
         pendingSiteProposal: testProposal(),
       ),
-      ProjectOverviewPage.localizeButtonKey,
+      {localize},
     ),
     'the site manager, a validated site': (
       testOverview(role: ProjectRole.siteManager, site: testSite()),
-      ProjectOverviewPage.localizeButtonKey,
+      {localize},
     ),
-    'the owner, a validated site': (testOverview(site: testSite()), null),
+    'the owner, a validated site': (
+      testOverview(site: testSite()),
+      {localize, editSite},
+    ),
+    'the owner, a validated site and a new proposal pending': (
+      testOverview(site: testSite(), pendingSiteProposal: testProposal()),
+      {review, editSite},
+    ),
+    'a viewer, a validated site': (
+      testOverview(role: ProjectRole.viewer, site: testSite()),
+      {},
+    ),
     'a viewer, a proposal pending': (
       testOverview(
         role: ProjectRole.viewer,
         pendingSiteProposal: testProposal(),
       ),
-      null,
+      {},
     ),
   };
   for (final MapEntry(key: who, value: (overview, expected))
       in buttons.entries) {
     testWidgets('Given $who then the site section offers '
-        '${expected?.toString() ?? 'no site button'}', (tester) async {
+        '${expected.isEmpty ? 'no site button' : expected.join(', ')}', (
+      tester,
+    ) async {
       await pumpWith(tester, loaded(overview));
 
-      for (final key in [
-        ProjectOverviewPage.localizeButtonKey,
-        ProjectOverviewPage.reviewSiteButtonKey,
-      ]) {
+      for (final key in [localize, review, editSite]) {
         expect(
           find.byKey(key),
-          key == expected ? findsOneWidget : findsNothing,
+          expected.contains(key) ? findsOneWidget : findsNothing,
+          reason: '$key',
         );
       }
     });
   }
+
+  testWidgets(
+    'Given a validated site then the owner can move it with a new reading',
+    (tester) async {
+      await pumpWith(tester, loaded(testOverview(site: testSite())));
+
+      expect(find.text(l10n.proposeNewLocationAction), findsOneWidget);
+      expect(find.text(l10n.editSiteAction), findsOneWidget);
+    },
+  );
 
   testWidgets(
     'Given a proposal pending then the site manager is told it waits for '

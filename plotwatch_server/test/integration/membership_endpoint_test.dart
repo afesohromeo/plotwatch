@@ -281,6 +281,186 @@ void main() {
       });
     });
 
+    // doc/04b H-4 (MEMB-07, role only).
+    group('when the owner changes a member\'s role', () {
+      Future<ProjectMember> join(
+        ProjectRole role, {
+        bool canApprove = false,
+      }) async => endpoints.membership.acceptInvitation(
+        signedInAs(joinerId),
+        (await invite(role, canApprove: canApprove)).code,
+      );
+
+      Future<ProjectMember> ownerMember() async =>
+          (await endpoints.membership.listMembers(
+            signedInAs(ownerId),
+            projectId,
+          )).firstWhere((m) => m.member.role == ProjectRole.owner).member;
+
+      test('then the new role is saved, audited and announced', () async {
+        final member = await join(ProjectRole.viewer);
+
+        final changed = await endpoints.membership.changeRole(
+          signedInAs(ownerId),
+          projectId,
+          member.id!,
+          ProjectRole.coFunder,
+        );
+        final session = sessionBuilder.build();
+
+        expect(changed.role, ProjectRole.coFunder);
+        expect(
+          (await ProjectMember.db.findById(session, member.id!))!.role,
+          ProjectRole.coFunder,
+        );
+        final audit = (await AuditLog.db.find(
+          session,
+          where: (t) => t.action.equals('member.changeRole'),
+        )).single;
+        expect(audit.before?['role'], 'viewer');
+        expect(audit.after?['role'], 'coFunder');
+        expect(
+          await ActivityEvent.db.find(
+            session,
+            where: (t) => t.type.equals(ActivityType.memberRoleChanged),
+          ),
+          hasLength(1),
+        );
+      });
+
+      test('then the member\'s rights follow the new role', () async {
+        final member = await join(ProjectRole.viewer);
+        await endpoints.membership.changeRole(
+          signedInAs(ownerId),
+          projectId,
+          member.id!,
+          ProjectRole.siteManager,
+        );
+
+        final proposal = await endpoints.site.propose(
+          signedInAs(joinerId),
+          projectId,
+          lat: 5.4778,
+          lng: 10.4176,
+          accuracyM: 8,
+          isMocked: false,
+        );
+
+        expect(proposal.status, SiteProposalStatus.pending);
+      });
+
+      test(
+        'from co-funder who can approve to viewer then approval is turned off',
+        () async {
+          final member = await join(ProjectRole.coFunder, canApprove: true);
+          expect(member.canApprove, isTrue);
+
+          final changed = await endpoints.membership.changeRole(
+            signedInAs(ownerId),
+            projectId,
+            member.id!,
+            ProjectRole.viewer,
+          );
+
+          expect(changed.canApprove, isFalse);
+        },
+      );
+
+      test('to the role they already have then nothing is recorded', () async {
+        final member = await join(ProjectRole.viewer);
+
+        final unchanged = await endpoints.membership.changeRole(
+          signedInAs(ownerId),
+          projectId,
+          member.id!,
+          ProjectRole.viewer,
+        );
+
+        expect(unchanged.role, ProjectRole.viewer);
+        expect(
+          await AuditLog.db.find(
+            sessionBuilder.build(),
+            where: (t) => t.action.equals('member.changeRole'),
+          ),
+          isEmpty,
+        );
+      });
+
+      test('of the owner then it throws cannotChangeOwnerRole', () async {
+        final owner = await ownerMember();
+
+        await expectLater(
+          endpoints.membership.changeRole(
+            signedInAs(ownerId),
+            projectId,
+            owner.id!,
+            ProjectRole.viewer,
+          ),
+          throwsA(_appException(AppErrorCode.cannotChangeOwnerRole)),
+        );
+      });
+
+      test('to owner then it throws invalidMemberRole', () async {
+        final member = await join(ProjectRole.viewer);
+
+        await expectLater(
+          endpoints.membership.changeRole(
+            signedInAs(ownerId),
+            projectId,
+            member.id!,
+            ProjectRole.owner,
+          ),
+          throwsA(_appException(AppErrorCode.invalidMemberRole)),
+        );
+      });
+
+      test('of a removed member then it throws memberNotFound', () async {
+        final member = await join(ProjectRole.viewer);
+        await endpoints.membership.removeMember(
+          signedInAs(ownerId),
+          projectId,
+          member.id!,
+        );
+
+        await expectLater(
+          endpoints.membership.changeRole(
+            signedInAs(ownerId),
+            projectId,
+            member.id!,
+            ProjectRole.coFunder,
+          ),
+          throwsA(_appException(AppErrorCode.memberNotFound)),
+        );
+      });
+
+      test('of an unknown member then it throws memberNotFound', () async {
+        await expectLater(
+          endpoints.membership.changeRole(
+            signedInAs(ownerId),
+            projectId,
+            999999,
+            ProjectRole.coFunder,
+          ),
+          throwsA(_appException(AppErrorCode.memberNotFound)),
+        );
+      });
+
+      test('as a member who is not the owner then it throws '
+          'permissionDenied', () async {
+        final member = await join(ProjectRole.coFunder, canApprove: true);
+
+        await expectLater(
+          endpoints.membership.changeRole(
+            signedInAs(joinerId),
+            projectId,
+            member.id!,
+            ProjectRole.viewer,
+          ),
+          throwsA(_appException(AppErrorCode.permissionDenied)),
+        );
+      });
+    });
+
     group('when the owner manages the project', () {
       test(
         'then pending invitations are listed and can be cancelled',

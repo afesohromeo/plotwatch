@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 // Auth guard (_standards/07): public pages when signed out, home when signed in.
@@ -17,7 +18,7 @@ void main() {
       expect(
         RouteManager.redirectFor(
           AuthenticationStatus.unauthenticated,
-          profilePage,
+          '/$profilePage',
         ),
         welcomePage,
       );
@@ -113,5 +114,60 @@ void main() {
     test('Given an ordinary page then it is not remembered', () {
       expect(RouteManager.isRememberedTarget('/projects/7'), isFalse);
     });
+  });
+
+  // doc/04b H-1: nested routes, so going to a page builds its parents below
+  // it and Android Back goes up one level instead of closing the app.
+  group('Given the route tree', () {
+    /// The route names from the top level down to [name].
+    List<String>? search(
+      List<RouteBase> routes,
+      List<String> above,
+      String name,
+    ) {
+      for (final route in routes.whereType<GoRoute>()) {
+        final path = [...above, ?route.name];
+        if (route.name == name) return path;
+        final found = search(route.routes, path, name);
+        if (found != null) return found;
+      }
+      return null;
+    }
+
+    List<String>? ancestry(String name) =>
+        search(RouteManager.shellSubRoutes, [], name);
+
+    test('then the project list is the home page at /', () {
+      expect(homePage, '/');
+      expect(ancestry(homeRouteName), [homeRouteName]);
+    });
+
+    for (final (name, parents) in [
+      (createProjectRouteName, [homeRouteName]),
+      (projectRouteName, [homeRouteName]),
+      (editProjectRouteName, [homeRouteName, projectRouteName]),
+      (membersRouteName, [homeRouteName, projectRouteName]),
+      (localizeSiteRouteName, [homeRouteName, projectRouteName]),
+      (validateSiteRouteName, [homeRouteName, projectRouteName]),
+      (editSiteRouteName, [homeRouteName, projectRouteName]),
+      (joinRouteName, [homeRouteName]),
+      (joinWithCodeRouteName, [homeRouteName, joinRouteName]),
+      (profileRouteName, [homeRouteName]),
+    ]) {
+      test('then $name sits under ${parents.join(' > ')}', () {
+        expect(ancestry(name), [...parents, name]);
+      });
+    }
+
+    for (final name in [
+      welcomeRouteName,
+      signInRouteName,
+      signUpRouteName,
+      passwordResetRouteName,
+    ]) {
+      test('then $name stays at the top level', () {
+        expect(ancestry(name), [name]);
+      });
+    }
   });
 }

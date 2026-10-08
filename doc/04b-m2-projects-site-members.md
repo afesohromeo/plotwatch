@@ -419,3 +419,43 @@ The app targets Android and iOS (and the web). The iOS project is set up from Wi
 
 ### Group G2 outcome (2026-10-07)
 Done as planned. Not compiled yet (no Mac); the first iOS build is the check.
+
+### Fix found while testing (2026-10-08)
+The Android build failed: `build.gradle.kts` wrote `java.util.Properties()`, and in a Gradle Kotlin script `java` is the project's Java extension, not the package. Fixed with `import java.util.Properties` at the top of the script. Claude doesn't build the app, so native build files are checked only by the developer's first build after a change.
+
+## Group H: Back button, owner site actions, member roles (approved 2026-10-08)
+Found by the developer while testing on the emulator: the Android Back button closed the app on every page; after validation the owner had no way to move the site or change its radius; a role could only be changed by removing and re-inviting the member.
+
+### Decisions
+| # | Item | Decision |
+|---|------|----------|
+| H-1 | **Nested routes** | Routes are nested by hierarchy (as in SmartDrive), so `goNamed` builds the page stack and Android Back goes up one level. The project list moves from `/home` to `/`; every other address is unchanged, including `/join/<code>` (invitation links, App Links). Back on the project list closes the app (Android convention). Tree: `/` (projects) → `projects/new`, `projects/:projectId` → (`edit`, `members`, `site/localize`, `site/validate`, `site/edit`), `join` → `:code`, `profile`. Welcome, sign-in, sign-up and password reset stay top level. The `root` redirect route is removed (the list is at `/`). Path constants: top-level paths keep their leading `/`, child paths are relative segments (SmartDrive convention); the full paths used by the redirect logic (`/join`) stay as constants. |
+| H-1a | **Reload when shown again** | With nesting, the pages underneath stay alive, so the project list and the project page would show stale data after a child page changes something (a new project, a validated site). A small shared widget `ReloadOnReturn` calls a callback when its page becomes the top page again (`ModalRoute.isCurrentOf`). The project list refreshes and the project page reloads. A dialog or menu closing on the page also counts as a return (one extra request, accepted). The in-page back arrows keep using `goNamed` to the parent. |
+| H-2 | **Owner moves the site** | Once a site is validated, the owner also sees **Propose new location** (the same localize flow, phone only; the web page explains this, as before the first validation). Server unchanged: `proposeSite` already allows the owner (G-12). |
+| H-3 | **Owner edits the site** | **Edit site** for the owner once a site exists: the map with the current point and circle, the radius slider and the address, prefilled; **Save** changes only the radius and the address. New `site.update(projectId, {radiusM, addressText})`, owner only (`editProject`), same limits as validation (10–500 m, address ≤ 200), `siteNotFound` when no site exists yet. Audit `site.update` (before/after) and activity `siteChanged`. A blank address removes it. Photos keep the result they got at capture time (each capture is checked against the site as it was then). App: `EditSiteBloc`, `EditSitePage`, route `site/edit` (`edit-site`); the radius slider row moves into a shared `SiteRadiusField` used by both the validate and the edit page. |
+| H-4 | **Change a member's role** | New `membership.changeRole(projectId, memberId, role)`, owner only (`manageMembers`). The target must be an active member of the project (`memberNotFound`); the owner's role can't be changed (`cannotChangeOwnerRole`); the new role can't be owner (`invalidMemberRole`). The same role is a no-op (nothing recorded). Leaving co-funder resets `canApprove` to false. Audit `member.changeRole` (before/after), activity `memberRoleChanged` (new `ActivityType` value; enums are stored by name, so no migration). A pending site proposal made by a site manager whose role changes stays pending; the owner still decides. App: on the members list the owner gets a **Change role** button next to Remove, opening a dialog with co-funder, viewer and site manager (current role marked); the list updates in place. `canApprove` (the co-funder approval switch) comes in M3 with approvals. |
+| H-5 | **Scope** | MEMB-07 (role change only) moves into the MVP (`03` §3.1); setting `can_approve` stays with M3. |
+| H-6 | **Android Gradle Plugin** | 9.1.0 → 9.1.1, as in SmartDrive and PlusLocate. |
+
+### Files
+- Server: `site_endpoint.dart` (+ `update`), `site_service.dart` (+ `update`), `membership_endpoint.dart` (+ `changeRole`), `membership_service.dart` (+ `changeRole`), models `app_error_code.spy.yaml` (+ `siteNotFound`, `cannotChangeOwnerRole`, `invalidMemberRole`), `activity_type.spy.yaml` (+ `memberRoleChanged`).
+- App: `route_paths.dart`, `route_names.dart` (+ `edit-site`), `route_manager.dart`; `shared/components/reload_on_return.dart`; `project_list_page.dart`, `project_overview_page.dart` (site section, `ReloadOnReturn`); `features/site/` (`EditSiteBloc`, `EditSitePage`, `widgets/site_radius_field.dart`; `ValidateSitePage` uses the field); `SiteApiProvider`/`SiteRepository` (+ `update`); `MembershipApiProvider`/`MembershipRepository` (+ `changeRole`); `MembersBloc` (+ `changeRole`), `MembersPage` (button and dialog); `app_error_code_extensions.dart`; ARB EN + FR.
+- Android: `settings.gradle.kts` (AGP 9.1.1).
+- Docs: `02` (MEMB-07 → MVP for the role), `03` §3.1, `00` status.
+
+### Tests first
+- Server `site_endpoint_test`: owner updates radius and address (audit before/after, one `siteChanged`); blank address removes it; radius 9 / 501 → `invalidSiteRadius`; no site → `siteNotFound`; site manager, co-funder, viewer → `permissionDenied`; outsider → `projectNotFound`.
+- Server `membership_endpoint_test`: owner changes viewer → co-funder (audit, one `memberRoleChanged`); co-funder with `canApprove` → viewer resets it; same role records nothing; owner's role → `cannotChangeOwnerRole`; role owner → `invalidMemberRole`; removed or unknown member → `memberNotFound`; non-owner → `permissionDenied`; the member's permissions follow the new role (a new site manager can propose).
+- App: router (`redirectFor` with `/` as home; `go('/projects/1/members')` builds the list, project and members pages; popping returns to the project page); `ReloadOnReturn` (called when the page above is popped, not on first show); `EditSiteBloc` (load prefills radius and address, radius clamp, save success and each failure); `EditSitePage` (prefilled, Save sends radius and address); overview site section (owner with a site: Propose new location and Edit site; site manager: Propose new location only; viewer: neither); `MembersBloc.changeRole` (updates the row, failure keeps it); `MembersPage` (Change role only for the owner and not on the owner's row; picking a role sends it); repositories and API providers.
+
+### You run (one batch, after Claude writes the code)
+`serverpod generate` (server; no migration needed), `flutter gen-l10n`, `dart run build_runner build --delete-conflicting-outputs`, `dart format .` (both packages), `dart analyze`. Then Claude runs both test suites, and you check on the emulator: Back from members → project → list → app closes; owner moves and edits the site; owner changes a role.
+
+### Group H outcome (2026-10-08)
+Done as planned (H-1 to H-6). `dart test` **224/224** (new: 13 site edit and 9 role change cases), `flutter test` **443/443** (new: route tree, `ReloadOnReturn`, `EditSiteBloc`, `EditSitePage`, owner site buttons, role change in `MembersBloc` and `MembersPage`, repositories). Seen red first: every new test failed to compile until the code existed.
+
+Notes:
+- `serverpod start` regenerated the client while the server edits were half done, and the client lost the `site` and `membership` endpoints until the developer ran `serverpod generate`. When `serverpod start` runs, server edits should be complete before saving, or generation fixed afterwards.
+- The role change bloc test compares roles, not whole states: Serverpod's `MemberView` and `ProjectMember` have no value equality.
+
+To check on the emulator: Back from members → project → list → app closes; the owner moves the site (new reading) and edits its radius and address; the owner changes a role.

@@ -56,12 +56,13 @@ extension MembersEventPatterns on MembersEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _FetchMembers value)?  fetchMembers,TResult Function( _RemoveMember value)?  removeMember,TResult Function( _CancelInvitation value)?  cancelInvitation,TResult Function( _InvitationCreated value)?  invitationCreated,TResult Function( _ResetFlowStep value)?  resetFlowStep,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _FetchMembers value)?  fetchMembers,TResult Function( _RemoveMember value)?  removeMember,TResult Function( _ChangeRole value)?  changeRole,TResult Function( _CancelInvitation value)?  cancelInvitation,TResult Function( _InvitationCreated value)?  invitationCreated,TResult Function( _ResetFlowStep value)?  resetFlowStep,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _FetchMembers() when fetchMembers != null:
 return fetchMembers(_that);case _RemoveMember() when removeMember != null:
-return removeMember(_that);case _CancelInvitation() when cancelInvitation != null:
+return removeMember(_that);case _ChangeRole() when changeRole != null:
+return changeRole(_that);case _CancelInvitation() when cancelInvitation != null:
 return cancelInvitation(_that);case _InvitationCreated() when invitationCreated != null:
 return invitationCreated(_that);case _ResetFlowStep() when resetFlowStep != null:
 return resetFlowStep(_that);case _:
@@ -82,12 +83,13 @@ return resetFlowStep(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _FetchMembers value)  fetchMembers,required TResult Function( _RemoveMember value)  removeMember,required TResult Function( _CancelInvitation value)  cancelInvitation,required TResult Function( _InvitationCreated value)  invitationCreated,required TResult Function( _ResetFlowStep value)  resetFlowStep,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _FetchMembers value)  fetchMembers,required TResult Function( _RemoveMember value)  removeMember,required TResult Function( _ChangeRole value)  changeRole,required TResult Function( _CancelInvitation value)  cancelInvitation,required TResult Function( _InvitationCreated value)  invitationCreated,required TResult Function( _ResetFlowStep value)  resetFlowStep,}){
 final _that = this;
 switch (_that) {
 case _FetchMembers():
 return fetchMembers(_that);case _RemoveMember():
-return removeMember(_that);case _CancelInvitation():
+return removeMember(_that);case _ChangeRole():
+return changeRole(_that);case _CancelInvitation():
 return cancelInvitation(_that);case _InvitationCreated():
 return invitationCreated(_that);case _ResetFlowStep():
 return resetFlowStep(_that);}
@@ -104,12 +106,13 @@ return resetFlowStep(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _FetchMembers value)?  fetchMembers,TResult? Function( _RemoveMember value)?  removeMember,TResult? Function( _CancelInvitation value)?  cancelInvitation,TResult? Function( _InvitationCreated value)?  invitationCreated,TResult? Function( _ResetFlowStep value)?  resetFlowStep,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _FetchMembers value)?  fetchMembers,TResult? Function( _RemoveMember value)?  removeMember,TResult? Function( _ChangeRole value)?  changeRole,TResult? Function( _CancelInvitation value)?  cancelInvitation,TResult? Function( _InvitationCreated value)?  invitationCreated,TResult? Function( _ResetFlowStep value)?  resetFlowStep,}){
 final _that = this;
 switch (_that) {
 case _FetchMembers() when fetchMembers != null:
 return fetchMembers(_that);case _RemoveMember() when removeMember != null:
-return removeMember(_that);case _CancelInvitation() when cancelInvitation != null:
+return removeMember(_that);case _ChangeRole() when changeRole != null:
+return changeRole(_that);case _CancelInvitation() when cancelInvitation != null:
 return cancelInvitation(_that);case _InvitationCreated() when invitationCreated != null:
 return invitationCreated(_that);case _ResetFlowStep() when resetFlowStep != null:
 return resetFlowStep(_that);case _:
@@ -129,11 +132,12 @@ return resetFlowStep(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int projectId)?  fetchMembers,TResult Function( int memberId)?  removeMember,TResult Function( int invitationId)?  cancelInvitation,TResult Function( Invitation invitation)?  invitationCreated,TResult Function()?  resetFlowStep,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int projectId)?  fetchMembers,TResult Function( int memberId)?  removeMember,TResult Function( int memberId,  ProjectRole role)?  changeRole,TResult Function( int invitationId)?  cancelInvitation,TResult Function( Invitation invitation)?  invitationCreated,TResult Function()?  resetFlowStep,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FetchMembers() when fetchMembers != null:
 return fetchMembers(_that.projectId);case _RemoveMember() when removeMember != null:
-return removeMember(_that.memberId);case _CancelInvitation() when cancelInvitation != null:
+return removeMember(_that.memberId);case _ChangeRole() when changeRole != null:
+return changeRole(_that.memberId,_that.role);case _CancelInvitation() when cancelInvitation != null:
 return cancelInvitation(_that.invitationId);case _InvitationCreated() when invitationCreated != null:
 return invitationCreated(_that.invitation);case _ResetFlowStep() when resetFlowStep != null:
 return resetFlowStep();case _:
@@ -154,11 +158,12 @@ return resetFlowStep();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int projectId)  fetchMembers,required TResult Function( int memberId)  removeMember,required TResult Function( int invitationId)  cancelInvitation,required TResult Function( Invitation invitation)  invitationCreated,required TResult Function()  resetFlowStep,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int projectId)  fetchMembers,required TResult Function( int memberId)  removeMember,required TResult Function( int memberId,  ProjectRole role)  changeRole,required TResult Function( int invitationId)  cancelInvitation,required TResult Function( Invitation invitation)  invitationCreated,required TResult Function()  resetFlowStep,}) {final _that = this;
 switch (_that) {
 case _FetchMembers():
 return fetchMembers(_that.projectId);case _RemoveMember():
-return removeMember(_that.memberId);case _CancelInvitation():
+return removeMember(_that.memberId);case _ChangeRole():
+return changeRole(_that.memberId,_that.role);case _CancelInvitation():
 return cancelInvitation(_that.invitationId);case _InvitationCreated():
 return invitationCreated(_that.invitation);case _ResetFlowStep():
 return resetFlowStep();}
@@ -175,11 +180,12 @@ return resetFlowStep();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int projectId)?  fetchMembers,TResult? Function( int memberId)?  removeMember,TResult? Function( int invitationId)?  cancelInvitation,TResult? Function( Invitation invitation)?  invitationCreated,TResult? Function()?  resetFlowStep,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int projectId)?  fetchMembers,TResult? Function( int memberId)?  removeMember,TResult? Function( int memberId,  ProjectRole role)?  changeRole,TResult? Function( int invitationId)?  cancelInvitation,TResult? Function( Invitation invitation)?  invitationCreated,TResult? Function()?  resetFlowStep,}) {final _that = this;
 switch (_that) {
 case _FetchMembers() when fetchMembers != null:
 return fetchMembers(_that.projectId);case _RemoveMember() when removeMember != null:
-return removeMember(_that.memberId);case _CancelInvitation() when cancelInvitation != null:
+return removeMember(_that.memberId);case _ChangeRole() when changeRole != null:
+return changeRole(_that.memberId,_that.role);case _CancelInvitation() when cancelInvitation != null:
 return cancelInvitation(_that.invitationId);case _InvitationCreated() when invitationCreated != null:
 return invitationCreated(_that.invitation);case _ResetFlowStep() when resetFlowStep != null:
 return resetFlowStep();case _:
@@ -320,6 +326,76 @@ class __$RemoveMemberCopyWithImpl<$Res>
   return _then(_RemoveMember(
 memberId: null == memberId ? _self.memberId : memberId // ignore: cast_nullable_to_non_nullable
 as int,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _ChangeRole implements MembersEvent {
+  const _ChangeRole({required this.memberId, required this.role});
+  
+
+ final  int memberId;
+ final  ProjectRole role;
+
+/// Create a copy of MembersEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ChangeRoleCopyWith<_ChangeRole> get copyWith => __$ChangeRoleCopyWithImpl<_ChangeRole>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChangeRole&&(identical(other.memberId, memberId) || other.memberId == memberId)&&(identical(other.role, role) || other.role == role));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,memberId,role);
+}
+
+@override
+String toString() {
+    return 'MembersEvent.changeRole(memberId: $memberId, role: $role)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ChangeRoleCopyWith<$Res> implements $MembersEventCopyWith<$Res> {
+  factory _$ChangeRoleCopyWith(_ChangeRole value, $Res Function(_ChangeRole) _then) = __$ChangeRoleCopyWithImpl;
+@useResult
+$Res call({
+ int memberId, ProjectRole role
+});
+
+
+
+
+}
+/// @nodoc
+class __$ChangeRoleCopyWithImpl<$Res>
+    implements _$ChangeRoleCopyWith<$Res> {
+  __$ChangeRoleCopyWithImpl(this._self, this._then);
+
+  final _ChangeRole _self;
+  final $Res Function(_ChangeRole) _then;
+
+/// Create a copy of MembersEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? memberId = null,Object? role = null,}) {
+  return _then(_ChangeRole(
+memberId: null == memberId ? _self.memberId : memberId // ignore: cast_nullable_to_non_nullable
+as int,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as ProjectRole,
   ));
 }
 

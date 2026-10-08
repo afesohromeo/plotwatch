@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
-/// A project's members with their role; the owner invites, removes members
-/// and cancels pending invitations (MEMB-01, 04, 05). The server enforces
-/// who may do what.
+/// A project's members with their role; the owner invites, changes roles,
+/// removes members and cancels pending invitations (MEMB-01, 04, 05, 07).
+/// The server enforces who may do what.
 class MembersPage extends StatefulWidget {
   const MembersPage({super.key, required this.projectId});
 
@@ -14,6 +14,10 @@ class MembersPage extends StatefulWidget {
   static const inviteButtonKey = Key('members.invite');
   static const refreshButtonKey = Key('members.refresh');
   static Key removeButtonKey(int memberId) => Key('members.remove.$memberId');
+  static Key changeRoleButtonKey(int memberId) =>
+      Key('members.changeRole.$memberId');
+  static Key roleOptionKey(ProjectRole role) =>
+      Key('members.roleOption.${role.name}');
   static Key shareInvitationKey(int invitationId) =>
       Key('members.shareInvitation.$invitationId');
   static Key cancelInvitationKey(int invitationId) =>
@@ -68,6 +72,37 @@ class _MembersPageState extends State<MembersPage> {
     );
     if (confirmed) {
       bloc.add(MembersEvent.removeMember(memberId: view.member.id!));
+    }
+  }
+
+  /// The roles a member can be given; the current one is marked and
+  /// picking it changes nothing (doc/04b H-4).
+  Future<void> _chooseRole(MemberView view, AppLocalizations l10n) async {
+    final bloc = context.read<MembersBloc>();
+    final current = view.member.role;
+    final role = await showDialog<ProjectRole>(
+      context: context,
+      builder: (dialogContext) => SimpleDialog(
+        title: Text(l10n.changeRoleTitle(view.fullName ?? view.email ?? '')),
+        children: [
+          for (final role in ProjectRole.values)
+            if (role != ProjectRole.owner)
+              SimpleDialogOption(
+                key: MembersPage.roleOptionKey(role),
+                onPressed: () => Navigator.of(dialogContext).pop(role),
+                child: Row(
+                  children: [
+                    Expanded(child: Text(role.label(l10n))),
+                    if (role == current)
+                      Icon(Icons.check_rounded, color: customColors.primary),
+                  ],
+                ),
+              ),
+        ],
+      ),
+    );
+    if (role != null && role != current) {
+      bloc.add(MembersEvent.changeRole(memberId: view.member.id!, role: role));
     }
   }
 
@@ -129,6 +164,7 @@ class _MembersPageState extends State<MembersPage> {
               state: state,
               onRefresh: () async => _load(),
               onRemove: (view) => _confirmRemove(view, l10n),
+              onChangeRole: (view) => _chooseRole(view, l10n),
               onShareInvitation: (invitation) =>
                   _openInviteSheet(invitation: invitation),
               onCancelInvitation: (invitation) => bloc.add(
@@ -152,6 +188,7 @@ class _MembersList extends StatelessWidget {
   const _MembersList({
     required this.state,
     required this.onRemove,
+    required this.onChangeRole,
     required this.onCancelInvitation,
     required this.onShareInvitation,
     required this.onRefresh,
@@ -159,6 +196,7 @@ class _MembersList extends StatelessWidget {
 
   final MembersState state;
   final ValueChanged<MemberView> onRemove;
+  final ValueChanged<MemberView> onChangeRole;
   final ValueChanged<Invitation> onCancelInvitation;
   final ValueChanged<Invitation> onShareInvitation;
   final Future<void> Function() onRefresh;
@@ -178,12 +216,24 @@ class _MembersList extends StatelessWidget {
             subtitle: view.fullName == null ? null : view.email,
             chip: ProjectChip(label: view.member.role.label(l10n)),
             action: state.isOwner && view.member.role != ProjectRole.owner
-                ? IconButton(
-                    key: MembersPage.removeButtonKey(view.member.id!),
-                    tooltip: l10n.removeMemberTitle(view.fullName ?? ''),
-                    color: customColors.unverified,
-                    icon: const Icon(Icons.person_remove_outlined),
-                    onPressed: () => onRemove(view),
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        key: MembersPage.changeRoleButtonKey(view.member.id!),
+                        tooltip: l10n.changeRoleTitle(view.fullName ?? ''),
+                        color: customColors.primary,
+                        icon: const Icon(Icons.manage_accounts_outlined),
+                        onPressed: () => onChangeRole(view),
+                      ),
+                      IconButton(
+                        key: MembersPage.removeButtonKey(view.member.id!),
+                        tooltip: l10n.removeMemberTitle(view.fullName ?? ''),
+                        color: customColors.unverified,
+                        icon: const Icon(Icons.person_remove_outlined),
+                        onPressed: () => onRemove(view),
+                      ),
+                    ],
                   )
                 : null,
           ),

@@ -17,6 +17,7 @@ class ProjectOverviewPage extends StatefulWidget {
   static const refreshButtonKey = Key('project.refresh');
   static const localizeButtonKey = Key('project.localizeSite');
   static const reviewSiteButtonKey = Key('project.reviewSite');
+  static const editSiteButtonKey = Key('project.editSite');
 
   @override
   State<ProjectOverviewPage> createState() => _ProjectOverviewPageState();
@@ -38,64 +39,70 @@ class _ProjectOverviewPageState extends State<ProjectOverviewPage> {
     final l10n = AppLocalizations.of(context)!;
     final bloc = context.read<ProjectOverviewBloc>();
 
-    return BlocConsumer<ProjectOverviewBloc, ProjectOverviewState>(
-      listenWhen: (previous, current) =>
-          previous.actionStatus != current.actionStatus,
-      listener: (context, state) {
-        void resetFlowStep() =>
-            bloc.add(const ProjectOverviewEvent.resetFlowStep());
+    // Changes made on a page above (site, members, edit) show up after
+    // coming back (doc/04b H-1a).
+    return ReloadOnReturn(
+      onReturn: _load,
+      child: BlocConsumer<ProjectOverviewBloc, ProjectOverviewState>(
+        listenWhen: (previous, current) =>
+            previous.actionStatus != current.actionStatus,
+        listener: (context, state) {
+          void resetFlowStep() =>
+              bloc.add(const ProjectOverviewEvent.resetFlowStep());
 
-        if (state.actionStatus == GenericStatus.success) {
-          DialogUtils.handleSuccess(
-            context,
-            l10n.statusChanged,
-            postActions: [resetFlowStep],
-          );
-        } else if (state.actionStatus == GenericStatus.failure &&
-            state.actionErrorMessage != null) {
-          DialogUtils.handleFailure(
-            context,
-            state.actionErrorMessage!,
-            postActions: [resetFlowStep],
-          );
-        }
-      },
-      buildWhen: (previous, current) =>
-          previous.overview != current.overview ||
-          previous.overviewStatus != current.overviewStatus,
-      builder: (context, state) {
-        final overview = state.overview;
-        return ResponsiveScaffoldWrapper(
-          props: ScaffoldWrapperProps(
-            leading: BackButton(
-              onPressed: () => context.goNamed(homeRouteName),
+          if (state.actionStatus == GenericStatus.success) {
+            DialogUtils.handleSuccess(
+              context,
+              l10n.statusChanged,
+              postActions: [resetFlowStep],
+            );
+          } else if (state.actionStatus == GenericStatus.failure &&
+              state.actionErrorMessage != null) {
+            DialogUtils.handleFailure(
+              context,
+              state.actionErrorMessage!,
+              postActions: [resetFlowStep],
+            );
+          }
+        },
+        buildWhen: (previous, current) =>
+            previous.overview != current.overview ||
+            previous.overviewStatus != current.overviewStatus,
+        builder: (context, state) {
+          final overview = state.overview;
+          return ResponsiveScaffoldWrapper(
+            props: ScaffoldWrapperProps(
+              leading: BackButton(
+                onPressed: () => context.goNamed(homeRouteName),
+              ),
+              title: Text(overview?.project.name ?? l10n.projectsTitle),
+              actions: [
+                IconButton(
+                  key: ProjectOverviewPage.refreshButtonKey,
+                  tooltip: l10n.refresh,
+                  color: customColors.primary,
+                  icon: const Icon(Icons.refresh_rounded),
+                  onPressed: _load,
+                ),
+                if (overview != null) ...?_ownerActions(overview, l10n),
+              ],
             ),
-            title: Text(overview?.project.name ?? l10n.projectsTitle),
-            actions: [
-              IconButton(
-                key: ProjectOverviewPage.refreshButtonKey,
-                tooltip: l10n.refresh,
-                color: customColors.primary,
-                icon: const Icon(Icons.refresh_rounded),
+            mobileBody: switch (state.overviewStatus) {
+              _ when overview != null => _OverviewBody(
+                overview: overview,
+                onRefresh: () async => _load(),
+              ),
+              GenericStatus.failure => ErrorrWidget(
+                errorMessage:
+                    state.overviewErrorMessage ?? l10n.errorProjectLoad,
+                refreshText: l10n.refresh,
                 onPressed: _load,
               ),
-              if (overview != null) ...?_ownerActions(overview, l10n),
-            ],
-          ),
-          mobileBody: switch (state.overviewStatus) {
-            _ when overview != null => _OverviewBody(
-              overview: overview,
-              onRefresh: () async => _load(),
-            ),
-            GenericStatus.failure => ErrorrWidget(
-              errorMessage: state.overviewErrorMessage ?? l10n.errorProjectLoad,
-              refreshText: l10n.refresh,
-              onPressed: _load,
-            ),
-            _ => const Center(child: CircularProgressIndicator()),
-          },
-        );
-      },
+              _ => const Center(child: CircularProgressIndicator()),
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -189,7 +196,8 @@ class _OverviewBody extends StatelessWidget {
     );
   }
 
-  /// What each role sees and can do about the site (doc/04b G-7, G-12).
+  /// What each role sees and can do about the site (doc/04b G-7, G-12, H-2,
+  /// H-3).
   List<Widget> _site(BuildContext context, AppLocalizations l10n) {
     final site = overview.site;
     final pending = overview.pendingSiteProposal;
@@ -259,11 +267,20 @@ class _OverviewBody extends StatelessWidget {
           ],
           _ => [text(l10n.siteWaiting)],
         }
-      else if (role == ProjectRole.siteManager)
+      // A validated site, nothing pending: the site manager or the owner
+      // can move it with a new reading on the plot.
+      else if (role == ProjectRole.siteManager || role == ProjectRole.owner)
         button(
           ProjectOverviewPage.localizeButtonKey,
           l10n.proposeNewLocationAction,
           localizeSiteRouteName,
+        ),
+      // The owner changes the radius or the address without a new reading.
+      if (site != null && role == ProjectRole.owner)
+        button(
+          ProjectOverviewPage.editSiteButtonKey,
+          l10n.editSiteAction,
+          editSiteRouteName,
         ),
     ];
   }

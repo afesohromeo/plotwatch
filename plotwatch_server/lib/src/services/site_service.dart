@@ -213,6 +213,58 @@ class SiteService {
     });
   }
 
+  /// Changes the radius and the address of the validated site, not its point
+  /// (doc/04b H-3). A null [addressText] removes the address.
+  Future<Site> update(
+    Session session,
+    ProjectMember owner, {
+    required int radiusM,
+    required String? addressText,
+  }) {
+    return session.db.transaction((transaction) async {
+      final existing = await Site.db.findFirstRow(
+        session,
+        where: (t) => t.projectId.equals(owner.projectId),
+        lockMode: LockMode.forUpdate,
+        transaction: transaction,
+      );
+      if (existing == null) {
+        throw AppException(code: AppErrorCode.siteNotFound);
+      }
+      final site = await Site.db.updateRow(
+        session,
+        existing.copyWith(
+          radiusM: radiusM,
+          addressText: addressText,
+          updatedAt: DateTime.now().toUtc(),
+        ),
+        transaction: transaction,
+      );
+      await _audit.record(
+        session,
+        actorId: owner.authUserId,
+        projectId: owner.projectId,
+        action: 'site.update',
+        entityType: 'site',
+        entityId: site.id,
+        before: _siteFields(existing),
+        after: _siteFields(site),
+        transaction: transaction,
+      );
+      await _activity.record(
+        session,
+        projectId: owner.projectId,
+        actorId: owner.authUserId,
+        type: ActivityType.siteChanged,
+        targetType: 'site',
+        targetId: site.id,
+        payload: {'plusCode': site.plusCode, 'radiusM': '${site.radiusM}'},
+        transaction: transaction,
+      );
+      return site;
+    });
+  }
+
   Future<void> reject(
     Session session,
     ProjectMember owner,

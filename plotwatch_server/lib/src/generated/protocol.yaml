@@ -17,6 +17,7 @@ membership:
   - previewInvitation:
   - acceptInvitation:
   - listMembers:
+  - changeRole:
   - removeMember:
 profile:
   - getMe:
@@ -32,4 +33,5 @@ site:
   - propose:
   - listProposals:
   - validate:
+  - update:
   - reject:

@@ -69,6 +69,16 @@ void main() {
       verify(() => apiProvider.cancelInvitation(1, 3)).called(1);
     });
 
+    // doc/04b H-4.
+    test('when a role is changed then the updated member comes back', () async {
+      final changed = testMember(id: 2, role: ProjectRole.viewer).member;
+      when(
+        () => apiProvider.changeRole(1, 2, ProjectRole.viewer),
+      ).thenAnswer((_) async => changed);
+
+      expect(await repository.changeRole(1, 2, ProjectRole.viewer), changed);
+    });
+
     test('when a call fails then the error is rethrown', () async {
       when(
         () => apiProvider.acceptInvitation(any()),

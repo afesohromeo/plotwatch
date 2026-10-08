@@ -58,6 +58,22 @@ void main() {
       verify(() => apiProvider.reject(1, 7, reason: 'Wrong plot')).called(1);
     });
 
+    // doc/04b H-3.
+    test(
+      'when the site is updated then its radius and address are sent',
+      () async {
+        final site = testSite();
+        when(
+          () => apiProvider.update(1, radiusM: 120, addressText: 'Gate'),
+        ).thenAnswer((_) async => site);
+
+        expect(
+          await repository.updateSite(1, radiusM: 120, addressText: 'Gate'),
+          site,
+        );
+      },
+    );
+
     test('when a call fails then the error is rethrown', () async {
       when(
         () => apiProvider.listProposals(any()),

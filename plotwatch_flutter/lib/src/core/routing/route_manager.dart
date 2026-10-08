@@ -67,15 +67,13 @@ class RouteManager {
 
   /// Pages worth coming back to after signing in: the join links.
   static bool isRememberedTarget(String location) =>
-      location == joinPage || location.startsWith('$joinPage/');
+      location == '/$joinPage' || location.startsWith('/$joinPage/');
 
+  /// Nested by hierarchy (doc/04b H-1): going to a page also builds its
+  /// parents below it, so Android Back goes up one level. The auth pages
+  /// stay at the top level.
   static List<RouteBase> get shellSubRoutes {
     return [
-      GoRoute(
-        name: rootRouteName,
-        path: rootPage,
-        redirect: (context, state) => homePage,
-      ),
       GoRoute(
         name: welcomeRouteName,
         path: welcomePage,
@@ -133,35 +131,84 @@ class RouteManager {
             child: const ProjectListPage(),
           ),
         ),
-      ),
-      // Before `projectPage`, so "new" isn't read as a project ID.
-      GoRoute(
-        name: createProjectRouteName,
-        path: createProjectPage,
-        pageBuilder: (context, state) => NoTransitionPage<void>(
-          key: state.pageKey,
-          child: BlocProvider(
-            create: (context) => CreateProjectBloc(
-              projectRepository: context.read<ProjectRepository>(),
+        routes: [
+          // Before `projectPage`, so "new" isn't read as a project ID.
+          GoRoute(
+            name: createProjectRouteName,
+            path: createProjectPage,
+            pageBuilder: (context, state) => NoTransitionPage<void>(
+              key: state.pageKey,
+              child: BlocProvider(
+                create: (context) => CreateProjectBloc(
+                  projectRepository: context.read<ProjectRepository>(),
+                ),
+                child: const CreateProjectPage(),
+              ),
             ),
-            child: const CreateProjectPage(),
           ),
-        ),
-      ),
-      GoRoute(
-        name: projectRouteName,
-        path: projectPage,
-        redirect: _requireProjectId,
-        pageBuilder: (context, state) => NoTransitionPage<void>(
-          key: state.pageKey,
-          child: BlocProvider(
-            create: (context) => ProjectOverviewBloc(
-              projectRepository: context.read<ProjectRepository>(),
+          GoRoute(
+            name: projectRouteName,
+            path: projectPage,
+            redirect: _requireProjectId,
+            pageBuilder: (context, state) => NoTransitionPage<void>(
+              key: state.pageKey,
+              child: BlocProvider(
+                create: (context) => ProjectOverviewBloc(
+                  projectRepository: context.read<ProjectRepository>(),
+                ),
+                child: ProjectOverviewPage(projectId: _projectId(state)!),
+              ),
             ),
-            child: ProjectOverviewPage(projectId: _projectId(state)!),
+            routes: _projectSubRoutes,
           ),
-        ),
+          GoRoute(
+            name: joinRouteName,
+            path: joinPage,
+            pageBuilder: (context, state) => NoTransitionPage<void>(
+              key: state.pageKey,
+              child: BlocProvider(
+                create: (context) => JoinProjectBloc(
+                  membershipRepository: context.read<MembershipRepository>(),
+                ),
+                child: const JoinProjectPage(),
+              ),
+            ),
+            routes: [
+              // The invitation link (decision M2-8).
+              GoRoute(
+                name: joinWithCodeRouteName,
+                path: joinWithCodePage,
+                pageBuilder: (context, state) => NoTransitionPage<void>(
+                  key: state.pageKey,
+                  child: BlocProvider(
+                    create: (context) => JoinProjectBloc(
+                      membershipRepository: context
+                          .read<MembershipRepository>(),
+                    ),
+                    child: JoinProjectPage(
+                      initialCode: state.pathParameters['code'],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          GoRoute(
+            name: profileRouteName,
+            path: profilePage,
+            pageBuilder: (context, state) => NoTransitionPage<void>(
+              key: state.pageKey,
+              child: const ProfilePage(),
+            ),
+          ),
+        ],
       ),
+    ];
+  }
+
+  /// The pages of one project, under the project page.
+  static List<RouteBase> get _projectSubRoutes {
+    return [
       GoRoute(
         name: editProjectRouteName,
         path: editProjectPage,
@@ -222,38 +269,16 @@ class RouteManager {
         ),
       ),
       GoRoute(
-        name: joinRouteName,
-        path: joinPage,
+        name: editSiteRouteName,
+        path: editSitePage,
+        redirect: _requireProjectId,
         pageBuilder: (context, state) => NoTransitionPage<void>(
           key: state.pageKey,
           child: BlocProvider(
-            create: (context) => JoinProjectBloc(
-              membershipRepository: context.read<MembershipRepository>(),
-            ),
-            child: const JoinProjectPage(),
+            create: (context) =>
+                EditSiteBloc(siteRepository: context.read<SiteRepository>()),
+            child: EditSitePage(projectId: _projectId(state)!),
           ),
-        ),
-      ),
-      // The invitation link (decision M2-8).
-      GoRoute(
-        name: joinWithCodeRouteName,
-        path: joinWithCodePage,
-        pageBuilder: (context, state) => NoTransitionPage<void>(
-          key: state.pageKey,
-          child: BlocProvider(
-            create: (context) => JoinProjectBloc(
-              membershipRepository: context.read<MembershipRepository>(),
-            ),
-            child: JoinProjectPage(initialCode: state.pathParameters['code']),
-          ),
-        ),
-      ),
-      GoRoute(
-        name: profileRouteName,
-        path: profilePage,
-        pageBuilder: (context, state) => NoTransitionPage<void>(
-          key: state.pageKey,
-          child: const ProfilePage(),
         ),
       ),
     ];

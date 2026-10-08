@@ -731,4 +731,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get proposeNewLocationAction => 'Propose a new location';
+
+  @override
+  String get errorCannotChangeOwnerRole =>
+      'The project owner\'s role can\'t be changed.';
+
+  @override
+  String get errorInvalidMemberRole => 'A member can\'t be made the owner.';
+
+  @override
+  String get errorSiteNotFound => 'This project has no validated site yet.';
+
+  @override
+  String get editSiteAction => 'Edit the site';
+
+  @override
+  String get editSiteTitle => 'Edit the site';
+
+  @override
+  String get editSiteHint =>
+      'Change the circle or the address. To move the point, propose a new location from the plot.';
+
+  @override
+  String get siteUpdated => 'The site has been updated.';
+
+  @override
+  String changeRoleTitle(String name) {
+    return 'Change the role of $name';
+  }
 }

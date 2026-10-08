@@ -122,6 +122,69 @@ void main() {
     },
   );
 
+  // doc/04b H-4.
+  testWidgets(
+    'Given the owner then only other members\' roles can be changed',
+    (tester) async {
+      await pumpWith(tester, loaded(ProjectRole.owner));
+
+      expect(find.byKey(MembersPage.changeRoleButtonKey(1)), findsNothing);
+      expect(find.byKey(MembersPage.changeRoleButtonKey(2)), findsOneWidget);
+    },
+  );
+
+  testWidgets('Given a site manager then no role can be changed', (
+    tester,
+  ) async {
+    await pumpWith(tester, loaded(ProjectRole.siteManager));
+
+    expect(find.byKey(MembersPage.changeRoleButtonKey(2)), findsNothing);
+  });
+
+  testWidgets('Given the owner changes a role when they pick another one then '
+      'it is sent', (tester) async {
+    await pumpWith(tester, loaded(ProjectRole.owner));
+
+    await tester.tap(find.byKey(MembersPage.changeRoleButtonKey(2)));
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(MembersPage.roleOptionKey(ProjectRole.owner)),
+      findsNothing,
+    );
+    await tester.tap(find.byKey(MembersPage.roleOptionKey(ProjectRole.viewer)));
+    await tester.pumpAndSettle();
+
+    verify(
+      () => bloc.add(
+        const MembersEvent.changeRole(memberId: 2, role: ProjectRole.viewer),
+      ),
+    ).called(1);
+  });
+
+  testWidgets('Given the role dialog when the current role is picked then '
+      'nothing is sent', (tester) async {
+    await pumpWith(tester, loaded(ProjectRole.owner));
+
+    await tester.tap(find.byKey(MembersPage.changeRoleButtonKey(2)));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(MembersPage.roleOptionKey(ProjectRole.siteManager)),
+    );
+    await tester.pumpAndSettle();
+
+    verifyNever(
+      () => bloc.add(
+        any(
+          that: isA<MembersEvent>().having(
+            (e) => '$e',
+            'event',
+            startsWith('MembersEvent.changeRole'),
+          ),
+        ),
+      ),
+    );
+  });
+
   testWidgets('Given the owner removes a member when they confirm then it is '
       'sent', (tester) async {
     await pumpWith(tester, loaded(ProjectRole.owner));

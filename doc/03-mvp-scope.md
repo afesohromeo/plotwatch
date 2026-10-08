@@ -68,7 +68,7 @@ Each day starts by checking the plan and ends with: tests passing, code committe
 | Profile | PROF-01, 02, 03 | Name, country, language (EN/FR), edit profile |
 | Projects | PROJ-01, 02, 03, 04, 05, 08 | Create (wizard), list, edit, status |
 | Site | SITE-03, 04, 06, 07 | Site manager localizes with GPS on the plot, owner validates and sets the radius; address; changes logged (revised 2026-10-06, `04b` M2-15) |
-| Members | MEMB-01, 02, 03, 04, 05, 08 | Invitation code/link, join, member list, remove, cancel |
+| Members | MEMB-01, 02, 03, 04, 05, 07, 08 | Invitation code/link, join, member list, change role (MEMB-07 role only, added 2026-10-08, `04b` H-4), remove, cancel |
 | Stages | STG-01 → 09 | Create/edit/reorder, templates, checklist, statuses, submit, progress |
 | Budget | BUD-01, 02 | Stage budgets, minor units + currency code |
 | Capture | CAP-01 → 09 | In-app camera only, GPS overlay, metadata, hash, commit/upload/finalize, attach to stage/item, immutable |

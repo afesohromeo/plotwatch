@@ -22,7 +22,8 @@ enum ActivityType implements _is.SerializableModel {
   siteProposalRejected,
   siteChanged,
   memberJoined,
-  memberRemoved;
+  memberRemoved,
+  memberRoleChanged;
 
   static ActivityType fromJson(String name) {
     switch (name) {
@@ -42,6 +43,8 @@ enum ActivityType implements _is.SerializableModel {
         return ActivityType.memberJoined;
       case 'memberRemoved':
         return ActivityType.memberRemoved;
+      case 'memberRoleChanged':
+        return ActivityType.memberRoleChanged;
       default:
         throw ArgumentError(
           'Value "$name" cannot be converted to "ActivityType"',

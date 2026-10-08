@@ -58,124 +58,129 @@ class _ProjectListPageState extends State<ProjectListPage> {
           DialogUtils.handleFailure(context, state.signOutErrorMessage!);
         }
       },
-      child: ResponsiveScaffoldWrapper(
-        props: ScaffoldWrapperProps(
-          title: Padding(
-            padding: const EdgeInsets.only(left: AppSpacing.md),
-            child: Text(l10n.projectsTitle),
-          ),
-          actions: [
-            IconButton(
-              key: ProjectListPage.joinButtonKey,
-              tooltip: l10n.joinTitle,
-              color: customColors.primary,
-              onPressed: () => context.goNamed(joinRouteName),
-              icon: const Icon(Icons.group_add_outlined),
+      // A new or joined project shows up after coming back (doc/04b H-1a).
+      child: ReloadOnReturn(
+        onReturn: _refresh,
+        child: ResponsiveScaffoldWrapper(
+          props: ScaffoldWrapperProps(
+            title: Padding(
+              padding: const EdgeInsets.only(left: AppSpacing.md),
+              child: Text(l10n.projectsTitle),
             ),
-            IconButton(
-              key: ProjectListPage.profileButtonKey,
-              tooltip: l10n.profileTitle,
-              color: customColors.primary,
-              onPressed: () => context.goNamed(profileRouteName),
-              icon: const Icon(Icons.person_outline_rounded),
-            ),
-            IconButton(
-              key: ProjectListPage.signOutButtonKey,
-              tooltip: l10n.signOut,
-              color: customColors.primary,
-              onPressed: () => context.read<AuthenticationBloc>().add(
-                const AuthenticationEvent.signOutRequested(),
+            actions: [
+              IconButton(
+                key: ProjectListPage.joinButtonKey,
+                tooltip: l10n.joinTitle,
+                color: customColors.primary,
+                onPressed: () => context.goNamed(joinRouteName),
+                icon: const Icon(Icons.group_add_outlined),
               ),
-              icon: const Icon(Icons.logout),
-            ),
-          ],
-          showFloatingButton: true,
-          onPressed: () => context.goNamed(createProjectRouteName),
-          buttonIcon: Icon(
-            Icons.add,
-            key: ProjectListPage.newProjectButtonKey,
-            semanticLabel: l10n.newProject,
-          ),
-        ),
-        mobileBody: BlocConsumer<ProjectListBloc, ProjectListState>(
-          listenWhen: (previous, current) =>
-              previous.projectsListStatus != current.projectsListStatus ||
-              previous.projectsRefreshController !=
-                  current.projectsRefreshController,
-          listener: (context, state) {
-            if (state.projectsRefreshController) {
-              _pagingController.refresh();
-              return;
-            }
-            if (state.projectsListStatus == GenericStatus.success) {
-              if (state.maxProjects) {
-                _pagingController.appendLastPage(state.paginatedProjects);
-              } else {
-                _pagingController.appendPage(
-                  state.paginatedProjects,
-                  state.projectsPageKey + 1,
-                );
-              }
-            } else if (state.projectsListStatus == GenericStatus.failure) {
-              _pagingController.error =
-                  state.projectsListError ?? l10n.errorProjectsLoad;
-            }
-          },
-          builder: (context, state) => RefreshIndicator(
-            onRefresh: () async => _refresh(),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: AuthFormLayout.maxWidth * 2,
+              IconButton(
+                key: ProjectListPage.profileButtonKey,
+                tooltip: l10n.profileTitle,
+                color: customColors.primary,
+                onPressed: () => context.goNamed(profileRouteName),
+                icon: const Icon(Icons.person_outline_rounded),
+              ),
+              IconButton(
+                key: ProjectListPage.signOutButtonKey,
+                tooltip: l10n.signOut,
+                color: customColors.primary,
+                onPressed: () => context.read<AuthenticationBloc>().add(
+                  const AuthenticationEvent.signOutRequested(),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: CustomPaginatedList<ProjectSummary>(
-                    pagingController: _pagingController,
-                    seperator: const Gap.vertical(height: AppSpacing.sm),
-                    pagedChildBuilderDelegate:
-                        PagedChildBuilderDelegate<ProjectSummary>(
-                          itemBuilder: (context, summary, index) => ProjectCard(
-                            summary: summary,
-                            onTap: () => context.goNamed(
-                              projectRouteName,
-                              pathParameters: {
-                                'projectId': '${summary.project.id}',
-                              },
-                            ),
-                          ),
-                          firstPageProgressIndicatorBuilder: (context) =>
-                              LoadingWidget(loadingText: l10n.loading),
-                          newPageProgressIndicatorBuilder: (context) =>
-                              const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(AppSpacing.md),
-                                  child: CircularProgressIndicator.adaptive(),
+                icon: const Icon(Icons.logout),
+              ),
+            ],
+            showFloatingButton: true,
+            onPressed: () => context.goNamed(createProjectRouteName),
+            buttonIcon: Icon(
+              Icons.add,
+              key: ProjectListPage.newProjectButtonKey,
+              semanticLabel: l10n.newProject,
+            ),
+          ),
+          mobileBody: BlocConsumer<ProjectListBloc, ProjectListState>(
+            listenWhen: (previous, current) =>
+                previous.projectsListStatus != current.projectsListStatus ||
+                previous.projectsRefreshController !=
+                    current.projectsRefreshController,
+            listener: (context, state) {
+              if (state.projectsRefreshController) {
+                _pagingController.refresh();
+                return;
+              }
+              if (state.projectsListStatus == GenericStatus.success) {
+                if (state.maxProjects) {
+                  _pagingController.appendLastPage(state.paginatedProjects);
+                } else {
+                  _pagingController.appendPage(
+                    state.paginatedProjects,
+                    state.projectsPageKey + 1,
+                  );
+                }
+              } else if (state.projectsListStatus == GenericStatus.failure) {
+                _pagingController.error =
+                    state.projectsListError ?? l10n.errorProjectsLoad;
+              }
+            },
+            builder: (context, state) => RefreshIndicator(
+              onRefresh: () async => _refresh(),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: AuthFormLayout.maxWidth * 2,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    child: CustomPaginatedList<ProjectSummary>(
+                      pagingController: _pagingController,
+                      seperator: const Gap.vertical(height: AppSpacing.sm),
+                      pagedChildBuilderDelegate:
+                          PagedChildBuilderDelegate<ProjectSummary>(
+                            itemBuilder: (context, summary, index) =>
+                                ProjectCard(
+                                  summary: summary,
+                                  onTap: () => context.goNamed(
+                                    projectRouteName,
+                                    pathParameters: {
+                                      'projectId': '${summary.project.id}',
+                                    },
+                                  ),
                                 ),
-                              ),
-                          firstPageErrorIndicatorBuilder: (context) =>
-                              ErrorrWidget(
-                                errorMessage:
-                                    _pagingController.error?.toString() ??
-                                    l10n.errorProjectsLoad,
-                                refreshText: l10n.refresh,
-                                onPressed: _refresh,
-                              ),
-                          newPageErrorIndicatorBuilder: (context) =>
-                              ErrorrWidget(
-                                errorMessage:
-                                    _pagingController.error?.toString() ??
-                                    l10n.errorProjectsLoad,
-                                refreshText: l10n.refresh,
-                                onPressed: () =>
-                                    _pagingController.retryLastFailedRequest(),
-                              ),
-                          noItemsFoundIndicatorBuilder: (context) =>
-                              EmptyWidget(
-                                emptyText: l10n.projectsEmpty,
-                                onPressed: _refresh,
-                              ),
-                        ),
+                            firstPageProgressIndicatorBuilder: (context) =>
+                                LoadingWidget(loadingText: l10n.loading),
+                            newPageProgressIndicatorBuilder: (context) =>
+                                const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(AppSpacing.md),
+                                    child: CircularProgressIndicator.adaptive(),
+                                  ),
+                                ),
+                            firstPageErrorIndicatorBuilder: (context) =>
+                                ErrorrWidget(
+                                  errorMessage:
+                                      _pagingController.error?.toString() ??
+                                      l10n.errorProjectsLoad,
+                                  refreshText: l10n.refresh,
+                                  onPressed: _refresh,
+                                ),
+                            newPageErrorIndicatorBuilder: (context) =>
+                                ErrorrWidget(
+                                  errorMessage:
+                                      _pagingController.error?.toString() ??
+                                      l10n.errorProjectsLoad,
+                                  refreshText: l10n.refresh,
+                                  onPressed: () => _pagingController
+                                      .retryLastFailedRequest(),
+                                ),
+                            noItemsFoundIndicatorBuilder: (context) =>
+                                EmptyWidget(
+                                  emptyText: l10n.projectsEmpty,
+                                  onPressed: _refresh,
+                                ),
+                          ),
+                    ),
                   ),
                 ),
               ),

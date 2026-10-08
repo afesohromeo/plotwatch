@@ -470,6 +470,118 @@ void main() {
       expect(validated.site, isNotNull);
     });
 
+    // doc/04b H-3: the owner changes the radius and the address of a
+    // validated site without a new GPS reading.
+    group('when the owner edits a validated site', () {
+      late Site validated;
+
+      setUp(() async {
+        final proposal = await propose();
+        validated = await endpoints.site.validate(
+          signedInAs(ownerId),
+          projectId,
+          proposal.id!,
+          radiusM: 50,
+          addressText: 'Behind the church',
+        );
+      });
+
+      test('then the radius and address change, the point stays', () async {
+        final site = await endpoints.site.update(
+          signedInAs(ownerId),
+          projectId,
+          radiusM: 120,
+          addressText: '  Near the market  ',
+        );
+
+        expect(site.id, validated.id);
+        expect(site.radiusM, 120);
+        expect(site.addressText, 'Near the market');
+        expect(site.centerLat, validated.centerLat);
+        expect(site.plusCode, validated.plusCode);
+        expect(site.validatedProposalId, validated.validatedProposalId);
+      });
+
+      test('then the change is audited and announced as siteChanged', () async {
+        await endpoints.site.update(
+          signedInAs(ownerId),
+          projectId,
+          radiusM: 120,
+        );
+        final session = sessionBuilder.build();
+
+        final audit = (await AuditLog.db.find(
+          session,
+          where: (t) => t.action.equals('site.update'),
+        )).single;
+        expect(audit.before?['radiusM'], '50');
+        expect(audit.after?['radiusM'], '120');
+        expect(
+          (await ActivityEvent.db.find(
+            session,
+            where: (t) => t.type.equals(ActivityType.siteChanged),
+          )).length,
+          2,
+          reason: 'one for the validation, one for the edit',
+        );
+      });
+
+      test('with a blank address then the address is removed', () async {
+        final site = await endpoints.site.update(
+          signedInAs(ownerId),
+          projectId,
+          radiusM: 50,
+          addressText: '   ',
+        );
+
+        expect(site.addressText, isNull);
+      });
+
+      for (final radiusM in [9, 501]) {
+        test(
+          'with a radius of $radiusM m then it throws invalidSiteRadius',
+          () async {
+            await expectLater(
+              endpoints.site.update(
+                signedInAs(ownerId),
+                projectId,
+                radiusM: radiusM,
+              ),
+              throwsA(_appException(AppErrorCode.invalidSiteRadius)),
+            );
+          },
+        );
+      }
+
+      for (final (name, userId) in [
+        ('the site manager', managerId),
+        ('a co-funder', coFunderId),
+        ('a viewer', viewerId),
+      ]) {
+        test('as $name then it throws permissionDenied', () async {
+          await expectLater(
+            endpoints.site.update(signedInAs(userId), projectId, radiusM: 80),
+            throwsA(_appException(AppErrorCode.permissionDenied)),
+          );
+        });
+      }
+
+      test('as a non-member then it throws projectNotFound', () async {
+        await expectLater(
+          endpoints.site.update(signedInAs(strangerId), projectId, radiusM: 80),
+          throwsA(_appException(AppErrorCode.projectNotFound)),
+        );
+      });
+    });
+
+    test('when the owner edits the site before one is validated then it '
+        'throws siteNotFound', () async {
+      await expectLater(
+        endpoints.site.update(signedInAs(ownerId), projectId, radiusM: 80),
+        throwsA(_appException(AppErrorCode.siteNotFound)),
+      );
+    });
+
     test('when the proposals are listed then the newest comes first', () async {
       final first = await propose();
       final second = await propose(atLat: lat + 0.0001);

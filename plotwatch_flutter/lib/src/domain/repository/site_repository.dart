@@ -45,6 +45,20 @@ class SiteRepository {
     ),
   );
 
+  /// Changes the radius and the address, not the point (doc/04b H-3).
+  Future<Site> updateSite(
+    int projectId, {
+    required int radiusM,
+    String? addressText,
+  }) => _logged(
+    'updating the site',
+    () => _apiProvider.update(
+      projectId,
+      radiusM: radiusM,
+      addressText: addressText,
+    ),
+  );
+
   Future<void> rejectProposal(
     int projectId,
     int proposalId, {

@@ -1,18 +1,29 @@
-const String rootPage = '/';
+// Top-level paths start with `/`; child paths are relative to their parent
+// route (SmartDrive convention), so `goNamed` builds the page stack and
+// Android Back goes up one level (doc/04b H-1).
 const String welcomePage = '/welcome';
 const String signInPage = '/sign-in';
 const String signUpPage = '/sign-up';
 const String passwordResetPage = '/forgot-password';
-const String homePage = '/home';
-const String profilePage = '/profile';
-const String createProjectPage = '/projects/new';
-const String projectPage = '/projects/:projectId';
-const String editProjectPage = '/projects/:projectId/edit';
-const String membersPage = '/projects/:projectId/members';
-const String localizeSitePage = '/projects/:projectId/site/localize';
-const String validateSitePage = '/projects/:projectId/site/validate';
-const String joinPage = '/join';
-const String joinWithCodePage = '/join/:code';
+
+/// The project list.
+const String homePage = '/';
+
+// Under the home page.
+const String createProjectPage = 'projects/new';
+const String projectPage = 'projects/:projectId';
+const String joinPage = 'join';
+const String profilePage = 'profile';
+
+// Under the project page.
+const String editProjectPage = 'edit';
+const String membersPage = 'members';
+const String localizeSitePage = 'site/localize';
+const String validateSitePage = 'site/validate';
+const String editSitePage = 'site/edit';
+
+// Under the join page: the invitation link (decision M2-8).
+const String joinWithCodePage = ':code';
 
 /// Pages reachable without signing in (auth guard in `route_manager.dart`).
 const Set<String> publicPages = {

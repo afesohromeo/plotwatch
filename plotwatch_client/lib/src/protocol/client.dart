@@ -346,6 +346,21 @@ class EndpointMembership extends _isc.EndpointRef {
         {'projectId': projectId},
       );
 
+  /// The owner gives a member another role (doc/04b H-4, MEMB-07).
+  _ida.Future<_ibpqw7ry.ProjectMember> changeRole(
+    int projectId,
+    int memberId,
+    _iei5qef1.ProjectRole role,
+  ) => caller.callServerEndpoint<_ibpqw7ry.ProjectMember>(
+    'membership',
+    'changeRole',
+    {
+      'projectId': projectId,
+      'memberId': memberId,
+      'role': role,
+    },
+  );
+
   _ida.Future<void> removeMember(
     int projectId,
     int memberId,
@@ -509,6 +524,22 @@ class EndpointSite extends _isc.EndpointRef {
     {
       'projectId': projectId,
       'proposalId': proposalId,
+      'radiusM': radiusM,
+      'addressText': addressText,
+    },
+  );
+
+  /// The owner changes the radius and the address of the validated site
+  /// without a new GPS reading (doc/04b H-3); a blank address removes it.
+  _ida.Future<_iw3fvswq.Site> update(
+    int projectId, {
+    required int radiusM,
+    String? addressText,
+  }) => caller.callServerEndpoint<_iw3fvswq.Site>(
+    'site',
+    'update',
+    {
+      'projectId': projectId,
       'radiusM': radiusM,
       'addressText': addressText,
     },

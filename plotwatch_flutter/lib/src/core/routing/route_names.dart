@@ -1,4 +1,3 @@
-const String rootRouteName = 'root';
 const String welcomeRouteName = 'welcome';
 const String signInRouteName = 'sign-in';
 const String signUpRouteName = 'sign-up';
@@ -13,3 +12,4 @@ const String joinRouteName = 'join';
 const String joinWithCodeRouteName = 'join-code';
 const String localizeSiteRouteName = 'localize-site';
 const String validateSiteRouteName = 'validate-site';
+const String editSiteRouteName = 'edit-site';

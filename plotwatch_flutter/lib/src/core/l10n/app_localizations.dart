@@ -1430,11 +1430,59 @@ abstract class AppLocalizations {
   /// **'Localize again'**
   String get localizeAgainAction;
 
-  /// Project page, site manager: moving a validated site
+  /// Project page, site manager or owner: moving a validated site with a new GPS reading
   ///
   /// In en, this message translates to:
   /// **'Propose a new location'**
   String get proposeNewLocationAction;
+
+  /// AppErrorCode.cannotChangeOwnerRole
+  ///
+  /// In en, this message translates to:
+  /// **'The project owner\'s role can\'t be changed.'**
+  String get errorCannotChangeOwnerRole;
+
+  /// AppErrorCode.invalidMemberRole
+  ///
+  /// In en, this message translates to:
+  /// **'A member can\'t be made the owner.'**
+  String get errorInvalidMemberRole;
+
+  /// AppErrorCode.siteNotFound
+  ///
+  /// In en, this message translates to:
+  /// **'This project has no validated site yet.'**
+  String get errorSiteNotFound;
+
+  /// Project page, owner: change the radius or the address of the validated site
+  ///
+  /// In en, this message translates to:
+  /// **'Edit the site'**
+  String get editSiteAction;
+
+  /// Title of the page where the owner changes the radius and the address
+  ///
+  /// In en, this message translates to:
+  /// **'Edit the site'**
+  String get editSiteTitle;
+
+  /// Subtitle of the edit site page
+  ///
+  /// In en, this message translates to:
+  /// **'Change the circle or the address. To move the point, propose a new location from the plot.'**
+  String get editSiteHint;
+
+  /// After the owner saved the radius and the address
+  ///
+  /// In en, this message translates to:
+  /// **'The site has been updated.'**
+  String get siteUpdated;
+
+  /// Members page: title of the role dialog and tooltip of its button
+  ///
+  /// In en, this message translates to:
+  /// **'Change the role of {name}'**
+  String changeRoleTitle(String name);
 }
 
 class _AppLocalizationsDelegate

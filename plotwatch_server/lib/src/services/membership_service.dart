@@ -30,6 +30,13 @@ class MembershipService {
     }
   }
 
+  /// Nobody becomes owner by a role change (doc/04b H-4).
+  static void validateMemberRole(ProjectRole role) {
+    if (role == ProjectRole.owner) {
+      throw AppException(code: AppErrorCode.invalidMemberRole);
+    }
+  }
+
   /// Upper case, without spaces or hyphens: `abcd-efgh` → `ABCDEFGH`.
   static String normalizeCode(String input) =>
       input.toUpperCase().replaceAll(RegExp(r'[\s-]'), '');
@@ -285,6 +292,66 @@ class MembershipService {
         payload: {'role': member.role.name},
         transaction: transaction,
       );
+    });
+  }
+
+  /// Gives an active member another role (doc/04b H-4, MEMB-07). The owner's
+  /// role is fixed; the same role records nothing. Leaving co-funder turns
+  /// approval off. Callers check the new role with [validateMemberRole].
+  Future<ProjectMember> changeRole(
+    Session session,
+    ProjectMember owner,
+    int memberId,
+    ProjectRole role,
+  ) {
+    return session.db.transaction((transaction) async {
+      final member = await ProjectMember.db.findFirstRow(
+        session,
+        where: (t) =>
+            t.id.equals(memberId) &
+            t.projectId.equals(owner.projectId) &
+            t.status.equals(MemberStatus.active),
+        lockMode: LockMode.forUpdate,
+        transaction: transaction,
+      );
+      if (member == null) {
+        throw AppException(code: AppErrorCode.memberNotFound);
+      }
+      if (member.role == ProjectRole.owner) {
+        throw AppException(code: AppErrorCode.cannotChangeOwnerRole);
+      }
+      if (member.role == role) return member;
+
+      final changed = await ProjectMember.db.updateRow(
+        session,
+        member.copyWith(
+          role: role,
+          canApprove: role == ProjectRole.coFunder && member.canApprove,
+        ),
+        transaction: transaction,
+      );
+      await _audit.record(
+        session,
+        actorId: owner.authUserId,
+        projectId: owner.projectId,
+        action: 'member.changeRole',
+        entityType: 'project_member',
+        entityId: member.id,
+        before: _memberFields(member),
+        after: _memberFields(changed),
+        transaction: transaction,
+      );
+      await _activity.record(
+        session,
+        projectId: owner.projectId,
+        actorId: owner.authUserId,
+        type: ActivityType.memberRoleChanged,
+        targetType: 'project_member',
+        targetId: member.id,
+        payload: {'from': member.role.name, 'to': role.name},
+        transaction: transaction,
+      );
+      return changed;
     });
   }
 

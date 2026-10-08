@@ -81,6 +81,31 @@ class SiteEndpoint extends Endpoint {
     );
   }
 
+  /// The owner changes the radius and the address of the validated site
+  /// without a new GPS reading (doc/04b H-3); a blank address removes it.
+  Future<Site> update(
+    Session session,
+    int projectId, {
+    required int radiusM,
+    String? addressText,
+  }) async {
+    final owner = await _permissions.require(
+      session,
+      projectId,
+      ProjectAction.editProject,
+    );
+    final address = SiteService.validateValidation(
+      radiusM: radiusM,
+      addressText: addressText,
+    );
+    return _service.update(
+      session,
+      owner,
+      radiusM: radiusM,
+      addressText: address,
+    );
+  }
+
   Future<void> reject(
     Session session,
     int projectId,

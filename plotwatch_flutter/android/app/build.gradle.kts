@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -6,7 +8,7 @@ plugins {
 
 // Keys kept out of git (doc/04b G-3): android/secrets.properties holds
 // MAPS_API_KEY=... . Without the file the app builds; only the map is blank.
-val secrets = java.util.Properties().apply {
+val secrets = Properties().apply {
     val file = rootProject.file("secrets.properties")
     if (file.exists()) file.inputStream().use { load(it) }
 }

@@ -756,4 +756,34 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get proposeNewLocationAction => 'Proposer un nouvel emplacement';
+
+  @override
+  String get errorCannotChangeOwnerRole =>
+      'Le rôle du propriétaire du projet ne peut pas être modifié.';
+
+  @override
+  String get errorInvalidMemberRole =>
+      'Un membre ne peut pas devenir propriétaire.';
+
+  @override
+  String get errorSiteNotFound =>
+      'Ce projet n\'a pas encore de chantier validé.';
+
+  @override
+  String get editSiteAction => 'Modifier le chantier';
+
+  @override
+  String get editSiteTitle => 'Modifier le chantier';
+
+  @override
+  String get editSiteHint =>
+      'Modifiez le cercle ou l\'adresse. Pour déplacer le point, proposez un nouvel emplacement depuis le terrain.';
+
+  @override
+  String get siteUpdated => 'Le chantier a été mis à jour.';
+
+  @override
+  String changeRoleTitle(String name) {
+    return 'Changer le rôle de $name';
+  }
 }

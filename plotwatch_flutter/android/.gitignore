@@ -15,3 +15,6 @@ key.properties
 
 # Maps key and other secrets (doc/04b G-3)
 secrets.properties
+
+# Build output written here by the Android Gradle Plugin 9.
+/build/

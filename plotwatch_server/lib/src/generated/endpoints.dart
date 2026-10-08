@@ -453,6 +453,38 @@ class Endpoints extends _is.EndpointDispatch {
                         params['projectId'],
                       ),
         ),
+        'changeRole': _is.MethodConnector(
+          name: 'changeRole',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'memberId': _is.ParameterDescription(
+              name: 'memberId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'role': _is.ParameterDescription(
+              name: 'role',
+              type: _is.getType<_izsiizob.ProjectRole>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['membership'] as _it8meaj6.MembershipEndpoint)
+                      .changeRole(
+                        session,
+                        params['projectId'],
+                        params['memberId'],
+                        params['role'],
+                      ),
+        ),
         'removeMember': _is.MethodConnector(
           name: 'removeMember',
           params: {
@@ -762,6 +794,36 @@ class Endpoints extends _is.EndpointDispatch {
                 session,
                 params['projectId'],
                 params['proposalId'],
+                radiusM: params['radiusM'],
+                addressText: params['addressText'],
+              ),
+        ),
+        'update': _is.MethodConnector(
+          name: 'update',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'radiusM': _is.ParameterDescription(
+              name: 'radiusM',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'addressText': _is.ParameterDescription(
+              name: 'addressText',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['site'] as _iisfmjap.SiteEndpoint).update(
+                session,
+                params['projectId'],
                 radiusM: params['radiusM'],
                 addressText: params['addressText'],
               ),

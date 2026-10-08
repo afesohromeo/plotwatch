@@ -60,6 +60,19 @@ class MembershipApiProvider {
     }
   }
 
+  /// doc/04b H-4.
+  Future<ProjectMember> changeRole(
+    int projectId,
+    int memberId,
+    ProjectRole role,
+  ) async {
+    try {
+      return await _client.membership.changeRole(projectId, memberId, role);
+    } catch (e) {
+      throw ApiErrorHandler.handle(e);
+    }
+  }
+
   Future<void> removeMember(int projectId, int memberId) async {
     try {
       await _client.membership.removeMember(projectId, memberId);

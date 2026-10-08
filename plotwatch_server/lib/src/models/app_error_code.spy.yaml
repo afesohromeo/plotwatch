@@ -29,11 +29,16 @@ values:
   - alreadyMember
   - cannotRemoveOwner
   - memberNotFound
+  # Role change (doc/04b H-4)
+  - cannotChangeOwnerRole
+  - invalidMemberRole
   # Site localization (doc/04b, group D)
   - siteProposalNotFound
   - siteProposalNotPending
   - siteAccuracyTooLow
   - siteMockLocation
+  # Site edit (doc/04b H-3)
+  - siteNotFound
   # Free text longer than its limit
   - textTooLong
   # Set by the client from the auth module's exceptions

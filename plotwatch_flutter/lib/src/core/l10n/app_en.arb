@@ -858,5 +858,26 @@
     "localizeAgainAction": "Localize again",
     "@localizeAgainAction": {"description": "Project page, site manager: a new proposal replaces the pending one"},
     "proposeNewLocationAction": "Propose a new location",
-    "@proposeNewLocationAction": {"description": "Project page, site manager: moving a validated site"}
+    "@proposeNewLocationAction": {"description": "Project page, site manager or owner: moving a validated site with a new GPS reading"},
+    "errorCannotChangeOwnerRole": "The project owner's role can't be changed.",
+    "@errorCannotChangeOwnerRole": {"description": "AppErrorCode.cannotChangeOwnerRole"},
+    "errorInvalidMemberRole": "A member can't be made the owner.",
+    "@errorInvalidMemberRole": {"description": "AppErrorCode.invalidMemberRole"},
+    "errorSiteNotFound": "This project has no validated site yet.",
+    "@errorSiteNotFound": {"description": "AppErrorCode.siteNotFound"},
+    "editSiteAction": "Edit the site",
+    "@editSiteAction": {"description": "Project page, owner: change the radius or the address of the validated site"},
+    "editSiteTitle": "Edit the site",
+    "@editSiteTitle": {"description": "Title of the page where the owner changes the radius and the address"},
+    "editSiteHint": "Change the circle or the address. To move the point, propose a new location from the plot.",
+    "@editSiteHint": {"description": "Subtitle of the edit site page"},
+    "siteUpdated": "The site has been updated.",
+    "@siteUpdated": {"description": "After the owner saved the radius and the address"},
+    "changeRoleTitle": "Change the role of {name}",
+    "@changeRoleTitle": {
+        "description": "Members page: title of the role dialog and tooltip of its button",
+        "placeholders": {
+            "name": {"type": "String"}
+        }
+    }
 }

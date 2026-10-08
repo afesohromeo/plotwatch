@@ -81,6 +81,22 @@ class MembershipEndpoint extends Endpoint {
     return _service.listMembers(session, projectId);
   }
 
+  /// The owner gives a member another role (doc/04b H-4, MEMB-07).
+  Future<ProjectMember> changeRole(
+    Session session,
+    int projectId,
+    int memberId,
+    ProjectRole role,
+  ) async {
+    final owner = await _permissions.require(
+      session,
+      projectId,
+      ProjectAction.manageMembers,
+    );
+    MembershipService.validateMemberRole(role);
+    return _service.changeRole(session, owner, memberId, role);
+  }
+
   Future<void> removeMember(
     Session session,
     int projectId,

@@ -21,7 +21,10 @@ void main() {
   );
   final invitation = testInvitation(id: 5);
 
-  setUpAll(() => l10n = setUpTestLocalization());
+  setUpAll(() {
+    l10n = setUpTestLocalization();
+    registerFallbackValue(ProjectRole.viewer);
+  });
   setUp(() {
     projectRepository = MockProjectRepository();
     membershipRepository = MockMembershipRepository();
@@ -170,6 +173,66 @@ void main() {
           flowStep: GenericFlowStep.deletingItem,
           actionStatus: GenericStatus.failure,
           actionErrorMessage: l10n.errorCannotRemoveOwner,
+        ),
+      ],
+    );
+
+    // doc/04b H-4.
+    blocTest<MembersBloc, MembersState>(
+      'when a member\'s role is changed then their row shows the new role',
+      setUp: () =>
+          when(
+            () => membershipRepository.changeRole(1, 2, ProjectRole.viewer),
+          ).thenAnswer(
+            (_) async => manager.member.copyWith(role: ProjectRole.viewer),
+          ),
+      build: build,
+      seed: () => ownerLoaded,
+      act: (bloc) => bloc.add(
+        const MembersEvent.changeRole(memberId: 2, role: ProjectRole.viewer),
+      ),
+      // Serverpod's MemberView has no value equality, so the roles are
+      // compared rather than whole states.
+      expect: () => [
+        ownerLoaded.copyWith(
+          flowStep: GenericFlowStep.updatingItem,
+          actionStatus: GenericStatus.loading,
+        ),
+        isA<MembersState>()
+            .having(
+              (s) => s.members.map((v) => (v.member.id, v.member.role)),
+              'member roles',
+              [(1, ProjectRole.owner), (2, ProjectRole.viewer)],
+            )
+            .having((s) => s.actionStatus, 'actionStatus', GenericStatus.success)
+            .having(
+              (s) => s.flowStep,
+              'flowStep',
+              GenericFlowStep.updatingItem,
+            ),
+      ],
+    );
+
+    blocTest<MembersBloc, MembersState>(
+      'when a role change is refused then the row keeps its role and it '
+      'shows why',
+      setUp: () =>
+          when(
+            () => membershipRepository.changeRole(any(), any(), any()),
+          ).thenThrow(
+            const HttpException400(code: AppErrorCode.cannotChangeOwnerRole),
+          ),
+      build: build,
+      seed: () => ownerLoaded,
+      act: (bloc) => bloc.add(
+        const MembersEvent.changeRole(memberId: 1, role: ProjectRole.viewer),
+      ),
+      skip: 1,
+      expect: () => [
+        ownerLoaded.copyWith(
+          flowStep: GenericFlowStep.updatingItem,
+          actionStatus: GenericStatus.failure,
+          actionErrorMessage: l10n.errorCannotChangeOwnerRole,
         ),
       ],
     );

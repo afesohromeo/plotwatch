@@ -220,7 +220,7 @@ A user can hold different roles on different projects (a site manager on one pro
 | MEMB-04 | The owner sees the list of members with role and join date, and can remove a member. | MVP |
 | MEMB-05 | The owner can cancel pending invitations. | MVP |
 | MEMB-06 | Invitations can be sent directly by email or SMS from the app. | P1 |
-| MEMB-07 | The owner can change a member's role and set `can_approve` for co-funders. | P1 |
+| MEMB-07 | The owner can change a member's role and set `can_approve` for co-funders. | MVP (role change, `04b` H-4); `can_approve` with M3 approvals |
 | MEMB-08 | A removed member loses access immediately, including to their active streams. | MVP |
 
 ### 4.6 Stages and templates (STG)

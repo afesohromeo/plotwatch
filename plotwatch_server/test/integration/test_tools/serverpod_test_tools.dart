@@ -778,6 +778,43 @@ class _MembershipEndpoint {
     });
   }
 
+  _ida.Future<_ilvoqq46.ProjectMember> changeRole(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    int memberId,
+    _izsiizob.ProjectRole role,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'membership',
+            method: 'changeRole',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'membership',
+          methodName: 'changeRole',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'memberId': memberId,
+            'role': role,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ilvoqq46.ProjectMember>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
   _ida.Future<void> removeMember(
     _ist.TestSessionBuilder sessionBuilder,
     int projectId,
@@ -1204,6 +1241,43 @@ class _SiteEndpoint {
           parameters: _ist.testObjectToJson({
             'projectId': projectId,
             'proposalId': proposalId,
+            'radiusM': radiusM,
+            'addressText': addressText,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_iiew30c8.Site>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_iiew30c8.Site> update(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId, {
+    required int radiusM,
+    String? addressText,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'site',
+            method: 'update',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'site',
+          methodName: 'update',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
             'radiusM': radiusM,
             'addressText': addressText,
           }),
