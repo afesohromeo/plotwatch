@@ -100,6 +100,8 @@ plotwatch/                          (git root)
 
 The order follows dependencies. Each milestone ends with something that runs end to end on the deployed build.
 
+**Revised schedule (approved 2026-10-08, `04c` M3-12).** M2 ran from D3 to D5, two days late. M3 D5–D6, M4 D6–D7, a half-day design pass on the demo screens D7 (`04c` M3-13), M5 D7–D8, M6 D8–D9, M8 D9 (feature freeze), M9 D10, D11 buffer. **M7 is dropped as a milestone:** evidence requests become a stretch goal, other should-haves follow the cut order of `03` §3.4.
+
 ---
 
 ## 4. Milestone scope
