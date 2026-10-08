@@ -92,13 +92,53 @@ void main() {
     await pumpWith(tester, loaded());
 
     tester
-        .widget<ReorderableListView>(find.byType(ReorderableListView))
+        .widget<SliverReorderableList>(find.byType(SliverReorderableList))
         .onReorderItem!(0, 1);
     await tester.pump();
 
     verify(
       () => bloc.add(
         const StagePlanEvent.reorderRequested(oldIndex: 0, newIndex: 1),
+      ),
+    ).called(1);
+  });
+
+  // doc/04c M3-F3: dragging a stage had to stop at the screen edge, because
+  // the page didn't scroll during the drag.
+  testWidgets('Given 20 stages on a small screen when the last is dragged '
+      'to the top then the page scrolls with it and the move is sent', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 700);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final stages = [
+      for (var i = 1; i <= 20; i++)
+        testStageView(id: i, name: 'Stage $i', orderIndex: i - 1),
+    ];
+    await pumpWith(tester, loaded(plan: testStagePlan(stages: stages)));
+    final page = find.byType(Scrollable).first;
+    final handle = find.byKey(StagePlanPage.dragHandleKey(20));
+    await tester.scrollUntilVisible(handle, 300, scrollable: page);
+    final position = tester.state<ScrollableState>(page).position;
+    expect(position.pixels, greaterThan(0));
+
+    final start = tester.getCenter(handle);
+    final gesture = await tester.startGesture(start);
+    await gesture.moveBy(const Offset(0, -20));
+    await tester.pump();
+    // Hold the stage at the top edge: the page scrolls up under it.
+    await gesture.moveTo(Offset(start.dx, 20));
+    for (var i = 0; i < 100 && position.pixels > 0; i++) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(position.pixels, 0);
+    await gesture.up();
+    await tester.pumpAndSettle();
+
+    verify(
+      () => bloc.add(
+        const StagePlanEvent.reorderRequested(oldIndex: 19, newIndex: 0),
       ),
     ).called(1);
   });

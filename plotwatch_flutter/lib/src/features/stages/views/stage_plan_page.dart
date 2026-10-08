@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -130,11 +132,13 @@ class _PlanBody extends StatelessWidget {
     final overview = state.overview!;
     final isBusy = state.actionStatus == GenericStatus.loading;
 
-    return AuthFormLayout(
-      title: overview.project.name,
-      subtitle: l10n.stagesTitle,
-      onRefresh: onRefresh,
+    final header = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        Text(overview.project.name, style: context.textTheme.headlineSmall),
+        const Gap.vertical(height: AppSpacing.sm),
+        Text(l10n.stagesTitle, style: context.textTheme.bodyMedium),
+        const Gap.vertical(height: AppSpacing.lg),
         DetailRow(
           label: l10n.labelTotalBudget,
           value: formatMoney(
@@ -148,31 +152,60 @@ class _PlanBody extends StatelessWidget {
           value: l10n.progressPercent(plan.progressPercent),
         ),
         const Gap.vertical(height: AppSpacing.md),
-        if (plan.stages.isEmpty)
-          ..._empty(context, l10n, bloc, isBusy)
-        else
-          ReorderableListView(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            buildDefaultDragHandles: false,
-            onReorderItem: (oldIndex, newIndex) => bloc.add(
-              StagePlanEvent.reorderRequested(
-                oldIndex: oldIndex,
-                newIndex: newIndex,
-              ),
-            ),
-            children: [
-              for (final (index, view) in plan.stages.indexed)
-                _StageTile(
-                  key: StagePlanPage.stageTileKey(view.stage.id!),
-                  index: index,
-                  view: view,
-                  currencyCode: state.currencyCode,
-                  canDrag: state.canEdit && !isBusy,
-                ),
-            ],
-          ),
+        if (plan.stages.isEmpty) ..._empty(context, l10n, bloc, isBusy),
       ],
+    );
+
+    // One scroll view for the whole page: a stage dragged near the top or
+    // bottom edge scrolls the page with it (doc/04c M3-F3). Same width as
+    // AuthFormLayout: 420 px at most, centred.
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final side = math.max(
+            AppSpacing.lg,
+            (constraints.maxWidth - AuthFormLayout.maxWidth) / 2,
+          );
+          return CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: [
+              SliverPadding(
+                padding: EdgeInsets.fromLTRB(side, AppSpacing.lg, side, 0),
+                sliver: SliverToBoxAdapter(child: header),
+              ),
+              SliverPadding(
+                padding: EdgeInsets.fromLTRB(side, 0, side, AppSpacing.lg),
+                sliver: SliverReorderableList(
+                  itemCount: plan.stages.length,
+                  onReorderItem: (oldIndex, newIndex) => bloc.add(
+                    StagePlanEvent.reorderRequested(
+                      oldIndex: oldIndex,
+                      newIndex: newIndex,
+                    ),
+                  ),
+                  proxyDecorator: (child, index, animation) => Material(
+                    elevation: 4,
+                    color: customColors.background,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    child: child,
+                  ),
+                  itemBuilder: (context, index) {
+                    final view = plan.stages[index];
+                    return _StageTile(
+                      key: StagePlanPage.stageTileKey(view.stage.id!),
+                      index: index,
+                      view: view,
+                      currencyCode: state.currencyCode,
+                      canDrag: state.canEdit && !isBusy,
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
