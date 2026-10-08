@@ -458,4 +458,4 @@ Notes:
 - `serverpod start` regenerated the client while the server edits were half done, and the client lost the `site` and `membership` endpoints until the developer ran `serverpod generate`. When `serverpod start` runs, server edits should be complete before saving, or generation fixed afterwards.
 - The role change bloc test compares roles, not whole states: Serverpod's `MemberView` and `ProjectMember` have no value equality.
 
-To check on the emulator: Back from members → project → list → app closes; the owner moves the site (new reading) and edits its radius and address; the owner changes a role.
+Checked by the developer on the Android emulator (2026-10-08), no issues: Back from members → project → list → app closes; the owner moves the site (new reading) and edits its radius and address; the owner changes a role; a new project shows in the list after going back.
