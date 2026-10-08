@@ -5,7 +5,8 @@ import 'activity_service.dart';
 import 'audit_service.dart';
 
 /// A project's stage plan: stages with a budget, planned dates and a
-/// checklist (STG-01–09, BUD-01–02; doc/04c). Callers check permissions
+/// checklist, and how much of it the captures cover (STG-01–09, BUD-01–02;
+/// doc/04c, doc/04d M4-10). Callers check permissions
 /// first with `PermissionService`. Every change locks the project row, so
 /// two edits of the same plan never interleave their order indexes.
 class StageService {
@@ -97,18 +98,16 @@ class StageService {
     Transaction? transaction,
   }) async {
     final stages = await _stages(session, projectId, transaction);
-    final items = await _itemsOf(
-      session,
-      {for (final s in stages) s.id!},
-      transaction,
-    );
+    final stageIds = {for (final s in stages) s.id!};
+    final items = await _itemsOf(session, stageIds, transaction);
+    final covered = await _coveredItems(session, stageIds, transaction);
     return StagePlan(
       stages: [
         for (final stage in stages)
           StageView(
             stage: stage,
             items: items[stage.id] ?? [],
-            itemsCovered: 0,
+            itemsCovered: covered[stage.id] ?? 0,
           ),
       ],
       budgetTotalMinor: budgetTotal(stages),
@@ -269,6 +268,17 @@ class StageService {
         throw AppException(code: AppErrorCode.invalidChecklistItem);
       }
       final removed = existing.where((i) => !sentIds.contains(i.id)).toList();
+      // A photo points to its item (doc/04d M4-15).
+      if (removed.isNotEmpty &&
+          await Evidence.db.count(
+                session,
+                where: (t) =>
+                    t.checklistItemId.inSet({for (final i in removed) i.id!}),
+                transaction: transaction,
+              ) >
+              0) {
+        throw AppException(code: AppErrorCode.checklistItemHasEvidence);
+      }
       if (removed.isNotEmpty) {
         await ChecklistItem.db.delete(
           session,
@@ -580,11 +590,38 @@ class StageService {
     Transaction? transaction,
   ) async {
     final items = await _itemsOf(session, {stage.id!}, transaction);
+    final covered = await _coveredItems(session, {stage.id!}, transaction);
     return StageView(
       stage: stage,
       items: items[stage.id] ?? [],
-      itemsCovered: 0,
+      itemsCovered: covered[stage.id] ?? 0,
     );
+  }
+
+  /// Per stage, the checklist items with at least one finalized capture
+  /// that isn't retracted, whatever its badge (STG-08, doc/04d M4-10).
+  Future<Map<int, int>> _coveredItems(
+    Session session,
+    Set<int> stageIds,
+    Transaction? transaction,
+  ) async {
+    if (stageIds.isEmpty) return {};
+    final captures = await Evidence.db.find(
+      session,
+      where: (t) =>
+          t.stageId.inSet(stageIds) & t.status.equals(EvidenceStatus.finalized),
+      transaction: transaction,
+    );
+    final itemsByStage = <int, Set<int>>{};
+    for (final capture in captures) {
+      itemsByStage
+          .putIfAbsent(capture.stageId, () => {})
+          .add(capture.checklistItemId);
+    }
+    return {
+      for (final MapEntry(:key, :value) in itemsByStage.entries)
+        key: value.length,
+    };
   }
 
   /// One audit entry and one activity event per change (AUD-01, FEED).

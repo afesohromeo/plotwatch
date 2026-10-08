@@ -1,0 +1,26 @@
+### What the phone sends when a photo is taken (CAP-03, CAP-05, CAP-06).
+### Immutable: a value object compared by its fields (==).
+class: EvidenceCommit
+immutable: true
+fields:
+  stageId: int
+  checklistItemId: int
+  ### SHA-256 of the exact bytes that will be uploaded, 64 hex characters
+  ### (decision M4-2).
+  sha256: String
+  ### From the phone; not trusted on its own (checks V7, V8).
+  deviceCapturedAt: DateTime
+  ### No fix is allowed: the capture is then not verified (M4-8).
+  lat: double?
+  lng: double?
+  accuracyM: double?
+  altitudeM: double?
+  ### Android only.
+  isMockLocation: bool?
+  ### The app attests the photo came from its own camera (check V1).
+  capturedInApp: bool
+  deviceModel: String
+  osVersion: String
+  appVersion: String
+  ### At most 500 characters.
+  caption: String?

@@ -8,6 +8,14 @@ emailIdp:
   - verifyPasswordResetCode:
   - finishPasswordReset:
   - hasAccount:
+evidence:
+  - commit:
+  - uploadDescription:
+  - finalize:
+  - list:
+  - get:
+  - media:
+  - retract:
 jwtRefresh:
   - refreshAccessToken:
 membership:

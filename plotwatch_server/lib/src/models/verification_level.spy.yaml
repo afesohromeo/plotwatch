@@ -1,0 +1,10 @@
+### The badge of a capture (VER-02): verified if every check passed,
+### partiallyVerified if only non-critical ones failed, unverified if a
+### critical one failed; pending until finalize.
+enum: VerificationLevel
+serialized: byName
+values:
+  - pending
+  - verified
+  - partiallyVerified
+  - unverified

@@ -1,0 +1,9 @@
+### Where a capture is in its upload (doc/02 §10.4). uploadFailed is shown
+### for a capture still committed 24 h later (doc/04d M4-12).
+enum: EvidenceStatus
+serialized: byName
+values:
+  - committed
+  - finalized
+  - uploadFailed
+  - retracted

@@ -340,5 +340,14 @@
     "validateStageNameRequired": "Saisissez un nom d'étape",
     "validateStageNameTooLong": "Utilisez 100 caractères au plus",
     "validateChecklistLabelRequired": "Décrivez la photo attendue",
-    "validateChecklistLabelTooLong": "Utilisez 200 caractères au plus"
+    "validateChecklistLabelTooLong": "Utilisez 200 caractères au plus",
+    "errorEvidenceNotFound": "Cette photo n'existe pas dans ce projet.",
+    "errorChecklistItemNotFound": "Cet élément de liste n'existe pas dans cette étape.",
+    "errorEvidenceNotCommitted": "Cette photo a déjà été envoyée.",
+    "errorUploadMissing": "La photo n'est pas arrivée. Réessayez de l'envoyer.",
+    "errorEvidenceFileTooLarge": "La photo dépasse 10 Mo.",
+    "errorInvalidEvidenceMetadata": "Les informations de la photo sont incomplètes. Reprenez-la.",
+    "errorEvidenceAlreadyRetracted": "Cette photo a déjà été retirée.",
+    "errorNotYourCapture": "Seule la personne qui a pris cette photo peut faire cela.",
+    "errorChecklistItemHasEvidence": "Cet élément de liste a des photos : il ne peut pas être retiré. Vous pouvez encore le renommer."
 }

@@ -2143,6 +2143,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use 200 characters at most'**
   String get validateChecklistLabelTooLong;
+
+  /// AppErrorCode.evidenceNotFound
+  ///
+  /// In en, this message translates to:
+  /// **'This photo doesn\'t exist in this project.'**
+  String get errorEvidenceNotFound;
+
+  /// AppErrorCode.checklistItemNotFound
+  ///
+  /// In en, this message translates to:
+  /// **'This checklist item doesn\'t exist in this stage.'**
+  String get errorChecklistItemNotFound;
+
+  /// AppErrorCode.evidenceNotCommitted
+  ///
+  /// In en, this message translates to:
+  /// **'This photo has already been sent.'**
+  String get errorEvidenceNotCommitted;
+
+  /// AppErrorCode.uploadMissing
+  ///
+  /// In en, this message translates to:
+  /// **'The photo didn\'t arrive. Try sending it again.'**
+  String get errorUploadMissing;
+
+  /// AppErrorCode.evidenceFileTooLarge
+  ///
+  /// In en, this message translates to:
+  /// **'The photo is larger than 10 MB.'**
+  String get errorEvidenceFileTooLarge;
+
+  /// AppErrorCode.invalidEvidenceMetadata
+  ///
+  /// In en, this message translates to:
+  /// **'The photo\'s details are incomplete. Take it again.'**
+  String get errorInvalidEvidenceMetadata;
+
+  /// AppErrorCode.evidenceAlreadyRetracted
+  ///
+  /// In en, this message translates to:
+  /// **'This photo has already been withdrawn.'**
+  String get errorEvidenceAlreadyRetracted;
+
+  /// AppErrorCode.notYourCapture
+  ///
+  /// In en, this message translates to:
+  /// **'Only the person who took this photo can do this.'**
+  String get errorNotYourCapture;
+
+  /// AppErrorCode.checklistItemHasEvidence
+  ///
+  /// In en, this message translates to:
+  /// **'This checklist item has photos, so it can\'t be removed. You can still rename it.'**
+  String get errorChecklistItemHasEvidence;
 }
 
 class _AppLocalizationsDelegate

@@ -79,3 +79,14 @@
 
 ## Exit (M4)
 AC-3 on a **real Android phone outdoors**, with the funder watching on the web (refreshing until M5): a photo taken inside the radius with good GPS appears on the stage with a **Verified** badge and every check listed; a photo taken outside the radius is accepted and marked **Unverified** with "Taken X m from the site; allowed: Y m"; the hash mismatch case is covered by a server test; the gallery can't be used anywhere. All tests pass, CI green, English and French complete.
+
+---
+
+## Outcomes
+
+### Group A outcome (2026-10-09)
+Done as planned, with M4-15 added while writing it. `dart test` **331/331** (new: 31 verification checks at their limits and the level rule, 35 evidence endpoint cases including the three AC-3 cases). Seen red first: the new tests failed to compile until the models, the services and the endpoint existed. The app maps the 9 new error codes (EN + FR).
+
+Notes:
+- `withServerpod` registers the database storage (`public`, `private`), so the tests store the "uploaded" photo with `storeFile`. A file stored that way is already verified, and `verifyUpload` then returns false; finalize therefore accepts a file that is verified **or** already present, which also makes a repeated finalize after a failure safe.
+- One run of the full suite timed out starting a test server for the email tests ("Serverpod did not start within 2 min"), while the development server was running; the file passed on its own. Watched for in the next runs.

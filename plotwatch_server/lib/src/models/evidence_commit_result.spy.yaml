@@ -1,0 +1,5 @@
+### The committed capture and where to upload its photo (decision M4-3).
+class: EvidenceCommitResult
+fields:
+  evidence: Evidence
+  uploadDescription: String

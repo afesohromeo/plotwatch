@@ -1,0 +1,11 @@
+### One check's result. [details] holds numbers only (e.g. distanceM,
+### allowedM); the app writes the sentence in the user's language
+### (doc/04d M4-7).
+class: VerificationCheck
+immutable: true
+fields:
+  name: VerificationCheckName
+  passed: bool
+  ### A failed critical check makes the capture unverified (VER-02).
+  critical: bool
+  details: Map<String, String>?

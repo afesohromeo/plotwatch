@@ -11,10 +11,17 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _ida;
+import 'dart:typed_data' as _idt;
 import 'package:http/http.dart' as _i85jenna;
+import 'package:plotwatch_client/src/protocol/evidence.dart' as _iqq0l4bs;
+import 'package:plotwatch_client/src/protocol/evidence_commit.dart'
+    as _imtsa3z6;
+import 'package:plotwatch_client/src/protocol/evidence_commit_result.dart'
+    as _ildz1yta;
 import 'package:plotwatch_client/src/protocol/invitation.dart' as _idw8kw5i;
 import 'package:plotwatch_client/src/protocol/invitation_preview.dart'
     as _idbqcfcc;
+import 'package:plotwatch_client/src/protocol/media_variant.dart' as _ihqw92ih;
 import 'package:plotwatch_client/src/protocol/member_view.dart' as _ifqht5qj;
 import 'package:plotwatch_client/src/protocol/my_profile.dart' as _iclzzlcy;
 import 'package:plotwatch_client/src/protocol/project_details.dart'
@@ -239,6 +246,111 @@ class EndpointEmailIdp extends _iaic.EndpointEmailIdpBase {
     'emailIdp',
     'hasAccount',
     {},
+  );
+}
+
+/// Captures (CAP, VER; doc/02 §9.1, doc/04d). Thin: sign-in → permission →
+/// validate → one service call (`_standards/14` §4.2).
+/// {@category Endpoint}
+class EndpointEvidence extends _isc.EndpointRef {
+  EndpointEvidence(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'evidence';
+
+  /// The site manager sends a photo's hash and metadata; the server records
+  /// its own time and answers with the upload description (M4-3).
+  _ida.Future<_ildz1yta.EvidenceCommitResult> commit(
+    int projectId,
+    _imtsa3z6.EvidenceCommit commit,
+  ) => caller.callServerEndpoint<_ildz1yta.EvidenceCommitResult>(
+    'evidence',
+    'commit',
+    {
+      'projectId': projectId,
+      'commit': commit,
+    },
+  );
+
+  /// A new upload description for a capture still committed (retry).
+  _ida.Future<String> uploadDescription(
+    int projectId,
+    int evidenceId,
+  ) => caller.callServerEndpoint<String>(
+    'evidence',
+    'uploadDescription',
+    {
+      'projectId': projectId,
+      'evidenceId': evidenceId,
+    },
+  );
+
+  /// Checks the uploaded photo and gives the capture its badge (M4-6).
+  _ida.Future<_iqq0l4bs.Evidence> finalize(
+    int projectId,
+    int evidenceId,
+  ) => caller.callServerEndpoint<_iqq0l4bs.Evidence>(
+    'evidence',
+    'finalize',
+    {
+      'projectId': projectId,
+      'evidenceId': evidenceId,
+    },
+  );
+
+  /// A stage's captures, newest first.
+  _ida.Future<List<_iqq0l4bs.Evidence>> list(
+    int projectId,
+    int stageId,
+  ) => caller.callServerEndpoint<List<_iqq0l4bs.Evidence>>(
+    'evidence',
+    'list',
+    {
+      'projectId': projectId,
+      'stageId': stageId,
+    },
+  );
+
+  _ida.Future<_iqq0l4bs.Evidence> get(
+    int projectId,
+    int evidenceId,
+  ) => caller.callServerEndpoint<_iqq0l4bs.Evidence>(
+    'evidence',
+    'get',
+    {
+      'projectId': projectId,
+      'evidenceId': evidenceId,
+    },
+  );
+
+  /// The photo or its thumbnail, through the server (decision M4-4).
+  _ida.Future<_idt.ByteData> media(
+    int projectId,
+    int evidenceId,
+    _ihqw92ih.MediaVariant variant,
+  ) => caller.callServerEndpoint<_idt.ByteData>(
+    'evidence',
+    'media',
+    {
+      'projectId': projectId,
+      'evidenceId': evidenceId,
+      'variant': variant,
+    },
+  );
+
+  /// The author withdraws a capture with a reason (CAP-09).
+  _ida.Future<_iqq0l4bs.Evidence> retract(
+    int projectId,
+    int evidenceId,
+    String reason,
+  ) => caller.callServerEndpoint<_iqq0l4bs.Evidence>(
+    'evidence',
+    'retract',
+    {
+      'projectId': projectId,
+      'evidenceId': evidenceId,
+      'reason': reason,
+    },
   );
 }
 
@@ -716,6 +828,7 @@ class Client extends _isc.ServerpodClientShared {
          httpClientOverride: httpClientOverride,
        ) {
     emailIdp = EndpointEmailIdp(this);
+    evidence = EndpointEvidence(this);
     jwtRefresh = EndpointJwtRefresh(this);
     membership = EndpointMembership(this);
     profile = EndpointProfile(this);
@@ -726,6 +839,8 @@ class Client extends _isc.ServerpodClientShared {
   }
 
   late final EndpointEmailIdp emailIdp;
+
+  late final EndpointEvidence evidence;
 
   late final EndpointJwtRefresh jwtRefresh;
 
@@ -744,6 +859,7 @@ class Client extends _isc.ServerpodClientShared {
   @override
   Map<String, _isc.EndpointRef> get endpointRefLookup => {
     'emailIdp': emailIdp,
+    'evidence': evidence,
     'jwtRefresh': jwtRefresh,
     'membership': membership,
     'profile': profile,

@@ -19,3 +19,6 @@ values:
   # (doc/04c M3-11).
   - stagePlanChanged
   - stageStarted
+  # doc/04d
+  - evidenceCaptured
+  - evidenceRetracted

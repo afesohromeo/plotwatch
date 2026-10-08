@@ -11,6 +11,7 @@
 // ignore_for_file: dead_code, unnecessary_type_check
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:plotwatch_client/src/protocol/evidence.dart' as _iqq0l4bs;
 import 'package:plotwatch_client/src/protocol/invitation.dart' as _idw8kw5i;
 import 'package:plotwatch_client/src/protocol/member_view.dart' as _ifqht5qj;
 import 'package:plotwatch_client/src/protocol/site_proposal.dart' as _irbyqz3h;
@@ -26,9 +27,14 @@ import 'app_error_code.dart' as _imu8gbx5;
 import 'app_exception.dart' as _it4z223c;
 import 'checklist_item.dart' as _ifywsnp6;
 import 'checklist_item_draft.dart' as _iuwh2s2t;
+import 'evidence.dart' as _iptmmm0p;
+import 'evidence_commit.dart' as _it2d46ly;
+import 'evidence_commit_result.dart' as _i6593me7;
+import 'evidence_status.dart' as _itwc15qq;
 import 'invitation.dart' as _ix00wubs;
 import 'invitation_preview.dart' as _i8l83u67;
 import 'invitation_status.dart' as _ifbgrtog;
+import 'media_variant.dart' as _ibclxgv9;
 import 'member_status.dart' as _iolegqnm;
 import 'member_view.dart' as _iwpqxdug;
 import 'my_profile.dart' as _i1hmtol2;
@@ -50,15 +56,23 @@ import 'stage_plan.dart' as _iwmsx3av;
 import 'stage_status.dart' as _iblg1lql;
 import 'stage_view.dart' as _iobwm8xj;
 import 'user_settings.dart' as _iy88a0nt;
+import 'verification_check.dart' as _i92h88x8;
+import 'verification_check_name.dart' as _io670pev;
+import 'verification_level.dart' as _i5zqa56i;
 export 'activity_event.dart';
 export 'activity_type.dart';
 export 'app_error_code.dart';
 export 'app_exception.dart';
 export 'checklist_item.dart';
 export 'checklist_item_draft.dart';
+export 'evidence.dart';
+export 'evidence_commit.dart';
+export 'evidence_commit_result.dart';
+export 'evidence_status.dart';
 export 'invitation.dart';
 export 'invitation_preview.dart';
 export 'invitation_status.dart';
+export 'media_variant.dart';
 export 'member_status.dart';
 export 'member_view.dart';
 export 'my_profile.dart';
@@ -80,6 +94,9 @@ export 'stage_plan.dart';
 export 'stage_status.dart';
 export 'stage_view.dart';
 export 'user_settings.dart';
+export 'verification_check.dart';
+export 'verification_check_name.dart';
+export 'verification_level.dart';
 export 'client.dart';
 
 class Protocol extends _isc.SerializationManager {
@@ -134,6 +151,18 @@ class Protocol extends _isc.SerializationManager {
     if (t == _iuwh2s2t.ChecklistItemDraft) {
       return _iuwh2s2t.ChecklistItemDraft.fromJson(data) as T;
     }
+    if (t == _iptmmm0p.Evidence) {
+      return _iptmmm0p.Evidence.fromJson(data) as T;
+    }
+    if (t == _it2d46ly.EvidenceCommit) {
+      return _it2d46ly.EvidenceCommit.fromJson(data) as T;
+    }
+    if (t == _i6593me7.EvidenceCommitResult) {
+      return _i6593me7.EvidenceCommitResult.fromJson(data) as T;
+    }
+    if (t == _itwc15qq.EvidenceStatus) {
+      return _itwc15qq.EvidenceStatus.fromJson(data) as T;
+    }
     if (t == _ix00wubs.Invitation) {
       return _ix00wubs.Invitation.fromJson(data) as T;
     }
@@ -142,6 +171,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _ifbgrtog.InvitationStatus) {
       return _ifbgrtog.InvitationStatus.fromJson(data) as T;
+    }
+    if (t == _ibclxgv9.MediaVariant) {
+      return _ibclxgv9.MediaVariant.fromJson(data) as T;
     }
     if (t == _iolegqnm.MemberStatus) {
       return _iolegqnm.MemberStatus.fromJson(data) as T;
@@ -206,6 +238,15 @@ class Protocol extends _isc.SerializationManager {
     if (t == _iy88a0nt.UserSettings) {
       return _iy88a0nt.UserSettings.fromJson(data) as T;
     }
+    if (t == _i92h88x8.VerificationCheck) {
+      return _i92h88x8.VerificationCheck.fromJson(data) as T;
+    }
+    if (t == _io670pev.VerificationCheckName) {
+      return _io670pev.VerificationCheckName.fromJson(data) as T;
+    }
+    if (t == _i5zqa56i.VerificationLevel) {
+      return _i5zqa56i.VerificationLevel.fromJson(data) as T;
+    }
     if (t == _isc.getType<_iwse5pgb.ActivityEvent?>()) {
       return (data != null ? _iwse5pgb.ActivityEvent.fromJson(data) : null)
           as T;
@@ -227,6 +268,23 @@ class Protocol extends _isc.SerializationManager {
       return (data != null ? _iuwh2s2t.ChecklistItemDraft.fromJson(data) : null)
           as T;
     }
+    if (t == _isc.getType<_iptmmm0p.Evidence?>()) {
+      return (data != null ? _iptmmm0p.Evidence.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_it2d46ly.EvidenceCommit?>()) {
+      return (data != null ? _it2d46ly.EvidenceCommit.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_i6593me7.EvidenceCommitResult?>()) {
+      return (data != null
+              ? _i6593me7.EvidenceCommitResult.fromJson(data)
+              : null)
+          as T;
+    }
+    if (t == _isc.getType<_itwc15qq.EvidenceStatus?>()) {
+      return (data != null ? _itwc15qq.EvidenceStatus.fromJson(data) : null)
+          as T;
+    }
     if (t == _isc.getType<_ix00wubs.Invitation?>()) {
       return (data != null ? _ix00wubs.Invitation.fromJson(data) : null) as T;
     }
@@ -237,6 +295,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _isc.getType<_ifbgrtog.InvitationStatus?>()) {
       return (data != null ? _ifbgrtog.InvitationStatus.fromJson(data) : null)
           as T;
+    }
+    if (t == _isc.getType<_ibclxgv9.MediaVariant?>()) {
+      return (data != null ? _ibclxgv9.MediaVariant.fromJson(data) : null) as T;
     }
     if (t == _isc.getType<_iolegqnm.MemberStatus?>()) {
       return (data != null ? _iolegqnm.MemberStatus.fromJson(data) : null) as T;
@@ -308,6 +369,20 @@ class Protocol extends _isc.SerializationManager {
     if (t == _isc.getType<_iy88a0nt.UserSettings?>()) {
       return (data != null ? _iy88a0nt.UserSettings.fromJson(data) : null) as T;
     }
+    if (t == _isc.getType<_i92h88x8.VerificationCheck?>()) {
+      return (data != null ? _i92h88x8.VerificationCheck.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_io670pev.VerificationCheckName?>()) {
+      return (data != null
+              ? _io670pev.VerificationCheckName.fromJson(data)
+              : null)
+          as T;
+    }
+    if (t == _isc.getType<_i5zqa56i.VerificationLevel?>()) {
+      return (data != null ? _i5zqa56i.VerificationLevel.fromJson(data) : null)
+          as T;
+    }
     if (t == Map<String, String>) {
       return (data as Map).map(
             (k, v) => MapEntry(deserialize<String>(k), deserialize<String>(v)),
@@ -320,6 +395,20 @@ class Protocol extends _isc.SerializationManager {
                   (k, v) =>
                       MapEntry(deserialize<String>(k), deserialize<String>(v)),
                 )
+              : null)
+          as T;
+    }
+    if (t == List<_i92h88x8.VerificationCheck>) {
+      return (data as List)
+              .map((e) => deserialize<_i92h88x8.VerificationCheck>(e))
+              .toList()
+          as T;
+    }
+    if (t == _isc.getType<List<_i92h88x8.VerificationCheck>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_i92h88x8.VerificationCheck>(e))
+                    .toList()
               : null)
           as T;
     }
@@ -344,6 +433,12 @@ class Protocol extends _isc.SerializationManager {
     if (t == List<_ifywsnp6.ChecklistItem>) {
       return (data as List)
               .map((e) => deserialize<_ifywsnp6.ChecklistItem>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_iqq0l4bs.Evidence>) {
+      return (data as List)
+              .map((e) => deserialize<_iqq0l4bs.Evidence>(e))
               .toList()
           as T;
     }
@@ -399,9 +494,14 @@ class Protocol extends _isc.SerializationManager {
       _it4z223c.AppException => 'AppException',
       _ifywsnp6.ChecklistItem => 'ChecklistItem',
       _iuwh2s2t.ChecklistItemDraft => 'ChecklistItemDraft',
+      _iptmmm0p.Evidence => 'Evidence',
+      _it2d46ly.EvidenceCommit => 'EvidenceCommit',
+      _i6593me7.EvidenceCommitResult => 'EvidenceCommitResult',
+      _itwc15qq.EvidenceStatus => 'EvidenceStatus',
       _ix00wubs.Invitation => 'Invitation',
       _i8l83u67.InvitationPreview => 'InvitationPreview',
       _ifbgrtog.InvitationStatus => 'InvitationStatus',
+      _ibclxgv9.MediaVariant => 'MediaVariant',
       _iolegqnm.MemberStatus => 'MemberStatus',
       _iwpqxdug.MemberView => 'MemberView',
       _i1hmtol2.MyProfile => 'MyProfile',
@@ -423,6 +523,9 @@ class Protocol extends _isc.SerializationManager {
       _iblg1lql.StageStatus => 'StageStatus',
       _iobwm8xj.StageView => 'StageView',
       _iy88a0nt.UserSettings => 'UserSettings',
+      _i92h88x8.VerificationCheck => 'VerificationCheck',
+      _io670pev.VerificationCheckName => 'VerificationCheckName',
+      _i5zqa56i.VerificationLevel => 'VerificationLevel',
       _ => null,
     };
   }
@@ -449,12 +552,22 @@ class Protocol extends _isc.SerializationManager {
         return 'ChecklistItem';
       case _iuwh2s2t.ChecklistItemDraft():
         return 'ChecklistItemDraft';
+      case _iptmmm0p.Evidence():
+        return 'Evidence';
+      case _it2d46ly.EvidenceCommit():
+        return 'EvidenceCommit';
+      case _i6593me7.EvidenceCommitResult():
+        return 'EvidenceCommitResult';
+      case _itwc15qq.EvidenceStatus():
+        return 'EvidenceStatus';
       case _ix00wubs.Invitation():
         return 'Invitation';
       case _i8l83u67.InvitationPreview():
         return 'InvitationPreview';
       case _ifbgrtog.InvitationStatus():
         return 'InvitationStatus';
+      case _ibclxgv9.MediaVariant():
+        return 'MediaVariant';
       case _iolegqnm.MemberStatus():
         return 'MemberStatus';
       case _iwpqxdug.MemberView():
@@ -497,6 +610,12 @@ class Protocol extends _isc.SerializationManager {
         return 'StageView';
       case _iy88a0nt.UserSettings():
         return 'UserSettings';
+      case _i92h88x8.VerificationCheck():
+        return 'VerificationCheck';
+      case _io670pev.VerificationCheckName():
+        return 'VerificationCheckName';
+      case _i5zqa56i.VerificationLevel():
+        return 'VerificationLevel';
     }
     className = _iaic.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -537,6 +656,18 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName == 'ChecklistItemDraft') {
       return deserialize<_iuwh2s2t.ChecklistItemDraft>(data['data']);
     }
+    if (dataClassName == 'Evidence') {
+      return deserialize<_iptmmm0p.Evidence>(data['data']);
+    }
+    if (dataClassName == 'EvidenceCommit') {
+      return deserialize<_it2d46ly.EvidenceCommit>(data['data']);
+    }
+    if (dataClassName == 'EvidenceCommitResult') {
+      return deserialize<_i6593me7.EvidenceCommitResult>(data['data']);
+    }
+    if (dataClassName == 'EvidenceStatus') {
+      return deserialize<_itwc15qq.EvidenceStatus>(data['data']);
+    }
     if (dataClassName == 'Invitation') {
       return deserialize<_ix00wubs.Invitation>(data['data']);
     }
@@ -545,6 +676,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'InvitationStatus') {
       return deserialize<_ifbgrtog.InvitationStatus>(data['data']);
+    }
+    if (dataClassName == 'MediaVariant') {
+      return deserialize<_ibclxgv9.MediaVariant>(data['data']);
     }
     if (dataClassName == 'MemberStatus') {
       return deserialize<_iolegqnm.MemberStatus>(data['data']);
@@ -608,6 +742,15 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'UserSettings') {
       return deserialize<_iy88a0nt.UserSettings>(data['data']);
+    }
+    if (dataClassName == 'VerificationCheck') {
+      return deserialize<_i92h88x8.VerificationCheck>(data['data']);
+    }
+    if (dataClassName == 'VerificationCheckName') {
+      return deserialize<_io670pev.VerificationCheckName>(data['data']);
+    }
+    if (dataClassName == 'VerificationLevel') {
+      return deserialize<_i5zqa56i.VerificationLevel>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);

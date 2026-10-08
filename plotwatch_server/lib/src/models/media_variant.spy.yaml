@@ -1,0 +1,6 @@
+### Which file of a capture to fetch (doc/04d M4-4, M4-5).
+enum: MediaVariant
+serialized: byName
+values:
+  - photo
+  - thumbnail

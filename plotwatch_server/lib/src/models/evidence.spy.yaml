@@ -1,0 +1,45 @@
+### A photo taken in the app for a stage's checklist item, with what the
+### phone recorded and what the server checked (CAP, VER; doc/02 §7.2,
+### doc/04d). Never edited after finalize; only retracted (CAP-09).
+class: Evidence
+table: evidence
+fields:
+  projectId: int, relation(parent=project, onDelete=Cascade)
+  ### Restrict: a stage or item with captures can't disappear (M4-15).
+  stageId: int, relation(parent=stage, onDelete=Restrict)
+  checklistItemId: int, relation(parent=checklist_item, onDelete=Restrict)
+  capturedBy: UuidValue
+  status: EvidenceStatus
+  ### The committed hash (lower case).
+  sha256: String
+  photoPath: String
+  thumbPath: String?
+  ### Of the stored photo, set at finalize.
+  fileSizeBytes: int?
+  deviceCapturedAt: DateTime
+  ### Trusted: the server's clock at commit.
+  serverCommittedAt: DateTime
+  finalizedAt: DateTime?
+  lat: double?
+  lng: double?
+  accuracyM: double?
+  altitudeM: double?
+  isMockLocation: bool?
+  capturedInApp: bool
+  ### Computed by the server from the site centre.
+  distanceFromSiteM: double?
+  deviceModel: String
+  osVersion: String
+  appVersion: String
+  verificationLevel: VerificationLevel
+  checks: List<VerificationCheck>?
+  caption: String?
+  retractedAt: DateTime?
+  retractedReason: String?
+indexes:
+  evidence_project_idx:
+    fields: projectId
+  evidence_stage_idx:
+    fields: stageId
+  evidence_item_idx:
+    fields: checklistItemId

@@ -1,0 +1,12 @@
+### Checks V1–V8 of doc/02 §8.2 (doc/04d M4-6).
+enum: VerificationCheckName
+serialized: byName
+values:
+  - inAppCapture
+  - locationPresent
+  - locationAccuracy
+  - insideSite
+  - notMockLocation
+  - hashMatch
+  - clockConsistency
+  - promptCommit

@@ -1165,4 +1165,37 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get validateChecklistLabelTooLong => 'Utilisez 200 caractères au plus';
+
+  @override
+  String get errorEvidenceNotFound =>
+      'Cette photo n\'existe pas dans ce projet.';
+
+  @override
+  String get errorChecklistItemNotFound =>
+      'Cet élément de liste n\'existe pas dans cette étape.';
+
+  @override
+  String get errorEvidenceNotCommitted => 'Cette photo a déjà été envoyée.';
+
+  @override
+  String get errorUploadMissing =>
+      'La photo n\'est pas arrivée. Réessayez de l\'envoyer.';
+
+  @override
+  String get errorEvidenceFileTooLarge => 'La photo dépasse 10 Mo.';
+
+  @override
+  String get errorInvalidEvidenceMetadata =>
+      'Les informations de la photo sont incomplètes. Reprenez-la.';
+
+  @override
+  String get errorEvidenceAlreadyRetracted => 'Cette photo a déjà été retirée.';
+
+  @override
+  String get errorNotYourCapture =>
+      'Seule la personne qui a pris cette photo peut faire cela.';
+
+  @override
+  String get errorChecklistItemHasEvidence =>
+      'Cet élément de liste a des photos : il ne peut pas être retiré. Vous pouvez encore le renommer.';
 }

@@ -59,6 +59,15 @@ enum AppErrorCode implements _isc.SerializableModel {
   invalidStageTransition,
   projectNotActive,
   projectNotEditable,
+  evidenceNotFound,
+  checklistItemNotFound,
+  evidenceNotCommitted,
+  uploadMissing,
+  evidenceFileTooLarge,
+  invalidEvidenceMetadata,
+  evidenceAlreadyRetracted,
+  notYourCapture,
+  checklistItemHasEvidence,
   textTooLong,
   authInvalidCredentials,
   authTooManyAttempts,
@@ -150,6 +159,24 @@ enum AppErrorCode implements _isc.SerializableModel {
         return AppErrorCode.projectNotActive;
       case 'projectNotEditable':
         return AppErrorCode.projectNotEditable;
+      case 'evidenceNotFound':
+        return AppErrorCode.evidenceNotFound;
+      case 'checklistItemNotFound':
+        return AppErrorCode.checklistItemNotFound;
+      case 'evidenceNotCommitted':
+        return AppErrorCode.evidenceNotCommitted;
+      case 'uploadMissing':
+        return AppErrorCode.uploadMissing;
+      case 'evidenceFileTooLarge':
+        return AppErrorCode.evidenceFileTooLarge;
+      case 'invalidEvidenceMetadata':
+        return AppErrorCode.invalidEvidenceMetadata;
+      case 'evidenceAlreadyRetracted':
+        return AppErrorCode.evidenceAlreadyRetracted;
+      case 'notYourCapture':
+        return AppErrorCode.notYourCapture;
+      case 'checklistItemHasEvidence':
+        return AppErrorCode.checklistItemHasEvidence;
       case 'textTooLong':
         return AppErrorCode.textTooLong;
       case 'authInvalidCredentials':

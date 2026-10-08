@@ -54,6 +54,16 @@ values:
   - invalidStageTransition
   - projectNotActive
   - projectNotEditable
+  # Captures (doc/04d)
+  - evidenceNotFound
+  - checklistItemNotFound
+  - evidenceNotCommitted
+  - uploadMissing
+  - evidenceFileTooLarge
+  - invalidEvidenceMetadata
+  - evidenceAlreadyRetracted
+  - notYourCapture
+  - checklistItemHasEvidence
   # Free text longer than its limit
   - textTooLong
   # Set by the client from the auth module's exceptions

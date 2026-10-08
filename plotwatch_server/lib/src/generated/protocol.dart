@@ -11,6 +11,7 @@
 // ignore_for_file: dead_code, unnecessary_type_check
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:plotwatch_server/src/generated/evidence.dart' as _icm5mt5e;
 import 'package:plotwatch_server/src/generated/invitation.dart' as _ikzhqv9e;
 import 'package:plotwatch_server/src/generated/member_view.dart' as _ig1yf1bz;
 import 'package:plotwatch_server/src/generated/site_proposal.dart' as _iarrohmg;
@@ -28,9 +29,14 @@ import 'app_exception.dart' as _it4z223c;
 import 'audit_log.dart' as _itixckla;
 import 'checklist_item.dart' as _ifywsnp6;
 import 'checklist_item_draft.dart' as _iuwh2s2t;
+import 'evidence.dart' as _iptmmm0p;
+import 'evidence_commit.dart' as _it2d46ly;
+import 'evidence_commit_result.dart' as _i6593me7;
+import 'evidence_status.dart' as _itwc15qq;
 import 'invitation.dart' as _ix00wubs;
 import 'invitation_preview.dart' as _i8l83u67;
 import 'invitation_status.dart' as _ifbgrtog;
+import 'media_variant.dart' as _ibclxgv9;
 import 'member_status.dart' as _iolegqnm;
 import 'member_view.dart' as _iwpqxdug;
 import 'my_profile.dart' as _i1hmtol2;
@@ -52,6 +58,9 @@ import 'stage_plan.dart' as _iwmsx3av;
 import 'stage_status.dart' as _iblg1lql;
 import 'stage_view.dart' as _iobwm8xj;
 import 'user_settings.dart' as _iy88a0nt;
+import 'verification_check.dart' as _i92h88x8;
+import 'verification_check_name.dart' as _io670pev;
+import 'verification_level.dart' as _i5zqa56i;
 export 'activity_event.dart';
 export 'activity_type.dart';
 export 'app_error_code.dart';
@@ -59,9 +68,14 @@ export 'app_exception.dart';
 export 'audit_log.dart';
 export 'checklist_item.dart';
 export 'checklist_item_draft.dart';
+export 'evidence.dart';
+export 'evidence_commit.dart';
+export 'evidence_commit_result.dart';
+export 'evidence_status.dart';
 export 'invitation.dart';
 export 'invitation_preview.dart';
 export 'invitation_status.dart';
+export 'media_variant.dart';
 export 'member_status.dart';
 export 'member_view.dart';
 export 'my_profile.dart';
@@ -83,6 +97,9 @@ export 'stage_plan.dart';
 export 'stage_status.dart';
 export 'stage_view.dart';
 export 'user_settings.dart';
+export 'verification_check.dart';
+export 'verification_check_name.dart';
+export 'verification_level.dart';
 
 class Protocol extends _is.DatabaseSerializationManager {
   Protocol._();
@@ -323,6 +340,257 @@ class Protocol extends _is.DatabaseSerializationManager {
             _isp.IndexElementDefinition(
               type: _isp.IndexElementDefinitionType.column,
               definition: 'orderIndex',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _isp.TableDefinition(
+      name: 'evidence',
+      dartName: 'Evidence',
+      schema: 'public',
+      module: 'plotwatch',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'projectId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'stageId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'checklistItemId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'capturedBy',
+          columnType: _isp.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _isp.ColumnDefinition(
+          name: 'status',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:EvidenceStatus',
+        ),
+        _isp.ColumnDefinition(
+          name: 'sha256',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'photoPath',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'thumbPath',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'fileSizeBytes',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'deviceCapturedAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _isp.ColumnDefinition(
+          name: 'serverCommittedAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _isp.ColumnDefinition(
+          name: 'finalizedAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'lat',
+          columnType: _isp.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'lng',
+          columnType: _isp.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'accuracyM',
+          columnType: _isp.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'altitudeM',
+          columnType: _isp.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'isMockLocation',
+          columnType: _isp.ColumnType.boolean,
+          isNullable: true,
+          dartType: 'bool?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'capturedInApp',
+          columnType: _isp.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _isp.ColumnDefinition(
+          name: 'distanceFromSiteM',
+          columnType: _isp.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'deviceModel',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'osVersion',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'appVersion',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _isp.ColumnDefinition(
+          name: 'verificationLevel',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:VerificationLevel',
+        ),
+        _isp.ColumnDefinition(
+          name: 'checks',
+          columnType: _isp.ColumnType.json,
+          isNullable: true,
+          dartType: 'List<protocol:VerificationCheck>?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'caption',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'retractedAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'retractedReason',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+      ],
+      foreignKeys: [
+        _isp.ForeignKeyDefinition(
+          constraintName: 'evidence_fk_0',
+          columns: ['projectId'],
+          referenceTable: 'project',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _isp.ForeignKeyAction.noAction,
+          onDelete: _isp.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+        _isp.ForeignKeyDefinition(
+          constraintName: 'evidence_fk_1',
+          columns: ['stageId'],
+          referenceTable: 'stage',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _isp.ForeignKeyAction.noAction,
+          onDelete: _isp.ForeignKeyAction.restrict,
+          matchType: null,
+        ),
+        _isp.ForeignKeyDefinition(
+          constraintName: 'evidence_fk_2',
+          columns: ['checklistItemId'],
+          referenceTable: 'checklist_item',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _isp.ForeignKeyAction.noAction,
+          onDelete: _isp.ForeignKeyAction.restrict,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _isp.IndexDefinition(
+          indexName: 'evidence_project_idx',
+          tableSpace: null,
+          elements: [
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'projectId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _isp.IndexDefinition(
+          indexName: 'evidence_stage_idx',
+          tableSpace: null,
+          elements: [
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'stageId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _isp.IndexDefinition(
+          indexName: 'evidence_item_idx',
+          tableSpace: null,
+          elements: [
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'checklistItemId',
             ),
           ],
           type: 'btree',
@@ -1080,6 +1348,18 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _iuwh2s2t.ChecklistItemDraft) {
       return _iuwh2s2t.ChecklistItemDraft.fromJson(data) as T;
     }
+    if (t == _iptmmm0p.Evidence) {
+      return _iptmmm0p.Evidence.fromJson(data) as T;
+    }
+    if (t == _it2d46ly.EvidenceCommit) {
+      return _it2d46ly.EvidenceCommit.fromJson(data) as T;
+    }
+    if (t == _i6593me7.EvidenceCommitResult) {
+      return _i6593me7.EvidenceCommitResult.fromJson(data) as T;
+    }
+    if (t == _itwc15qq.EvidenceStatus) {
+      return _itwc15qq.EvidenceStatus.fromJson(data) as T;
+    }
     if (t == _ix00wubs.Invitation) {
       return _ix00wubs.Invitation.fromJson(data) as T;
     }
@@ -1088,6 +1368,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _ifbgrtog.InvitationStatus) {
       return _ifbgrtog.InvitationStatus.fromJson(data) as T;
+    }
+    if (t == _ibclxgv9.MediaVariant) {
+      return _ibclxgv9.MediaVariant.fromJson(data) as T;
     }
     if (t == _iolegqnm.MemberStatus) {
       return _iolegqnm.MemberStatus.fromJson(data) as T;
@@ -1152,6 +1435,15 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _iy88a0nt.UserSettings) {
       return _iy88a0nt.UserSettings.fromJson(data) as T;
     }
+    if (t == _i92h88x8.VerificationCheck) {
+      return _i92h88x8.VerificationCheck.fromJson(data) as T;
+    }
+    if (t == _io670pev.VerificationCheckName) {
+      return _io670pev.VerificationCheckName.fromJson(data) as T;
+    }
+    if (t == _i5zqa56i.VerificationLevel) {
+      return _i5zqa56i.VerificationLevel.fromJson(data) as T;
+    }
     if (t == _is.getType<_iwse5pgb.ActivityEvent?>()) {
       return (data != null ? _iwse5pgb.ActivityEvent.fromJson(data) : null)
           as T;
@@ -1176,6 +1468,23 @@ class Protocol extends _is.DatabaseSerializationManager {
       return (data != null ? _iuwh2s2t.ChecklistItemDraft.fromJson(data) : null)
           as T;
     }
+    if (t == _is.getType<_iptmmm0p.Evidence?>()) {
+      return (data != null ? _iptmmm0p.Evidence.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_it2d46ly.EvidenceCommit?>()) {
+      return (data != null ? _it2d46ly.EvidenceCommit.fromJson(data) : null)
+          as T;
+    }
+    if (t == _is.getType<_i6593me7.EvidenceCommitResult?>()) {
+      return (data != null
+              ? _i6593me7.EvidenceCommitResult.fromJson(data)
+              : null)
+          as T;
+    }
+    if (t == _is.getType<_itwc15qq.EvidenceStatus?>()) {
+      return (data != null ? _itwc15qq.EvidenceStatus.fromJson(data) : null)
+          as T;
+    }
     if (t == _is.getType<_ix00wubs.Invitation?>()) {
       return (data != null ? _ix00wubs.Invitation.fromJson(data) : null) as T;
     }
@@ -1186,6 +1495,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _is.getType<_ifbgrtog.InvitationStatus?>()) {
       return (data != null ? _ifbgrtog.InvitationStatus.fromJson(data) : null)
           as T;
+    }
+    if (t == _is.getType<_ibclxgv9.MediaVariant?>()) {
+      return (data != null ? _ibclxgv9.MediaVariant.fromJson(data) : null) as T;
     }
     if (t == _is.getType<_iolegqnm.MemberStatus?>()) {
       return (data != null ? _iolegqnm.MemberStatus.fromJson(data) : null) as T;
@@ -1257,6 +1569,20 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _is.getType<_iy88a0nt.UserSettings?>()) {
       return (data != null ? _iy88a0nt.UserSettings.fromJson(data) : null) as T;
     }
+    if (t == _is.getType<_i92h88x8.VerificationCheck?>()) {
+      return (data != null ? _i92h88x8.VerificationCheck.fromJson(data) : null)
+          as T;
+    }
+    if (t == _is.getType<_io670pev.VerificationCheckName?>()) {
+      return (data != null
+              ? _io670pev.VerificationCheckName.fromJson(data)
+              : null)
+          as T;
+    }
+    if (t == _is.getType<_i5zqa56i.VerificationLevel?>()) {
+      return (data != null ? _i5zqa56i.VerificationLevel.fromJson(data) : null)
+          as T;
+    }
     if (t == Map<String, String>) {
       return (data as Map).map(
             (k, v) => MapEntry(deserialize<String>(k), deserialize<String>(v)),
@@ -1269,6 +1595,20 @@ class Protocol extends _is.DatabaseSerializationManager {
                   (k, v) =>
                       MapEntry(deserialize<String>(k), deserialize<String>(v)),
                 )
+              : null)
+          as T;
+    }
+    if (t == List<_i92h88x8.VerificationCheck>) {
+      return (data as List)
+              .map((e) => deserialize<_i92h88x8.VerificationCheck>(e))
+              .toList()
+          as T;
+    }
+    if (t == _is.getType<List<_i92h88x8.VerificationCheck>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_i92h88x8.VerificationCheck>(e))
+                    .toList()
               : null)
           as T;
     }
@@ -1293,6 +1633,12 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == List<_ifywsnp6.ChecklistItem>) {
       return (data as List)
               .map((e) => deserialize<_ifywsnp6.ChecklistItem>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_icm5mt5e.Evidence>) {
+      return (data as List)
+              .map((e) => deserialize<_icm5mt5e.Evidence>(e))
               .toList()
           as T;
     }
@@ -1352,9 +1698,14 @@ class Protocol extends _is.DatabaseSerializationManager {
       _itixckla.AuditLog => 'AuditLog',
       _ifywsnp6.ChecklistItem => 'ChecklistItem',
       _iuwh2s2t.ChecklistItemDraft => 'ChecklistItemDraft',
+      _iptmmm0p.Evidence => 'Evidence',
+      _it2d46ly.EvidenceCommit => 'EvidenceCommit',
+      _i6593me7.EvidenceCommitResult => 'EvidenceCommitResult',
+      _itwc15qq.EvidenceStatus => 'EvidenceStatus',
       _ix00wubs.Invitation => 'Invitation',
       _i8l83u67.InvitationPreview => 'InvitationPreview',
       _ifbgrtog.InvitationStatus => 'InvitationStatus',
+      _ibclxgv9.MediaVariant => 'MediaVariant',
       _iolegqnm.MemberStatus => 'MemberStatus',
       _iwpqxdug.MemberView => 'MemberView',
       _i1hmtol2.MyProfile => 'MyProfile',
@@ -1376,6 +1727,9 @@ class Protocol extends _is.DatabaseSerializationManager {
       _iblg1lql.StageStatus => 'StageStatus',
       _iobwm8xj.StageView => 'StageView',
       _iy88a0nt.UserSettings => 'UserSettings',
+      _i92h88x8.VerificationCheck => 'VerificationCheck',
+      _io670pev.VerificationCheckName => 'VerificationCheckName',
+      _i5zqa56i.VerificationLevel => 'VerificationLevel',
       _ => null,
     };
   }
@@ -1404,12 +1758,22 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'ChecklistItem';
       case _iuwh2s2t.ChecklistItemDraft():
         return 'ChecklistItemDraft';
+      case _iptmmm0p.Evidence():
+        return 'Evidence';
+      case _it2d46ly.EvidenceCommit():
+        return 'EvidenceCommit';
+      case _i6593me7.EvidenceCommitResult():
+        return 'EvidenceCommitResult';
+      case _itwc15qq.EvidenceStatus():
+        return 'EvidenceStatus';
       case _ix00wubs.Invitation():
         return 'Invitation';
       case _i8l83u67.InvitationPreview():
         return 'InvitationPreview';
       case _ifbgrtog.InvitationStatus():
         return 'InvitationStatus';
+      case _ibclxgv9.MediaVariant():
+        return 'MediaVariant';
       case _iolegqnm.MemberStatus():
         return 'MemberStatus';
       case _iwpqxdug.MemberView():
@@ -1452,6 +1816,12 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'StageView';
       case _iy88a0nt.UserSettings():
         return 'UserSettings';
+      case _i92h88x8.VerificationCheck():
+        return 'VerificationCheck';
+      case _io670pev.VerificationCheckName():
+        return 'VerificationCheckName';
+      case _i5zqa56i.VerificationLevel():
+        return 'VerificationLevel';
     }
     className = _iais.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -1499,6 +1869,18 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (dataClassName == 'ChecklistItemDraft') {
       return deserialize<_iuwh2s2t.ChecklistItemDraft>(data['data']);
     }
+    if (dataClassName == 'Evidence') {
+      return deserialize<_iptmmm0p.Evidence>(data['data']);
+    }
+    if (dataClassName == 'EvidenceCommit') {
+      return deserialize<_it2d46ly.EvidenceCommit>(data['data']);
+    }
+    if (dataClassName == 'EvidenceCommitResult') {
+      return deserialize<_i6593me7.EvidenceCommitResult>(data['data']);
+    }
+    if (dataClassName == 'EvidenceStatus') {
+      return deserialize<_itwc15qq.EvidenceStatus>(data['data']);
+    }
     if (dataClassName == 'Invitation') {
       return deserialize<_ix00wubs.Invitation>(data['data']);
     }
@@ -1507,6 +1889,9 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'InvitationStatus') {
       return deserialize<_ifbgrtog.InvitationStatus>(data['data']);
+    }
+    if (dataClassName == 'MediaVariant') {
+      return deserialize<_ibclxgv9.MediaVariant>(data['data']);
     }
     if (dataClassName == 'MemberStatus') {
       return deserialize<_iolegqnm.MemberStatus>(data['data']);
@@ -1571,6 +1956,15 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (dataClassName == 'UserSettings') {
       return deserialize<_iy88a0nt.UserSettings>(data['data']);
     }
+    if (dataClassName == 'VerificationCheck') {
+      return deserialize<_i92h88x8.VerificationCheck>(data['data']);
+    }
+    if (dataClassName == 'VerificationCheckName') {
+      return deserialize<_io670pev.VerificationCheckName>(data['data']);
+    }
+    if (dataClassName == 'VerificationLevel') {
+      return deserialize<_i5zqa56i.VerificationLevel>(data['data']);
+    }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
       return _iais.Protocol().deserializeByClassName(data);
@@ -1618,6 +2012,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return _itixckla.AuditLog.t;
       case _ifywsnp6.ChecklistItem:
         return _ifywsnp6.ChecklistItem.t;
+      case _iptmmm0p.Evidence:
+        return _iptmmm0p.Evidence.t;
       case _ix00wubs.Invitation:
         return _ix00wubs.Invitation.t;
       case _ifiazq2p.Project:

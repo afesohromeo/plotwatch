@@ -10,6 +10,9 @@
 // ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:plotwatch_server/src/generated/evidence_commit.dart'
+    as _idi5nd8p;
+import 'package:plotwatch_server/src/generated/media_variant.dart' as _i70qn4qh;
 import 'package:plotwatch_server/src/generated/project_details.dart'
     as _i4y7utee;
 import 'package:plotwatch_server/src/generated/project_role.dart' as _izsiizob;
@@ -22,6 +25,7 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
 import '../endpoints/email_idp_endpoint.dart' as _ilutrrxn;
+import '../endpoints/evidence_endpoint.dart' as _i2cvsm7u;
 import '../endpoints/jwt_refresh_endpoint.dart' as _in48dm4x;
 import '../endpoints/membership_endpoint.dart' as _it8meaj6;
 import '../endpoints/profile_endpoint.dart' as _i2cx2pww;
@@ -37,6 +41,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'emailIdp',
+          null,
+        ),
+      'evidence': _i2cvsm7u.EvidenceEndpoint()
+        ..initialize(
+          server,
+          'evidence',
           null,
         ),
       'jwtRefresh': _in48dm4x.JwtRefreshEndpoint()
@@ -290,6 +300,199 @@ class Endpoints extends _is.EndpointDispatch {
                 Map<String, dynamic> params,
               ) async => (endpoints['emailIdp'] as _ilutrrxn.EmailIdpEndpoint)
                   .hasAccount(session),
+        ),
+      },
+    );
+    connectors['evidence'] = _is.EndpointConnector(
+      name: 'evidence',
+      endpoint: endpoints['evidence']!,
+      methodConnectors: {
+        'commit': _is.MethodConnector(
+          name: 'commit',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'commit': _is.ParameterDescription(
+              name: 'commit',
+              type: _is.getType<_idi5nd8p.EvidenceCommit>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['evidence'] as _i2cvsm7u.EvidenceEndpoint).commit(
+                    session,
+                    params['projectId'],
+                    params['commit'],
+                  ),
+        ),
+        'uploadDescription': _is.MethodConnector(
+          name: 'uploadDescription',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'evidenceId': _is.ParameterDescription(
+              name: 'evidenceId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['evidence'] as _i2cvsm7u.EvidenceEndpoint)
+                  .uploadDescription(
+                    session,
+                    params['projectId'],
+                    params['evidenceId'],
+                  ),
+        ),
+        'finalize': _is.MethodConnector(
+          name: 'finalize',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'evidenceId': _is.ParameterDescription(
+              name: 'evidenceId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['evidence'] as _i2cvsm7u.EvidenceEndpoint)
+                  .finalize(
+                    session,
+                    params['projectId'],
+                    params['evidenceId'],
+                  ),
+        ),
+        'list': _is.MethodConnector(
+          name: 'list',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'stageId': _is.ParameterDescription(
+              name: 'stageId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['evidence'] as _i2cvsm7u.EvidenceEndpoint).list(
+                    session,
+                    params['projectId'],
+                    params['stageId'],
+                  ),
+        ),
+        'get': _is.MethodConnector(
+          name: 'get',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'evidenceId': _is.ParameterDescription(
+              name: 'evidenceId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['evidence'] as _i2cvsm7u.EvidenceEndpoint).get(
+                    session,
+                    params['projectId'],
+                    params['evidenceId'],
+                  ),
+        ),
+        'media': _is.MethodConnector(
+          name: 'media',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'evidenceId': _is.ParameterDescription(
+              name: 'evidenceId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'variant': _is.ParameterDescription(
+              name: 'variant',
+              type: _is.getType<_i70qn4qh.MediaVariant>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['evidence'] as _i2cvsm7u.EvidenceEndpoint).media(
+                    session,
+                    params['projectId'],
+                    params['evidenceId'],
+                    params['variant'],
+                  ),
+        ),
+        'retract': _is.MethodConnector(
+          name: 'retract',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'evidenceId': _is.ParameterDescription(
+              name: 'evidenceId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'reason': _is.ParameterDescription(
+              name: 'reason',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['evidence'] as _i2cvsm7u.EvidenceEndpoint).retract(
+                    session,
+                    params['projectId'],
+                    params['evidenceId'],
+                    params['reason'],
+                  ),
         ),
       },
     );
