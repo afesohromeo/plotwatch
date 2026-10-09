@@ -271,4 +271,162 @@ void main() {
       expect(find.byKey(StagePage.captureButtonKey(20)), findsNothing);
     });
   });
+
+  // doc/04e group D (decisions M5-2, M5-3, M5-8).
+  group('Given the review loop', () {
+    final inProgress = testStageView(id: 2, status: StageStatus.inProgress);
+    final submitted = testStageView(id: 2, status: StageStatus.submitted);
+    final covered = [testEvidence(id: 9, checklistItemId: 20)];
+    StageReviewView decision(ReviewDecision value, {String? comment}) =>
+        StageReviewView(
+          review: StageReview(
+            id: value.index + 1,
+            stageId: 2,
+            reviewerId: UuidValue.fromString(testManagerId),
+            decision: value,
+            comment: comment,
+            createdAt: DateTime.utc(2026, 10, 9),
+          ),
+          reviewerName: 'Ada Lovelace',
+        );
+
+    testWidgets('when every required item is covered then the site manager '
+        'submits the stage', (tester) async {
+      await pumpWith(
+        tester,
+        loaded(
+          role: ProjectRole.siteManager,
+        ).copyWith(view: inProgress, evidence: covered),
+      );
+
+      await tester.ensureVisible(find.byKey(StagePage.submitButtonKey));
+      await tester.tap(find.byKey(StagePage.submitButtonKey));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.confirm));
+      await tester.pump();
+
+      verify(() => bloc.add(const StageEvent.submitRequested())).called(1);
+    });
+
+    testWidgets('when a required item has no photo then it is named and the '
+        'stage can\'t be submitted', (tester) async {
+      await pumpWith(
+        tester,
+        loaded(role: ProjectRole.siteManager).copyWith(view: inProgress),
+      );
+
+      expect(find.text(l10n.submitMissingItems('Wide shot')), findsOneWidget);
+      expect(find.byKey(StagePage.submitButtonKey), findsNothing);
+    });
+
+    testWidgets('when the owner requests changes then a comment is required '
+        'and sent', (tester) async {
+      await pumpWith(tester, loaded().copyWith(view: submitted));
+
+      await tester.ensureVisible(find.byKey(StagePage.requestChangesButtonKey));
+      await tester.tap(find.byKey(StagePage.requestChangesButtonKey));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.confirm));
+      await tester.pumpAndSettle();
+      expect(find.text(l10n.validateReviewCommentRequired), findsOneWidget);
+
+      await tester.enterText(
+        find.byKey(StagePage.reviewCommentFieldKey),
+        'Too dark',
+      );
+      await tester.tap(find.text(l10n.confirm));
+      await tester.pumpAndSettle();
+
+      verify(
+        () => bloc.add(
+          const StageEvent.reviewRequested(
+            decision: ReviewDecision.changesRequested,
+            comment: 'Too dark',
+          ),
+        ),
+      ).called(1);
+    });
+
+    testWidgets('when the owner approves and confirms then it is sent', (
+      tester,
+    ) async {
+      await pumpWith(tester, loaded().copyWith(view: submitted));
+
+      await tester.ensureVisible(find.byKey(StagePage.approveButtonKey));
+      await tester.tap(find.byKey(StagePage.approveButtonKey));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.confirm));
+      await tester.pumpAndSettle();
+
+      verify(
+        () => bloc.add(
+          const StageEvent.reviewRequested(decision: ReviewDecision.approved),
+        ),
+      ).called(1);
+    });
+
+    testWidgets('when a viewer looks at a submitted stage then there is '
+        'nothing to decide', (tester) async {
+      await pumpWith(
+        tester,
+        loaded(role: ProjectRole.viewer).copyWith(view: submitted),
+      );
+
+      expect(find.byKey(StagePage.approveButtonKey), findsNothing);
+      expect(find.byKey(StagePage.requestChangesButtonKey), findsNothing);
+    });
+
+    testWidgets('then the history lists each decision with its reviewer and '
+        'comment', (tester) async {
+      await pumpWith(
+        tester,
+        loaded(role: ProjectRole.viewer).copyWith(
+          view: testStageView(id: 2, status: StageStatus.approved),
+          reviews: [
+            decision(ReviewDecision.changesRequested, comment: 'Too dark'),
+            decision(ReviewDecision.approved),
+          ],
+        ),
+      );
+
+      expect(find.text(l10n.reviewHistoryTitle), findsOneWidget);
+      expect(find.textContaining('Too dark'), findsOneWidget);
+      expect(find.textContaining('Ada Lovelace'), findsNWidgets(2));
+    });
+
+    testWidgets('when changes were requested then the site manager sees what '
+        'to change at the top', (tester) async {
+      await pumpWith(
+        tester,
+        loaded(role: ProjectRole.siteManager).copyWith(
+          view: testStageView(id: 2, status: StageStatus.changesRequested),
+          reviews: [
+            decision(ReviewDecision.changesRequested, comment: 'Too dark'),
+          ],
+        ),
+      );
+
+      expect(
+        find.text(l10n.changesRequestedBy('Ada Lovelace', 'Too dark')),
+        findsOneWidget,
+      );
+    });
+  });
+
+  testWidgets('Given a stage past its planned end and not approved then it '
+      'is marked late (M5-10)', (tester) async {
+    await pumpWith(
+      tester,
+      loaded(role: ProjectRole.viewer).copyWith(
+        view: testStageView(id: 2, status: StageStatus.inProgress).copyWith(
+          stage: testStage(
+            id: 2,
+            status: StageStatus.inProgress,
+          ).copyWith(plannedEnd: DateTime.utc(2020, 1, 1)),
+        ),
+      ),
+    );
+
+    expect(find.text(l10n.stageLate), findsOneWidget);
+  });
 }

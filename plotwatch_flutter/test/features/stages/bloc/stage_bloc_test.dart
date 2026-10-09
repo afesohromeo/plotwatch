@@ -24,6 +24,9 @@ void main() {
     when(
       () => evidenceRepository.fetchStageEvidence(any(), any()),
     ).thenAnswer((_) async => []);
+    when(
+      () => stageRepository.fetchReviews(any(), any()),
+    ).thenAnswer((_) async => []);
   });
 
   StageBloc build() => StageBloc(
@@ -118,11 +121,13 @@ void main() {
       act: (bloc) => bloc.add(const StageEvent.startRequested()),
       expect: () => [
         asManager.copyWith(
+          action: StageAction.start,
           flowStep: GenericFlowStep.updatingItem,
           actionStatus: GenericStatus.loading,
         ),
         asManager.copyWith(
           view: started,
+          action: StageAction.start,
           flowStep: GenericFlowStep.updatingItem,
           actionStatus: GenericStatus.success,
         ),
@@ -140,6 +145,7 @@ void main() {
       skip: 1,
       expect: () => [
         asManager.copyWith(
+          action: StageAction.start,
           flowStep: GenericFlowStep.updatingItem,
           actionStatus: GenericStatus.failure,
           actionErrorMessage: l10n.errorProjectNotActive,
@@ -159,10 +165,12 @@ void main() {
       act: (bloc) => bloc.add(const StageEvent.deleteRequested()),
       expect: () => [
         asOwner.copyWith(
+          action: StageAction.delete,
           flowStep: GenericFlowStep.deletingItem,
           actionStatus: GenericStatus.loading,
         ),
         asOwner.copyWith(
+          action: StageAction.delete,
           flowStep: GenericFlowStep.deletingItem,
           actionStatus: GenericStatus.success,
         ),
@@ -208,6 +216,7 @@ void main() {
       skip: 1,
       expect: () => [
         asOwner.copyWith(
+          action: StageAction.delete,
           flowStep: GenericFlowStep.deletingItem,
           actionStatus: GenericStatus.failure,
           actionErrorMessage: l10n.errorStageLocked,
@@ -302,6 +311,165 @@ void main() {
         ).canCapture,
         isFalse,
       );
+    });
+  });
+
+  // doc/04e group D (decisions M5-2, M5-3, M5-8).
+  group('Given the review loop', () {
+    final inProgress = testStageView(id: 2, status: StageStatus.inProgress);
+    final submitted = testStageView(id: 2, status: StageStatus.submitted);
+    final approved = testStageView(id: 2, status: StageStatus.approved);
+    final managerAtWork = loaded(
+      role: ProjectRole.siteManager,
+      stage: inProgress,
+    );
+    final ownerReviewing = loaded(stage: submitted);
+    final changes = StageReviewView(
+      review: StageReview(
+        id: 1,
+        stageId: 2,
+        reviewerId: UuidValue.fromString(testManagerId),
+        decision: ReviewDecision.changesRequested,
+        comment: 'Too dark',
+        createdAt: DateTime.utc(2026, 10, 9),
+      ),
+      reviewerName: 'Ada Lovelace',
+    );
+
+    blocTest<StageBloc, StageState>(
+      'when the site manager submits then the stage is shown submitted',
+      setUp: () => when(
+        () => stageRepository.submitStage(1, 2),
+      ).thenAnswer((_) async => submitted),
+      build: build,
+      seed: () => managerAtWork,
+      act: (bloc) => bloc.add(const StageEvent.submitRequested()),
+      verify: (bloc) {
+        expect(bloc.state.view, submitted);
+        expect(bloc.state.action, StageAction.submit);
+        expect(bloc.state.actionStatus, GenericStatus.success);
+      },
+    );
+
+    blocTest<StageBloc, StageState>(
+      'when the checklist is incomplete then it shows why',
+      setUp: () =>
+          when(() => stageRepository.submitStage(any(), any())).thenThrow(
+            const HttpException400(code: AppErrorCode.checklistIncomplete),
+          ),
+      build: build,
+      seed: () => managerAtWork,
+      act: (bloc) => bloc.add(const StageEvent.submitRequested()),
+      verify: (bloc) =>
+          expect(bloc.state.actionErrorMessage, l10n.errorChecklistIncomplete),
+    );
+
+    blocTest<StageBloc, StageState>(
+      'when the owner approves then the stage and its history are refreshed',
+      setUp: () {
+        when(
+          () => stageRepository.reviewStage(1, 2, ReviewDecision.approved),
+        ).thenAnswer((_) async => approved);
+        when(
+          () => stageRepository.fetchReviews(1, 2),
+        ).thenAnswer((_) async => [changes]);
+      },
+      build: build,
+      seed: () => ownerReviewing,
+      act: (bloc) => bloc.add(
+        const StageEvent.reviewRequested(decision: ReviewDecision.approved),
+      ),
+      verify: (bloc) {
+        expect(bloc.state.view, approved);
+        expect(bloc.state.reviews, [changes]);
+        expect(bloc.state.action, StageAction.approve);
+      },
+    );
+
+    blocTest<StageBloc, StageState>(
+      'when the owner requests changes then the comment is sent',
+      setUp: () => when(
+        () => stageRepository.reviewStage(
+          1,
+          2,
+          ReviewDecision.changesRequested,
+          comment: 'Too dark',
+        ),
+      ).thenAnswer((_) async => inProgress),
+      build: build,
+      seed: () => ownerReviewing,
+      act: (bloc) => bloc.add(
+        const StageEvent.reviewRequested(
+          decision: ReviewDecision.changesRequested,
+          comment: 'Too dark',
+        ),
+      ),
+      verify: (bloc) => expect(bloc.state.action, StageAction.requestChanges),
+    );
+
+    test('then only the site manager submits an open stage on an active '
+        'project, and the missing required items are named', () {
+      final evidence = [testEvidence(checklistItemId: 21)];
+      // Item 20 is required, 21 optional (testStageView).
+      final incomplete = managerAtWork.copyWith(evidence: evidence);
+      final complete = managerAtWork.copyWith(
+        evidence: [testEvidence(checklistItemId: 20)],
+      );
+
+      expect(incomplete.canSubmit, isTrue);
+      expect(incomplete.missingItems.map((i) => i.id), [20]);
+      expect(complete.missingItems, isEmpty);
+      expect(
+        managerAtWork
+            .copyWith(
+              evidence: [
+                testEvidence(
+                  checklistItemId: 20,
+                  status: EvidenceStatus.retracted,
+                ),
+              ],
+            )
+            .missingItems
+            .map((i) => i.id),
+        [20],
+      );
+      expect(loaded(stage: inProgress).canSubmit, isFalse);
+      expect(
+        loaded(role: ProjectRole.siteManager, stage: submitted).canSubmit,
+        isFalse,
+      );
+    });
+
+    test('then the owner and an approving co-funder review a submitted '
+        'stage, nobody else', () {
+      StageState as(ProjectRole role, {bool canApprove = false}) => StageState(
+        projectId: 1,
+        stageId: 2,
+        overview: testOverview(
+          role: role,
+          canApprove: canApprove,
+          project: testProject(status: ProjectStatus.active),
+        ),
+        view: submitted,
+        loadStatus: GenericStatus.success,
+      );
+
+      expect(as(ProjectRole.owner).canReview, isTrue);
+      expect(as(ProjectRole.coFunder, canApprove: true).canReview, isTrue);
+      expect(as(ProjectRole.coFunder).canReview, isFalse);
+      expect(as(ProjectRole.siteManager).canReview, isFalse);
+      expect(as(ProjectRole.viewer).canReview, isFalse);
+      expect(ownerReviewing.copyWith(view: inProgress).canReview, isFalse);
+    });
+
+    test('then the site manager sees the last changes requested', () {
+      final again = managerAtWork.copyWith(
+        view: testStageView(id: 2, status: StageStatus.changesRequested),
+        reviews: [changes],
+      );
+
+      expect(again.lastChangesRequested, changes);
+      expect(managerAtWork.lastChangesRequested, isNull);
     });
   });
 }

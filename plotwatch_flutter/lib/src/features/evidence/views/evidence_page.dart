@@ -101,6 +101,11 @@ class _EvidencePageState extends State<EvidencePage> {
             ),
             _ when evidence != null => _EvidenceBody(
               evidence: evidence,
+              daysLate: daysAfterPlannedEnd(
+                evidence.deviceCapturedAt,
+                state.stage?.plannedEnd,
+              ),
+              plannedEnd: state.stage?.plannedEnd,
               canRetract: state.canRetract,
               isRetracting: state.actionStatus == GenericStatus.loading,
               onRetract: _retract,
@@ -116,12 +121,18 @@ class _EvidencePageState extends State<EvidencePage> {
 class _EvidenceBody extends StatelessWidget {
   const _EvidenceBody({
     required this.evidence,
+    required this.daysLate,
+    required this.plannedEnd,
     required this.canRetract,
     required this.isRetracting,
     required this.onRetract,
   });
 
   final Evidence evidence;
+
+  /// Days after the stage's planned end it was taken, if any (M5-10).
+  final int? daysLate;
+  final DateTime? plannedEnd;
   final bool canRetract;
   final bool isRetracting;
   final VoidCallback onRetract;
@@ -193,6 +204,16 @@ class _EvidenceBody extends StatelessWidget {
         ],
         const Gap.vertical(height: AppSpacing.lg),
         Text(l10n.evidenceDetailsTitle, style: context.textTheme.titleMedium),
+        // Information only: lateness never changes the badge (M5-10).
+        if (daysLate case final days?) ...[
+          const Gap.vertical(height: AppSpacing.xs),
+          Text(
+            l10n.takenAfterPlannedEnd(days, formatDate(plannedEnd!)),
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: customColors.partial,
+            ),
+          ),
+        ],
         const Gap.vertical(height: AppSpacing.sm),
         DetailRow(
           label: l10n.labelTakenAt,

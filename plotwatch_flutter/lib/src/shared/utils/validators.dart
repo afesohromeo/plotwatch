@@ -94,6 +94,40 @@ class Validators {
     return null;
   }
 
+  // Progress update rules mirror the server's UpdateService.validateDraft
+  // (doc/04e M5-9 b).
+  static const maxUpdateTextLength = 2000;
+  static const maxUpdateIssuesLength = 1000;
+  static const maxWorkersCount = 999;
+
+  static String? updateText(String? value, AppLocalizations l10n) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) return l10n.validateUpdateTextRequired;
+    if (text.length > maxUpdateTextLength) {
+      return l10n.validateUpdateTextTooLong;
+    }
+    return null;
+  }
+
+  /// Optional: a whole number from 0 to 999.
+  static String? workersCount(String? value, AppLocalizations l10n) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) return null;
+    final count = int.tryParse(text);
+    if (count == null || count < 0 || count > maxWorkersCount) {
+      return l10n.validateWorkersCount;
+    }
+    return null;
+  }
+
+  /// Optional: only the length is checked.
+  static String? updateIssues(String? value, AppLocalizations l10n) {
+    if ((value?.trim() ?? '').length > maxUpdateIssuesLength) {
+      return l10n.validateUpdateIssuesTooLong;
+    }
+    return null;
+  }
+
   /// Optional: only the length is checked.
   static String? projectDescription(String? value, AppLocalizations l10n) {
     if ((value?.trim() ?? '').length > maxProjectDescriptionLength) {

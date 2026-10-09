@@ -47,6 +47,35 @@ void main() {
       expect(await repository.createPlan(1, drafts), plan);
     });
 
+    // doc/04e group D.
+    test('when a stage is submitted, reviewed or its history fetched then '
+        'the server answer is returned', () async {
+      final view = testStageView();
+      final history = <StageReviewView>[];
+      when(() => apiProvider.submit(1, 2)).thenAnswer((_) async => view);
+      when(
+        () => apiProvider.review(
+          1,
+          2,
+          ReviewDecision.changesRequested,
+          comment: 'Too dark',
+        ),
+      ).thenAnswer((_) async => view);
+      when(() => apiProvider.reviews(1, 2)).thenAnswer((_) async => history);
+
+      expect(await repository.submitStage(1, 2), view);
+      expect(
+        await repository.reviewStage(
+          1,
+          2,
+          ReviewDecision.changesRequested,
+          comment: 'Too dark',
+        ),
+        view,
+      );
+      expect(await repository.fetchReviews(1, 2), history);
+    });
+
     test('when stages are reordered or one is deleted then the call goes '
         'through', () async {
       final plan = testStagePlan();

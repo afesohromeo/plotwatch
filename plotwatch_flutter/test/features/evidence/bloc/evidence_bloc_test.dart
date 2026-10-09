@@ -12,9 +12,11 @@ void main() {
   late MockEvidenceRepository evidenceRepository;
   late MockProjectRepository projectRepository;
   late MockAuthRepository authRepository;
+  late MockStageRepository stageRepository;
 
   final managerOverview = testOverview(role: ProjectRole.siteManager);
   final evidence = testEvidence();
+  final stageView = testStageView(id: 1);
   final retracted = testEvidence(
     status: EvidenceStatus.retracted,
     retractedReason: 'Blurred',
@@ -25,6 +27,10 @@ void main() {
     evidenceRepository = MockEvidenceRepository();
     projectRepository = MockProjectRepository();
     authRepository = MockAuthRepository();
+    stageRepository = MockStageRepository();
+    when(
+      () => stageRepository.fetchStage(1, 1),
+    ).thenAnswer((_) async => stageView);
     when(
       () => projectRepository.fetchProject(1),
     ).thenAnswer((_) async => managerOverview);
@@ -37,6 +43,7 @@ void main() {
     evidenceRepository: evidenceRepository,
     projectRepository: projectRepository,
     authRepository: authRepository,
+    stageRepository: stageRepository,
   );
 
   final loaded = EvidenceState(
@@ -45,6 +52,7 @@ void main() {
     evidenceId: 9,
     overview: managerOverview,
     evidence: evidence,
+    stage: stageView.stage,
     isMine: true,
     loadStatus: GenericStatus.success,
   );

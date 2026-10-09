@@ -68,6 +68,8 @@ class _ProjectListPageState extends State<ProjectListPage> {
               child: Text(l10n.projectsTitle),
             ),
             actions: [
+              // Unread notifications, live (doc/04e M5-4).
+              const NotificationBell(),
               IconButton(
                 key: ProjectListPage.joinButtonKey,
                 tooltip: l10n.joinTitle,

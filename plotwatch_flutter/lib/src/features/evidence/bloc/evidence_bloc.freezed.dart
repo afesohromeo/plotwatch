@@ -353,7 +353,8 @@ String toString() {
 /// @nodoc
 mixin _$EvidenceState {
 
- int? get projectId; int? get stageId; int? get evidenceId; ProjectOverview? get overview; Evidence? get evidence;/// The signed-in user took the photo.
+ int? get projectId; int? get stageId; int? get evidenceId; ProjectOverview? get overview; Evidence? get evidence;/// The capture's stage, for the schedule line (doc/04e M5-10).
+ Stage? get stage;/// The signed-in user took the photo.
  bool get isMine; GenericStatus get loadStatus; String? get loadErrorMessage; GenericStatus get actionStatus; String? get actionErrorMessage;
 /// Create a copy of EvidenceState
 /// with the given fields replaced by the non-null parameter values.
@@ -366,20 +367,20 @@ $EvidenceStateCopyWith<EvidenceState> get copyWith => _$EvidenceStateCopyWithImp
 @override
 bool operator ==(Object other) {
   final _this = this as EvidenceState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EvidenceState&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.stageId, _this.stageId) || other.stageId == _this.stageId)&&(identical(other.evidenceId, _this.evidenceId) || other.evidenceId == _this.evidenceId)&&(identical(other.overview, _this.overview) || other.overview == _this.overview)&&(identical(other.evidence, _this.evidence) || other.evidence == _this.evidence)&&(identical(other.isMine, _this.isMine) || other.isMine == _this.isMine)&&(identical(other.loadStatus, _this.loadStatus) || other.loadStatus == _this.loadStatus)&&(identical(other.loadErrorMessage, _this.loadErrorMessage) || other.loadErrorMessage == _this.loadErrorMessage)&&(identical(other.actionStatus, _this.actionStatus) || other.actionStatus == _this.actionStatus)&&(identical(other.actionErrorMessage, _this.actionErrorMessage) || other.actionErrorMessage == _this.actionErrorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EvidenceState&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.stageId, _this.stageId) || other.stageId == _this.stageId)&&(identical(other.evidenceId, _this.evidenceId) || other.evidenceId == _this.evidenceId)&&(identical(other.overview, _this.overview) || other.overview == _this.overview)&&(identical(other.evidence, _this.evidence) || other.evidence == _this.evidence)&&(identical(other.stage, _this.stage) || other.stage == _this.stage)&&(identical(other.isMine, _this.isMine) || other.isMine == _this.isMine)&&(identical(other.loadStatus, _this.loadStatus) || other.loadStatus == _this.loadStatus)&&(identical(other.loadErrorMessage, _this.loadErrorMessage) || other.loadErrorMessage == _this.loadErrorMessage)&&(identical(other.actionStatus, _this.actionStatus) || other.actionStatus == _this.actionStatus)&&(identical(other.actionErrorMessage, _this.actionErrorMessage) || other.actionErrorMessage == _this.actionErrorMessage));
 }
 
 
 @override
 int get hashCode {
   final _this = this as EvidenceState;
-  return Object.hash(runtimeType,_this.projectId,_this.stageId,_this.evidenceId,_this.overview,_this.evidence,_this.isMine,_this.loadStatus,_this.loadErrorMessage,_this.actionStatus,_this.actionErrorMessage);
+  return Object.hash(runtimeType,_this.projectId,_this.stageId,_this.evidenceId,_this.overview,_this.evidence,_this.stage,_this.isMine,_this.loadStatus,_this.loadErrorMessage,_this.actionStatus,_this.actionErrorMessage);
 }
 
 @override
 String toString() {
   final _this = this as EvidenceState;
-  return 'EvidenceState(projectId: ${_this.projectId}, stageId: ${_this.stageId}, evidenceId: ${_this.evidenceId}, overview: ${_this.overview}, evidence: ${_this.evidence}, isMine: ${_this.isMine}, loadStatus: ${_this.loadStatus}, loadErrorMessage: ${_this.loadErrorMessage}, actionStatus: ${_this.actionStatus}, actionErrorMessage: ${_this.actionErrorMessage})';
+  return 'EvidenceState(projectId: ${_this.projectId}, stageId: ${_this.stageId}, evidenceId: ${_this.evidenceId}, overview: ${_this.overview}, evidence: ${_this.evidence}, stage: ${_this.stage}, isMine: ${_this.isMine}, loadStatus: ${_this.loadStatus}, loadErrorMessage: ${_this.loadErrorMessage}, actionStatus: ${_this.actionStatus}, actionErrorMessage: ${_this.actionErrorMessage})';
 }
 
 
@@ -390,7 +391,7 @@ abstract mixin class $EvidenceStateCopyWith<$Res>  {
   factory $EvidenceStateCopyWith(EvidenceState value, $Res Function(EvidenceState) _then) = _$EvidenceStateCopyWithImpl;
 @useResult
 $Res call({
- int? projectId, int? stageId, int? evidenceId, ProjectOverview? overview, Evidence? evidence, bool isMine, GenericStatus loadStatus, String? loadErrorMessage, GenericStatus actionStatus, String? actionErrorMessage
+ int? projectId, int? stageId, int? evidenceId, ProjectOverview? overview, Evidence? evidence, Stage? stage, bool isMine, GenericStatus loadStatus, String? loadErrorMessage, GenericStatus actionStatus, String? actionErrorMessage
 });
 
 
@@ -407,14 +408,15 @@ class _$EvidenceStateCopyWithImpl<$Res>
 
 /// Create a copy of EvidenceState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? projectId = freezed,Object? stageId = freezed,Object? evidenceId = freezed,Object? overview = freezed,Object? evidence = freezed,Object? isMine = null,Object? loadStatus = null,Object? loadErrorMessage = freezed,Object? actionStatus = null,Object? actionErrorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? projectId = freezed,Object? stageId = freezed,Object? evidenceId = freezed,Object? overview = freezed,Object? evidence = freezed,Object? stage = freezed,Object? isMine = null,Object? loadStatus = null,Object? loadErrorMessage = freezed,Object? actionStatus = null,Object? actionErrorMessage = freezed,}) {
   return _then(EvidenceState(
 projectId: freezed == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as int?,stageId: freezed == stageId ? _self.stageId : stageId // ignore: cast_nullable_to_non_nullable
 as int?,evidenceId: freezed == evidenceId ? _self.evidenceId : evidenceId // ignore: cast_nullable_to_non_nullable
 as int?,overview: freezed == overview ? _self.overview : overview // ignore: cast_nullable_to_non_nullable
 as ProjectOverview?,evidence: freezed == evidence ? _self.evidence : evidence // ignore: cast_nullable_to_non_nullable
-as Evidence?,isMine: null == isMine ? _self.isMine : isMine // ignore: cast_nullable_to_non_nullable
+as Evidence?,stage: freezed == stage ? _self.stage : stage // ignore: cast_nullable_to_non_nullable
+as Stage?,isMine: null == isMine ? _self.isMine : isMine // ignore: cast_nullable_to_non_nullable
 as bool,loadStatus: null == loadStatus ? _self.loadStatus : loadStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,loadErrorMessage: freezed == loadErrorMessage ? _self.loadErrorMessage : loadErrorMessage // ignore: cast_nullable_to_non_nullable
 as String?,actionStatus: null == actionStatus ? _self.actionStatus : actionStatus // ignore: cast_nullable_to_non_nullable
@@ -501,10 +503,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? projectId,  int? stageId,  int? evidenceId,  ProjectOverview? overview,  Evidence? evidence,  bool isMine,  GenericStatus loadStatus,  String? loadErrorMessage,  GenericStatus actionStatus,  String? actionErrorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? projectId,  int? stageId,  int? evidenceId,  ProjectOverview? overview,  Evidence? evidence,  Stage? stage,  bool isMine,  GenericStatus loadStatus,  String? loadErrorMessage,  GenericStatus actionStatus,  String? actionErrorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EvidenceState() when $default != null:
-return $default(_that.projectId,_that.stageId,_that.evidenceId,_that.overview,_that.evidence,_that.isMine,_that.loadStatus,_that.loadErrorMessage,_that.actionStatus,_that.actionErrorMessage);case _:
+return $default(_that.projectId,_that.stageId,_that.evidenceId,_that.overview,_that.evidence,_that.stage,_that.isMine,_that.loadStatus,_that.loadErrorMessage,_that.actionStatus,_that.actionErrorMessage);case _:
   return orElse();
 
 }
@@ -522,10 +524,10 @@ return $default(_that.projectId,_that.stageId,_that.evidenceId,_that.overview,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? projectId,  int? stageId,  int? evidenceId,  ProjectOverview? overview,  Evidence? evidence,  bool isMine,  GenericStatus loadStatus,  String? loadErrorMessage,  GenericStatus actionStatus,  String? actionErrorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? projectId,  int? stageId,  int? evidenceId,  ProjectOverview? overview,  Evidence? evidence,  Stage? stage,  bool isMine,  GenericStatus loadStatus,  String? loadErrorMessage,  GenericStatus actionStatus,  String? actionErrorMessage)  $default,) {final _that = this;
 switch (_that) {
 case _EvidenceState():
-return $default(_that.projectId,_that.stageId,_that.evidenceId,_that.overview,_that.evidence,_that.isMine,_that.loadStatus,_that.loadErrorMessage,_that.actionStatus,_that.actionErrorMessage);}
+return $default(_that.projectId,_that.stageId,_that.evidenceId,_that.overview,_that.evidence,_that.stage,_that.isMine,_that.loadStatus,_that.loadErrorMessage,_that.actionStatus,_that.actionErrorMessage);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -539,10 +541,10 @@ return $default(_that.projectId,_that.stageId,_that.evidenceId,_that.overview,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? projectId,  int? stageId,  int? evidenceId,  ProjectOverview? overview,  Evidence? evidence,  bool isMine,  GenericStatus loadStatus,  String? loadErrorMessage,  GenericStatus actionStatus,  String? actionErrorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? projectId,  int? stageId,  int? evidenceId,  ProjectOverview? overview,  Evidence? evidence,  Stage? stage,  bool isMine,  GenericStatus loadStatus,  String? loadErrorMessage,  GenericStatus actionStatus,  String? actionErrorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _EvidenceState() when $default != null:
-return $default(_that.projectId,_that.stageId,_that.evidenceId,_that.overview,_that.evidence,_that.isMine,_that.loadStatus,_that.loadErrorMessage,_that.actionStatus,_that.actionErrorMessage);case _:
+return $default(_that.projectId,_that.stageId,_that.evidenceId,_that.overview,_that.evidence,_that.stage,_that.isMine,_that.loadStatus,_that.loadErrorMessage,_that.actionStatus,_that.actionErrorMessage);case _:
   return null;
 
 }
@@ -554,7 +556,7 @@ return $default(_that.projectId,_that.stageId,_that.evidenceId,_that.overview,_t
 
 
 class _EvidenceState extends EvidenceState {
-  const _EvidenceState({this.projectId, this.stageId, this.evidenceId, this.overview, this.evidence, this.isMine = false, this.loadStatus = GenericStatus.initial, this.loadErrorMessage, this.actionStatus = GenericStatus.initial, this.actionErrorMessage}): super._();
+  const _EvidenceState({this.projectId, this.stageId, this.evidenceId, this.overview, this.evidence, this.stage, this.isMine = false, this.loadStatus = GenericStatus.initial, this.loadErrorMessage, this.actionStatus = GenericStatus.initial, this.actionErrorMessage}): super._();
   
 
 @override final  int? projectId;
@@ -562,6 +564,8 @@ class _EvidenceState extends EvidenceState {
 @override final  int? evidenceId;
 @override final  ProjectOverview? overview;
 @override final  Evidence? evidence;
+/// The capture's stage, for the schedule line (doc/04e M5-10).
+@override final  Stage? stage;
 /// The signed-in user took the photo.
 @override@JsonKey() final  bool isMine;
 @override@JsonKey() final  GenericStatus loadStatus;
@@ -579,18 +583,18 @@ _$EvidenceStateCopyWith<_EvidenceState> get copyWith => __$EvidenceStateCopyWith
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EvidenceState&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.stageId, stageId) || other.stageId == stageId)&&(identical(other.evidenceId, evidenceId) || other.evidenceId == evidenceId)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.evidence, evidence) || other.evidence == evidence)&&(identical(other.isMine, isMine) || other.isMine == isMine)&&(identical(other.loadStatus, loadStatus) || other.loadStatus == loadStatus)&&(identical(other.loadErrorMessage, loadErrorMessage) || other.loadErrorMessage == loadErrorMessage)&&(identical(other.actionStatus, actionStatus) || other.actionStatus == actionStatus)&&(identical(other.actionErrorMessage, actionErrorMessage) || other.actionErrorMessage == actionErrorMessage));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EvidenceState&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.stageId, stageId) || other.stageId == stageId)&&(identical(other.evidenceId, evidenceId) || other.evidenceId == evidenceId)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.evidence, evidence) || other.evidence == evidence)&&(identical(other.stage, stage) || other.stage == stage)&&(identical(other.isMine, isMine) || other.isMine == isMine)&&(identical(other.loadStatus, loadStatus) || other.loadStatus == loadStatus)&&(identical(other.loadErrorMessage, loadErrorMessage) || other.loadErrorMessage == loadErrorMessage)&&(identical(other.actionStatus, actionStatus) || other.actionStatus == actionStatus)&&(identical(other.actionErrorMessage, actionErrorMessage) || other.actionErrorMessage == actionErrorMessage));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,projectId,stageId,evidenceId,overview,evidence,isMine,loadStatus,loadErrorMessage,actionStatus,actionErrorMessage);
+    return Object.hash(runtimeType,projectId,stageId,evidenceId,overview,evidence,stage,isMine,loadStatus,loadErrorMessage,actionStatus,actionErrorMessage);
 }
 
 @override
 String toString() {
-    return 'EvidenceState(projectId: $projectId, stageId: $stageId, evidenceId: $evidenceId, overview: $overview, evidence: $evidence, isMine: $isMine, loadStatus: $loadStatus, loadErrorMessage: $loadErrorMessage, actionStatus: $actionStatus, actionErrorMessage: $actionErrorMessage)';
+    return 'EvidenceState(projectId: $projectId, stageId: $stageId, evidenceId: $evidenceId, overview: $overview, evidence: $evidence, stage: $stage, isMine: $isMine, loadStatus: $loadStatus, loadErrorMessage: $loadErrorMessage, actionStatus: $actionStatus, actionErrorMessage: $actionErrorMessage)';
 }
 
 
@@ -601,7 +605,7 @@ abstract mixin class _$EvidenceStateCopyWith<$Res> implements $EvidenceStateCopy
   factory _$EvidenceStateCopyWith(_EvidenceState value, $Res Function(_EvidenceState) _then) = __$EvidenceStateCopyWithImpl;
 @override @useResult
 $Res call({
- int? projectId, int? stageId, int? evidenceId, ProjectOverview? overview, Evidence? evidence, bool isMine, GenericStatus loadStatus, String? loadErrorMessage, GenericStatus actionStatus, String? actionErrorMessage
+ int? projectId, int? stageId, int? evidenceId, ProjectOverview? overview, Evidence? evidence, Stage? stage, bool isMine, GenericStatus loadStatus, String? loadErrorMessage, GenericStatus actionStatus, String? actionErrorMessage
 });
 
 
@@ -618,14 +622,15 @@ class __$EvidenceStateCopyWithImpl<$Res>
 
 /// Create a copy of EvidenceState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? projectId = freezed,Object? stageId = freezed,Object? evidenceId = freezed,Object? overview = freezed,Object? evidence = freezed,Object? isMine = null,Object? loadStatus = null,Object? loadErrorMessage = freezed,Object? actionStatus = null,Object? actionErrorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? projectId = freezed,Object? stageId = freezed,Object? evidenceId = freezed,Object? overview = freezed,Object? evidence = freezed,Object? stage = freezed,Object? isMine = null,Object? loadStatus = null,Object? loadErrorMessage = freezed,Object? actionStatus = null,Object? actionErrorMessage = freezed,}) {
   return _then(_EvidenceState(
 projectId: freezed == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as int?,stageId: freezed == stageId ? _self.stageId : stageId // ignore: cast_nullable_to_non_nullable
 as int?,evidenceId: freezed == evidenceId ? _self.evidenceId : evidenceId // ignore: cast_nullable_to_non_nullable
 as int?,overview: freezed == overview ? _self.overview : overview // ignore: cast_nullable_to_non_nullable
 as ProjectOverview?,evidence: freezed == evidence ? _self.evidence : evidence // ignore: cast_nullable_to_non_nullable
-as Evidence?,isMine: null == isMine ? _self.isMine : isMine // ignore: cast_nullable_to_non_nullable
+as Evidence?,stage: freezed == stage ? _self.stage : stage // ignore: cast_nullable_to_non_nullable
+as Stage?,isMine: null == isMine ? _self.isMine : isMine // ignore: cast_nullable_to_non_nullable
 as bool,loadStatus: null == loadStatus ? _self.loadStatus : loadStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,loadErrorMessage: freezed == loadErrorMessage ? _self.loadErrorMessage : loadErrorMessage // ignore: cast_nullable_to_non_nullable
 as String?,actionStatus: null == actionStatus ? _self.actionStatus : actionStatus // ignore: cast_nullable_to_non_nullable

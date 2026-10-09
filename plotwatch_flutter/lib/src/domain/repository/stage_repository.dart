@@ -45,6 +45,30 @@ class StageRepository {
   Future<StageView> startStage(int projectId, int stageId) =>
       _logged('starting a stage', () => _apiProvider.start(projectId, stageId));
 
+  /// Sends the stage for review (STG-07, doc/04e M5-2).
+  Future<StageView> submitStage(int projectId, int stageId) => _logged(
+    'submitting a stage',
+    () => _apiProvider.submit(projectId, stageId),
+  );
+
+  /// Approves or requests changes (REV-03, doc/04e M5-3).
+  Future<StageView> reviewStage(
+    int projectId,
+    int stageId,
+    ReviewDecision decision, {
+    String? comment,
+  }) => _logged(
+    'reviewing a stage',
+    () => _apiProvider.review(projectId, stageId, decision, comment: comment),
+  );
+
+  /// Every decision, oldest first (REV-05).
+  Future<List<StageReviewView>> fetchReviews(int projectId, int stageId) =>
+      _logged(
+        'fetching the review history',
+        () => _apiProvider.reviews(projectId, stageId),
+      );
+
   Future<T> _logged<T>(String what, Future<T> Function() call) async {
     try {
       return await call();

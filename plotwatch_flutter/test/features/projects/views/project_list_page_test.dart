@@ -18,6 +18,7 @@ void main() {
   late AppLocalizations l10n;
   late MockProjectListBloc bloc;
   late MockAuthenticationBloc authBloc;
+  late MockNotificationsBloc notificationsBloc;
 
   setUpAll(() {
     l10n = setUpTestLocalization();
@@ -27,6 +28,8 @@ void main() {
   setUp(() {
     bloc = MockProjectListBloc();
     authBloc = MockAuthenticationBloc();
+    notificationsBloc = MockNotificationsBloc();
+    when(() => notificationsBloc.state).thenReturn(const NotificationsState());
     when(() => authBloc.state).thenReturn(
       const AuthenticationState(status: AuthenticationStatus.authenticated),
     );
@@ -43,6 +46,7 @@ void main() {
         providers: [
           BlocProvider<ProjectListBloc>.value(value: bloc),
           BlocProvider<AuthenticationBloc>.value(value: authBloc),
+          BlocProvider<NotificationsBloc>.value(value: notificationsBloc),
         ],
         child: const ProjectListPage(),
       ),

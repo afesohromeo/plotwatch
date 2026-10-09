@@ -15,18 +15,26 @@ class MockProjectOverviewBloc
 void main() {
   late AppLocalizations l10n;
   late MockProjectOverviewBloc bloc;
+  late MockFeedBloc feedBloc;
 
   setUpAll(() {
     l10n = setUpTestLocalization();
     registerFallbackValue(const ProjectOverviewEvent.resetFlowStep());
   });
-  setUp(() => bloc = MockProjectOverviewBloc());
+  setUp(() {
+    bloc = MockProjectOverviewBloc();
+    feedBloc = MockFeedBloc();
+    when(() => feedBloc.state).thenReturn(const FeedState());
+  });
 
   Future<void> pumpWith(WidgetTester tester, ProjectOverviewState state) {
     when(() => bloc.state).thenReturn(state);
     return tester.pumpApp(
-      BlocProvider<ProjectOverviewBloc>.value(
-        value: bloc,
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<ProjectOverviewBloc>.value(value: bloc),
+          BlocProvider<FeedBloc>.value(value: feedBloc),
+        ],
         child: const ProjectOverviewPage(projectId: 1),
       ),
     );
@@ -283,5 +291,42 @@ void main() {
         const ProjectOverviewEvent.changeStatus(status: ProjectStatus.paused),
       ),
     ).called(1);
+  });
+
+  // doc/04e M5-9 b and M5-7.
+  group('Given the progress updates and the latest activity', () {
+    final active = testProject(status: ProjectStatus.active);
+
+    testWidgets('then the site manager of an active project can post an '
+        'update', (tester) async {
+      await pumpWith(
+        tester,
+        loaded(testOverview(project: active, role: ProjectRole.siteManager)),
+      );
+
+      expect(
+        find.byKey(ProjectOverviewPage.postUpdateButtonKey),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('then the owner and a draft project have no update button', (
+      tester,
+    ) async {
+      await pumpWith(tester, loaded(testOverview(project: active)));
+      expect(find.byKey(ProjectOverviewPage.postUpdateButtonKey), findsNothing);
+
+      await pumpWith(
+        tester,
+        loaded(testOverview(role: ProjectRole.siteManager)),
+      );
+      expect(find.byKey(ProjectOverviewPage.postUpdateButtonKey), findsNothing);
+    });
+
+    testWidgets('then the latest activity is shown', (tester) async {
+      await pumpWith(tester, loaded(testOverview(role: ProjectRole.viewer)));
+
+      expect(find.byType(LatestActivity), findsOneWidget);
+    });
   });
 }

@@ -9,3 +9,6 @@ export 'membership/membership_api_provider.dart';
 export 'site/site_api_provider.dart';
 export 'stage/stage_api_provider.dart';
 export 'evidence/evidence_api_provider.dart';
+export 'activity/activity_api_provider.dart';
+export 'notification/notification_api_provider.dart';
+export 'update/update_api_provider.dart';

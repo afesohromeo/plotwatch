@@ -56,13 +56,15 @@ extension StageEventPatterns on StageEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Load value)?  load,TResult Function( _StartRequested value)?  startRequested,TResult Function( _DeleteRequested value)?  deleteRequested,TResult Function( _ResetFlowStep value)?  resetFlowStep,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Load value)?  load,TResult Function( _StartRequested value)?  startRequested,TResult Function( _DeleteRequested value)?  deleteRequested,TResult Function( _SubmitRequested value)?  submitRequested,TResult Function( _ReviewRequested value)?  reviewRequested,TResult Function( _ResetFlowStep value)?  resetFlowStep,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Load() when load != null:
 return load(_that);case _StartRequested() when startRequested != null:
 return startRequested(_that);case _DeleteRequested() when deleteRequested != null:
-return deleteRequested(_that);case _ResetFlowStep() when resetFlowStep != null:
+return deleteRequested(_that);case _SubmitRequested() when submitRequested != null:
+return submitRequested(_that);case _ReviewRequested() when reviewRequested != null:
+return reviewRequested(_that);case _ResetFlowStep() when resetFlowStep != null:
 return resetFlowStep(_that);case _:
   return orElse();
 
@@ -81,13 +83,15 @@ return resetFlowStep(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Load value)  load,required TResult Function( _StartRequested value)  startRequested,required TResult Function( _DeleteRequested value)  deleteRequested,required TResult Function( _ResetFlowStep value)  resetFlowStep,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Load value)  load,required TResult Function( _StartRequested value)  startRequested,required TResult Function( _DeleteRequested value)  deleteRequested,required TResult Function( _SubmitRequested value)  submitRequested,required TResult Function( _ReviewRequested value)  reviewRequested,required TResult Function( _ResetFlowStep value)  resetFlowStep,}){
 final _that = this;
 switch (_that) {
 case _Load():
 return load(_that);case _StartRequested():
 return startRequested(_that);case _DeleteRequested():
-return deleteRequested(_that);case _ResetFlowStep():
+return deleteRequested(_that);case _SubmitRequested():
+return submitRequested(_that);case _ReviewRequested():
+return reviewRequested(_that);case _ResetFlowStep():
 return resetFlowStep(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -102,13 +106,15 @@ return resetFlowStep(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Load value)?  load,TResult? Function( _StartRequested value)?  startRequested,TResult? Function( _DeleteRequested value)?  deleteRequested,TResult? Function( _ResetFlowStep value)?  resetFlowStep,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Load value)?  load,TResult? Function( _StartRequested value)?  startRequested,TResult? Function( _DeleteRequested value)?  deleteRequested,TResult? Function( _SubmitRequested value)?  submitRequested,TResult? Function( _ReviewRequested value)?  reviewRequested,TResult? Function( _ResetFlowStep value)?  resetFlowStep,}){
 final _that = this;
 switch (_that) {
 case _Load() when load != null:
 return load(_that);case _StartRequested() when startRequested != null:
 return startRequested(_that);case _DeleteRequested() when deleteRequested != null:
-return deleteRequested(_that);case _ResetFlowStep() when resetFlowStep != null:
+return deleteRequested(_that);case _SubmitRequested() when submitRequested != null:
+return submitRequested(_that);case _ReviewRequested() when reviewRequested != null:
+return reviewRequested(_that);case _ResetFlowStep() when resetFlowStep != null:
 return resetFlowStep(_that);case _:
   return null;
 
@@ -126,12 +132,14 @@ return resetFlowStep(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int projectId,  int stageId)?  load,TResult Function()?  startRequested,TResult Function()?  deleteRequested,TResult Function()?  resetFlowStep,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int projectId,  int stageId)?  load,TResult Function()?  startRequested,TResult Function()?  deleteRequested,TResult Function()?  submitRequested,TResult Function( ReviewDecision decision,  String? comment)?  reviewRequested,TResult Function()?  resetFlowStep,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Load() when load != null:
 return load(_that.projectId,_that.stageId);case _StartRequested() when startRequested != null:
 return startRequested();case _DeleteRequested() when deleteRequested != null:
-return deleteRequested();case _ResetFlowStep() when resetFlowStep != null:
+return deleteRequested();case _SubmitRequested() when submitRequested != null:
+return submitRequested();case _ReviewRequested() when reviewRequested != null:
+return reviewRequested(_that.decision,_that.comment);case _ResetFlowStep() when resetFlowStep != null:
 return resetFlowStep();case _:
   return orElse();
 
@@ -150,12 +158,14 @@ return resetFlowStep();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int projectId,  int stageId)  load,required TResult Function()  startRequested,required TResult Function()  deleteRequested,required TResult Function()  resetFlowStep,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int projectId,  int stageId)  load,required TResult Function()  startRequested,required TResult Function()  deleteRequested,required TResult Function()  submitRequested,required TResult Function( ReviewDecision decision,  String? comment)  reviewRequested,required TResult Function()  resetFlowStep,}) {final _that = this;
 switch (_that) {
 case _Load():
 return load(_that.projectId,_that.stageId);case _StartRequested():
 return startRequested();case _DeleteRequested():
-return deleteRequested();case _ResetFlowStep():
+return deleteRequested();case _SubmitRequested():
+return submitRequested();case _ReviewRequested():
+return reviewRequested(_that.decision,_that.comment);case _ResetFlowStep():
 return resetFlowStep();}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -170,12 +180,14 @@ return resetFlowStep();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int projectId,  int stageId)?  load,TResult? Function()?  startRequested,TResult? Function()?  deleteRequested,TResult? Function()?  resetFlowStep,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int projectId,  int stageId)?  load,TResult? Function()?  startRequested,TResult? Function()?  deleteRequested,TResult? Function()?  submitRequested,TResult? Function( ReviewDecision decision,  String? comment)?  reviewRequested,TResult? Function()?  resetFlowStep,}) {final _that = this;
 switch (_that) {
 case _Load() when load != null:
 return load(_that.projectId,_that.stageId);case _StartRequested() when startRequested != null:
 return startRequested();case _DeleteRequested() when deleteRequested != null:
-return deleteRequested();case _ResetFlowStep() when resetFlowStep != null:
+return deleteRequested();case _SubmitRequested() when submitRequested != null:
+return submitRequested();case _ReviewRequested() when reviewRequested != null:
+return reviewRequested(_that.decision,_that.comment);case _ResetFlowStep() when resetFlowStep != null:
 return resetFlowStep();case _:
   return null;
 
@@ -321,6 +333,108 @@ String toString() {
 /// @nodoc
 
 
+class _SubmitRequested implements StageEvent {
+  const _SubmitRequested();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SubmitRequested);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+    return 'StageEvent.submitRequested()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _ReviewRequested implements StageEvent {
+  const _ReviewRequested({required this.decision, this.comment});
+  
+
+ final  ReviewDecision decision;
+ final  String? comment;
+
+/// Create a copy of StageEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ReviewRequestedCopyWith<_ReviewRequested> get copyWith => __$ReviewRequestedCopyWithImpl<_ReviewRequested>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReviewRequested&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.comment, comment) || other.comment == comment));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,decision,comment);
+}
+
+@override
+String toString() {
+    return 'StageEvent.reviewRequested(decision: $decision, comment: $comment)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ReviewRequestedCopyWith<$Res> implements $StageEventCopyWith<$Res> {
+  factory _$ReviewRequestedCopyWith(_ReviewRequested value, $Res Function(_ReviewRequested) _then) = __$ReviewRequestedCopyWithImpl;
+@useResult
+$Res call({
+ ReviewDecision decision, String? comment
+});
+
+
+
+
+}
+/// @nodoc
+class __$ReviewRequestedCopyWithImpl<$Res>
+    implements _$ReviewRequestedCopyWith<$Res> {
+  __$ReviewRequestedCopyWithImpl(this._self, this._then);
+
+  final _ReviewRequested _self;
+  final $Res Function(_ReviewRequested) _then;
+
+/// Create a copy of StageEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? decision = null,Object? comment = freezed,}) {
+  return _then(_ReviewRequested(
+decision: null == decision ? _self.decision : decision // ignore: cast_nullable_to_non_nullable
+as ReviewDecision,comment: freezed == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
 class _ResetFlowStep implements StageEvent {
   const _ResetFlowStep();
   
@@ -354,7 +468,8 @@ String toString() {
 mixin _$StageState {
 
  int? get projectId; int? get stageId; ProjectOverview? get overview; StageView? get view;/// The stage's captures, newest first (doc/04d M4-10).
- List<Evidence> get evidence; GenericStatus get loadStatus; String? get loadErrorMessage;/// `updatingItem` = starting, `deletingItem` = deleting.
+ List<Evidence> get evidence;/// Every review decision, oldest first (REV-05).
+ List<StageReviewView> get reviews; StageAction get action; GenericStatus get loadStatus; String? get loadErrorMessage;/// `updatingItem` = starting, `deletingItem` = deleting.
  GenericFlowStep get flowStep; GenericStatus get actionStatus; String? get actionErrorMessage;
 /// Create a copy of StageState
 /// with the given fields replaced by the non-null parameter values.
@@ -367,20 +482,20 @@ $StageStateCopyWith<StageState> get copyWith => _$StageStateCopyWithImpl<StageSt
 @override
 bool operator ==(Object other) {
   final _this = this as StageState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StageState&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.stageId, _this.stageId) || other.stageId == _this.stageId)&&(identical(other.overview, _this.overview) || other.overview == _this.overview)&&(identical(other.view, _this.view) || other.view == _this.view)&&const DeepCollectionEquality().equals(other.evidence, _this.evidence)&&(identical(other.loadStatus, _this.loadStatus) || other.loadStatus == _this.loadStatus)&&(identical(other.loadErrorMessage, _this.loadErrorMessage) || other.loadErrorMessage == _this.loadErrorMessage)&&(identical(other.flowStep, _this.flowStep) || other.flowStep == _this.flowStep)&&(identical(other.actionStatus, _this.actionStatus) || other.actionStatus == _this.actionStatus)&&(identical(other.actionErrorMessage, _this.actionErrorMessage) || other.actionErrorMessage == _this.actionErrorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StageState&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.stageId, _this.stageId) || other.stageId == _this.stageId)&&(identical(other.overview, _this.overview) || other.overview == _this.overview)&&(identical(other.view, _this.view) || other.view == _this.view)&&const DeepCollectionEquality().equals(other.evidence, _this.evidence)&&const DeepCollectionEquality().equals(other.reviews, _this.reviews)&&(identical(other.action, _this.action) || other.action == _this.action)&&(identical(other.loadStatus, _this.loadStatus) || other.loadStatus == _this.loadStatus)&&(identical(other.loadErrorMessage, _this.loadErrorMessage) || other.loadErrorMessage == _this.loadErrorMessage)&&(identical(other.flowStep, _this.flowStep) || other.flowStep == _this.flowStep)&&(identical(other.actionStatus, _this.actionStatus) || other.actionStatus == _this.actionStatus)&&(identical(other.actionErrorMessage, _this.actionErrorMessage) || other.actionErrorMessage == _this.actionErrorMessage));
 }
 
 
 @override
 int get hashCode {
   final _this = this as StageState;
-  return Object.hash(runtimeType,_this.projectId,_this.stageId,_this.overview,_this.view,const DeepCollectionEquality().hash(_this.evidence),_this.loadStatus,_this.loadErrorMessage,_this.flowStep,_this.actionStatus,_this.actionErrorMessage);
+  return Object.hash(runtimeType,_this.projectId,_this.stageId,_this.overview,_this.view,const DeepCollectionEquality().hash(_this.evidence),const DeepCollectionEquality().hash(_this.reviews),_this.action,_this.loadStatus,_this.loadErrorMessage,_this.flowStep,_this.actionStatus,_this.actionErrorMessage);
 }
 
 @override
 String toString() {
   final _this = this as StageState;
-  return 'StageState(projectId: ${_this.projectId}, stageId: ${_this.stageId}, overview: ${_this.overview}, view: ${_this.view}, evidence: ${_this.evidence}, loadStatus: ${_this.loadStatus}, loadErrorMessage: ${_this.loadErrorMessage}, flowStep: ${_this.flowStep}, actionStatus: ${_this.actionStatus}, actionErrorMessage: ${_this.actionErrorMessage})';
+  return 'StageState(projectId: ${_this.projectId}, stageId: ${_this.stageId}, overview: ${_this.overview}, view: ${_this.view}, evidence: ${_this.evidence}, reviews: ${_this.reviews}, action: ${_this.action}, loadStatus: ${_this.loadStatus}, loadErrorMessage: ${_this.loadErrorMessage}, flowStep: ${_this.flowStep}, actionStatus: ${_this.actionStatus}, actionErrorMessage: ${_this.actionErrorMessage})';
 }
 
 
@@ -391,7 +506,7 @@ abstract mixin class $StageStateCopyWith<$Res>  {
   factory $StageStateCopyWith(StageState value, $Res Function(StageState) _then) = _$StageStateCopyWithImpl;
 @useResult
 $Res call({
- int? projectId, int? stageId, ProjectOverview? overview, StageView? view, List<Evidence> evidence, GenericStatus loadStatus, String? loadErrorMessage, GenericFlowStep flowStep, GenericStatus actionStatus, String? actionErrorMessage
+ int? projectId, int? stageId, ProjectOverview? overview, StageView? view, List<Evidence> evidence, List<StageReviewView> reviews, StageAction action, GenericStatus loadStatus, String? loadErrorMessage, GenericFlowStep flowStep, GenericStatus actionStatus, String? actionErrorMessage
 });
 
 
@@ -408,14 +523,16 @@ class _$StageStateCopyWithImpl<$Res>
 
 /// Create a copy of StageState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? projectId = freezed,Object? stageId = freezed,Object? overview = freezed,Object? view = freezed,Object? evidence = null,Object? loadStatus = null,Object? loadErrorMessage = freezed,Object? flowStep = null,Object? actionStatus = null,Object? actionErrorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? projectId = freezed,Object? stageId = freezed,Object? overview = freezed,Object? view = freezed,Object? evidence = null,Object? reviews = null,Object? action = null,Object? loadStatus = null,Object? loadErrorMessage = freezed,Object? flowStep = null,Object? actionStatus = null,Object? actionErrorMessage = freezed,}) {
   return _then(StageState(
 projectId: freezed == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as int?,stageId: freezed == stageId ? _self.stageId : stageId // ignore: cast_nullable_to_non_nullable
 as int?,overview: freezed == overview ? _self.overview : overview // ignore: cast_nullable_to_non_nullable
 as ProjectOverview?,view: freezed == view ? _self.view : view // ignore: cast_nullable_to_non_nullable
 as StageView?,evidence: null == evidence ? _self.evidence : evidence // ignore: cast_nullable_to_non_nullable
-as List<Evidence>,loadStatus: null == loadStatus ? _self.loadStatus : loadStatus // ignore: cast_nullable_to_non_nullable
+as List<Evidence>,reviews: null == reviews ? _self.reviews : reviews // ignore: cast_nullable_to_non_nullable
+as List<StageReviewView>,action: null == action ? _self.action : action // ignore: cast_nullable_to_non_nullable
+as StageAction,loadStatus: null == loadStatus ? _self.loadStatus : loadStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,loadErrorMessage: freezed == loadErrorMessage ? _self.loadErrorMessage : loadErrorMessage // ignore: cast_nullable_to_non_nullable
 as String?,flowStep: null == flowStep ? _self.flowStep : flowStep // ignore: cast_nullable_to_non_nullable
 as GenericFlowStep,actionStatus: null == actionStatus ? _self.actionStatus : actionStatus // ignore: cast_nullable_to_non_nullable
@@ -502,10 +619,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? projectId,  int? stageId,  ProjectOverview? overview,  StageView? view,  List<Evidence> evidence,  GenericStatus loadStatus,  String? loadErrorMessage,  GenericFlowStep flowStep,  GenericStatus actionStatus,  String? actionErrorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? projectId,  int? stageId,  ProjectOverview? overview,  StageView? view,  List<Evidence> evidence,  List<StageReviewView> reviews,  StageAction action,  GenericStatus loadStatus,  String? loadErrorMessage,  GenericFlowStep flowStep,  GenericStatus actionStatus,  String? actionErrorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StageState() when $default != null:
-return $default(_that.projectId,_that.stageId,_that.overview,_that.view,_that.evidence,_that.loadStatus,_that.loadErrorMessage,_that.flowStep,_that.actionStatus,_that.actionErrorMessage);case _:
+return $default(_that.projectId,_that.stageId,_that.overview,_that.view,_that.evidence,_that.reviews,_that.action,_that.loadStatus,_that.loadErrorMessage,_that.flowStep,_that.actionStatus,_that.actionErrorMessage);case _:
   return orElse();
 
 }
@@ -523,10 +640,10 @@ return $default(_that.projectId,_that.stageId,_that.overview,_that.view,_that.ev
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? projectId,  int? stageId,  ProjectOverview? overview,  StageView? view,  List<Evidence> evidence,  GenericStatus loadStatus,  String? loadErrorMessage,  GenericFlowStep flowStep,  GenericStatus actionStatus,  String? actionErrorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? projectId,  int? stageId,  ProjectOverview? overview,  StageView? view,  List<Evidence> evidence,  List<StageReviewView> reviews,  StageAction action,  GenericStatus loadStatus,  String? loadErrorMessage,  GenericFlowStep flowStep,  GenericStatus actionStatus,  String? actionErrorMessage)  $default,) {final _that = this;
 switch (_that) {
 case _StageState():
-return $default(_that.projectId,_that.stageId,_that.overview,_that.view,_that.evidence,_that.loadStatus,_that.loadErrorMessage,_that.flowStep,_that.actionStatus,_that.actionErrorMessage);}
+return $default(_that.projectId,_that.stageId,_that.overview,_that.view,_that.evidence,_that.reviews,_that.action,_that.loadStatus,_that.loadErrorMessage,_that.flowStep,_that.actionStatus,_that.actionErrorMessage);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -540,10 +657,10 @@ return $default(_that.projectId,_that.stageId,_that.overview,_that.view,_that.ev
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? projectId,  int? stageId,  ProjectOverview? overview,  StageView? view,  List<Evidence> evidence,  GenericStatus loadStatus,  String? loadErrorMessage,  GenericFlowStep flowStep,  GenericStatus actionStatus,  String? actionErrorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? projectId,  int? stageId,  ProjectOverview? overview,  StageView? view,  List<Evidence> evidence,  List<StageReviewView> reviews,  StageAction action,  GenericStatus loadStatus,  String? loadErrorMessage,  GenericFlowStep flowStep,  GenericStatus actionStatus,  String? actionErrorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _StageState() when $default != null:
-return $default(_that.projectId,_that.stageId,_that.overview,_that.view,_that.evidence,_that.loadStatus,_that.loadErrorMessage,_that.flowStep,_that.actionStatus,_that.actionErrorMessage);case _:
+return $default(_that.projectId,_that.stageId,_that.overview,_that.view,_that.evidence,_that.reviews,_that.action,_that.loadStatus,_that.loadErrorMessage,_that.flowStep,_that.actionStatus,_that.actionErrorMessage);case _:
   return null;
 
 }
@@ -555,7 +672,7 @@ return $default(_that.projectId,_that.stageId,_that.overview,_that.view,_that.ev
 
 
 class _StageState extends StageState {
-  const _StageState({this.projectId, this.stageId, this.overview, this.view,  List<Evidence> evidence = const <Evidence>[], this.loadStatus = GenericStatus.initial, this.loadErrorMessage, this.flowStep = GenericFlowStep.none, this.actionStatus = GenericStatus.initial, this.actionErrorMessage}): _evidence = evidence,super._();
+  const _StageState({this.projectId, this.stageId, this.overview, this.view,  List<Evidence> evidence = const <Evidence>[],  List<StageReviewView> reviews = const <StageReviewView>[], this.action = StageAction.none, this.loadStatus = GenericStatus.initial, this.loadErrorMessage, this.flowStep = GenericFlowStep.none, this.actionStatus = GenericStatus.initial, this.actionErrorMessage}): _evidence = evidence,_reviews = reviews,super._();
   
 
 @override final  int? projectId;
@@ -571,6 +688,16 @@ class _StageState extends StageState {
   return EqualUnmodifiableListView(_evidence);
 }
 
+/// Every review decision, oldest first (REV-05).
+ final  List<StageReviewView> _reviews;
+/// Every review decision, oldest first (REV-05).
+@override@JsonKey() List<StageReviewView> get reviews {
+  if (_reviews is EqualUnmodifiableListView) return _reviews;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_reviews);
+}
+
+@override@JsonKey() final  StageAction action;
 @override@JsonKey() final  GenericStatus loadStatus;
 @override final  String? loadErrorMessage;
 /// `updatingItem` = starting, `deletingItem` = deleting.
@@ -588,18 +715,18 @@ _$StageStateCopyWith<_StageState> get copyWith => __$StageStateCopyWithImpl<_Sta
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StageState&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.stageId, stageId) || other.stageId == stageId)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.view, view) || other.view == view)&&const DeepCollectionEquality().equals(other.evidence, _evidence)&&(identical(other.loadStatus, loadStatus) || other.loadStatus == loadStatus)&&(identical(other.loadErrorMessage, loadErrorMessage) || other.loadErrorMessage == loadErrorMessage)&&(identical(other.flowStep, flowStep) || other.flowStep == flowStep)&&(identical(other.actionStatus, actionStatus) || other.actionStatus == actionStatus)&&(identical(other.actionErrorMessage, actionErrorMessage) || other.actionErrorMessage == actionErrorMessage));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StageState&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.stageId, stageId) || other.stageId == stageId)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.view, view) || other.view == view)&&const DeepCollectionEquality().equals(other.evidence, _evidence)&&const DeepCollectionEquality().equals(other.reviews, _reviews)&&(identical(other.action, action) || other.action == action)&&(identical(other.loadStatus, loadStatus) || other.loadStatus == loadStatus)&&(identical(other.loadErrorMessage, loadErrorMessage) || other.loadErrorMessage == loadErrorMessage)&&(identical(other.flowStep, flowStep) || other.flowStep == flowStep)&&(identical(other.actionStatus, actionStatus) || other.actionStatus == actionStatus)&&(identical(other.actionErrorMessage, actionErrorMessage) || other.actionErrorMessage == actionErrorMessage));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,projectId,stageId,overview,view,const DeepCollectionEquality().hash(_evidence),loadStatus,loadErrorMessage,flowStep,actionStatus,actionErrorMessage);
+    return Object.hash(runtimeType,projectId,stageId,overview,view,const DeepCollectionEquality().hash(_evidence),const DeepCollectionEquality().hash(_reviews),action,loadStatus,loadErrorMessage,flowStep,actionStatus,actionErrorMessage);
 }
 
 @override
 String toString() {
-    return 'StageState(projectId: $projectId, stageId: $stageId, overview: $overview, view: $view, evidence: $evidence, loadStatus: $loadStatus, loadErrorMessage: $loadErrorMessage, flowStep: $flowStep, actionStatus: $actionStatus, actionErrorMessage: $actionErrorMessage)';
+    return 'StageState(projectId: $projectId, stageId: $stageId, overview: $overview, view: $view, evidence: $evidence, reviews: $reviews, action: $action, loadStatus: $loadStatus, loadErrorMessage: $loadErrorMessage, flowStep: $flowStep, actionStatus: $actionStatus, actionErrorMessage: $actionErrorMessage)';
 }
 
 
@@ -610,7 +737,7 @@ abstract mixin class _$StageStateCopyWith<$Res> implements $StageStateCopyWith<$
   factory _$StageStateCopyWith(_StageState value, $Res Function(_StageState) _then) = __$StageStateCopyWithImpl;
 @override @useResult
 $Res call({
- int? projectId, int? stageId, ProjectOverview? overview, StageView? view, List<Evidence> evidence, GenericStatus loadStatus, String? loadErrorMessage, GenericFlowStep flowStep, GenericStatus actionStatus, String? actionErrorMessage
+ int? projectId, int? stageId, ProjectOverview? overview, StageView? view, List<Evidence> evidence, List<StageReviewView> reviews, StageAction action, GenericStatus loadStatus, String? loadErrorMessage, GenericFlowStep flowStep, GenericStatus actionStatus, String? actionErrorMessage
 });
 
 
@@ -627,14 +754,16 @@ class __$StageStateCopyWithImpl<$Res>
 
 /// Create a copy of StageState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? projectId = freezed,Object? stageId = freezed,Object? overview = freezed,Object? view = freezed,Object? evidence = null,Object? loadStatus = null,Object? loadErrorMessage = freezed,Object? flowStep = null,Object? actionStatus = null,Object? actionErrorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? projectId = freezed,Object? stageId = freezed,Object? overview = freezed,Object? view = freezed,Object? evidence = null,Object? reviews = null,Object? action = null,Object? loadStatus = null,Object? loadErrorMessage = freezed,Object? flowStep = null,Object? actionStatus = null,Object? actionErrorMessage = freezed,}) {
   return _then(_StageState(
 projectId: freezed == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as int?,stageId: freezed == stageId ? _self.stageId : stageId // ignore: cast_nullable_to_non_nullable
 as int?,overview: freezed == overview ? _self.overview : overview // ignore: cast_nullable_to_non_nullable
 as ProjectOverview?,view: freezed == view ? _self.view : view // ignore: cast_nullable_to_non_nullable
 as StageView?,evidence: null == evidence ? _self._evidence : evidence // ignore: cast_nullable_to_non_nullable
-as List<Evidence>,loadStatus: null == loadStatus ? _self.loadStatus : loadStatus // ignore: cast_nullable_to_non_nullable
+as List<Evidence>,reviews: null == reviews ? _self._reviews : reviews // ignore: cast_nullable_to_non_nullable
+as List<StageReviewView>,action: null == action ? _self.action : action // ignore: cast_nullable_to_non_nullable
+as StageAction,loadStatus: null == loadStatus ? _self.loadStatus : loadStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,loadErrorMessage: freezed == loadErrorMessage ? _self.loadErrorMessage : loadErrorMessage // ignore: cast_nullable_to_non_nullable
 as String?,flowStep: null == flowStep ? _self.flowStep : flowStep // ignore: cast_nullable_to_non_nullable
 as GenericFlowStep,actionStatus: null == actionStatus ? _self.actionStatus : actionStatus // ignore: cast_nullable_to_non_nullable

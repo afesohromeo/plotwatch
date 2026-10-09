@@ -2683,6 +2683,440 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This update doesn\'t exist in this project.'**
   String get errorUpdateNotFound;
+
+  /// After the site manager submitted a stage
+  ///
+  /// In en, this message translates to:
+  /// **'Stage sent for review.'**
+  String get stageSubmittedDone;
+
+  /// After an approver approved a stage
+  ///
+  /// In en, this message translates to:
+  /// **'Stage approved.'**
+  String get stageApprovedDone;
+
+  /// After an approver requested changes
+  ///
+  /// In en, this message translates to:
+  /// **'Changes requested. The site manager has been told.'**
+  String get changesRequestedDone;
+
+  /// Stage page banner for the site manager
+  ///
+  /// In en, this message translates to:
+  /// **'{name} asked for changes: {comment}'**
+  String changesRequestedBy(String name, String comment);
+
+  /// Site manager: submit a stage (button and dialog title)
+  ///
+  /// In en, this message translates to:
+  /// **'Submit for review'**
+  String get submitStageAction;
+
+  /// Stage page: required items without a photo
+  ///
+  /// In en, this message translates to:
+  /// **'Before submitting, add a photo for: {items}'**
+  String submitMissingItems(String items);
+
+  /// Submit confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'The approvers will be told. You can\'t edit the stage or add photos while it is being reviewed.'**
+  String get submitStageMessage;
+
+  /// Approver: approve a stage (button and dialog title)
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get approveStageAction;
+
+  /// Approve confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Approve this stage? The site manager will be told and the project\'s progress will go up.'**
+  String get approveStageMessage;
+
+  /// Approver: request changes (button and dialog title)
+  ///
+  /// In en, this message translates to:
+  /// **'Request changes'**
+  String get requestChangesAction;
+
+  /// Stage page section title
+  ///
+  /// In en, this message translates to:
+  /// **'Review history'**
+  String get reviewHistoryTitle;
+
+  /// Review history row
+  ///
+  /// In en, this message translates to:
+  /// **'{decision} by {name}, {date}'**
+  String reviewDecisionBy(String decision, String name, String date);
+
+  /// Review decision
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get reviewApproved;
+
+  /// Review decision
+  ///
+  /// In en, this message translates to:
+  /// **'Changes requested'**
+  String get reviewChangesRequested;
+
+  /// Request changes dialog field
+  ///
+  /// In en, this message translates to:
+  /// **'What needs to change?'**
+  String get reviewCommentLabel;
+
+  /// Request changes comment empty
+  ///
+  /// In en, this message translates to:
+  /// **'Say what needs to change'**
+  String get validateReviewCommentRequired;
+
+  /// Feed and notifications: an actor whose name is unknown
+  ///
+  /// In en, this message translates to:
+  /// **'Someone'**
+  String get someone;
+
+  /// Feed page title
+  ///
+  /// In en, this message translates to:
+  /// **'Activity'**
+  String get activityTitle;
+
+  /// Project page section title
+  ///
+  /// In en, this message translates to:
+  /// **'Latest activity'**
+  String get latestActivityTitle;
+
+  /// Feed with no events
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing has happened yet.'**
+  String get activityEmpty;
+
+  /// Project page: open the whole feed
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// Live stream down, trying again (doc/04e M5-6)
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting…'**
+  String get reconnecting;
+
+  /// Feed load failure
+  ///
+  /// In en, this message translates to:
+  /// **'The activity couldn\'t be loaded.'**
+  String get errorActivityLoad;
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} created the project {name}'**
+  String activityProjectCreated(String actor, String name);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} edited the project details'**
+  String activityProjectUpdated(String actor);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} set the project to {status}'**
+  String activityProjectStatusChanged(String actor, String status);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} proposed the site location'**
+  String activitySiteProposed(String actor);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} rejected the proposed site location'**
+  String activitySiteProposalRejected(String actor);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} set the site location'**
+  String activitySiteChanged(String actor);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} joined as {role}'**
+  String activityMemberJoined(String actor, String role);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} removed a member ({role})'**
+  String activityMemberRemoved(String actor, String role);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} changed a member\'s role from {from} to {to}'**
+  String activityMemberRoleChanged(String actor, String from, String to);
+
+  /// Feed event: one stage added, edited, deleted or moved
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} changed the stage {name}'**
+  String activityStageChanged(String actor, String name);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} created a plan of {count, plural, =1{1 stage} other{{count} stages}}'**
+  String activityPlanCreated(String actor, int count);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} reordered the stages'**
+  String activityPlanChanged(String actor);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} started {name}'**
+  String activityStageStarted(String actor, String name);
+
+  /// Feed event, with the badge
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} added a photo: {level}'**
+  String activityEvidenceCaptured(String actor, String level);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} withdrew a photo'**
+  String activityEvidenceRetracted(String actor);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} submitted {name} for review'**
+  String activityStageSubmitted(String actor, String name);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} approved {name}'**
+  String activityStageApproved(String actor, String name);
+
+  /// Feed event
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} requested changes on {name}'**
+  String activityChangesRequested(String actor, String name);
+
+  /// Feed event, with the start of the text
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} posted an update: {excerpt}'**
+  String activityUpdatePosted(String actor, String excerpt);
+
+  /// Notification centre title and bell tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// Notification centre empty
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet.'**
+  String get notificationsEmpty;
+
+  /// Notification centre action
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read'**
+  String get markAllReadAction;
+
+  /// Notification centre load failure
+  ///
+  /// In en, this message translates to:
+  /// **'The notifications couldn\'t be loaded.'**
+  String get errorNotificationsLoad;
+
+  /// Notification to approvers
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} submitted {stage} for review ({project})'**
+  String notificationStageSubmitted(String actor, String stage, String project);
+
+  /// Notification to site managers
+  ///
+  /// In en, this message translates to:
+  /// **'{reviewer} approved {stage} ({project})'**
+  String notificationStageApproved(
+    String reviewer,
+    String stage,
+    String project,
+  );
+
+  /// Notification to site managers
+  ///
+  /// In en, this message translates to:
+  /// **'{reviewer} requested changes on {stage}: {comment}'**
+  String notificationChangesRequested(
+    String reviewer,
+    String stage,
+    String comment,
+  );
+
+  /// Notification to the owner
+  ///
+  /// In en, this message translates to:
+  /// **'{member} joined {project} as {role}'**
+  String notificationMemberJoined(String member, String project, String role);
+
+  /// Site manager: post a progress update (button and form title)
+  ///
+  /// In en, this message translates to:
+  /// **'Post an update'**
+  String get postUpdateAction;
+
+  /// After posting an update
+  ///
+  /// In en, this message translates to:
+  /// **'Update posted.'**
+  String get updatePosted;
+
+  /// Update page title
+  ///
+  /// In en, this message translates to:
+  /// **'Progress update'**
+  String get updateTitle;
+
+  /// Update form field
+  ///
+  /// In en, this message translates to:
+  /// **'What was done today?'**
+  String get labelUpdateText;
+
+  /// Update form field and update page row
+  ///
+  /// In en, this message translates to:
+  /// **'Stage'**
+  String get labelUpdateStage;
+
+  /// Update form: no stage chosen
+  ///
+  /// In en, this message translates to:
+  /// **'No particular stage'**
+  String get noStage;
+
+  /// Update form field and update page row
+  ///
+  /// In en, this message translates to:
+  /// **'Workers on site'**
+  String get labelWorkersCount;
+
+  /// Update form field and update page row
+  ///
+  /// In en, this message translates to:
+  /// **'Weather'**
+  String get labelWeather;
+
+  /// Update form field and update page row
+  ///
+  /// In en, this message translates to:
+  /// **'Issues'**
+  String get labelUpdateIssues;
+
+  /// Weather
+  ///
+  /// In en, this message translates to:
+  /// **'Sunny'**
+  String get weatherSunny;
+
+  /// Weather
+  ///
+  /// In en, this message translates to:
+  /// **'Cloudy'**
+  String get weatherCloudy;
+
+  /// Weather
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get weatherRain;
+
+  /// Weather
+  ///
+  /// In en, this message translates to:
+  /// **'Storm'**
+  String get weatherStorm;
+
+  /// Update text empty
+  ///
+  /// In en, this message translates to:
+  /// **'Say what was done'**
+  String get validateUpdateTextRequired;
+
+  /// Update text too long
+  ///
+  /// In en, this message translates to:
+  /// **'At most 2,000 characters'**
+  String get validateUpdateTextTooLong;
+
+  /// Workers count invalid
+  ///
+  /// In en, this message translates to:
+  /// **'A whole number from 0 to 999'**
+  String get validateWorkersCount;
+
+  /// Update issues too long
+  ///
+  /// In en, this message translates to:
+  /// **'At most 1,000 characters'**
+  String get validateUpdateIssuesTooLong;
+
+  /// Update save failure
+  ///
+  /// In en, this message translates to:
+  /// **'The update couldn\'t be posted.'**
+  String get errorUpdateSave;
+
+  /// Update load failure
+  ///
+  /// In en, this message translates to:
+  /// **'The update couldn\'t be loaded.'**
+  String get errorUpdateLoad;
+
+  /// Chip: stage past its planned end and not approved (STG-10)
+  ///
+  /// In en, this message translates to:
+  /// **'Late'**
+  String get stageLate;
+
+  /// Evidence page information line; never changes the badge (doc/04e M5-10)
+  ///
+  /// In en, this message translates to:
+  /// **'Taken {days, plural, =1{1 day} other{{days} days}} after the stage\'s planned end, {date}'**
+  String takenAfterPlannedEnd(int days, String date);
 }
 
 class _AppLocalizationsDelegate

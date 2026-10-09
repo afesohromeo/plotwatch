@@ -216,4 +216,24 @@ void main() {
 
     expect(find.text('the stage'), findsOneWidget);
   });
+
+  // doc/04e M5-10: information only, the badge is unchanged.
+  testWidgets('Given a photo taken after the stage\'s planned end then it '
+      'says by how many days', (tester) async {
+    await pumpWith(
+      tester,
+      loaded().copyWith(
+        // testEvidence was taken on 9 Oct 2026.
+        stage: testStage().copyWith(plannedEnd: DateTime.utc(2026, 10, 4)),
+      ),
+    );
+
+    expect(
+      find.text(
+        l10n.takenAfterPlannedEnd(5, formatDate(DateTime.utc(2026, 10, 4))),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text(l10n.verificationUnverified), findsWidgets);
+  });
 }

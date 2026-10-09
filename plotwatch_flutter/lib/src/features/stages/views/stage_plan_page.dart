@@ -303,9 +303,20 @@ class _StageTile extends StatelessWidget {
                         style: context.textTheme.bodySmall,
                       ),
                       const Gap.vertical(height: AppSpacing.xs),
-                      ProjectChip(
-                        label: stage.status.label(l10n),
-                        color: stage.status.color,
+                      Wrap(
+                        spacing: AppSpacing.xs,
+                        children: [
+                          ProjectChip(
+                            label: stage.status.label(l10n),
+                            color: stage.status.color,
+                          ),
+                          // Schedule status (STG-10, doc/04e M5-10).
+                          if (stage.isLateOn(DateTime.now()))
+                            ProjectChip(
+                              label: l10n.stageLate,
+                              color: customColors.unverified,
+                            ),
+                        ],
                       ),
                     ],
                   ),

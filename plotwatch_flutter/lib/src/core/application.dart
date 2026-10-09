@@ -18,6 +18,9 @@ class Application extends StatelessWidget {
         RepositoryProvider(create: (_) => SiteRepository()),
         RepositoryProvider(create: (_) => StageRepository()),
         RepositoryProvider(create: (_) => EvidenceRepository()),
+        RepositoryProvider(create: (_) => ActivityRepository()),
+        RepositoryProvider(create: (_) => NotificationRepository()),
+        RepositoryProvider(create: (_) => UpdateRepository()),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -40,6 +43,19 @@ class Application extends StatelessWidget {
               return bloc;
             },
           ),
+          // The bell's unread count, live while signed in (doc/04e M5-4).
+          BlocProvider(
+            create: (context) {
+              final bloc = NotificationsBloc(
+                notificationRepository: context.read<NotificationRepository>(),
+              );
+              if (context.read<AuthenticationBloc>().state.status ==
+                  AuthenticationStatus.authenticated) {
+                bloc.add(const NotificationsEvent.started());
+              }
+              return bloc;
+            },
+          ),
         ],
         // The profile follows the session; coordinated here so no BLoC
         // calls another (_standards/02).
@@ -47,11 +63,14 @@ class Application extends StatelessWidget {
           listenWhen: (previous, current) => previous.status != current.status,
           listener: (context, state) {
             final profileBloc = context.read<ProfileBloc>();
+            final notificationsBloc = context.read<NotificationsBloc>();
             switch (state.status) {
               case AuthenticationStatus.authenticated:
                 profileBloc.add(const ProfileEvent.fetchMe());
+                notificationsBloc.add(const NotificationsEvent.started());
               case AuthenticationStatus.unauthenticated:
                 profileBloc.add(const ProfileEvent.reset());
+                notificationsBloc.add(const NotificationsEvent.stopped());
               case AuthenticationStatus.unknown:
                 break;
             }

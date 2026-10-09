@@ -42,3 +42,9 @@ const Set<String> publicPages = {
   signUpPage,
   passwordResetPage,
 };
+
+// The feed, notifications and progress updates (doc/04e).
+const String feedPage = 'feed';
+const String notificationsPage = 'notifications';
+const String createUpdatePage = 'updates/new';
+const String updatePage = 'updates/:updateId';

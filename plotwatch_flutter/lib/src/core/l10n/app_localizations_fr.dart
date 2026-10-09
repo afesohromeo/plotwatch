@@ -1485,4 +1485,299 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get errorUpdateNotFound =>
       'Cette mise à jour n\'existe pas dans ce projet.';
+
+  @override
+  String get stageSubmittedDone => 'Étape envoyée pour validation.';
+
+  @override
+  String get stageApprovedDone => 'Étape approuvée.';
+
+  @override
+  String get changesRequestedDone =>
+      'Modifications demandées. Le chef de chantier a été prévenu.';
+
+  @override
+  String changesRequestedBy(String name, String comment) {
+    return '$name a demandé des modifications : $comment';
+  }
+
+  @override
+  String get submitStageAction => 'Soumettre pour validation';
+
+  @override
+  String submitMissingItems(String items) {
+    return 'Avant de soumettre, ajoutez une photo pour : $items';
+  }
+
+  @override
+  String get submitStageMessage =>
+      'Les validateurs seront prévenus. Pendant la validation, vous ne pouvez ni modifier l\'étape ni ajouter de photos.';
+
+  @override
+  String get approveStageAction => 'Approuver';
+
+  @override
+  String get approveStageMessage =>
+      'Approuver cette étape ? Le chef de chantier sera prévenu et l\'avancement du projet augmentera.';
+
+  @override
+  String get requestChangesAction => 'Demander des modifications';
+
+  @override
+  String get reviewHistoryTitle => 'Historique des validations';
+
+  @override
+  String reviewDecisionBy(String decision, String name, String date) {
+    return '$decision par $name, $date';
+  }
+
+  @override
+  String get reviewApproved => 'Approuvée';
+
+  @override
+  String get reviewChangesRequested => 'Modifications demandées';
+
+  @override
+  String get reviewCommentLabel => 'Que faut-il changer ?';
+
+  @override
+  String get validateReviewCommentRequired => 'Indiquez ce qui doit changer';
+
+  @override
+  String get someone => 'Quelqu\'un';
+
+  @override
+  String get activityTitle => 'Activité';
+
+  @override
+  String get latestActivityTitle => 'Activité récente';
+
+  @override
+  String get activityEmpty => 'Rien ne s\'est encore passé.';
+
+  @override
+  String get seeAll => 'Tout voir';
+
+  @override
+  String get reconnecting => 'Reconnexion…';
+
+  @override
+  String get errorActivityLoad => 'Impossible de charger l\'activité.';
+
+  @override
+  String activityProjectCreated(String actor, String name) {
+    return '$actor a créé le projet $name';
+  }
+
+  @override
+  String activityProjectUpdated(String actor) {
+    return '$actor a modifié les informations du projet';
+  }
+
+  @override
+  String activityProjectStatusChanged(String actor, String status) {
+    return '$actor a passé le projet à « $status »';
+  }
+
+  @override
+  String activitySiteProposed(String actor) {
+    return '$actor a proposé l\'emplacement du chantier';
+  }
+
+  @override
+  String activitySiteProposalRejected(String actor) {
+    return '$actor a refusé l\'emplacement proposé';
+  }
+
+  @override
+  String activitySiteChanged(String actor) {
+    return '$actor a fixé l\'emplacement du chantier';
+  }
+
+  @override
+  String activityMemberJoined(String actor, String role) {
+    return '$actor a rejoint le projet comme $role';
+  }
+
+  @override
+  String activityMemberRemoved(String actor, String role) {
+    return '$actor a retiré un membre ($role)';
+  }
+
+  @override
+  String activityMemberRoleChanged(String actor, String from, String to) {
+    return '$actor a changé le rôle d\'un membre de $from à $to';
+  }
+
+  @override
+  String activityStageChanged(String actor, String name) {
+    return '$actor a modifié l\'étape $name';
+  }
+
+  @override
+  String activityPlanCreated(String actor, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count étapes',
+      one: '1 étape',
+    );
+    return '$actor a créé un plan de $_temp0';
+  }
+
+  @override
+  String activityPlanChanged(String actor) {
+    return '$actor a réordonné les étapes';
+  }
+
+  @override
+  String activityStageStarted(String actor, String name) {
+    return '$actor a commencé $name';
+  }
+
+  @override
+  String activityEvidenceCaptured(String actor, String level) {
+    return '$actor a ajouté une photo : $level';
+  }
+
+  @override
+  String activityEvidenceRetracted(String actor) {
+    return '$actor a retiré une photo';
+  }
+
+  @override
+  String activityStageSubmitted(String actor, String name) {
+    return '$actor a soumis $name pour validation';
+  }
+
+  @override
+  String activityStageApproved(String actor, String name) {
+    return '$actor a approuvé $name';
+  }
+
+  @override
+  String activityChangesRequested(String actor, String name) {
+    return '$actor a demandé des modifications sur $name';
+  }
+
+  @override
+  String activityUpdatePosted(String actor, String excerpt) {
+    return '$actor a publié une mise à jour : $excerpt';
+  }
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get notificationsEmpty => 'Aucune notification pour l\'instant.';
+
+  @override
+  String get markAllReadAction => 'Tout marquer comme lu';
+
+  @override
+  String get errorNotificationsLoad =>
+      'Impossible de charger les notifications.';
+
+  @override
+  String notificationStageSubmitted(
+    String actor,
+    String stage,
+    String project,
+  ) {
+    return '$actor a soumis $stage pour validation ($project)';
+  }
+
+  @override
+  String notificationStageApproved(
+    String reviewer,
+    String stage,
+    String project,
+  ) {
+    return '$reviewer a approuvé $stage ($project)';
+  }
+
+  @override
+  String notificationChangesRequested(
+    String reviewer,
+    String stage,
+    String comment,
+  ) {
+    return '$reviewer a demandé des modifications sur $stage : $comment';
+  }
+
+  @override
+  String notificationMemberJoined(String member, String project, String role) {
+    return '$member a rejoint $project comme $role';
+  }
+
+  @override
+  String get postUpdateAction => 'Publier une mise à jour';
+
+  @override
+  String get updatePosted => 'Mise à jour publiée.';
+
+  @override
+  String get updateTitle => 'Mise à jour du chantier';
+
+  @override
+  String get labelUpdateText => 'Qu\'est-ce qui a été fait aujourd\'hui ?';
+
+  @override
+  String get labelUpdateStage => 'Étape';
+
+  @override
+  String get noStage => 'Aucune étape en particulier';
+
+  @override
+  String get labelWorkersCount => 'Ouvriers sur le chantier';
+
+  @override
+  String get labelWeather => 'Météo';
+
+  @override
+  String get labelUpdateIssues => 'Problèmes';
+
+  @override
+  String get weatherSunny => 'Ensoleillé';
+
+  @override
+  String get weatherCloudy => 'Nuageux';
+
+  @override
+  String get weatherRain => 'Pluie';
+
+  @override
+  String get weatherStorm => 'Orage';
+
+  @override
+  String get validateUpdateTextRequired => 'Indiquez ce qui a été fait';
+
+  @override
+  String get validateUpdateTextTooLong => '2 000 caractères au plus';
+
+  @override
+  String get validateWorkersCount => 'Un nombre entier de 0 à 999';
+
+  @override
+  String get validateUpdateIssuesTooLong => '1 000 caractères au plus';
+
+  @override
+  String get errorUpdateSave => 'Impossible de publier la mise à jour.';
+
+  @override
+  String get errorUpdateLoad => 'Impossible de charger la mise à jour.';
+
+  @override
+  String get stageLate => 'En retard';
+
+  @override
+  String takenAfterPlannedEnd(int days, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days jours',
+      one: '1 jour',
+    );
+    return 'Prise $_temp0 après la fin prévue de l\'étape, le $date';
+  }
 }

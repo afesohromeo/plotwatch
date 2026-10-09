@@ -15,6 +15,7 @@ class EvidenceBloc extends Bloc<EvidenceEvent, EvidenceState> {
     required this._evidenceRepository,
     required this._projectRepository,
     required this._authRepository,
+    required this._stageRepository,
   }) : super(const EvidenceState()) {
     on<_Load>(_onLoad);
     on<_RetractRequested>(_onRetractRequested);
@@ -24,6 +25,7 @@ class EvidenceBloc extends Bloc<EvidenceEvent, EvidenceState> {
   final EvidenceRepository _evidenceRepository;
   final ProjectRepository _projectRepository;
   final AuthRepository _authRepository;
+  final StageRepository _stageRepository;
 
   Future<void> _onLoad(_Load event, Emitter<EvidenceState> emit) async {
     final l10n = LocalizationService.localization;
@@ -41,11 +43,17 @@ class EvidenceBloc extends Bloc<EvidenceEvent, EvidenceState> {
         event.projectId,
         event.evidenceId,
       );
+      // For its planned end (STG-10, doc/04e M5-10).
+      final stage = await _stageRepository.fetchStage(
+        event.projectId,
+        event.stageId,
+      );
       emit(
         state.copyWith(
           loadStatus: GenericStatus.success,
           overview: overview,
           evidence: evidence,
+          stage: stage.stage,
           isMine: evidence.capturedBy == _authRepository.currentUserId,
         ),
       );

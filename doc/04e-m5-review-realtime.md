@@ -80,3 +80,18 @@ Changes from the plan:
 - `PeopleService` (names, approvers, site managers, owner) is shared by the review history, the feed and the notifications; a missing name never breaks them.
 
 Found while testing (test mistakes, the server was right): `live_feed_test` runs without rollback, so it found an earlier project's membership and an earlier test's notifications; and Serverpod's test tools report the closed connection as a second error after the `projectNotFound` that ends a removed member's stream (checked with a throwaway debug test before changing the assertion).
+
+### Groups D to G outcome (2026-10-09)
+Done. `flutter test` **792/792** (115 new: review loop on the stage page, the reconnecting stream, the feed and notification BLoCs, every event and notification sentence in EN and FR with its source, the bell, the notification centre, the latest activity and the full feed, the update form and page, the Late chip and the evidence page's line). Not red-first in the strict sense: the tests were written alongside the code, because none of it compiles before `gen-l10n` and `build_runner`; they were first run after generation.
+
+How it works:
+- **Reconnecting stream** (`reconnectingStream`, M5-6): waits 2, 4, 8, 16, then 30 s; resubscribes after the last ID received; reports "Reconnecting…" and "connected" to the BLoC; a refusal from the server (a removed member's `projectNotFound`, a lost session) ends it without retrying.
+- **Feed and notification lists**: the BLoC's list is the truth (live items on top, then the pages); the page mirrors it into the `PagingController`. The live stream starts after the first page, from its newest ID, so nothing between the two is missed; a live item a page brings again is dropped.
+- **Notifications** are one app-wide BLoC: started on sign-in (unread count, then live from the newest notification), stopped and cleared on sign-out.
+
+Changes from the plan:
+- A photo event reads "Ada added a photo: Verified", without the stage name: the server sends the stage's ID only. The update page doesn't show its author either. Both would need a server change; left for later.
+- The project page's latest activity is its own live `FeedBloc` (5 events); the full feed page has another.
+- The site manager's **Post an update** button shows on an active project only (the server refuses otherwise).
+
+Found while testing: `GenericStatus` has a fifth value (`filtering`), so two switches weren't exhaustive (reported by `dart analyze`); and 8 BLoC tests timed out because their teardown awaited `close()` on a mock stream nobody had listened to (a test mistake; the code was right).

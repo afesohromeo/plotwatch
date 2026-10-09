@@ -152,10 +152,20 @@ class RouteManager {
             redirect: _requireProjectId,
             pageBuilder: (context, state) => NoTransitionPage<void>(
               key: state.pageKey,
-              child: BlocProvider(
-                create: (context) => ProjectOverviewBloc(
-                  projectRepository: context.read<ProjectRepository>(),
-                ),
+              child: MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => ProjectOverviewBloc(
+                      projectRepository: context.read<ProjectRepository>(),
+                    ),
+                  ),
+                  // The latest activity, live (doc/04e M5-7).
+                  BlocProvider(
+                    create: (context) => FeedBloc(
+                      activityRepository: context.read<ActivityRepository>(),
+                    ),
+                  ),
+                ],
                 child: ProjectOverviewPage(projectId: _projectId(state)!),
               ),
             ),
@@ -193,6 +203,16 @@ class RouteManager {
               ),
             ],
           ),
+          // The notification centre, on the app-wide NotificationsBloc
+          // (doc/04e M5-4).
+          GoRoute(
+            name: notificationsRouteName,
+            path: notificationsPage,
+            pageBuilder: (context, state) => NoTransitionPage<void>(
+              key: state.pageKey,
+              child: const NotificationsPage(),
+            ),
+          ),
           GoRoute(
             name: profileRouteName,
             path: profilePage,
@@ -209,6 +229,56 @@ class RouteManager {
   /// The pages of one project, under the project page.
   static List<RouteBase> get _projectSubRoutes {
     return [
+      // The whole activity feed (doc/04e M5-7).
+      GoRoute(
+        name: feedRouteName,
+        path: feedPage,
+        redirect: _requireProjectId,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => FeedBloc(
+              activityRepository: context.read<ActivityRepository>(),
+            ),
+            child: FeedPage(projectId: _projectId(state)!),
+          ),
+        ),
+      ),
+      // Progress updates (doc/04e M5-9 b). Before `updatePage`, so "new"
+      // isn't read as an update ID.
+      GoRoute(
+        name: createUpdateRouteName,
+        path: createUpdatePage,
+        redirect: _requireProjectId,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => UpdateFormBloc(
+              updateRepository: context.read<UpdateRepository>(),
+              stageRepository: context.read<StageRepository>(),
+            ),
+            child: UpdateFormPage(projectId: _projectId(state)!),
+          ),
+        ),
+      ),
+      GoRoute(
+        name: updateRouteName,
+        path: updatePage,
+        redirect: _requireUpdateId,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => UpdateBloc(
+              updateRepository: context.read<UpdateRepository>(),
+              stageRepository: context.read<StageRepository>(),
+            ),
+            child: UpdatePage(
+              projectId: _projectId(state)!,
+              updateId: _intParameter(state, 'updateId')!,
+            ),
+          ),
+        ),
+      ),
       GoRoute(
         name: editProjectRouteName,
         path: editProjectPage,
@@ -387,6 +457,7 @@ class RouteManager {
                               .read<EvidenceRepository>(),
                           projectRepository: context.read<ProjectRepository>(),
                           authRepository: context.read<AuthRepository>(),
+                          stageRepository: context.read<StageRepository>(),
                         ),
                       ),
                       BlocProvider(
@@ -441,6 +512,11 @@ class RouteManager {
   ) =>
       _requireStageId(context, state) ??
       (_intParameter(state, 'evidenceId') == null ? homePage : null);
+
+  /// A malformed update ID in the URL goes back to the project list.
+  static String? _requireUpdateId(BuildContext context, GoRouterState state) =>
+      _requireProjectId(context, state) ??
+      (_intParameter(state, 'updateId') == null ? homePage : null);
 
   /// A malformed stage ID in the URL goes back to the project list.
   static String? _requireStageId(BuildContext context, GoRouterState state) =>

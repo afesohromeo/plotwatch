@@ -20,6 +20,8 @@ class StageBloc extends Bloc<StageEvent, StageState> {
     on<_Load>(_onLoad);
     on<_StartRequested>(_onStartRequested);
     on<_DeleteRequested>(_onDeleteRequested);
+    on<_SubmitRequested>(_onSubmitRequested);
+    on<_ReviewRequested>(_onReviewRequested);
     on<_ResetFlowStep>(_onResetFlowStep);
   }
 
@@ -36,6 +38,7 @@ class StageBloc extends Bloc<StageEvent, StageState> {
         overview: state.overview,
         view: state.view,
         evidence: state.evidence,
+        reviews: state.reviews,
         loadStatus: GenericStatus.loading,
       ),
     );
@@ -49,12 +52,17 @@ class StageBloc extends Bloc<StageEvent, StageState> {
         event.projectId,
         event.stageId,
       );
+      final reviews = await _stageRepository.fetchReviews(
+        event.projectId,
+        event.stageId,
+      );
       emit(
         state.copyWith(
           loadStatus: GenericStatus.success,
           overview: overview,
           view: view,
           evidence: evidence,
+          reviews: reviews,
         ),
       );
     } on HttpException400 catch (e) {
@@ -74,6 +82,7 @@ class StageBloc extends Bloc<StageEvent, StageState> {
     Emitter<StageState> emit,
   ) => _runAction(
     emit,
+    StageAction.start,
     GenericFlowStep.updatingItem,
     'StageBloc._onStartRequested',
     (projectId, stageId) async {
@@ -87,6 +96,7 @@ class StageBloc extends Bloc<StageEvent, StageState> {
     Emitter<StageState> emit,
   ) => _runAction(
     emit,
+    StageAction.delete,
     GenericFlowStep.deletingItem,
     'StageBloc._onDeleteRequested',
     (projectId, stageId) async {
@@ -95,9 +105,47 @@ class StageBloc extends Bloc<StageEvent, StageState> {
     },
   );
 
+  Future<void> _onSubmitRequested(
+    _SubmitRequested event,
+    Emitter<StageState> emit,
+  ) => _runAction(
+    emit,
+    StageAction.submit,
+    GenericFlowStep.updatingItem,
+    'StageBloc._onSubmitRequested',
+    (projectId, stageId) async {
+      final submitted = await _stageRepository.submitStage(projectId, stageId);
+      return state.copyWith(view: submitted);
+    },
+  );
+
+  /// The decision, then the history again so it shows at once.
+  Future<void> _onReviewRequested(
+    _ReviewRequested event,
+    Emitter<StageState> emit,
+  ) => _runAction(
+    emit,
+    event.decision == ReviewDecision.approved
+        ? StageAction.approve
+        : StageAction.requestChanges,
+    GenericFlowStep.updatingItem,
+    'StageBloc._onReviewRequested',
+    (projectId, stageId) async {
+      final reviewed = await _stageRepository.reviewStage(
+        projectId,
+        stageId,
+        event.decision,
+        comment: event.comment,
+      );
+      final reviews = await _stageRepository.fetchReviews(projectId, stageId);
+      return state.copyWith(view: reviewed, reviews: reviews);
+    },
+  );
+
   /// [action] returns the state to show once it succeeded.
   Future<void> _runAction(
     Emitter<StageState> emit,
+    StageAction stageAction,
     GenericFlowStep flowStep,
     String logTag,
     Future<StageState> Function(int projectId, int stageId) action,
@@ -109,6 +157,7 @@ class StageBloc extends Bloc<StageEvent, StageState> {
     final l10n = LocalizationService.localization;
     emit(
       state.copyWith(
+        action: stageAction,
         flowStep: flowStep,
         actionStatus: GenericStatus.loading,
         actionErrorMessage: null,
@@ -120,6 +169,7 @@ class StageBloc extends Bloc<StageEvent, StageState> {
       // page would take the result for another action (doc/04c M3-F1).
       emit(
         updated.copyWith(
+          action: stageAction,
           flowStep: flowStep,
           actionStatus: GenericStatus.success,
         ),

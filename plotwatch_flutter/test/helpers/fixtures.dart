@@ -37,6 +37,7 @@ ProjectOverview testOverview({
   Site? site,
   ProjectRole role = ProjectRole.owner,
   SiteProposal? pendingSiteProposal,
+  bool canApprove = false,
   int stageCount = 0,
   int budgetTotalMinor = 0,
   int progressPercent = 0,
@@ -44,7 +45,7 @@ ProjectOverview testOverview({
   project: project ?? testProject(),
   site: site,
   myRole: role,
-  myCanApprove: false,
+  myCanApprove: canApprove,
   pendingSiteProposal: pendingSiteProposal,
   stageCount: stageCount,
   budgetTotalMinor: budgetTotalMinor,
@@ -274,4 +275,58 @@ Evidence testEvidence({
       ? null
       : testChecks(insidePassed: level != VerificationLevel.unverified),
   retractedReason: retractedReason,
+);
+
+// Feed, notifications and updates (doc/04e).
+ActivityEntry testActivity({
+  int id = 1,
+  ActivityType type = ActivityType.stageApproved,
+  String targetType = 'stage',
+  int? targetId = 2,
+  Map<String, String>? payload = const {'name': 'Foundation'},
+  String? actorName = 'Ada',
+}) => ActivityEntry(
+  event: ActivityEvent(
+    id: id,
+    projectId: 1,
+    actorId: UuidValue.fromString(testManagerId),
+    type: type,
+    targetType: targetType,
+    targetId: targetId,
+    payload: payload,
+    createdAt: DateTime.utc(2026, 10, 9, 10),
+  ),
+  actorName: actorName,
+);
+
+AppNotification testNotification({
+  int id = 1,
+  NotificationType type = NotificationType.stageSubmitted,
+  Map<String, String>? payload = const {
+    'stageId': '2',
+    'stageName': 'Foundation',
+    'projectName': 'Maison Douala',
+    'actorName': 'Bob',
+  },
+  DateTime? readAt,
+}) => AppNotification(
+  id: id,
+  userId: UuidValue.fromString(testManagerId),
+  projectId: 1,
+  type: type,
+  payload: payload,
+  readAt: readAt,
+  createdAt: DateTime.utc(2026, 10, 9, 10),
+);
+
+ProgressUpdate testUpdate({int id = 4, int? stageId = 2}) => ProgressUpdate(
+  id: id,
+  projectId: 1,
+  stageId: stageId,
+  authorId: UuidValue.fromString(testManagerId),
+  text: 'Concrete poured on the east side.',
+  workersCount: 6,
+  weather: Weather.sunny,
+  issues: 'Cement delivery late.',
+  createdAt: DateTime.utc(2026, 10, 9, 16),
 );

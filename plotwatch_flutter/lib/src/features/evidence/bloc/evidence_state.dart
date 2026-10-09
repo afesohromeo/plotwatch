@@ -11,6 +11,9 @@ sealed class EvidenceState with _$EvidenceState {
     ProjectOverview? overview,
     Evidence? evidence,
 
+    /// The capture's stage, for the schedule line (doc/04e M5-10).
+    Stage? stage,
+
     /// The signed-in user took the photo.
     @Default(false) bool isMine,
     @Default(GenericStatus.initial) GenericStatus loadStatus,

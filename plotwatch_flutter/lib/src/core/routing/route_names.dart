@@ -19,3 +19,7 @@ const String stageRouteName = 'stage';
 const String editStageRouteName = 'edit-stage';
 const String captureRouteName = 'capture';
 const String evidenceRouteName = 'evidence';
+const String feedRouteName = 'feed';
+const String notificationsRouteName = 'notifications';
+const String createUpdateRouteName = 'new-update';
+const String updateRouteName = 'update';

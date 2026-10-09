@@ -5,3 +5,4 @@ export 'package:plotwatch_client/plotwatch_client.dart';
 export 'paginated_list.dart';
 export 'gps_reading.dart';
 export 'device_details.dart';
+export 'live_update.dart';

@@ -28,6 +28,21 @@ class StageApiProvider {
   Future<StageView> start(int projectId, int stageId) =>
       _call(() => _client.stage.start(projectId, stageId));
 
+  Future<StageView> submit(int projectId, int stageId) =>
+      _call(() => _client.stage.submit(projectId, stageId));
+
+  Future<StageView> review(
+    int projectId,
+    int stageId,
+    ReviewDecision decision, {
+    String? comment,
+  }) => _call(
+    () => _client.stage.review(projectId, stageId, decision, comment: comment),
+  );
+
+  Future<List<StageReviewView>> reviews(int projectId, int stageId) =>
+      _call(() => _client.stage.reviews(projectId, stageId));
+
   Future<T> _call<T>(Future<T> Function() call) async {
     try {
       return await call();

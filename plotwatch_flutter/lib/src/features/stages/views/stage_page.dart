@@ -26,6 +26,10 @@ class StagePage extends StatefulWidget {
   static const deleteButtonKey = Key('stage.delete');
   static const startButtonKey = Key('stage.start');
   static const refreshButtonKey = Key('stage.refresh');
+  static const submitButtonKey = Key('stage.submit');
+  static const approveButtonKey = Key('stage.approve');
+  static const requestChangesButtonKey = Key('stage.requestChanges');
+  static const reviewCommentFieldKey = Key('stage.reviewComment');
   static Key captureButtonKey(int itemId) => Key('stage.capture.$itemId');
   static Key captureTileKey(int evidenceId) => Key('stage.photo.$evidenceId');
 
@@ -79,7 +83,12 @@ class _StagePageState extends State<StagePage> {
             } else {
               DialogUtils.handleSuccess(
                 context,
-                l10n.stageStarted,
+                switch (state.action) {
+                  StageAction.submit => l10n.stageSubmittedDone,
+                  StageAction.approve => l10n.stageApprovedDone,
+                  StageAction.requestChanges => l10n.changesRequestedDone,
+                  _ => l10n.stageStarted,
+                },
                 postActions: [reset],
               );
             }
@@ -182,11 +191,40 @@ class _StageBody extends StatelessWidget {
       children: [
         Align(
           alignment: Alignment.centerLeft,
-          child: ProjectChip(
-            label: stage.status.label(l10n),
-            color: stage.status.color,
+          child: Wrap(
+            spacing: AppSpacing.xs,
+            children: [
+              ProjectChip(
+                label: stage.status.label(l10n),
+                color: stage.status.color,
+              ),
+              // Schedule status (STG-10, doc/04e M5-10).
+              if (stage.isLateOn(DateTime.now()))
+                ProjectChip(
+                  label: l10n.stageLate,
+                  color: customColors.unverified,
+                ),
+            ],
           ),
         ),
+        // What the approver asked for, for the site manager (M5-8).
+        if (state.lastChangesRequested case final changes?) ...[
+          const Gap.vertical(height: AppSpacing.md),
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              color: customColors.partial.withValues(alpha: .1),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            ),
+            child: Text(
+              l10n.changesRequestedBy(
+                changes.reviewerName ?? '',
+                changes.review.comment ?? '',
+              ),
+              style: context.textTheme.bodyMedium,
+            ),
+          ),
+        ],
         const Gap.vertical(height: AppSpacing.md),
         DetailRow(
           label: l10n.labelBudget,
@@ -230,6 +268,198 @@ class _StageBody extends StatelessWidget {
           else
             Text(l10n.stageStartNeedsSite, style: context.textTheme.bodyMedium),
         ],
+        if (state.canSubmit) ...[
+          const Gap.vertical(height: AppSpacing.lg),
+          if (state.missingItems.isEmpty)
+            SubmitButton(
+              key: StagePage.submitButtonKey,
+              label: l10n.submitStageAction,
+              isLoading: state.actionStatus == GenericStatus.loading,
+              onPressed: () => _submit(context, l10n, bloc),
+            )
+          else
+            Text(
+              l10n.submitMissingItems(
+                state.missingItems.map((i) => i.label).join(', '),
+              ),
+              style: context.textTheme.bodyMedium,
+            ),
+        ],
+        if (state.canReview) ...[
+          const Gap.vertical(height: AppSpacing.lg),
+          SubmitButton(
+            key: StagePage.approveButtonKey,
+            label: l10n.approveStageAction,
+            isLoading: state.actionStatus == GenericStatus.loading,
+            onPressed: () => _approve(context, l10n, bloc),
+          ),
+          const Gap.vertical(height: AppSpacing.sm),
+          PrimaryButton(
+            key: StagePage.requestChangesButtonKey,
+            withBg: false,
+            width: double.infinity,
+            onPressed: state.actionStatus == GenericStatus.loading
+                ? null
+                : () => _requestChanges(context, bloc),
+            child: Text(l10n.requestChangesAction),
+          ),
+        ],
+        if (state.reviews.isNotEmpty) ...[
+          const Gap.vertical(height: AppSpacing.lg),
+          Text(l10n.reviewHistoryTitle, style: context.textTheme.titleMedium),
+          const Gap.vertical(height: AppSpacing.sm),
+          for (final entry in state.reviews.reversed) _ReviewRow(entry: entry),
+        ],
+      ],
+    );
+  }
+
+  Future<void> _submit(
+    BuildContext context,
+    AppLocalizations l10n,
+    StageBloc bloc,
+  ) async {
+    final confirmed = await showConfirmDialog(
+      context,
+      title: l10n.submitStageAction,
+      message: l10n.submitStageMessage,
+    );
+    if (confirmed) bloc.add(const StageEvent.submitRequested());
+  }
+
+  Future<void> _approve(
+    BuildContext context,
+    AppLocalizations l10n,
+    StageBloc bloc,
+  ) async {
+    final confirmed = await showConfirmDialog(
+      context,
+      title: l10n.approveStageAction,
+      message: l10n.approveStageMessage,
+    );
+    if (confirmed) {
+      bloc.add(
+        const StageEvent.reviewRequested(decision: ReviewDecision.approved),
+      );
+    }
+  }
+
+  Future<void> _requestChanges(BuildContext context, StageBloc bloc) async {
+    final comment = await showDialog<String>(
+      context: context,
+      builder: (_) => const _ReviewCommentDialog(),
+    );
+    if (comment != null) {
+      bloc.add(
+        StageEvent.reviewRequested(
+          decision: ReviewDecision.changesRequested,
+          comment: comment,
+        ),
+      );
+    }
+  }
+}
+
+/// One review decision: what, who, when, and the comment (REV-05).
+class _ReviewRow extends StatelessWidget {
+  const _ReviewRow({required this.entry});
+
+  final StageReviewView entry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final review = entry.review;
+    final approved = review.decision == ReviewDecision.approved;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            approved ? Icons.check_circle_rounded : Icons.replay_rounded,
+            size: 20,
+            color: approved ? customColors.verified : customColors.partial,
+          ),
+          const Gap.horizontal(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.reviewDecisionBy(
+                    approved
+                        ? l10n.reviewApproved
+                        : l10n.reviewChangesRequested,
+                    entry.reviewerName ?? '',
+                    formatDate(review.createdAt.toLocal(), withTime: true),
+                  ),
+                  style: context.textTheme.bodyMedium,
+                ),
+                if (review.comment != null)
+                  Text(review.comment!, style: context.textTheme.bodySmall),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Asks what must change; the comment is required (REV-03). Owns its text
+/// controller, so it is disposed only once the dialog is gone.
+class _ReviewCommentDialog extends StatefulWidget {
+  const _ReviewCommentDialog();
+
+  @override
+  State<_ReviewCommentDialog> createState() => _ReviewCommentDialogState();
+}
+
+class _ReviewCommentDialogState extends State<_ReviewCommentDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _comment = TextEditingController();
+
+  @override
+  void dispose() {
+    _comment.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AlertDialog(
+      title: Text(l10n.requestChangesAction),
+      content: Form(
+        key: _formKey,
+        child: TextFormField(
+          key: StagePage.reviewCommentFieldKey,
+          controller: _comment,
+          maxLength: 1000,
+          minLines: 2,
+          maxLines: 4,
+          decoration: InputDecoration(labelText: l10n.reviewCommentLabel),
+          validator: (value) => (value?.trim().isEmpty ?? true)
+              ? l10n.validateReviewCommentRequired
+              : null,
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton(
+          style: FilledButton.styleFrom(minimumSize: const Size(0, 44)),
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              Navigator.of(context).pop(_comment.text.trim());
+            }
+          },
+          child: Text(l10n.confirm),
+        ),
       ],
     );
   }

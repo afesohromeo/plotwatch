@@ -1,3 +1,4 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart'
@@ -42,3 +43,24 @@ class MockEvidenceRepository extends Mock implements EvidenceRepository {}
 class MockCameraProvider extends Mock implements CameraProvider {}
 
 class MockDeviceInfoProvider extends Mock implements DeviceInfoProvider {}
+
+class MockActivityApiProvider extends Mock implements ActivityApiProvider {}
+
+class MockActivityRepository extends Mock implements ActivityRepository {}
+
+class MockNotificationApiProvider extends Mock
+    implements NotificationApiProvider {}
+
+class MockNotificationRepository extends Mock
+    implements NotificationRepository {}
+
+class MockUpdateApiProvider extends Mock implements UpdateApiProvider {}
+
+class MockUpdateRepository extends Mock implements UpdateRepository {}
+
+// Used by several pages (doc/04e group E).
+class MockFeedBloc extends MockBloc<FeedEvent, FeedState> implements FeedBloc {}
+
+class MockNotificationsBloc
+    extends MockBloc<NotificationsEvent, NotificationsState>
+    implements NotificationsBloc {}

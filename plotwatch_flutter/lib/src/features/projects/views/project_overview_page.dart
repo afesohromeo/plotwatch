@@ -19,6 +19,7 @@ class ProjectOverviewPage extends StatefulWidget {
   static const reviewSiteButtonKey = Key('project.reviewSite');
   static const editSiteButtonKey = Key('project.editSite');
   static const stagesCardKey = Key('project.stages');
+  static const postUpdateButtonKey = Key('project.postUpdate');
 
   @override
   State<ProjectOverviewPage> createState() => _ProjectOverviewPageState();
@@ -195,6 +196,22 @@ class _OverviewBody extends StatelessWidget {
           ),
           child: Text(l10n.membersTitle),
         ),
+        // News from the site, by the site manager (UPD-01, doc/04e M5-9 b).
+        if (overview.myRole == ProjectRole.siteManager &&
+            project.status == ProjectStatus.active) ...[
+          const Gap.vertical(height: AppSpacing.sm),
+          PrimaryButton(
+            key: ProjectOverviewPage.postUpdateButtonKey,
+            width: double.infinity,
+            onPressed: () => context.goNamed(
+              createUpdateRouteName,
+              pathParameters: {'projectId': '${project.id}'},
+            ),
+            child: Text(l10n.postUpdateAction),
+          ),
+        ],
+        const Gap.vertical(height: AppSpacing.lg),
+        LatestActivity(projectId: project.id!),
       ],
     );
   }

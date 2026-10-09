@@ -11,3 +11,6 @@ export 'site/site.dart';
 export 'stages/stages.dart';
 export 'capture/capture.dart';
 export 'evidence/evidence.dart';
+export 'feed/feed.dart';
+export 'notifications/notifications.dart';
+export 'updates/updates.dart';

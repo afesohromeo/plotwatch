@@ -194,4 +194,34 @@ void main() {
 
     expect(find.text(l10n.networkError), findsOneWidget);
   });
+
+  // doc/04e M5-10 (STG-10).
+  testWidgets('Given a stage past its planned end and not approved then its '
+      'tile is marked late, and an approved one is not', (tester) async {
+    final overdue = testStageView(id: 1, status: StageStatus.inProgress);
+    final done = testStageView(
+      id: 2,
+      name: 'Walls',
+      status: StageStatus.approved,
+    );
+    await pumpWith(
+      tester,
+      loaded(
+        plan: testStagePlan(
+          stages: [
+            overdue.copyWith(
+              stage: overdue.stage.copyWith(
+                plannedEnd: DateTime.utc(2020, 1, 1),
+              ),
+            ),
+            done.copyWith(
+              stage: done.stage.copyWith(plannedEnd: DateTime.utc(2020, 1, 1)),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    expect(find.text(l10n.stageLate), findsOneWidget);
+  });
 }

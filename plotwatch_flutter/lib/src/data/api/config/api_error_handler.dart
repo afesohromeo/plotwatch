@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
@@ -6,6 +8,13 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 /// `catch (e) { throw ApiErrorHandler.handle(e); }`.
 class ApiErrorHandler {
   ApiErrorHandler._();
+
+  /// The same conversion for a live stream's errors (doc/04e M5-6).
+  static StreamTransformer<T, T> streamErrors<T>() =>
+      StreamTransformer<T, T>.fromHandlers(
+        handleError: (error, stackTrace, sink) =>
+            sink.addError(handle(error), stackTrace),
+      );
 
   static Exception handle(Object e) {
     if (e is AppException) return HttpException400(code: e.code);
