@@ -34,3 +34,11 @@ class MockLocationProvider extends Mock implements LocationProvider {}
 class MockStageApiProvider extends Mock implements StageApiProvider {}
 
 class MockStageRepository extends Mock implements StageRepository {}
+
+class MockEvidenceApiProvider extends Mock implements EvidenceApiProvider {}
+
+class MockEvidenceRepository extends Mock implements EvidenceRepository {}
+
+class MockCameraProvider extends Mock implements CameraProvider {}
+
+class MockDeviceInfoProvider extends Mock implements DeviceInfoProvider {}

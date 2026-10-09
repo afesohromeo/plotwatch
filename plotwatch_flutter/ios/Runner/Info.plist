@@ -4,6 +4,8 @@
 	<dict>
 		<key>GMSApiKey</key>
 		<string>$(MAPS_API_KEY)</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Plotwatch uses the camera to take the site photos that prove where and when the work was done.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>Plotwatch uses your location to localize the construction site while you stand on the plot.</string>
 		<key>CADisableMinimumFrameDurationOnPhone</key>

@@ -9,3 +9,5 @@ export 'members/members.dart';
 export 'join/join.dart';
 export 'site/site.dart';
 export 'stages/stages.dart';
+export 'capture/capture.dart';
+export 'evidence/evidence.dart';

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -8,15 +9,25 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 /// is submitted and deletes it before it starts; the site manager starts it
 /// once the site is validated (doc/04c M3-6, M3-8).
 class StagePage extends StatefulWidget {
-  const StagePage({super.key, required this.projectId, required this.stageId});
+  const StagePage({
+    super.key,
+    required this.projectId,
+    required this.stageId,
+    this.isWeb = kIsWeb,
+  });
 
   final int projectId;
   final int stageId;
+
+  /// The web has no camera (check V1): no Take a photo button there.
+  final bool isWeb;
 
   static const editButtonKey = Key('stage.edit');
   static const deleteButtonKey = Key('stage.delete');
   static const startButtonKey = Key('stage.start');
   static const refreshButtonKey = Key('stage.refresh');
+  static Key captureButtonKey(int itemId) => Key('stage.capture.$itemId');
+  static Key captureTileKey(int evidenceId) => Key('stage.photo.$evidenceId');
 
   @override
   State<StagePage> createState() => _StagePageState();
@@ -123,6 +134,7 @@ class _StagePageState extends State<StagePage> {
               _ when view != null && state.overview != null => _StageBody(
                 state: state,
                 view: view,
+                canCapture: state.canCapture && !widget.isWeb,
                 onRefresh: () async => _load(),
               ),
               GenericStatus.failure => ErrorrWidget(
@@ -143,11 +155,15 @@ class _StageBody extends StatelessWidget {
   const _StageBody({
     required this.state,
     required this.view,
+    required this.canCapture,
     required this.onRefresh,
   });
 
   final StageState state;
   final StageView view;
+
+  /// The site manager on the phone, on an open stage (doc/04d M4-9).
+  final bool canCapture;
   final Future<void> Function() onRefresh;
 
   @override
@@ -195,22 +211,12 @@ class _StageBody extends StatelessWidget {
         ),
         const Gap.vertical(height: AppSpacing.sm),
         for (final item in view.items)
-          Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-            child: Row(
-              children: [
-                Icon(Icons.photo_camera_outlined, color: customColors.muted),
-                const Gap.horizontal(width: AppSpacing.sm),
-                Expanded(
-                  child: Text(item.label, style: context.textTheme.bodyMedium),
-                ),
-                if (!item.isRequired)
-                  Text(
-                    l10n.checklistOptional,
-                    style: context.textTheme.bodySmall,
-                  ),
-              ],
-            ),
+          _ChecklistItemRow(
+            item: item,
+            projectId: stage.projectId,
+            stageId: stage.id!,
+            captures: state.evidenceFor(item.id!),
+            canCapture: canCapture,
           ),
         if (state.canStart) ...[
           const Gap.vertical(height: AppSpacing.lg),
@@ -225,6 +231,162 @@ class _StageBody extends StatelessWidget {
             Text(l10n.stageStartNeedsSite, style: context.textTheme.bodyMedium),
         ],
       ],
+    );
+  }
+}
+
+/// One checklist item with its photos, newest first, and for the site
+/// manager a Take a photo button (doc/04d group D).
+class _ChecklistItemRow extends StatelessWidget {
+  const _ChecklistItemRow({
+    required this.item,
+    required this.projectId,
+    required this.stageId,
+    required this.captures,
+    required this.canCapture,
+  });
+
+  final ChecklistItem item;
+  final int projectId;
+  final int stageId;
+  final List<Evidence> captures;
+  final bool canCapture;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.photo_camera_outlined, color: customColors.muted),
+              const Gap.horizontal(width: AppSpacing.sm),
+              Expanded(
+                child: Text(item.label, style: context.textTheme.bodyMedium),
+              ),
+              if (!item.isRequired)
+                Text(
+                  l10n.checklistOptional,
+                  style: context.textTheme.bodySmall,
+                ),
+            ],
+          ),
+          if (captures.isNotEmpty) ...[
+            const Gap.vertical(height: AppSpacing.sm),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: [
+                for (final capture in captures)
+                  _CaptureTile(
+                    key: StagePage.captureTileKey(capture.id!),
+                    capture: capture,
+                    onTap: () => context.goNamed(
+                      evidenceRouteName,
+                      pathParameters: {
+                        'projectId': '$projectId',
+                        'stageId': '$stageId',
+                        'evidenceId': '${capture.id}',
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ],
+          if (canCapture) ...[
+            const Gap.vertical(height: AppSpacing.sm),
+            PrimaryButton(
+              key: StagePage.captureButtonKey(item.id!),
+              withBg: false,
+              onPressed: () => context.goNamed(
+                captureRouteName,
+                pathParameters: {
+                  'projectId': '$projectId',
+                  'stageId': '$stageId',
+                  'itemId': '${item.id}',
+                },
+              ),
+              child: Text(l10n.takePhotoAction),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// A photo's thumbnail with its badge, or what is happening to it.
+class _CaptureTile extends StatelessWidget {
+  const _CaptureTile({super.key, required this.capture, required this.onTap});
+
+  final Evidence capture;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final shown =
+        capture.status == EvidenceStatus.finalized ||
+        capture.status == EvidenceStatus.retracted;
+
+    return InkWell(
+      onTap: shown ? onTap : null,
+      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+      child: SizedBox(
+        width: 132,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              child: Opacity(
+                opacity: capture.status == EvidenceStatus.retracted ? .4 : 1,
+                child: shown
+                    ? EvidenceImage(
+                        projectId: capture.projectId,
+                        evidenceId: capture.id!,
+                        variant: MediaVariant.thumbnail,
+                        width: 132,
+                        height: 99,
+                      )
+                    : Container(
+                        width: 132,
+                        height: 99,
+                        color: customColors.muted.withValues(alpha: .15),
+                        child: Icon(
+                          Icons.cloud_upload_outlined,
+                          color: customColors.muted,
+                        ),
+                      ),
+              ),
+            ),
+            const Gap.vertical(height: AppSpacing.xs),
+            switch (capture.status) {
+              EvidenceStatus.finalized => VerificationBadge(
+                level: capture.verificationLevel,
+              ),
+              EvidenceStatus.retracted => Text(
+                l10n.captureRetracted,
+                style: context.textTheme.bodySmall,
+              ),
+              EvidenceStatus.uploadFailed => Text(
+                l10n.captureUploadFailed,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: customColors.unverified,
+                ),
+              ),
+              EvidenceStatus.committed => Text(
+                l10n.captureUploading,
+                style: context.textTheme.bodySmall,
+              ),
+            },
+          ],
+        ),
+      ),
     );
   }
 }

@@ -313,11 +313,22 @@ class RouteManager {
             redirect: _requireStageId,
             pageBuilder: (context, state) => NoTransitionPage<void>(
               key: state.pageKey,
-              child: BlocProvider(
-                create: (context) => StageBloc(
-                  stageRepository: context.read<StageRepository>(),
-                  projectRepository: context.read<ProjectRepository>(),
-                ),
+              child: MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => StageBloc(
+                      stageRepository: context.read<StageRepository>(),
+                      projectRepository: context.read<ProjectRepository>(),
+                      evidenceRepository: context.read<EvidenceRepository>(),
+                    ),
+                  ),
+                  // The thumbnails of the stage's photos (doc/04d M4-4).
+                  BlocProvider(
+                    create: (context) => EvidenceMediaBloc(
+                      evidenceRepository: context.read<EvidenceRepository>(),
+                    ),
+                  ),
+                ],
                 child: StagePage(
                   projectId: _projectId(state)!,
                   stageId: _stageId(state)!,
@@ -332,6 +343,63 @@ class RouteManager {
                 pageBuilder: (context, state) => NoTransitionPage<void>(
                   key: state.pageKey,
                   child: _stageForm(context, state),
+                ),
+              ),
+              // Taking a photo for one checklist item (doc/04d group C).
+              GoRoute(
+                name: captureRouteName,
+                path: capturePage,
+                redirect: _requireItemId,
+                pageBuilder: (context, state) => NoTransitionPage<void>(
+                  key: state.pageKey,
+                  child: RepositoryProvider(
+                    create: (_) => CameraProvider(),
+                    child: BlocProvider(
+                      create: (context) => CaptureBloc(
+                        cameraProvider: context.read<CameraProvider>(),
+                        locationProvider: const LocationProvider(),
+                        deviceInfoProvider: const DeviceInfoProvider(),
+                        evidenceRepository: context.read<EvidenceRepository>(),
+                        projectRepository: context.read<ProjectRepository>(),
+                        stageRepository: context.read<StageRepository>(),
+                      ),
+                      child: CapturePage(
+                        projectId: _projectId(state)!,
+                        stageId: _stageId(state)!,
+                        itemId: _intParameter(state, 'itemId')!,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // One photo with its checks (doc/04d group D).
+              GoRoute(
+                name: evidenceRouteName,
+                path: evidencePage,
+                redirect: _requireEvidenceId,
+                pageBuilder: (context, state) => NoTransitionPage<void>(
+                  key: state.pageKey,
+                  child: MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: (context) => EvidenceBloc(
+                          evidenceRepository: context.read<EvidenceRepository>(),
+                          projectRepository: context.read<ProjectRepository>(),
+                          authRepository: context.read<AuthRepository>(),
+                        ),
+                      ),
+                      BlocProvider(
+                        create: (context) => EvidenceMediaBloc(
+                          evidenceRepository: context.read<EvidenceRepository>(),
+                        ),
+                      ),
+                    ],
+                    child: EvidencePage(
+                      projectId: _projectId(state)!,
+                      stageId: _stageId(state)!,
+                      evidenceId: _intParameter(state, 'evidenceId')!,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -354,8 +422,23 @@ class RouteManager {
         ),
       );
 
-  static int? _stageId(GoRouterState state) =>
-      int.tryParse(state.pathParameters['stageId'] ?? '');
+  static int? _stageId(GoRouterState state) => _intParameter(state, 'stageId');
+
+  static int? _intParameter(GoRouterState state, String name) =>
+      int.tryParse(state.pathParameters[name] ?? '');
+
+  /// A malformed item ID in the URL goes back to the project list.
+  static String? _requireItemId(BuildContext context, GoRouterState state) =>
+      _requireStageId(context, state) ??
+      (_intParameter(state, 'itemId') == null ? homePage : null);
+
+  /// A malformed capture ID in the URL goes back to the project list.
+  static String? _requireEvidenceId(
+    BuildContext context,
+    GoRouterState state,
+  ) =>
+      _requireStageId(context, state) ??
+      (_intParameter(state, 'evidenceId') == null ? homePage : null);
 
   /// A malformed stage ID in the URL goes back to the project list.
   static String? _requireStageId(BuildContext context, GoRouterState state) =>

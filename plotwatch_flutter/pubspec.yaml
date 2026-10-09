@@ -45,6 +45,10 @@ dependencies:
   share_plus: 13.3.1
   geolocator: ^14.0.1
   google_maps_flutter: ^2.18.2
+  camera: ^0.12.1
+  crypto: ^3.0.7
+  device_info_plus: ^13.3.0
+  package_info_plus: ^10.2.2
 
 dev_dependencies:
   flutter_test:

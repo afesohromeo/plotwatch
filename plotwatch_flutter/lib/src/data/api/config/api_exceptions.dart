@@ -23,6 +23,12 @@ class NetworkException implements Exception {
   const NetworkException();
 }
 
+/// A photo upload that didn't reach the storage (doc/04d M4-3); the capture
+/// stays committed and can be sent again.
+class UploadException implements Exception {
+  const UploadException();
+}
+
 /// Anything else (server error, unexpected). [error] keeps the original for logs.
 class UnknownApiException implements Exception {
   const UnknownApiException(this.error);

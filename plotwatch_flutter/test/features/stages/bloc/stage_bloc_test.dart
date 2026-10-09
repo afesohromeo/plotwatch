@@ -11,6 +11,7 @@ void main() {
   late AppLocalizations l10n;
   late MockStageRepository stageRepository;
   late MockProjectRepository projectRepository;
+  late MockEvidenceRepository evidenceRepository;
 
   final view = testStageView(id: 2);
   final started = testStageView(id: 2, status: StageStatus.inProgress);
@@ -19,11 +20,16 @@ void main() {
   setUp(() {
     stageRepository = MockStageRepository();
     projectRepository = MockProjectRepository();
+    evidenceRepository = MockEvidenceRepository();
+    when(
+      () => evidenceRepository.fetchStageEvidence(any(), any()),
+    ).thenAnswer((_) async => []);
   });
 
   StageBloc build() => StageBloc(
     stageRepository: stageRepository,
     projectRepository: projectRepository,
+    evidenceRepository: evidenceRepository,
   );
 
   StageState loaded({
@@ -244,6 +250,58 @@ void main() {
     test('then a viewer only reads', () {
       final viewer = loaded(role: ProjectRole.viewer);
       expect(viewer.canEdit || viewer.canDelete || viewer.canStart, isFalse);
+    });
+  });
+
+  // doc/04d group D: the stage's captures, and who may add one.
+  group("Given the stage's captures", () {
+    final mine = testEvidence(id: 9, checklistItemId: 20);
+    final other = testEvidence(id: 8, checklistItemId: 21);
+
+    blocTest<StageBloc, StageState>(
+      'when the stage loads then its captures come with it, by item',
+      setUp: () {
+        when(
+          () => projectRepository.fetchProject(1),
+        ).thenAnswer((_) async => testOverview());
+        when(
+          () => stageRepository.fetchStage(1, 2),
+        ).thenAnswer((_) async => view);
+        when(
+          () => evidenceRepository.fetchStageEvidence(1, 2),
+        ).thenAnswer((_) async => [mine, other]);
+      },
+      build: build,
+      act: (bloc) => bloc.add(const StageEvent.load(projectId: 1, stageId: 2)),
+      verify: (bloc) {
+        expect(bloc.state.evidenceFor(20), [mine]);
+        expect(bloc.state.evidenceFor(21), [other]);
+        expect(bloc.state.evidenceFor(99), isEmpty);
+      },
+    );
+
+    test('then only the site manager captures, on an active project and an '
+        'open stage', () {
+      expect(loaded(role: ProjectRole.siteManager).canCapture, isTrue);
+      expect(
+        loaded(role: ProjectRole.siteManager, stage: started).canCapture,
+        isTrue,
+      );
+      expect(loaded().canCapture, isFalse);
+      expect(
+        loaded(
+          role: ProjectRole.siteManager,
+          projectStatus: ProjectStatus.draft,
+        ).canCapture,
+        isFalse,
+      );
+      expect(
+        loaded(
+          role: ProjectRole.siteManager,
+          stage: testStageView(id: 2, status: StageStatus.submitted),
+        ).canCapture,
+        isFalse,
+      );
     });
   });
 }

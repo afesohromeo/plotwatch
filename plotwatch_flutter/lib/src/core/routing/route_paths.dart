@@ -29,6 +29,8 @@ const String stagePage = ':stageId';
 
 // Under one stage.
 const String editStagePage = 'edit';
+const String capturePage = 'capture/:itemId';
+const String evidencePage = 'evidence/:evidenceId';
 
 // Under the join page: the invitation link (decision M2-8).
 const String joinWithCodePage = ':code';

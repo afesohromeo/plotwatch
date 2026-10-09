@@ -8,11 +8,15 @@ part 'stage_event.dart';
 part 'stage_state.dart';
 part 'stage_bloc.freezed.dart';
 
-/// One stage with its checklist: the site manager starts it, the owner
-/// deletes it (doc/04c M3-6, M3-8). Editing is the stage form's job.
+/// One stage with its checklist and the captures of each item: the site
+/// manager starts it and takes photos, the owner deletes it (doc/04c M3-6,
+/// M3-8; doc/04d group D). Editing is the stage form's job.
 class StageBloc extends Bloc<StageEvent, StageState> {
-  StageBloc({required this._stageRepository, required this._projectRepository})
-    : super(const StageState()) {
+  StageBloc({
+    required this._stageRepository,
+    required this._projectRepository,
+    required this._evidenceRepository,
+  }) : super(const StageState()) {
     on<_Load>(_onLoad);
     on<_StartRequested>(_onStartRequested);
     on<_DeleteRequested>(_onDeleteRequested);
@@ -21,6 +25,7 @@ class StageBloc extends Bloc<StageEvent, StageState> {
 
   final StageRepository _stageRepository;
   final ProjectRepository _projectRepository;
+  final EvidenceRepository _evidenceRepository;
 
   Future<void> _onLoad(_Load event, Emitter<StageState> emit) async {
     final l10n = LocalizationService.localization;
@@ -30,6 +35,7 @@ class StageBloc extends Bloc<StageEvent, StageState> {
         stageId: event.stageId,
         overview: state.overview,
         view: state.view,
+        evidence: state.evidence,
         loadStatus: GenericStatus.loading,
       ),
     );
@@ -39,11 +45,16 @@ class StageBloc extends Bloc<StageEvent, StageState> {
         event.projectId,
         event.stageId,
       );
+      final evidence = await _evidenceRepository.fetchStageEvidence(
+        event.projectId,
+        event.stageId,
+      );
       emit(
         state.copyWith(
           loadStatus: GenericStatus.success,
           overview: overview,
           view: view,
+          evidence: evidence,
         ),
       );
     } on HttpException400 catch (e) {

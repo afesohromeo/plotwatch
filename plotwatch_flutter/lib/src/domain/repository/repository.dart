@@ -5,3 +5,4 @@ export 'project_repository.dart';
 export 'membership_repository.dart';
 export 'site_repository.dart';
 export 'stage_repository.dart';
+export 'evidence_repository.dart';

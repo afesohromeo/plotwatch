@@ -2197,6 +2197,456 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This checklist item has photos, so it can\'t be removed. You can still rename it.'**
   String get errorChecklistItemHasEvidence;
+
+  /// Capture badge while finalize hasn't run (VER-02)
+  ///
+  /// In en, this message translates to:
+  /// **'Being checked'**
+  String get verificationPending;
+
+  /// Capture badge: every check passed
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get verificationVerified;
+
+  /// Capture badge: only non-critical checks failed
+  ///
+  /// In en, this message translates to:
+  /// **'Partially verified'**
+  String get verificationPartial;
+
+  /// Capture badge: a critical check failed
+  ///
+  /// In en, this message translates to:
+  /// **'Unverified'**
+  String get verificationUnverified;
+
+  /// Check V1 title
+  ///
+  /// In en, this message translates to:
+  /// **'Plotwatch camera'**
+  String get checkInAppCaptureTitle;
+
+  /// Check V2 title
+  ///
+  /// In en, this message translates to:
+  /// **'GPS position'**
+  String get checkLocationPresentTitle;
+
+  /// Check V3 title
+  ///
+  /// In en, this message translates to:
+  /// **'GPS accuracy'**
+  String get checkLocationAccuracyTitle;
+
+  /// Check V4 title
+  ///
+  /// In en, this message translates to:
+  /// **'On the site'**
+  String get checkInsideSiteTitle;
+
+  /// Check V5 title
+  ///
+  /// In en, this message translates to:
+  /// **'Real position'**
+  String get checkNotMockLocationTitle;
+
+  /// Check V6 title
+  ///
+  /// In en, this message translates to:
+  /// **'Unchanged photo'**
+  String get checkHashMatchTitle;
+
+  /// Check V7 title
+  ///
+  /// In en, this message translates to:
+  /// **'Phone clock'**
+  String get checkClockConsistencyTitle;
+
+  /// Check V8 title
+  ///
+  /// In en, this message translates to:
+  /// **'Sent promptly'**
+  String get checkPromptCommitTitle;
+
+  /// Check V1 passed
+  ///
+  /// In en, this message translates to:
+  /// **'Taken with the Plotwatch camera'**
+  String get checkInAppCapturePassed;
+
+  /// Check V1 failed
+  ///
+  /// In en, this message translates to:
+  /// **'Not taken with the Plotwatch camera'**
+  String get checkInAppCaptureFailed;
+
+  /// Check V2 passed
+  ///
+  /// In en, this message translates to:
+  /// **'A GPS position was recorded'**
+  String get checkLocationPresentPassed;
+
+  /// Check V2 failed
+  ///
+  /// In en, this message translates to:
+  /// **'No GPS position was recorded'**
+  String get checkLocationPresentFailed;
+
+  /// Check V3 passed
+  ///
+  /// In en, this message translates to:
+  /// **'Accurate to {accuracy} m (allowed: {allowed} m)'**
+  String checkLocationAccuracyPassed(int accuracy, int allowed);
+
+  /// Check V3 failed
+  ///
+  /// In en, this message translates to:
+  /// **'Accurate to only {accuracy} m (allowed: {allowed} m)'**
+  String checkLocationAccuracyFailed(int accuracy, int allowed);
+
+  /// Check V3 without an accuracy
+  ///
+  /// In en, this message translates to:
+  /// **'The GPS accuracy is unknown'**
+  String get checkLocationAccuracyUnknown;
+
+  /// Check V4 passed
+  ///
+  /// In en, this message translates to:
+  /// **'Taken {distance} m from the site centre; allowed: {allowed} m'**
+  String checkInsideSitePassed(int distance, int allowed);
+
+  /// Check V4 failed (AC-3 wording)
+  ///
+  /// In en, this message translates to:
+  /// **'Taken {distance} m from the site; allowed: {allowed} m'**
+  String checkInsideSiteFailed(int distance, int allowed);
+
+  /// Check V4 without a position
+  ///
+  /// In en, this message translates to:
+  /// **'No position, so it can\'t be placed on the site'**
+  String get checkInsideSiteUnknown;
+
+  /// Check V5 passed
+  ///
+  /// In en, this message translates to:
+  /// **'The position wasn\'t faked'**
+  String get checkNotMockLocationPassed;
+
+  /// Check V5 failed
+  ///
+  /// In en, this message translates to:
+  /// **'The phone reported a faked position'**
+  String get checkNotMockLocationFailed;
+
+  /// Check V6 passed
+  ///
+  /// In en, this message translates to:
+  /// **'The stored photo is exactly the one taken'**
+  String get checkHashMatchPassed;
+
+  /// Check V6 failed
+  ///
+  /// In en, this message translates to:
+  /// **'The stored photo differs from the one taken'**
+  String get checkHashMatchFailed;
+
+  /// Check V7 passed
+  ///
+  /// In en, this message translates to:
+  /// **'The phone\'s clock was right (within {allowed} min)'**
+  String checkClockConsistencyPassed(int allowed);
+
+  /// Check V7 failed
+  ///
+  /// In en, this message translates to:
+  /// **'The phone\'s clock was {skew} min off (allowed: {allowed} min)'**
+  String checkClockConsistencyFailed(int skew, int allowed);
+
+  /// Check V8 passed
+  ///
+  /// In en, this message translates to:
+  /// **'Sent within {allowed} min of being taken'**
+  String checkPromptCommitPassed(int allowed);
+
+  /// Check V8 failed
+  ///
+  /// In en, this message translates to:
+  /// **'Sent {delay} min after being taken (allowed: {allowed} min)'**
+  String checkPromptCommitFailed(int delay, int allowed);
+
+  /// Capture screen title (doc/04d group C)
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get captureTitle;
+
+  /// Capture screen on the web (check V1)
+  ///
+  /// In en, this message translates to:
+  /// **'Photos are taken with the Plotwatch app on the phone, standing on the plot.'**
+  String get capturePhoneOnly;
+
+  /// Camera permission refused
+  ///
+  /// In en, this message translates to:
+  /// **'Plotwatch needs the camera to take the photo. Allow it in the app\'s settings.'**
+  String get cameraDenied;
+
+  /// Opens the app settings
+  ///
+  /// In en, this message translates to:
+  /// **'Allow the camera'**
+  String get allowCamera;
+
+  /// No camera
+  ///
+  /// In en, this message translates to:
+  /// **'No camera is available on this device.'**
+  String get cameraUnavailable;
+
+  /// Stage page: capture for an item; shutter button label
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get takePhotoAction;
+
+  /// Review step subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Check the photo before sending it.'**
+  String get captureReviewHint;
+
+  /// Caption field (CAP-06)
+  ///
+  /// In en, this message translates to:
+  /// **'Caption (optional)'**
+  String get labelCaptionOptional;
+
+  /// Review step: send
+  ///
+  /// In en, this message translates to:
+  /// **'Use this photo'**
+  String get usePhotoAction;
+
+  /// Review step: retake
+  ///
+  /// In en, this message translates to:
+  /// **'Take it again'**
+  String get retakeAction;
+
+  /// Sending step 1 (commit)
+  ///
+  /// In en, this message translates to:
+  /// **'Recording the photo…'**
+  String get sendStepCommitting;
+
+  /// Sending step 2 (upload)
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading the photo…'**
+  String get sendStepUploading;
+
+  /// Sending step 3 (finalize)
+  ///
+  /// In en, this message translates to:
+  /// **'Checking where and when it was taken…'**
+  String get sendStepChecking;
+
+  /// Upload refused or interrupted
+  ///
+  /// In en, this message translates to:
+  /// **'The photo couldn\'t be uploaded. Check the connection and try again.'**
+  String get errorUploadFailed;
+
+  /// Sending failed for an unexpected reason
+  ///
+  /// In en, this message translates to:
+  /// **'The photo couldn\'t be sent. Try again.'**
+  String get errorCaptureSend;
+
+  /// Repeats the step that failed
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get retryAction;
+
+  /// Capture result title
+  ///
+  /// In en, this message translates to:
+  /// **'Photo checked'**
+  String get captureResultTitle;
+
+  /// VER-10 notice
+  ///
+  /// In en, this message translates to:
+  /// **'Verification proves where and when this photo was taken, not the quality of the work.'**
+  String get verificationNotice;
+
+  /// Camera overlay: no fix yet
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for GPS…'**
+  String get captureNoFix;
+
+  /// Camera overlay: inside the site radius
+  ///
+  /// In en, this message translates to:
+  /// **'Inside the site'**
+  String get captureInsideSite;
+
+  /// Camera overlay: outside the site radius
+  ///
+  /// In en, this message translates to:
+  /// **'Outside the site (≈ {distance} m)'**
+  String captureOutsideSite(int distance);
+
+  /// Camera overlay: no location permission
+  ///
+  /// In en, this message translates to:
+  /// **'Location off: the photo won\'t be verified'**
+  String get captureLocationOff;
+
+  /// Camera overlay: accuracy
+  ///
+  /// In en, this message translates to:
+  /// **'GPS ± {accuracy} m'**
+  String captureAccuracy(int accuracy);
+
+  /// Stage page: a retracted capture
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawn'**
+  String get captureRetracted;
+
+  /// Stage page: a capture stuck for 24 h (M4-12)
+  ///
+  /// In en, this message translates to:
+  /// **'Upload failed'**
+  String get captureUploadFailed;
+
+  /// Stage page: a capture not finalized yet
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading…'**
+  String get captureUploading;
+
+  /// Evidence page title
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get evidenceTitle;
+
+  /// After retracting a capture
+  ///
+  /// In en, this message translates to:
+  /// **'The photo has been withdrawn.'**
+  String get captureRetractedDone;
+
+  /// Evidence page failed to load
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the photo. Try again.'**
+  String get errorEvidenceLoad;
+
+  /// Evidence page: a retracted capture and why
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawn: {reason}'**
+  String captureRetractedReason(String reason);
+
+  /// Evidence page: checks section
+  ///
+  /// In en, this message translates to:
+  /// **'Checks'**
+  String get checksTitle;
+
+  /// Evidence page: what was recorded
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get evidenceDetailsTitle;
+
+  /// deviceCapturedAt
+  ///
+  /// In en, this message translates to:
+  /// **'Taken (phone time)'**
+  String get labelTakenAt;
+
+  /// serverCommittedAt
+  ///
+  /// In en, this message translates to:
+  /// **'Received (server time)'**
+  String get labelReceivedAt;
+
+  /// Latitude, longitude
+  ///
+  /// In en, this message translates to:
+  /// **'Position'**
+  String get labelPosition;
+
+  /// distanceFromSiteM
+  ///
+  /// In en, this message translates to:
+  /// **'Distance to the site centre'**
+  String get labelDistanceToSite;
+
+  /// A distance in metres
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} m'**
+  String distanceMeters(int distance);
+
+  /// Phone model and OS
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get labelDevice;
+
+  /// App version
+  ///
+  /// In en, this message translates to:
+  /// **'App version'**
+  String get labelAppVersion;
+
+  /// Evidence page: retract (CAP-09)
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw this photo'**
+  String get retractAction;
+
+  /// Retract dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw this photo?'**
+  String get retractTitle;
+
+  /// Retract dialog field
+  ///
+  /// In en, this message translates to:
+  /// **'Why? (stays in the history)'**
+  String get retractReasonLabel;
+
+  /// Retract reason empty
+  ///
+  /// In en, this message translates to:
+  /// **'Say why the photo is withdrawn'**
+  String get validateRetractReasonRequired;
+
+  /// Screen reader label of a capture
+  ///
+  /// In en, this message translates to:
+  /// **'Site photo'**
+  String get capturePhotoLabel;
+
+  /// Screen reader label when a photo can't load
+  ///
+  /// In en, this message translates to:
+  /// **'Photo unavailable'**
+  String get capturePhotoUnavailable;
 }
 
 class _AppLocalizationsDelegate

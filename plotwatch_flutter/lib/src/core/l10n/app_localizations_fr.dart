@@ -1198,4 +1198,269 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get errorChecklistItemHasEvidence =>
       'Cet élément de liste a des photos : il ne peut pas être retiré. Vous pouvez encore le renommer.';
+
+  @override
+  String get verificationPending => 'En cours de vérification';
+
+  @override
+  String get verificationVerified => 'Vérifiée';
+
+  @override
+  String get verificationPartial => 'Partiellement vérifiée';
+
+  @override
+  String get verificationUnverified => 'Non vérifiée';
+
+  @override
+  String get checkInAppCaptureTitle => 'Appareil photo Plotwatch';
+
+  @override
+  String get checkLocationPresentTitle => 'Position GPS';
+
+  @override
+  String get checkLocationAccuracyTitle => 'Précision GPS';
+
+  @override
+  String get checkInsideSiteTitle => 'Sur le chantier';
+
+  @override
+  String get checkNotMockLocationTitle => 'Position réelle';
+
+  @override
+  String get checkHashMatchTitle => 'Photo intacte';
+
+  @override
+  String get checkClockConsistencyTitle => 'Horloge du téléphone';
+
+  @override
+  String get checkPromptCommitTitle => 'Envoyée rapidement';
+
+  @override
+  String get checkInAppCapturePassed =>
+      'Prise avec l\'appareil photo de Plotwatch';
+
+  @override
+  String get checkInAppCaptureFailed =>
+      'Pas prise avec l\'appareil photo de Plotwatch';
+
+  @override
+  String get checkLocationPresentPassed => 'Une position GPS a été enregistrée';
+
+  @override
+  String get checkLocationPresentFailed =>
+      'Aucune position GPS n\'a été enregistrée';
+
+  @override
+  String checkLocationAccuracyPassed(int accuracy, int allowed) {
+    return 'Précise à $accuracy m (autorisé : $allowed m)';
+  }
+
+  @override
+  String checkLocationAccuracyFailed(int accuracy, int allowed) {
+    return 'Précise à $accuracy m seulement (autorisé : $allowed m)';
+  }
+
+  @override
+  String get checkLocationAccuracyUnknown => 'La précision GPS est inconnue';
+
+  @override
+  String checkInsideSitePassed(int distance, int allowed) {
+    return 'Prise à $distance m du centre du chantier ; autorisé : $allowed m';
+  }
+
+  @override
+  String checkInsideSiteFailed(int distance, int allowed) {
+    return 'Prise à $distance m du chantier ; autorisé : $allowed m';
+  }
+
+  @override
+  String get checkInsideSiteUnknown =>
+      'Pas de position : impossible de la situer sur le chantier';
+
+  @override
+  String get checkNotMockLocationPassed => 'La position n\'a pas été falsifiée';
+
+  @override
+  String get checkNotMockLocationFailed =>
+      'Le téléphone a signalé une position falsifiée';
+
+  @override
+  String get checkHashMatchPassed =>
+      'La photo enregistrée est exactement celle qui a été prise';
+
+  @override
+  String get checkHashMatchFailed =>
+      'La photo enregistrée diffère de celle qui a été prise';
+
+  @override
+  String checkClockConsistencyPassed(int allowed) {
+    return 'L\'horloge du téléphone était juste (à $allowed min près)';
+  }
+
+  @override
+  String checkClockConsistencyFailed(int skew, int allowed) {
+    return 'L\'horloge du téléphone avait $skew min d\'écart (autorisé : $allowed min)';
+  }
+
+  @override
+  String checkPromptCommitPassed(int allowed) {
+    return 'Envoyée dans les $allowed min suivant la prise';
+  }
+
+  @override
+  String checkPromptCommitFailed(int delay, int allowed) {
+    return 'Envoyée $delay min après la prise (autorisé : $allowed min)';
+  }
+
+  @override
+  String get captureTitle => 'Prendre une photo';
+
+  @override
+  String get capturePhoneOnly =>
+      'Les photos se prennent avec l\'application Plotwatch sur le téléphone, sur le terrain.';
+
+  @override
+  String get cameraDenied =>
+      'Plotwatch a besoin de l\'appareil photo pour prendre la photo. Autorisez-le dans les réglages de l\'application.';
+
+  @override
+  String get allowCamera => 'Autoriser l\'appareil photo';
+
+  @override
+  String get cameraUnavailable =>
+      'Aucun appareil photo n\'est disponible sur cet appareil.';
+
+  @override
+  String get takePhotoAction => 'Prendre une photo';
+
+  @override
+  String get captureReviewHint => 'Vérifiez la photo avant de l\'envoyer.';
+
+  @override
+  String get labelCaptionOptional => 'Légende (facultatif)';
+
+  @override
+  String get usePhotoAction => 'Utiliser cette photo';
+
+  @override
+  String get retakeAction => 'La reprendre';
+
+  @override
+  String get sendStepCommitting => 'Enregistrement de la photo…';
+
+  @override
+  String get sendStepUploading => 'Envoi de la photo…';
+
+  @override
+  String get sendStepChecking =>
+      'Vérification du lieu et de l\'heure de la prise…';
+
+  @override
+  String get errorUploadFailed =>
+      'La photo n\'a pas pu être envoyée. Vérifiez la connexion et réessayez.';
+
+  @override
+  String get errorCaptureSend =>
+      'La photo n\'a pas pu être envoyée. Réessayez.';
+
+  @override
+  String get retryAction => 'Réessayer';
+
+  @override
+  String get captureResultTitle => 'Photo vérifiée';
+
+  @override
+  String get verificationNotice =>
+      'La vérification prouve où et quand cette photo a été prise, pas la qualité des travaux.';
+
+  @override
+  String get captureNoFix => 'Recherche du GPS…';
+
+  @override
+  String get captureInsideSite => 'Sur le chantier';
+
+  @override
+  String captureOutsideSite(int distance) {
+    return 'Hors du chantier (≈ $distance m)';
+  }
+
+  @override
+  String get captureLocationOff =>
+      'Localisation désactivée : la photo ne sera pas vérifiée';
+
+  @override
+  String captureAccuracy(int accuracy) {
+    return 'GPS ± $accuracy m';
+  }
+
+  @override
+  String get captureRetracted => 'Retirée';
+
+  @override
+  String get captureUploadFailed => 'Échec de l\'envoi';
+
+  @override
+  String get captureUploading => 'Envoi en cours…';
+
+  @override
+  String get evidenceTitle => 'Photo';
+
+  @override
+  String get captureRetractedDone => 'La photo a été retirée.';
+
+  @override
+  String get errorEvidenceLoad => 'Impossible de charger la photo. Réessayez.';
+
+  @override
+  String captureRetractedReason(String reason) {
+    return 'Retirée : $reason';
+  }
+
+  @override
+  String get checksTitle => 'Vérifications';
+
+  @override
+  String get evidenceDetailsTitle => 'Détails';
+
+  @override
+  String get labelTakenAt => 'Prise (heure du téléphone)';
+
+  @override
+  String get labelReceivedAt => 'Reçue (heure du serveur)';
+
+  @override
+  String get labelPosition => 'Position';
+
+  @override
+  String get labelDistanceToSite => 'Distance au centre du chantier';
+
+  @override
+  String distanceMeters(int distance) {
+    return '$distance m';
+  }
+
+  @override
+  String get labelDevice => 'Appareil';
+
+  @override
+  String get labelAppVersion => 'Version de l\'application';
+
+  @override
+  String get retractAction => 'Retirer cette photo';
+
+  @override
+  String get retractTitle => 'Retirer cette photo ?';
+
+  @override
+  String get retractReasonLabel => 'Pourquoi ? (reste dans l\'historique)';
+
+  @override
+  String get validateRetractReasonRequired =>
+      'Indiquez pourquoi la photo est retirée';
+
+  @override
+  String get capturePhotoLabel => 'Photo du chantier';
+
+  @override
+  String get capturePhotoUnavailable => 'Photo indisponible';
 }

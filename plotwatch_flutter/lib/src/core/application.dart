@@ -17,6 +17,7 @@ class Application extends StatelessWidget {
         RepositoryProvider(create: (_) => MembershipRepository()),
         RepositoryProvider(create: (_) => SiteRepository()),
         RepositoryProvider(create: (_) => StageRepository()),
+        RepositoryProvider(create: (_) => EvidenceRepository()),
       ],
       child: MultiBlocProvider(
         providers: [

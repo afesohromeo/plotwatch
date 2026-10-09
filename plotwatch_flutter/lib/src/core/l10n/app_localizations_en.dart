@@ -1168,4 +1168,261 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorChecklistItemHasEvidence =>
       'This checklist item has photos, so it can\'t be removed. You can still rename it.';
+
+  @override
+  String get verificationPending => 'Being checked';
+
+  @override
+  String get verificationVerified => 'Verified';
+
+  @override
+  String get verificationPartial => 'Partially verified';
+
+  @override
+  String get verificationUnverified => 'Unverified';
+
+  @override
+  String get checkInAppCaptureTitle => 'Plotwatch camera';
+
+  @override
+  String get checkLocationPresentTitle => 'GPS position';
+
+  @override
+  String get checkLocationAccuracyTitle => 'GPS accuracy';
+
+  @override
+  String get checkInsideSiteTitle => 'On the site';
+
+  @override
+  String get checkNotMockLocationTitle => 'Real position';
+
+  @override
+  String get checkHashMatchTitle => 'Unchanged photo';
+
+  @override
+  String get checkClockConsistencyTitle => 'Phone clock';
+
+  @override
+  String get checkPromptCommitTitle => 'Sent promptly';
+
+  @override
+  String get checkInAppCapturePassed => 'Taken with the Plotwatch camera';
+
+  @override
+  String get checkInAppCaptureFailed => 'Not taken with the Plotwatch camera';
+
+  @override
+  String get checkLocationPresentPassed => 'A GPS position was recorded';
+
+  @override
+  String get checkLocationPresentFailed => 'No GPS position was recorded';
+
+  @override
+  String checkLocationAccuracyPassed(int accuracy, int allowed) {
+    return 'Accurate to $accuracy m (allowed: $allowed m)';
+  }
+
+  @override
+  String checkLocationAccuracyFailed(int accuracy, int allowed) {
+    return 'Accurate to only $accuracy m (allowed: $allowed m)';
+  }
+
+  @override
+  String get checkLocationAccuracyUnknown => 'The GPS accuracy is unknown';
+
+  @override
+  String checkInsideSitePassed(int distance, int allowed) {
+    return 'Taken $distance m from the site centre; allowed: $allowed m';
+  }
+
+  @override
+  String checkInsideSiteFailed(int distance, int allowed) {
+    return 'Taken $distance m from the site; allowed: $allowed m';
+  }
+
+  @override
+  String get checkInsideSiteUnknown =>
+      'No position, so it can\'t be placed on the site';
+
+  @override
+  String get checkNotMockLocationPassed => 'The position wasn\'t faked';
+
+  @override
+  String get checkNotMockLocationFailed =>
+      'The phone reported a faked position';
+
+  @override
+  String get checkHashMatchPassed =>
+      'The stored photo is exactly the one taken';
+
+  @override
+  String get checkHashMatchFailed =>
+      'The stored photo differs from the one taken';
+
+  @override
+  String checkClockConsistencyPassed(int allowed) {
+    return 'The phone\'s clock was right (within $allowed min)';
+  }
+
+  @override
+  String checkClockConsistencyFailed(int skew, int allowed) {
+    return 'The phone\'s clock was $skew min off (allowed: $allowed min)';
+  }
+
+  @override
+  String checkPromptCommitPassed(int allowed) {
+    return 'Sent within $allowed min of being taken';
+  }
+
+  @override
+  String checkPromptCommitFailed(int delay, int allowed) {
+    return 'Sent $delay min after being taken (allowed: $allowed min)';
+  }
+
+  @override
+  String get captureTitle => 'Take a photo';
+
+  @override
+  String get capturePhoneOnly =>
+      'Photos are taken with the Plotwatch app on the phone, standing on the plot.';
+
+  @override
+  String get cameraDenied =>
+      'Plotwatch needs the camera to take the photo. Allow it in the app\'s settings.';
+
+  @override
+  String get allowCamera => 'Allow the camera';
+
+  @override
+  String get cameraUnavailable => 'No camera is available on this device.';
+
+  @override
+  String get takePhotoAction => 'Take a photo';
+
+  @override
+  String get captureReviewHint => 'Check the photo before sending it.';
+
+  @override
+  String get labelCaptionOptional => 'Caption (optional)';
+
+  @override
+  String get usePhotoAction => 'Use this photo';
+
+  @override
+  String get retakeAction => 'Take it again';
+
+  @override
+  String get sendStepCommitting => 'Recording the photo…';
+
+  @override
+  String get sendStepUploading => 'Uploading the photo…';
+
+  @override
+  String get sendStepChecking => 'Checking where and when it was taken…';
+
+  @override
+  String get errorUploadFailed =>
+      'The photo couldn\'t be uploaded. Check the connection and try again.';
+
+  @override
+  String get errorCaptureSend => 'The photo couldn\'t be sent. Try again.';
+
+  @override
+  String get retryAction => 'Try again';
+
+  @override
+  String get captureResultTitle => 'Photo checked';
+
+  @override
+  String get verificationNotice =>
+      'Verification proves where and when this photo was taken, not the quality of the work.';
+
+  @override
+  String get captureNoFix => 'Looking for GPS…';
+
+  @override
+  String get captureInsideSite => 'Inside the site';
+
+  @override
+  String captureOutsideSite(int distance) {
+    return 'Outside the site (≈ $distance m)';
+  }
+
+  @override
+  String get captureLocationOff => 'Location off: the photo won\'t be verified';
+
+  @override
+  String captureAccuracy(int accuracy) {
+    return 'GPS ± $accuracy m';
+  }
+
+  @override
+  String get captureRetracted => 'Withdrawn';
+
+  @override
+  String get captureUploadFailed => 'Upload failed';
+
+  @override
+  String get captureUploading => 'Uploading…';
+
+  @override
+  String get evidenceTitle => 'Photo';
+
+  @override
+  String get captureRetractedDone => 'The photo has been withdrawn.';
+
+  @override
+  String get errorEvidenceLoad => 'Could not load the photo. Try again.';
+
+  @override
+  String captureRetractedReason(String reason) {
+    return 'Withdrawn: $reason';
+  }
+
+  @override
+  String get checksTitle => 'Checks';
+
+  @override
+  String get evidenceDetailsTitle => 'Details';
+
+  @override
+  String get labelTakenAt => 'Taken (phone time)';
+
+  @override
+  String get labelReceivedAt => 'Received (server time)';
+
+  @override
+  String get labelPosition => 'Position';
+
+  @override
+  String get labelDistanceToSite => 'Distance to the site centre';
+
+  @override
+  String distanceMeters(int distance) {
+    return '$distance m';
+  }
+
+  @override
+  String get labelDevice => 'Device';
+
+  @override
+  String get labelAppVersion => 'App version';
+
+  @override
+  String get retractAction => 'Withdraw this photo';
+
+  @override
+  String get retractTitle => 'Withdraw this photo?';
+
+  @override
+  String get retractReasonLabel => 'Why? (stays in the history)';
+
+  @override
+  String get validateRetractReasonRequired => 'Say why the photo is withdrawn';
+
+  @override
+  String get capturePhotoLabel => 'Site photo';
+
+  @override
+  String get capturePhotoUnavailable => 'Photo unavailable';
 }

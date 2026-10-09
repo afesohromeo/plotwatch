@@ -117,6 +117,10 @@ class AuthApiProvider {
 
   bool get isSignedIn => _client.auth.isAuthenticated;
 
+  /// The signed-in user's auth ID, or null when signed out.
+  UuidValue? get currentUserId =>
+      _client.auth.authInfoListenable.value?.authUserId;
+
   /// Emits whether a user is signed in each time the session changes.
   Stream<bool> get signedInChanges {
     final listenable = _client.auth.authInfoListenable;

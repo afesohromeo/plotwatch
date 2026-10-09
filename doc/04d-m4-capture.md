@@ -90,3 +90,13 @@ Done as planned, with M4-15 added while writing it. `dart test` **331/331** (new
 Notes:
 - `withServerpod` registers the database storage (`public`, `private`), so the tests store the "uploaded" photo with `storeFile`. A file stored that way is already verified, and `verifyUpload` then returns false; finalize therefore accepts a file that is verified **or** already present, which also makes a repeated finalize after a failure safe.
 - One run of the full suite timed out starting a test server for the email tests ("Serverpod did not start within 2 min"), while the development server was running; the file passed on its own. Watched for in the next runs.
+
+### Groups B to D outcome (2026-10-09)
+Done. `flutter test` **667/667** (new: hashing, check sentences EN + FR, evidence repository, `CaptureBloc` and `CapturePage`, `EvidenceMediaBloc`, `EvidenceBloc` and `EvidencePage`, the stage page's photos and capture button, routes, the signed-in user's ID); `dart analyze` clean. Seen red first: every new test failed to compile until the code existed.
+
+Changes from the plan:
+- The commit → upload → finalize chain lives in `CaptureBloc`, not in the repository: the repository keeps one method per step, so a retry repeats exactly the failed step and the repository stays thin (`_standards/09`). A retried upload asks for a new upload description.
+- Photos are loaded by an `EvidenceMediaBloc` per page (the standards forbid repository calls from widgets); the `EvidenceImage` widget asks it.
+- The evidence page knows the photo's author from the signed-in user's ID (`AuthRepository.currentUserId`, from the client session); the server still checks it.
+
+Found by the tests and fixed: the badge overflowed in a photo tile (now 132 px wide, with the label shortened when needed); a test closed the bloc twice. Two test names had an apostrophe inside a single-quoted string (fixed after the developer's analysis).

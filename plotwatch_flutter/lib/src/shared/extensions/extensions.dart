@@ -6,3 +6,4 @@ export 'project_type_extensions.dart';
 export 'project_status_extensions.dart';
 export 'project_role_extensions.dart';
 export 'stage_status_extensions.dart';
+export 'verification_extensions.dart';

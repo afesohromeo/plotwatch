@@ -107,5 +107,13 @@ void main() {
         expect(repository.isSignedIn, isTrue);
       },
     );
+
+    // doc/04d group D: the evidence page shows Retract to the photo's author.
+    test('when a user is signed in then their ID is known', () {
+      final id = UuidValue.fromString('00000000-0000-4000-8000-000000000002');
+      when(() => apiProvider.currentUserId).thenReturn(id);
+
+      expect(repository.currentUserId, id);
+    });
   });
 }

@@ -161,6 +161,15 @@ void main() {
         editStageRouteName,
         [homeRouteName, projectRouteName, stagesRouteName, stageRouteName],
       ),
+      // doc/04d groups C and D.
+      (
+        captureRouteName,
+        [homeRouteName, projectRouteName, stagesRouteName, stageRouteName],
+      ),
+      (
+        evidenceRouteName,
+        [homeRouteName, projectRouteName, stagesRouteName, stageRouteName],
+      ),
       (joinRouteName, [homeRouteName]),
       (joinWithCodeRouteName, [homeRouteName, joinRouteName]),
       (profileRouteName, [homeRouteName]),

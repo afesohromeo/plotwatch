@@ -8,6 +8,10 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 import '../../../helpers/helpers.dart';
 
+class MockEvidenceMediaBloc
+    extends MockBloc<EvidenceMediaEvent, EvidenceMediaState>
+    implements EvidenceMediaBloc {}
+
 class MockStageBloc extends MockBloc<StageEvent, StageState>
     implements StageBloc {}
 
@@ -20,14 +24,27 @@ void main() {
     l10n = setUpTestLocalization();
     registerFallbackValue(const StageEvent.resetFlowStep());
   });
-  setUp(() => bloc = MockStageBloc());
+  late MockEvidenceMediaBloc media;
 
-  Future<void> pumpWith(WidgetTester tester, StageState state) {
+  setUp(() {
+    bloc = MockStageBloc();
+    media = MockEvidenceMediaBloc();
+    when(() => media.state).thenReturn(const EvidenceMediaState());
+  });
+
+  Future<void> pumpWith(
+    WidgetTester tester,
+    StageState state, {
+    bool isWeb = false,
+  }) {
     when(() => bloc.state).thenReturn(state);
     return tester.pumpApp(
-      BlocProvider<StageBloc>.value(
-        value: bloc,
-        child: const StagePage(projectId: 1, stageId: 2),
+      BlocProvider<EvidenceMediaBloc>.value(
+        value: media,
+        child: BlocProvider<StageBloc>.value(
+          value: bloc,
+          child: StagePage(projectId: 1, stageId: 2, isWeb: isWeb),
+        ),
       ),
     );
   }
@@ -167,5 +184,42 @@ void main() {
 
     expect(find.text('the plan'), findsOneWidget);
     expect(router.routerDelegate.currentConfiguration.uri.path, '/projects/1/stages');
+  });
+
+  // doc/04d group D: each item's photos, and who may add one.
+  group("Given the stage's captures", () {
+    final capture = testEvidence(id: 9, checklistItemId: 20);
+
+    testWidgets('then each item shows its photos with their badge', (
+      tester,
+    ) async {
+      await pumpWith(
+        tester,
+        loaded(role: ProjectRole.viewer).copyWith(evidence: [capture]),
+      );
+
+      expect(find.byKey(StagePage.captureTileKey(9)), findsOneWidget);
+      expect(find.text(l10n.verificationVerified), findsOneWidget);
+    });
+
+    testWidgets('then the site manager can take a photo for each item on the '
+        'phone', (tester) async {
+      await pumpWith(tester, loaded(role: ProjectRole.siteManager));
+
+      expect(find.byKey(StagePage.captureButtonKey(20)), findsOneWidget);
+      expect(find.byKey(StagePage.captureButtonKey(21)), findsOneWidget);
+    });
+
+    testWidgets('then the web has no camera button', (tester) async {
+      await pumpWith(tester, loaded(role: ProjectRole.siteManager), isWeb: true);
+
+      expect(find.byKey(StagePage.captureButtonKey(20)), findsNothing);
+    });
+
+    testWidgets('then the owner has no camera button', (tester) async {
+      await pumpWith(tester, loaded());
+
+      expect(find.byKey(StagePage.captureButtonKey(20)), findsNothing);
+    });
   });
 }

@@ -9,6 +9,9 @@ sealed class StageState with _$StageState {
     int? stageId,
     ProjectOverview? overview,
     StageView? view,
+
+    /// The stage's captures, newest first (doc/04d M4-10).
+    @Default(<Evidence>[]) List<Evidence> evidence,
     @Default(GenericStatus.initial) GenericStatus loadStatus,
     String? loadErrorMessage,
 
@@ -45,7 +48,25 @@ sealed class StageState with _$StageState {
   bool get canStart =>
       _role == ProjectRole.siteManager && _status == StageStatus.notStarted;
 
-  bool get isProjectActive => overview?.project.status == ProjectStatus.active;
+  bool get isProjectActive =>
+      overview?.project.status == ProjectStatus.active;
+
+  /// The site manager adds photos on an active project to a stage that
+  /// isn't submitted or approved (doc/04d M4-9; the server checks it too).
+  bool get canCapture =>
+      _role == ProjectRole.siteManager &&
+      isProjectActive &&
+      const {
+        StageStatus.notStarted,
+        StageStatus.inProgress,
+        StageStatus.changesRequested,
+      }.contains(_status);
+
+  /// The captures of one checklist item, newest first.
+  List<Evidence> evidenceFor(int itemId) => [
+    for (final e in evidence)
+      if (e.checklistItemId == itemId) e,
+  ];
 
   String get currencyCode => overview?.project.currencyCode ?? 'XAF';
 }

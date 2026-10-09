@@ -12,6 +12,9 @@ class AuthRepository {
 
   bool get isSignedIn => _apiProvider.isSignedIn;
 
+  /// Tells whether a capture is the user's own (doc/04d group D).
+  UuidValue? get currentUserId => _apiProvider.currentUserId;
+
   Stream<bool> get signedInChanges => _apiProvider.signedInChanges;
 
   Future<void> signIn({required String email, required String password}) async {

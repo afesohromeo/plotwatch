@@ -207,3 +207,71 @@ StagePlan testStagePlan({List<StageView>? stages, int progressPercent = 0}) {
     progressPercent: progressPercent,
   );
 }
+
+// Captures (doc/04d).
+EvidenceCommit testEvidenceCommit() => EvidenceCommit(
+  stageId: 1,
+  checklistItemId: 10,
+  sha256: 'a' * 64,
+  deviceCapturedAt: DateTime.utc(2026, 10, 9, 9),
+  lat: 5.4778,
+  lng: 10.4176,
+  accuracyM: 8,
+  isMockLocation: false,
+  capturedInApp: true,
+  deviceModel: 'Pixel 7',
+  osVersion: 'Android 15',
+  appVersion: '1.0.0',
+);
+
+List<VerificationCheck> testChecks({bool insidePassed = true}) => [
+  for (final name in VerificationCheckName.values)
+    VerificationCheck(
+      name: name,
+      passed: name != VerificationCheckName.insideSite || insidePassed,
+      critical: true,
+      details: name == VerificationCheckName.insideSite
+          ? {'distanceM': insidePassed ? '4' : '137', 'allowedM': '58'}
+          : null,
+    ),
+];
+
+/// The site manager of the stage fixtures.
+const testManagerId = '00000000-0000-4000-8000-000000000002';
+
+Evidence testEvidence({
+  int id = 9,
+  int checklistItemId = 10,
+  EvidenceStatus status = EvidenceStatus.finalized,
+  VerificationLevel level = VerificationLevel.verified,
+  String capturedBy = testManagerId,
+  String? retractedReason,
+}) => Evidence(
+  id: id,
+  projectId: 1,
+  stageId: 1,
+  checklistItemId: checklistItemId,
+  capturedBy: UuidValue.fromString(capturedBy),
+  status: status,
+  sha256: 'a' * 64,
+  photoPath: 'projects/1/evidence/$id/photo.jpg',
+  thumbPath: 'projects/1/evidence/$id/thumb.jpg',
+  fileSizeBytes: 800000,
+  deviceCapturedAt: DateTime.utc(2026, 10, 9, 9),
+  serverCommittedAt: DateTime.utc(2026, 10, 9, 9, 0, 3),
+  finalizedAt: DateTime.utc(2026, 10, 9, 9, 0, 5),
+  lat: 5.4778,
+  lng: 10.4176,
+  accuracyM: 8,
+  isMockLocation: false,
+  capturedInApp: true,
+  distanceFromSiteM: 4,
+  deviceModel: 'Pixel 7',
+  osVersion: 'Android 15',
+  appVersion: '1.0.0',
+  verificationLevel: level,
+  checks: status == EvidenceStatus.committed
+      ? null
+      : testChecks(insidePassed: level != VerificationLevel.unverified),
+  retractedReason: retractedReason,
+);

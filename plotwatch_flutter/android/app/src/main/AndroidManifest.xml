@@ -5,6 +5,8 @@
     <!-- Localizing the site from GPS on the plot (doc/04b G-10). -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- The in-app camera, the only way to take a photo (CAP-01, doc/04d). -->
+    <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:label="Plotwatch"
         android:name="${applicationName}"
