@@ -1,0 +1,5 @@
+### A page of a project's feed, newest first, keyed by the last ID
+### (`_standards/14` §3.3).
+class: ActivityPage
+fields:
+  items: List<ActivityEntry>

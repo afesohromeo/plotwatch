@@ -1,0 +1,19 @@
+### The site manager's news from the site, without photos for now
+### (UPD-01, doc/04e M5-9 b).
+class: ProgressUpdate
+table: progress_update
+fields:
+  projectId: int, relation(parent=project, onDelete=Cascade)
+  stageId: int?, relation(parent=stage, onDelete=SetNull)
+  authorId: UuidValue
+  ### 1–2,000 characters.
+  text: String
+  ### 0–999.
+  workersCount: int?
+  weather: Weather?
+  ### At most 1,000 characters.
+  issues: String?
+  createdAt: DateTime
+indexes:
+  progress_update_project_idx:
+    fields: projectId

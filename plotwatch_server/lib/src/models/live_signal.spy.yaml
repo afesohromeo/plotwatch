@@ -1,0 +1,5 @@
+### Posted on a project's or user's channel when something was written, so
+### open streams look for it at once (doc/04e M5-5). Carries nothing else.
+class: LiveSignal
+fields:
+  channel: String

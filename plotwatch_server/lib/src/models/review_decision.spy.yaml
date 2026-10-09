@@ -1,0 +1,6 @@
+### An approver's decision on a submitted stage (REV-03).
+enum: ReviewDecision
+serialized: byName
+values:
+  - approved
+  - changesRequested

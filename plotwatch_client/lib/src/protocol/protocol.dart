@@ -16,12 +16,16 @@ import 'package:plotwatch_client/src/protocol/invitation.dart' as _idw8kw5i;
 import 'package:plotwatch_client/src/protocol/member_view.dart' as _ifqht5qj;
 import 'package:plotwatch_client/src/protocol/site_proposal.dart' as _irbyqz3h;
 import 'package:plotwatch_client/src/protocol/stage_draft.dart' as _inenhxrz;
+import 'package:plotwatch_client/src/protocol/stage_review_view.dart'
+    as _i41e1va7;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _iaic;
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
+import 'activity_entry.dart' as _iczfg34g;
 import 'activity_event.dart' as _iwse5pgb;
+import 'activity_page.dart' as _i8grwdd2;
 import 'activity_type.dart' as _iorr0e24;
 import 'app_error_code.dart' as _imu8gbx5;
 import 'app_exception.dart' as _it4z223c;
@@ -34,10 +38,16 @@ import 'evidence_status.dart' as _itwc15qq;
 import 'invitation.dart' as _ix00wubs;
 import 'invitation_preview.dart' as _i8l83u67;
 import 'invitation_status.dart' as _ifbgrtog;
+import 'live_signal.dart' as _ipp2ty4v;
 import 'media_variant.dart' as _ibclxgv9;
 import 'member_status.dart' as _iolegqnm;
 import 'member_view.dart' as _iwpqxdug;
 import 'my_profile.dart' as _i1hmtol2;
+import 'notification.dart' as _irt10kca;
+import 'notification_page.dart' as _iw4dnqzf;
+import 'notification_type.dart' as _igc0nsfd;
+import 'progress_update.dart' as _i4ejzj19;
+import 'progress_update_draft.dart' as _i0gnznij;
 import 'project.dart' as _ifiazq2p;
 import 'project_details.dart' as _irbn6ip5;
 import 'project_member.dart' as _i7o7d07j;
@@ -47,19 +57,25 @@ import 'project_status.dart' as _iqsxbscs;
 import 'project_summary.dart' as _ivxocntb;
 import 'project_summary_page.dart' as _i4o32k29;
 import 'project_type.dart' as _irluonl0;
+import 'review_decision.dart' as _idrjy6ic;
 import 'site.dart' as _iz8v5x4v;
 import 'site_proposal.dart' as _ira79kry;
 import 'site_proposal_status.dart' as _i8b5g94r;
 import 'stage.dart' as _igkbma1f;
 import 'stage_draft.dart' as _i7mtby60;
 import 'stage_plan.dart' as _iwmsx3av;
+import 'stage_review.dart' as _ie5kygoh;
+import 'stage_review_view.dart' as _ibz5bd0v;
 import 'stage_status.dart' as _iblg1lql;
 import 'stage_view.dart' as _iobwm8xj;
 import 'user_settings.dart' as _iy88a0nt;
 import 'verification_check.dart' as _i92h88x8;
 import 'verification_check_name.dart' as _io670pev;
 import 'verification_level.dart' as _i5zqa56i;
+import 'weather.dart' as _ifjsehv5;
+export 'activity_entry.dart';
 export 'activity_event.dart';
+export 'activity_page.dart';
 export 'activity_type.dart';
 export 'app_error_code.dart';
 export 'app_exception.dart';
@@ -72,10 +88,16 @@ export 'evidence_status.dart';
 export 'invitation.dart';
 export 'invitation_preview.dart';
 export 'invitation_status.dart';
+export 'live_signal.dart';
 export 'media_variant.dart';
 export 'member_status.dart';
 export 'member_view.dart';
 export 'my_profile.dart';
+export 'notification.dart';
+export 'notification_page.dart';
+export 'notification_type.dart';
+export 'progress_update.dart';
+export 'progress_update_draft.dart';
 export 'project.dart';
 export 'project_details.dart';
 export 'project_member.dart';
@@ -85,18 +107,22 @@ export 'project_status.dart';
 export 'project_summary.dart';
 export 'project_summary_page.dart';
 export 'project_type.dart';
+export 'review_decision.dart';
 export 'site.dart';
 export 'site_proposal.dart';
 export 'site_proposal_status.dart';
 export 'stage.dart';
 export 'stage_draft.dart';
 export 'stage_plan.dart';
+export 'stage_review.dart';
+export 'stage_review_view.dart';
 export 'stage_status.dart';
 export 'stage_view.dart';
 export 'user_settings.dart';
 export 'verification_check.dart';
 export 'verification_check_name.dart';
 export 'verification_level.dart';
+export 'weather.dart';
 export 'client.dart';
 
 class Protocol extends _isc.SerializationManager {
@@ -133,8 +159,14 @@ class Protocol extends _isc.SerializationManager {
       }
     }
 
+    if (t == _iczfg34g.ActivityEntry) {
+      return _iczfg34g.ActivityEntry.fromJson(data) as T;
+    }
     if (t == _iwse5pgb.ActivityEvent) {
       return _iwse5pgb.ActivityEvent.fromJson(data) as T;
+    }
+    if (t == _i8grwdd2.ActivityPage) {
+      return _i8grwdd2.ActivityPage.fromJson(data) as T;
     }
     if (t == _iorr0e24.ActivityType) {
       return _iorr0e24.ActivityType.fromJson(data) as T;
@@ -172,6 +204,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _ifbgrtog.InvitationStatus) {
       return _ifbgrtog.InvitationStatus.fromJson(data) as T;
     }
+    if (t == _ipp2ty4v.LiveSignal) {
+      return _ipp2ty4v.LiveSignal.fromJson(data) as T;
+    }
     if (t == _ibclxgv9.MediaVariant) {
       return _ibclxgv9.MediaVariant.fromJson(data) as T;
     }
@@ -183,6 +218,21 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _i1hmtol2.MyProfile) {
       return _i1hmtol2.MyProfile.fromJson(data) as T;
+    }
+    if (t == _irt10kca.AppNotification) {
+      return _irt10kca.AppNotification.fromJson(data) as T;
+    }
+    if (t == _iw4dnqzf.NotificationPage) {
+      return _iw4dnqzf.NotificationPage.fromJson(data) as T;
+    }
+    if (t == _igc0nsfd.NotificationType) {
+      return _igc0nsfd.NotificationType.fromJson(data) as T;
+    }
+    if (t == _i4ejzj19.ProgressUpdate) {
+      return _i4ejzj19.ProgressUpdate.fromJson(data) as T;
+    }
+    if (t == _i0gnznij.ProgressUpdateDraft) {
+      return _i0gnznij.ProgressUpdateDraft.fromJson(data) as T;
     }
     if (t == _ifiazq2p.Project) {
       return _ifiazq2p.Project.fromJson(data) as T;
@@ -211,6 +261,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _irluonl0.ProjectType) {
       return _irluonl0.ProjectType.fromJson(data) as T;
     }
+    if (t == _idrjy6ic.ReviewDecision) {
+      return _idrjy6ic.ReviewDecision.fromJson(data) as T;
+    }
     if (t == _iz8v5x4v.Site) {
       return _iz8v5x4v.Site.fromJson(data) as T;
     }
@@ -228,6 +281,12 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _iwmsx3av.StagePlan) {
       return _iwmsx3av.StagePlan.fromJson(data) as T;
+    }
+    if (t == _ie5kygoh.StageReview) {
+      return _ie5kygoh.StageReview.fromJson(data) as T;
+    }
+    if (t == _ibz5bd0v.StageReviewView) {
+      return _ibz5bd0v.StageReviewView.fromJson(data) as T;
     }
     if (t == _iblg1lql.StageStatus) {
       return _iblg1lql.StageStatus.fromJson(data) as T;
@@ -247,9 +306,19 @@ class Protocol extends _isc.SerializationManager {
     if (t == _i5zqa56i.VerificationLevel) {
       return _i5zqa56i.VerificationLevel.fromJson(data) as T;
     }
+    if (t == _ifjsehv5.Weather) {
+      return _ifjsehv5.Weather.fromJson(data) as T;
+    }
+    if (t == _isc.getType<_iczfg34g.ActivityEntry?>()) {
+      return (data != null ? _iczfg34g.ActivityEntry.fromJson(data) : null)
+          as T;
+    }
     if (t == _isc.getType<_iwse5pgb.ActivityEvent?>()) {
       return (data != null ? _iwse5pgb.ActivityEvent.fromJson(data) : null)
           as T;
+    }
+    if (t == _isc.getType<_i8grwdd2.ActivityPage?>()) {
+      return (data != null ? _i8grwdd2.ActivityPage.fromJson(data) : null) as T;
     }
     if (t == _isc.getType<_iorr0e24.ActivityType?>()) {
       return (data != null ? _iorr0e24.ActivityType.fromJson(data) : null) as T;
@@ -296,6 +365,9 @@ class Protocol extends _isc.SerializationManager {
       return (data != null ? _ifbgrtog.InvitationStatus.fromJson(data) : null)
           as T;
     }
+    if (t == _isc.getType<_ipp2ty4v.LiveSignal?>()) {
+      return (data != null ? _ipp2ty4v.LiveSignal.fromJson(data) : null) as T;
+    }
     if (t == _isc.getType<_ibclxgv9.MediaVariant?>()) {
       return (data != null ? _ibclxgv9.MediaVariant.fromJson(data) : null) as T;
     }
@@ -307,6 +379,28 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _isc.getType<_i1hmtol2.MyProfile?>()) {
       return (data != null ? _i1hmtol2.MyProfile.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_irt10kca.AppNotification?>()) {
+      return (data != null ? _irt10kca.AppNotification.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_iw4dnqzf.NotificationPage?>()) {
+      return (data != null ? _iw4dnqzf.NotificationPage.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_igc0nsfd.NotificationType?>()) {
+      return (data != null ? _igc0nsfd.NotificationType.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_i4ejzj19.ProgressUpdate?>()) {
+      return (data != null ? _i4ejzj19.ProgressUpdate.fromJson(data) : null)
+          as T;
+    }
+    if (t == _isc.getType<_i0gnznij.ProgressUpdateDraft?>()) {
+      return (data != null
+              ? _i0gnznij.ProgressUpdateDraft.fromJson(data)
+              : null)
+          as T;
     }
     if (t == _isc.getType<_ifiazq2p.Project?>()) {
       return (data != null ? _ifiazq2p.Project.fromJson(data) : null) as T;
@@ -341,6 +435,10 @@ class Protocol extends _isc.SerializationManager {
     if (t == _isc.getType<_irluonl0.ProjectType?>()) {
       return (data != null ? _irluonl0.ProjectType.fromJson(data) : null) as T;
     }
+    if (t == _isc.getType<_idrjy6ic.ReviewDecision?>()) {
+      return (data != null ? _idrjy6ic.ReviewDecision.fromJson(data) : null)
+          as T;
+    }
     if (t == _isc.getType<_iz8v5x4v.Site?>()) {
       return (data != null ? _iz8v5x4v.Site.fromJson(data) : null) as T;
     }
@@ -359,6 +457,13 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _isc.getType<_iwmsx3av.StagePlan?>()) {
       return (data != null ? _iwmsx3av.StagePlan.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_ie5kygoh.StageReview?>()) {
+      return (data != null ? _ie5kygoh.StageReview.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_ibz5bd0v.StageReviewView?>()) {
+      return (data != null ? _ibz5bd0v.StageReviewView.fromJson(data) : null)
+          as T;
     }
     if (t == _isc.getType<_iblg1lql.StageStatus?>()) {
       return (data != null ? _iblg1lql.StageStatus.fromJson(data) : null) as T;
@@ -383,6 +488,9 @@ class Protocol extends _isc.SerializationManager {
       return (data != null ? _i5zqa56i.VerificationLevel.fromJson(data) : null)
           as T;
     }
+    if (t == _isc.getType<_ifjsehv5.Weather?>()) {
+      return (data != null ? _ifjsehv5.Weather.fromJson(data) : null) as T;
+    }
     if (t == Map<String, String>) {
       return (data as Map).map(
             (k, v) => MapEntry(deserialize<String>(k), deserialize<String>(v)),
@@ -398,6 +506,12 @@ class Protocol extends _isc.SerializationManager {
               : null)
           as T;
     }
+    if (t == List<_iczfg34g.ActivityEntry>) {
+      return (data as List)
+              .map((e) => deserialize<_iczfg34g.ActivityEntry>(e))
+              .toList()
+          as T;
+    }
     if (t == List<_i92h88x8.VerificationCheck>) {
       return (data as List)
               .map((e) => deserialize<_i92h88x8.VerificationCheck>(e))
@@ -410,6 +524,12 @@ class Protocol extends _isc.SerializationManager {
                     .map((e) => deserialize<_i92h88x8.VerificationCheck>(e))
                     .toList()
               : null)
+          as T;
+    }
+    if (t == List<_irt10kca.AppNotification>) {
+      return (data as List)
+              .map((e) => deserialize<_irt10kca.AppNotification>(e))
+              .toList()
           as T;
     }
     if (t == List<_ivxocntb.ProjectSummary>) {
@@ -477,6 +597,12 @@ class Protocol extends _isc.SerializationManager {
     if (t == List<int>) {
       return (data as List).map((e) => deserialize<int>(e)).toList() as T;
     }
+    if (t == List<_i41e1va7.StageReviewView>) {
+      return (data as List)
+              .map((e) => deserialize<_i41e1va7.StageReviewView>(e))
+              .toList()
+          as T;
+    }
     try {
       return _iaic.Protocol().deserialize<T>(data, t);
     } on _isc.DeserializationTypeNotFoundException catch (_) {}
@@ -488,7 +614,9 @@ class Protocol extends _isc.SerializationManager {
 
   static String? getClassNameForType(Type type) {
     return switch (type) {
+      _iczfg34g.ActivityEntry => 'ActivityEntry',
       _iwse5pgb.ActivityEvent => 'ActivityEvent',
+      _i8grwdd2.ActivityPage => 'ActivityPage',
       _iorr0e24.ActivityType => 'ActivityType',
       _imu8gbx5.AppErrorCode => 'AppErrorCode',
       _it4z223c.AppException => 'AppException',
@@ -501,10 +629,16 @@ class Protocol extends _isc.SerializationManager {
       _ix00wubs.Invitation => 'Invitation',
       _i8l83u67.InvitationPreview => 'InvitationPreview',
       _ifbgrtog.InvitationStatus => 'InvitationStatus',
+      _ipp2ty4v.LiveSignal => 'LiveSignal',
       _ibclxgv9.MediaVariant => 'MediaVariant',
       _iolegqnm.MemberStatus => 'MemberStatus',
       _iwpqxdug.MemberView => 'MemberView',
       _i1hmtol2.MyProfile => 'MyProfile',
+      _irt10kca.AppNotification => 'AppNotification',
+      _iw4dnqzf.NotificationPage => 'NotificationPage',
+      _igc0nsfd.NotificationType => 'NotificationType',
+      _i4ejzj19.ProgressUpdate => 'ProgressUpdate',
+      _i0gnznij.ProgressUpdateDraft => 'ProgressUpdateDraft',
       _ifiazq2p.Project => 'Project',
       _irbn6ip5.ProjectDetails => 'ProjectDetails',
       _i7o7d07j.ProjectMember => 'ProjectMember',
@@ -514,18 +648,22 @@ class Protocol extends _isc.SerializationManager {
       _ivxocntb.ProjectSummary => 'ProjectSummary',
       _i4o32k29.ProjectSummaryPage => 'ProjectSummaryPage',
       _irluonl0.ProjectType => 'ProjectType',
+      _idrjy6ic.ReviewDecision => 'ReviewDecision',
       _iz8v5x4v.Site => 'Site',
       _ira79kry.SiteProposal => 'SiteProposal',
       _i8b5g94r.SiteProposalStatus => 'SiteProposalStatus',
       _igkbma1f.Stage => 'Stage',
       _i7mtby60.StageDraft => 'StageDraft',
       _iwmsx3av.StagePlan => 'StagePlan',
+      _ie5kygoh.StageReview => 'StageReview',
+      _ibz5bd0v.StageReviewView => 'StageReviewView',
       _iblg1lql.StageStatus => 'StageStatus',
       _iobwm8xj.StageView => 'StageView',
       _iy88a0nt.UserSettings => 'UserSettings',
       _i92h88x8.VerificationCheck => 'VerificationCheck',
       _io670pev.VerificationCheckName => 'VerificationCheckName',
       _i5zqa56i.VerificationLevel => 'VerificationLevel',
+      _ifjsehv5.Weather => 'Weather',
       _ => null,
     };
   }
@@ -540,8 +678,12 @@ class Protocol extends _isc.SerializationManager {
     }
 
     switch (data) {
+      case _iczfg34g.ActivityEntry():
+        return 'ActivityEntry';
       case _iwse5pgb.ActivityEvent():
         return 'ActivityEvent';
+      case _i8grwdd2.ActivityPage():
+        return 'ActivityPage';
       case _iorr0e24.ActivityType():
         return 'ActivityType';
       case _imu8gbx5.AppErrorCode():
@@ -566,6 +708,8 @@ class Protocol extends _isc.SerializationManager {
         return 'InvitationPreview';
       case _ifbgrtog.InvitationStatus():
         return 'InvitationStatus';
+      case _ipp2ty4v.LiveSignal():
+        return 'LiveSignal';
       case _ibclxgv9.MediaVariant():
         return 'MediaVariant';
       case _iolegqnm.MemberStatus():
@@ -574,6 +718,16 @@ class Protocol extends _isc.SerializationManager {
         return 'MemberView';
       case _i1hmtol2.MyProfile():
         return 'MyProfile';
+      case _irt10kca.AppNotification():
+        return 'AppNotification';
+      case _iw4dnqzf.NotificationPage():
+        return 'NotificationPage';
+      case _igc0nsfd.NotificationType():
+        return 'NotificationType';
+      case _i4ejzj19.ProgressUpdate():
+        return 'ProgressUpdate';
+      case _i0gnznij.ProgressUpdateDraft():
+        return 'ProgressUpdateDraft';
       case _ifiazq2p.Project():
         return 'Project';
       case _irbn6ip5.ProjectDetails():
@@ -592,6 +746,8 @@ class Protocol extends _isc.SerializationManager {
         return 'ProjectSummaryPage';
       case _irluonl0.ProjectType():
         return 'ProjectType';
+      case _idrjy6ic.ReviewDecision():
+        return 'ReviewDecision';
       case _iz8v5x4v.Site():
         return 'Site';
       case _ira79kry.SiteProposal():
@@ -604,6 +760,10 @@ class Protocol extends _isc.SerializationManager {
         return 'StageDraft';
       case _iwmsx3av.StagePlan():
         return 'StagePlan';
+      case _ie5kygoh.StageReview():
+        return 'StageReview';
+      case _ibz5bd0v.StageReviewView():
+        return 'StageReviewView';
       case _iblg1lql.StageStatus():
         return 'StageStatus';
       case _iobwm8xj.StageView():
@@ -616,6 +776,8 @@ class Protocol extends _isc.SerializationManager {
         return 'VerificationCheckName';
       case _i5zqa56i.VerificationLevel():
         return 'VerificationLevel';
+      case _ifjsehv5.Weather():
+        return 'Weather';
     }
     className = _iaic.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -638,8 +800,14 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
     }
+    if (dataClassName == 'ActivityEntry') {
+      return deserialize<_iczfg34g.ActivityEntry>(data['data']);
+    }
     if (dataClassName == 'ActivityEvent') {
       return deserialize<_iwse5pgb.ActivityEvent>(data['data']);
+    }
+    if (dataClassName == 'ActivityPage') {
+      return deserialize<_i8grwdd2.ActivityPage>(data['data']);
     }
     if (dataClassName == 'ActivityType') {
       return deserialize<_iorr0e24.ActivityType>(data['data']);
@@ -677,6 +845,9 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName == 'InvitationStatus') {
       return deserialize<_ifbgrtog.InvitationStatus>(data['data']);
     }
+    if (dataClassName == 'LiveSignal') {
+      return deserialize<_ipp2ty4v.LiveSignal>(data['data']);
+    }
     if (dataClassName == 'MediaVariant') {
       return deserialize<_ibclxgv9.MediaVariant>(data['data']);
     }
@@ -688,6 +859,21 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'MyProfile') {
       return deserialize<_i1hmtol2.MyProfile>(data['data']);
+    }
+    if (dataClassName == 'AppNotification') {
+      return deserialize<_irt10kca.AppNotification>(data['data']);
+    }
+    if (dataClassName == 'NotificationPage') {
+      return deserialize<_iw4dnqzf.NotificationPage>(data['data']);
+    }
+    if (dataClassName == 'NotificationType') {
+      return deserialize<_igc0nsfd.NotificationType>(data['data']);
+    }
+    if (dataClassName == 'ProgressUpdate') {
+      return deserialize<_i4ejzj19.ProgressUpdate>(data['data']);
+    }
+    if (dataClassName == 'ProgressUpdateDraft') {
+      return deserialize<_i0gnznij.ProgressUpdateDraft>(data['data']);
     }
     if (dataClassName == 'Project') {
       return deserialize<_ifiazq2p.Project>(data['data']);
@@ -716,6 +902,9 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName == 'ProjectType') {
       return deserialize<_irluonl0.ProjectType>(data['data']);
     }
+    if (dataClassName == 'ReviewDecision') {
+      return deserialize<_idrjy6ic.ReviewDecision>(data['data']);
+    }
     if (dataClassName == 'Site') {
       return deserialize<_iz8v5x4v.Site>(data['data']);
     }
@@ -734,6 +923,12 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName == 'StagePlan') {
       return deserialize<_iwmsx3av.StagePlan>(data['data']);
     }
+    if (dataClassName == 'StageReview') {
+      return deserialize<_ie5kygoh.StageReview>(data['data']);
+    }
+    if (dataClassName == 'StageReviewView') {
+      return deserialize<_ibz5bd0v.StageReviewView>(data['data']);
+    }
     if (dataClassName == 'StageStatus') {
       return deserialize<_iblg1lql.StageStatus>(data['data']);
     }
@@ -751,6 +946,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'VerificationLevel') {
       return deserialize<_i5zqa56i.VerificationLevel>(data['data']);
+    }
+    if (dataClassName == 'Weather') {
+      return deserialize<_ifjsehv5.Weather>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);

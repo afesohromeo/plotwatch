@@ -27,7 +27,11 @@ enum ActivityType implements _is.SerializableModel {
   stagePlanChanged,
   stageStarted,
   evidenceCaptured,
-  evidenceRetracted;
+  evidenceRetracted,
+  stageSubmitted,
+  stageApproved,
+  stageChangesRequested,
+  progressUpdatePosted;
 
   static ActivityType fromJson(String name) {
     switch (name) {
@@ -57,6 +61,14 @@ enum ActivityType implements _is.SerializableModel {
         return ActivityType.evidenceCaptured;
       case 'evidenceRetracted':
         return ActivityType.evidenceRetracted;
+      case 'stageSubmitted':
+        return ActivityType.stageSubmitted;
+      case 'stageApproved':
+        return ActivityType.stageApproved;
+      case 'stageChangesRequested':
+        return ActivityType.stageChangesRequested;
+      case 'progressUpdatePosted':
+        return ActivityType.progressUpdatePosted;
       default:
         throw ArgumentError(
           'Value "$name" cannot be converted to "ActivityType"',

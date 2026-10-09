@@ -13,6 +13,8 @@
 import 'dart:async' as _ida;
 import 'dart:typed_data' as _idt;
 import 'package:http/http.dart' as _i85jenna;
+import 'package:plotwatch_client/src/protocol/activity_entry.dart' as _i1w9howa;
+import 'package:plotwatch_client/src/protocol/activity_page.dart' as _i6kb728u;
 import 'package:plotwatch_client/src/protocol/evidence.dart' as _iqq0l4bs;
 import 'package:plotwatch_client/src/protocol/evidence_commit.dart'
     as _imtsa3z6;
@@ -24,6 +26,13 @@ import 'package:plotwatch_client/src/protocol/invitation_preview.dart'
 import 'package:plotwatch_client/src/protocol/media_variant.dart' as _ihqw92ih;
 import 'package:plotwatch_client/src/protocol/member_view.dart' as _ifqht5qj;
 import 'package:plotwatch_client/src/protocol/my_profile.dart' as _iclzzlcy;
+import 'package:plotwatch_client/src/protocol/notification.dart' as _i1khdovv;
+import 'package:plotwatch_client/src/protocol/notification_page.dart'
+    as _irwyz7rs;
+import 'package:plotwatch_client/src/protocol/progress_update.dart'
+    as _i06dncd6;
+import 'package:plotwatch_client/src/protocol/progress_update_draft.dart'
+    as _im7e9fup;
 import 'package:plotwatch_client/src/protocol/project_details.dart'
     as _iailnz8l;
 import 'package:plotwatch_client/src/protocol/project_member.dart' as _ibpqw7ry;
@@ -33,10 +42,14 @@ import 'package:plotwatch_client/src/protocol/project_role.dart' as _iei5qef1;
 import 'package:plotwatch_client/src/protocol/project_status.dart' as _id1x6c7u;
 import 'package:plotwatch_client/src/protocol/project_summary_page.dart'
     as _i5ea8tcf;
+import 'package:plotwatch_client/src/protocol/review_decision.dart'
+    as _ilrnd6d6;
 import 'package:plotwatch_client/src/protocol/site.dart' as _iw3fvswq;
 import 'package:plotwatch_client/src/protocol/site_proposal.dart' as _irbyqz3h;
 import 'package:plotwatch_client/src/protocol/stage_draft.dart' as _inenhxrz;
 import 'package:plotwatch_client/src/protocol/stage_plan.dart' as _i60snhcg;
+import 'package:plotwatch_client/src/protocol/stage_review_view.dart'
+    as _i41e1va7;
 import 'package:plotwatch_client/src/protocol/stage_view.dart' as _ilm4jwcv;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
@@ -44,6 +57,52 @@ import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _iaic;
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
 import 'protocol.dart' as _il2as5qe;
+
+/// A project's activity feed: pages and a live stream with catch-up
+/// (FEED-01–03, 05; doc/04e M5-5, M5-7). Thin: sign-in → permission → one
+/// service call (`_standards/14` §4.2).
+/// {@category Endpoint}
+class EndpointActivity extends _isc.EndpointRef {
+  EndpointActivity(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'activity';
+
+  /// Newest first, older than [beforeId] (`_standards/14` §3.3). Nullable
+  /// instead of default values: see `ProjectEndpoint.list`.
+  _ida.Future<_i6kb728u.ActivityPage> list(
+    int projectId, {
+    int? beforeId,
+    int? pageSize,
+  }) => caller.callServerEndpoint<_i6kb728u.ActivityPage>(
+    'activity',
+    'list',
+    {
+      'projectId': projectId,
+      'beforeId': beforeId,
+      'pageSize': pageSize,
+    },
+  );
+
+  /// The events after [afterId], then the new ones as they happen. Without
+  /// [afterId], only the new ones.
+  _ida.Stream<_i1w9howa.ActivityEntry> watch(
+    int projectId, {
+    int? afterId,
+  }) =>
+      caller.callStreamingServerEndpoint<
+        _ida.Stream<_i1w9howa.ActivityEntry>,
+        _i1w9howa.ActivityEntry
+      >(
+        'activity',
+        'watch',
+        {
+          'projectId': projectId,
+          'afterId': afterId,
+        },
+        {},
+      );
+}
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
@@ -489,6 +548,62 @@ class EndpointMembership extends _isc.EndpointRef {
   );
 }
 
+/// The signed-in user's in-app notifications (NOT-01, doc/04e M5-4). Each
+/// call only ever touches the caller's own notifications.
+/// {@category Endpoint}
+class EndpointNotification extends _isc.EndpointRef {
+  EndpointNotification(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'notification';
+
+  /// Newest first, older than [beforeId], with the unread count. Nullable
+  /// instead of default values: see `ProjectEndpoint.list`.
+  _ida.Future<_irwyz7rs.NotificationPage> list({
+    int? beforeId,
+    int? pageSize,
+  }) => caller.callServerEndpoint<_irwyz7rs.NotificationPage>(
+    'notification',
+    'list',
+    {
+      'beforeId': beforeId,
+      'pageSize': pageSize,
+    },
+  );
+
+  _ida.Future<int> unreadCount() => caller.callServerEndpoint<int>(
+    'notification',
+    'unreadCount',
+    {},
+  );
+
+  _ida.Future<void> markRead(int notificationId) =>
+      caller.callServerEndpoint<void>(
+        'notification',
+        'markRead',
+        {'notificationId': notificationId},
+      );
+
+  _ida.Future<void> markAllRead() => caller.callServerEndpoint<void>(
+    'notification',
+    'markAllRead',
+    {},
+  );
+
+  /// The notifications after [afterId], then the new ones as they come.
+  /// Without [afterId], only the new ones.
+  _ida.Stream<_i1khdovv.AppNotification> watch({int? afterId}) =>
+      caller.callStreamingServerEndpoint<
+        _ida.Stream<_i1khdovv.AppNotification>,
+        _i1khdovv.AppNotification
+      >(
+        'notification',
+        'watch',
+        {'afterId': afterId},
+        {},
+      );
+}
+
 /// The signed-in user's own profile (PROF-01–03).
 /// Thin: sign-in → validate → one service call (`_standards/14` §4.2).
 /// {@category Endpoint}
@@ -516,6 +631,41 @@ class EndpointProfile extends _isc.EndpointRef {
       'fullName': fullName,
       'countryCode': countryCode,
       'locale': locale,
+    },
+  );
+}
+
+/// The site manager's progress updates (UPD-01, UPD-02; doc/04e M5-9 b).
+/// Thin: sign-in → permission → validate → one service call
+/// (`_standards/14` §4.2).
+/// {@category Endpoint}
+class EndpointProgressUpdate extends _isc.EndpointRef {
+  EndpointProgressUpdate(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'progressUpdate';
+
+  _ida.Future<_i06dncd6.ProgressUpdate> create(
+    int projectId,
+    _im7e9fup.ProgressUpdateDraft draft,
+  ) => caller.callServerEndpoint<_i06dncd6.ProgressUpdate>(
+    'progressUpdate',
+    'create',
+    {
+      'projectId': projectId,
+      'draft': draft,
+    },
+  );
+
+  _ida.Future<_i06dncd6.ProgressUpdate> get(
+    int projectId,
+    int updateId,
+  ) => caller.callServerEndpoint<_i06dncd6.ProgressUpdate>(
+    'progressUpdate',
+    'get',
+    {
+      'projectId': projectId,
+      'updateId': updateId,
     },
   );
 }
@@ -787,6 +937,51 @@ class EndpointStage extends _isc.EndpointRef {
       'stageId': stageId,
     },
   );
+
+  /// The site manager sends a complete stage for review (STG-07).
+  _ida.Future<_ilm4jwcv.StageView> submit(
+    int projectId,
+    int stageId,
+  ) => caller.callServerEndpoint<_ilm4jwcv.StageView>(
+    'stage',
+    'submit',
+    {
+      'projectId': projectId,
+      'stageId': stageId,
+    },
+  );
+
+  /// An approver approves the stage or requests changes with a comment
+  /// (REV-03, doc/04e M5-3). Nullable instead of a default value: see
+  /// `ProjectEndpoint.list`.
+  _ida.Future<_ilm4jwcv.StageView> review(
+    int projectId,
+    int stageId,
+    _ilrnd6d6.ReviewDecision decision, {
+    String? comment,
+  }) => caller.callServerEndpoint<_ilm4jwcv.StageView>(
+    'stage',
+    'review',
+    {
+      'projectId': projectId,
+      'stageId': stageId,
+      'decision': decision,
+      'comment': comment,
+    },
+  );
+
+  /// The stage's review history, oldest first (REV-05).
+  _ida.Future<List<_i41e1va7.StageReviewView>> reviews(
+    int projectId,
+    int stageId,
+  ) => caller.callServerEndpoint<List<_i41e1va7.StageReviewView>>(
+    'stage',
+    'reviews',
+    {
+      'projectId': projectId,
+      'stageId': stageId,
+    },
+  );
 }
 
 class Modules {
@@ -827,16 +1022,21 @@ class Client extends _isc.ServerpodClientShared {
              disconnectStreamsOnLostInternetConnection,
          httpClientOverride: httpClientOverride,
        ) {
+    activity = EndpointActivity(this);
     emailIdp = EndpointEmailIdp(this);
     evidence = EndpointEvidence(this);
     jwtRefresh = EndpointJwtRefresh(this);
     membership = EndpointMembership(this);
+    notification = EndpointNotification(this);
     profile = EndpointProfile(this);
+    progressUpdate = EndpointProgressUpdate(this);
     project = EndpointProject(this);
     site = EndpointSite(this);
     stage = EndpointStage(this);
     modules = Modules(this);
   }
+
+  late final EndpointActivity activity;
 
   late final EndpointEmailIdp emailIdp;
 
@@ -846,7 +1046,11 @@ class Client extends _isc.ServerpodClientShared {
 
   late final EndpointMembership membership;
 
+  late final EndpointNotification notification;
+
   late final EndpointProfile profile;
+
+  late final EndpointProgressUpdate progressUpdate;
 
   late final EndpointProject project;
 
@@ -858,11 +1062,14 @@ class Client extends _isc.ServerpodClientShared {
 
   @override
   Map<String, _isc.EndpointRef> get endpointRefLookup => {
+    'activity': activity,
     'emailIdp': emailIdp,
     'evidence': evidence,
     'jwtRefresh': jwtRefresh,
     'membership': membership,
+    'notification': notification,
     'profile': profile,
+    'progressUpdate': progressUpdate,
     'project': project,
     'site': site,
     'stage': stage,

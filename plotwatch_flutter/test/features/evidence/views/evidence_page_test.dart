@@ -189,17 +189,18 @@ void main() {
           routes: [
             GoRoute(
               path: 'evidence/:evidenceId',
-              builder: (context, state) => BlocProvider<EvidenceMediaBloc>.value(
-                value: media,
-                child: BlocProvider<EvidenceBloc>.value(
-                  value: bloc,
-                  child: const EvidencePage(
-                    projectId: 1,
-                    stageId: 1,
-                    evidenceId: 9,
+              builder: (context, state) =>
+                  BlocProvider<EvidenceMediaBloc>.value(
+                    value: media,
+                    child: BlocProvider<EvidenceBloc>.value(
+                      value: bloc,
+                      child: const EvidencePage(
+                        projectId: 1,
+                        stageId: 1,
+                        evidenceId: 9,
+                      ),
+                    ),
                   ),
-                ),
-              ),
             ),
           ],
         ),

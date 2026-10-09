@@ -425,5 +425,10 @@
     "validateRetractReasonRequired": "Indiquez pourquoi la photo est retirée",
     "capturePhotoLabel": "Photo du chantier",
     "capturePhotoUnavailable": "Photo indisponible",
-    "captureNeverReceived": "Cette photo n'a jamais été reçue. Reprenez-la si elle est encore utile."
+    "captureNeverReceived": "Cette photo n'a jamais été reçue. Reprenez-la si elle est encore utile.",
+    "errorChecklistIncomplete": "Chaque élément obligatoire doit avoir au moins une photo avant de soumettre l'étape.",
+    "errorReviewCommentRequired": "Indiquez ce qui doit changer.",
+    "errorNotificationNotFound": "Cette notification n'existe pas.",
+    "errorInvalidProgressUpdate": "Vérifiez la mise à jour : texte de 2 000 caractères au plus, 0 à 999 ouvriers, problèmes de 1 000 caractères au plus.",
+    "errorUpdateNotFound": "Cette mise à jour n'existe pas dans ce projet."
 }

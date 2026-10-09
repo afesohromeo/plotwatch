@@ -68,6 +68,11 @@ enum AppErrorCode implements _is.SerializableModel {
   evidenceAlreadyRetracted,
   notYourCapture,
   checklistItemHasEvidence,
+  checklistIncomplete,
+  reviewCommentRequired,
+  notificationNotFound,
+  invalidProgressUpdate,
+  updateNotFound,
   textTooLong,
   authInvalidCredentials,
   authTooManyAttempts,
@@ -177,6 +182,16 @@ enum AppErrorCode implements _is.SerializableModel {
         return AppErrorCode.notYourCapture;
       case 'checklistItemHasEvidence':
         return AppErrorCode.checklistItemHasEvidence;
+      case 'checklistIncomplete':
+        return AppErrorCode.checklistIncomplete;
+      case 'reviewCommentRequired':
+        return AppErrorCode.reviewCommentRequired;
+      case 'notificationNotFound':
+        return AppErrorCode.notificationNotFound;
+      case 'invalidProgressUpdate':
+        return AppErrorCode.invalidProgressUpdate;
+      case 'updateNotFound':
+        return AppErrorCode.updateNotFound;
       case 'textTooLong':
         return AppErrorCode.textTooLong;
       case 'authInvalidCredentials':

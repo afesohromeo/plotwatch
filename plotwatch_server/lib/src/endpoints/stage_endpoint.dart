@@ -106,4 +106,48 @@ class StageEndpoint extends Endpoint {
     );
     return _service.start(session, siteManager, stageId);
   }
+
+  /// The site manager sends a complete stage for review (STG-07).
+  Future<StageView> submit(Session session, int projectId, int stageId) async {
+    final siteManager = await _permissions.require(
+      session,
+      projectId,
+      ProjectAction.submitStage,
+    );
+    return _service.submit(session, siteManager, stageId);
+  }
+
+  /// An approver approves the stage or requests changes with a comment
+  /// (REV-03, doc/04e M5-3). Nullable instead of a default value: see
+  /// `ProjectEndpoint.list`.
+  Future<StageView> review(
+    Session session,
+    int projectId,
+    int stageId,
+    ReviewDecision decision, {
+    String? comment,
+  }) async {
+    final approver = await _permissions.require(
+      session,
+      projectId,
+      ProjectAction.reviewStage,
+    );
+    return _service.review(
+      session,
+      approver,
+      stageId,
+      decision,
+      comment: StageService.validateReviewComment(decision, comment),
+    );
+  }
+
+  /// The stage's review history, oldest first (REV-05).
+  Future<List<StageReviewView>> reviews(
+    Session session,
+    int projectId,
+    int stageId,
+  ) async {
+    await _permissions.require(session, projectId, ProjectAction.viewProject);
+    return _service.reviews(session, projectId, stageId);
+  }
 }

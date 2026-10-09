@@ -2653,6 +2653,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This photo was never received. Take it again if it\'s still needed.'**
   String get captureNeverReceived;
+
+  /// AppErrorCode.checklistIncomplete
+  ///
+  /// In en, this message translates to:
+  /// **'Every required item needs at least one photo before the stage can be submitted.'**
+  String get errorChecklistIncomplete;
+
+  /// AppErrorCode.reviewCommentRequired
+  ///
+  /// In en, this message translates to:
+  /// **'Say what needs to change.'**
+  String get errorReviewCommentRequired;
+
+  /// AppErrorCode.notificationNotFound
+  ///
+  /// In en, this message translates to:
+  /// **'This notification doesn\'t exist.'**
+  String get errorNotificationNotFound;
+
+  /// AppErrorCode.invalidProgressUpdate
+  ///
+  /// In en, this message translates to:
+  /// **'Check the update: text up to 2,000 characters, 0 to 999 workers, issues up to 1,000 characters.'**
+  String get errorInvalidProgressUpdate;
+
+  /// AppErrorCode.updateNotFound
+  ///
+  /// In en, this message translates to:
+  /// **'This update doesn\'t exist in this project.'**
+  String get errorUpdateNotFound;
 }
 
 class _AppLocalizationsDelegate

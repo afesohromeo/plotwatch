@@ -1,0 +1,6 @@
+### A page of the user's notifications, newest first, keyed by the last ID
+### (`_standards/14` §3.3), with the unread count for the badge.
+class: NotificationPage
+fields:
+  items: List<AppNotification>
+  unreadCount: int

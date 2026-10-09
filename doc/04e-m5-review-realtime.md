@@ -66,3 +66,17 @@ Two devices or windows signed in as different members (owner in Chrome, site man
 
 ## Exit (M5)
 AC-4 and AC-6 between the Android app and the web on the deployed build: the site manager submits a complete stage and the owner's bell lights up at once; the owner requests changes with a comment and the site manager sees it; after new photos and a resubmission the owner approves, the stage shows **Approved** and the project's progress goes up; with the phone offline for a while, the feed catches up on reconnection without gaps or duplicates. All tests pass, CI green, English and French complete.
+
+---
+
+## Outcomes
+
+### Groups A to C outcome (2026-10-09)
+Done. `dart test` **365/365** (new: 20 review-loop cases with the AC-4 permission cases, 9 live-feed and notification cases with the AC-6 catch-up and the late commit, 10 progress update cases). Seen red first: the new tests failed to compile until the models, services and endpoints existed.
+
+Changes from the plan:
+- The notification model is **`AppNotification`** (table `notification`): Flutter has its own `Notification` class, which the app imports alongside the client.
+- One more error code, **`updateNotFound`**, so a missing update isn't reported as a missing project.
+- `PeopleService` (names, approvers, site managers, owner) is shared by the review history, the feed and the notifications; a missing name never breaks them.
+
+Found while testing (test mistakes, the server was right): `live_feed_test` runs without rollback, so it found an earlier project's membership and an earlier test's notifications; and Serverpod's test tools report the closed connection as a second error after the `projectNotFound` that ends a removed member's stream (checked with a throwaway debug test before changing the assertion).

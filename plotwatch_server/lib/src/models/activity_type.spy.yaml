@@ -22,3 +22,8 @@ values:
   # doc/04d
   - evidenceCaptured
   - evidenceRetracted
+  # doc/04e
+  - stageSubmitted
+  - stageApproved
+  - stageChangesRequested
+  - progressUpdatePosted

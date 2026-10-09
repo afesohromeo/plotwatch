@@ -1,0 +1,8 @@
+### The weather on site, in a progress update (UPD-01).
+enum: Weather
+serialized: byName
+values:
+  - sunny
+  - cloudy
+  - rain
+  - storm

@@ -1,0 +1,13 @@
+### One review decision, kept for good (REV-05, doc/04e M5-3).
+class: StageReview
+table: stage_review
+fields:
+  stageId: int, relation(parent=stage, onDelete=Cascade)
+  reviewerId: UuidValue
+  decision: ReviewDecision
+  ### Required when changes are requested, 1–1,000 characters.
+  comment: String?
+  createdAt: DateTime
+indexes:
+  stage_review_stage_idx:
+    fields: stageId

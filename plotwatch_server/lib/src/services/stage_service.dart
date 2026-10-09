@@ -3,10 +3,12 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 import 'activity_service.dart';
 import 'audit_service.dart';
+import 'notification_service.dart';
+import 'people_service.dart';
 
 /// A project's stage plan: stages with a budget, planned dates and a
-/// checklist, and how much of it the captures cover (STG-01–09, BUD-01–02;
-/// doc/04c, doc/04d M4-10). Callers check permissions
+/// checklist, how much of it the captures cover, and the review loop
+/// (STG-01–09, BUD-01–02, REV-01–05; doc/04c, doc/04d M4-10, doc/04e). Callers check permissions
 /// first with `PermissionService`. Every change locks the project row, so
 /// two edits of the same plan never interleave their order indexes.
 class StageService {
@@ -14,6 +16,10 @@ class StageService {
 
   static const _audit = AuditService();
   static const _activity = ActivityService();
+  static const _notifications = NotificationService();
+  static const _people = PeopleService();
+
+  static const maxReviewCommentLength = 1000;
 
   static const maxStages = 50;
   static const maxItems = 30;
@@ -413,6 +419,215 @@ class StageService {
 
   /// `not_started → in_progress` by the site manager, on an active project
   /// only (STG-06, decision M3-8).
+  /// Returns the trimmed comment (none when blank), or throws [AppException]
+  /// when changes are requested without one (doc/04e M5-3).
+  static String? validateReviewComment(
+    ReviewDecision decision,
+    String? comment,
+  ) {
+    final trimmed = comment?.trim();
+    if (trimmed != null && trimmed.length > maxReviewCommentLength) {
+      throw AppException(code: AppErrorCode.textTooLong);
+    }
+    final blank = trimmed?.isEmpty ?? true;
+    if (decision == ReviewDecision.changesRequested && blank) {
+      throw AppException(code: AppErrorCode.reviewCommentRequired);
+    }
+    return blank ? null : trimmed;
+  }
+
+  /// The site manager sends the stage for review once every required item
+  /// has a finalized capture (STG-07, doc/04e M5-2). Approvers are notified.
+  Future<StageView> submit(
+    Session session,
+    ProjectMember siteManager,
+    int stageId,
+  ) {
+    return session.db.transaction((transaction) async {
+      final project = await _lockedProject(
+        session,
+        siteManager.projectId,
+        transaction,
+      );
+      if (project.status != ProjectStatus.active) {
+        throw AppException(code: AppErrorCode.projectNotActive);
+      }
+      final before = await _stage(
+        session,
+        siteManager.projectId,
+        stageId,
+        transaction,
+      );
+      if (before.status != StageStatus.inProgress &&
+          before.status != StageStatus.changesRequested) {
+        throw AppException(code: AppErrorCode.invalidStageTransition);
+      }
+      final required = await ChecklistItem.db.find(
+        session,
+        where: (t) => t.stageId.equals(stageId) & t.isRequired.equals(true),
+        transaction: transaction,
+      );
+      final covered = await Evidence.db.find(
+        session,
+        where: (t) =>
+            t.stageId.equals(stageId) &
+            t.status.equals(EvidenceStatus.finalized),
+        transaction: transaction,
+      );
+      final coveredItems = {for (final e in covered) e.checklistItemId};
+      if (required.any((item) => !coveredItems.contains(item.id))) {
+        throw AppException(code: AppErrorCode.checklistIncomplete);
+      }
+      final now = DateTime.now().toUtc();
+      final after = await Stage.db.updateRow(
+        session,
+        before.copyWith(
+          status: StageStatus.submitted,
+          submittedAt: now,
+          updatedAt: now,
+        ),
+        transaction: transaction,
+      );
+      await _record(
+        session,
+        siteManager,
+        'stage.submit',
+        after,
+        before: {'status': before.status.name},
+        after: {'status': after.status.name},
+        type: ActivityType.stageSubmitted,
+        transaction: transaction,
+      );
+      await _notifications.notify(
+        session,
+        userIds: await _people.approvers(
+          session,
+          siteManager.projectId,
+          transaction: transaction,
+        ),
+        actorId: siteManager.authUserId,
+        projectId: siteManager.projectId,
+        type: NotificationType.stageSubmitted,
+        payload: {
+          'stageId': '${after.id}',
+          'stageName': after.name,
+          'projectName': project.name,
+          'actorName': ?await _people.name(session, siteManager.authUserId),
+        },
+        transaction: transaction,
+      );
+      return _view(session, after, transaction);
+    });
+  }
+
+  /// An approver approves the submitted stage or sends it back with a
+  /// comment; the decision is kept for good (REV-03–05, doc/04e M5-3). The
+  /// site managers are notified.
+  Future<StageView> review(
+    Session session,
+    ProjectMember approver,
+    int stageId,
+    ReviewDecision decision, {
+    required String? comment,
+  }) {
+    return session.db.transaction((transaction) async {
+      final project = await _lockedProject(
+        session,
+        approver.projectId,
+        transaction,
+      );
+      final before = await _stage(
+        session,
+        approver.projectId,
+        stageId,
+        transaction,
+      );
+      if (before.status != StageStatus.submitted) {
+        throw AppException(code: AppErrorCode.invalidStageTransition);
+      }
+      final now = DateTime.now().toUtc();
+      final approved = decision == ReviewDecision.approved;
+      await StageReview.db.insertRow(
+        session,
+        StageReview(
+          stageId: stageId,
+          reviewerId: approver.authUserId,
+          decision: decision,
+          comment: comment,
+          createdAt: now,
+        ),
+        transaction: transaction,
+      );
+      final after = await Stage.db.updateRow(
+        session,
+        before.copyWith(
+          status: approved
+              ? StageStatus.approved
+              : StageStatus.changesRequested,
+          approvedAt: approved ? now : null,
+          approvedBy: approved ? approver.authUserId : null,
+          updatedAt: now,
+        ),
+        transaction: transaction,
+      );
+      await _record(
+        session,
+        approver,
+        approved ? 'stage.approve' : 'stage.requestChanges',
+        after,
+        before: {'status': before.status.name},
+        after: {'status': after.status.name, 'comment': ?comment},
+        type: approved
+            ? ActivityType.stageApproved
+            : ActivityType.stageChangesRequested,
+        transaction: transaction,
+      );
+      await _notifications.notify(
+        session,
+        userIds: await _people.siteManagers(
+          session,
+          approver.projectId,
+          transaction: transaction,
+        ),
+        actorId: approver.authUserId,
+        projectId: approver.projectId,
+        type: approved
+            ? NotificationType.stageApproved
+            : NotificationType.stageChangesRequested,
+        payload: {
+          'stageId': '${after.id}',
+          'stageName': after.name,
+          'projectName': project.name,
+          'reviewerName': ?await _people.name(session, approver.authUserId),
+          'comment': ?comment,
+        },
+        transaction: transaction,
+      );
+      return _view(session, after, transaction);
+    });
+  }
+
+  /// Every decision on the stage, oldest first, with the reviewer's name.
+  Future<List<StageReviewView>> reviews(
+    Session session,
+    int projectId,
+    int stageId,
+  ) async {
+    await _stage(session, projectId, stageId, null);
+    final reviews = await StageReview.db.find(
+      session,
+      where: (t) => t.stageId.equals(stageId),
+      orderBy: (t) => t.id,
+    );
+    final names = await _people.names(session, {
+      for (final r in reviews) r.reviewerId,
+    });
+    return [
+      for (final review in reviews)
+        StageReviewView(review: review, reviewerName: names[review.reviewerId]),
+    ];
+  }
+
   Future<StageView> start(
     Session session,
     ProjectMember siteManager,

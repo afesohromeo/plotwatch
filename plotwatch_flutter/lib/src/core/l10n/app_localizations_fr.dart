@@ -1467,4 +1467,22 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get captureNeverReceived =>
       'Cette photo n\'a jamais été reçue. Reprenez-la si elle est encore utile.';
+
+  @override
+  String get errorChecklistIncomplete =>
+      'Chaque élément obligatoire doit avoir au moins une photo avant de soumettre l\'étape.';
+
+  @override
+  String get errorReviewCommentRequired => 'Indiquez ce qui doit changer.';
+
+  @override
+  String get errorNotificationNotFound => 'Cette notification n\'existe pas.';
+
+  @override
+  String get errorInvalidProgressUpdate =>
+      'Vérifiez la mise à jour : texte de 2 000 caractères au plus, 0 à 999 ouvriers, problèmes de 1 000 caractères au plus.';
+
+  @override
+  String get errorUpdateNotFound =>
+      'Cette mise à jour n\'existe pas dans ce projet.';
 }

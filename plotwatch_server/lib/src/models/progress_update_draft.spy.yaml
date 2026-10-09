@@ -1,0 +1,10 @@
+### What the site manager enters for an update. Immutable: a value object
+### compared by its fields (==).
+class: ProgressUpdateDraft
+immutable: true
+fields:
+  text: String
+  stageId: int?
+  workersCount: int?
+  weather: Weather?
+  issues: String?

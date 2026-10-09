@@ -1,0 +1,8 @@
+### What a notification is about (NOT-02 core subset, doc/04e M5-4).
+enum: NotificationType
+serialized: byName
+values:
+  - stageSubmitted
+  - stageApproved
+  - stageChangesRequested
+  - memberJoined

@@ -1,0 +1,5 @@
+### A feed event with the name of who did it (FEED-01, doc/04e M5-7).
+class: ActivityEntry
+fields:
+  event: ActivityEvent
+  actorName: String?

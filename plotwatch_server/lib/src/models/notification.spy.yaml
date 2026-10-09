@@ -1,0 +1,14 @@
+### An in-app notification for one user (NOT-01). [payload] holds names and
+### numbers only; the app writes the sentence (`_standards/14` §2).
+class: AppNotification
+table: notification
+fields:
+  userId: UuidValue
+  projectId: int?, relation(parent=project, onDelete=Cascade)
+  type: NotificationType
+  payload: Map<String, String>?
+  readAt: DateTime?
+  createdAt: DateTime
+indexes:
+  notification_user_idx:
+    fields: userId, id

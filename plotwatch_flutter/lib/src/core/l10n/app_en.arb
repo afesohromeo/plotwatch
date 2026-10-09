@@ -1269,5 +1269,15 @@
     "capturePhotoUnavailable": "Photo unavailable",
     "@capturePhotoUnavailable": {"description":"Screen reader label when a photo can't load"},
     "captureNeverReceived": "This photo was never received. Take it again if it's still needed.",
-    "@captureNeverReceived": {"description": "Evidence page: a capture committed but never uploaded (doc/04d M4-F4)"}
+    "@captureNeverReceived": {"description": "Evidence page: a capture committed but never uploaded (doc/04d M4-F4)"},
+    "errorChecklistIncomplete": "Every required item needs at least one photo before the stage can be submitted.",
+    "@errorChecklistIncomplete": {"description": "AppErrorCode.checklistIncomplete"},
+    "errorReviewCommentRequired": "Say what needs to change.",
+    "@errorReviewCommentRequired": {"description": "AppErrorCode.reviewCommentRequired"},
+    "errorNotificationNotFound": "This notification doesn't exist.",
+    "@errorNotificationNotFound": {"description": "AppErrorCode.notificationNotFound"},
+    "errorInvalidProgressUpdate": "Check the update: text up to 2,000 characters, 0 to 999 workers, issues up to 1,000 characters.",
+    "@errorInvalidProgressUpdate": {"description": "AppErrorCode.invalidProgressUpdate"},
+    "errorUpdateNotFound": "This update doesn't exist in this project.",
+    "@errorUpdateNotFound": {"description": "AppErrorCode.updateNotFound"}
 }

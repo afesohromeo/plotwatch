@@ -1,0 +1,5 @@
+### A review decision with the reviewer's name, for the stage history.
+class: StageReviewView
+fields:
+  review: StageReview
+  reviewerName: String?

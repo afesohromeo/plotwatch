@@ -64,6 +64,12 @@ values:
   - evidenceAlreadyRetracted
   - notYourCapture
   - checklistItemHasEvidence
+  # Review loop and updates (doc/04e)
+  - checklistIncomplete
+  - reviewCommentRequired
+  - notificationNotFound
+  - invalidProgressUpdate
+  - updateNotFound
   # Free text longer than its limit
   - textTooLong
   # Set by the client from the auth module's exceptions

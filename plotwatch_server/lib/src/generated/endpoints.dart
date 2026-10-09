@@ -13,22 +13,29 @@
 import 'package:plotwatch_server/src/generated/evidence_commit.dart'
     as _idi5nd8p;
 import 'package:plotwatch_server/src/generated/media_variant.dart' as _i70qn4qh;
+import 'package:plotwatch_server/src/generated/progress_update_draft.dart'
+    as _ie8srvsh;
 import 'package:plotwatch_server/src/generated/project_details.dart'
     as _i4y7utee;
 import 'package:plotwatch_server/src/generated/project_role.dart' as _izsiizob;
 import 'package:plotwatch_server/src/generated/project_status.dart'
     as _ipfaavrx;
+import 'package:plotwatch_server/src/generated/review_decision.dart'
+    as _iykfo9bc;
 import 'package:plotwatch_server/src/generated/stage_draft.dart' as _ieegu8zj;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
+import '../endpoints/activity_endpoint.dart' as _ijhtbkuk;
 import '../endpoints/email_idp_endpoint.dart' as _ilutrrxn;
 import '../endpoints/evidence_endpoint.dart' as _i2cvsm7u;
 import '../endpoints/jwt_refresh_endpoint.dart' as _in48dm4x;
 import '../endpoints/membership_endpoint.dart' as _it8meaj6;
+import '../endpoints/notification_endpoint.dart' as _ihb11yhk;
 import '../endpoints/profile_endpoint.dart' as _i2cx2pww;
+import '../endpoints/progress_update_endpoint.dart' as _i95o6e4v;
 import '../endpoints/project_endpoint.dart' as _iemg8ri2;
 import '../endpoints/site_endpoint.dart' as _iisfmjap;
 import '../endpoints/stage_endpoint.dart' as _id8pc9av;
@@ -37,6 +44,12 @@ class Endpoints extends _is.EndpointDispatch {
   @override
   void initializeEndpoints(_is.Server server) {
     var endpoints = <String, _is.Endpoint>{
+      'activity': _ijhtbkuk.ActivityEndpoint()
+        ..initialize(
+          server,
+          'activity',
+          null,
+        ),
       'emailIdp': _ilutrrxn.EmailIdpEndpoint()
         ..initialize(
           server,
@@ -61,10 +74,22 @@ class Endpoints extends _is.EndpointDispatch {
           'membership',
           null,
         ),
+      'notification': _ihb11yhk.NotificationEndpoint()
+        ..initialize(
+          server,
+          'notification',
+          null,
+        ),
       'profile': _i2cx2pww.ProfileEndpoint()
         ..initialize(
           server,
           'profile',
+          null,
+        ),
+      'progressUpdate': _i95o6e4v.ProgressUpdateEndpoint()
+        ..initialize(
+          server,
+          'progressUpdate',
           null,
         ),
       'project': _iemg8ri2.ProjectEndpoint()
@@ -86,6 +111,70 @@ class Endpoints extends _is.EndpointDispatch {
           null,
         ),
     };
+    connectors['activity'] = _is.EndpointConnector(
+      name: 'activity',
+      endpoint: endpoints['activity']!,
+      methodConnectors: {
+        'list': _is.MethodConnector(
+          name: 'list',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'beforeId': _is.ParameterDescription(
+              name: 'beforeId',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
+            'pageSize': _is.ParameterDescription(
+              name: 'pageSize',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['activity'] as _ijhtbkuk.ActivityEndpoint).list(
+                    session,
+                    params['projectId'],
+                    beforeId: params['beforeId'],
+                    pageSize: params['pageSize'],
+                  ),
+        ),
+        'watch': _is.MethodStreamConnector(
+          name: 'watch',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'afterId': _is.ParameterDescription(
+              name: 'afterId',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          streamParams: {},
+          returnType: _is.MethodStreamReturnType.streamType,
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['activity'] as _ijhtbkuk.ActivityEndpoint).watch(
+                session,
+                params['projectId'],
+                afterId: params['afterId'],
+              ),
+        ),
+      },
+    );
     connectors['emailIdp'] = _is.EndpointConnector(
       name: 'emailIdp',
       endpoint: endpoints['emailIdp']!,
@@ -724,6 +813,102 @@ class Endpoints extends _is.EndpointDispatch {
         ),
       },
     );
+    connectors['notification'] = _is.EndpointConnector(
+      name: 'notification',
+      endpoint: endpoints['notification']!,
+      methodConnectors: {
+        'list': _is.MethodConnector(
+          name: 'list',
+          params: {
+            'beforeId': _is.ParameterDescription(
+              name: 'beforeId',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
+            'pageSize': _is.ParameterDescription(
+              name: 'pageSize',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['notification'] as _ihb11yhk.NotificationEndpoint)
+                      .list(
+                        session,
+                        beforeId: params['beforeId'],
+                        pageSize: params['pageSize'],
+                      ),
+        ),
+        'unreadCount': _is.MethodConnector(
+          name: 'unreadCount',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['notification'] as _ihb11yhk.NotificationEndpoint)
+                      .unreadCount(session),
+        ),
+        'markRead': _is.MethodConnector(
+          name: 'markRead',
+          params: {
+            'notificationId': _is.ParameterDescription(
+              name: 'notificationId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['notification'] as _ihb11yhk.NotificationEndpoint)
+                      .markRead(
+                        session,
+                        params['notificationId'],
+                      ),
+        ),
+        'markAllRead': _is.MethodConnector(
+          name: 'markAllRead',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['notification'] as _ihb11yhk.NotificationEndpoint)
+                      .markAllRead(session),
+        ),
+        'watch': _is.MethodStreamConnector(
+          name: 'watch',
+          params: {
+            'afterId': _is.ParameterDescription(
+              name: 'afterId',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          streamParams: {},
+          returnType: _is.MethodStreamReturnType.streamType,
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+                Map<String, Stream> streamParams,
+              ) => (endpoints['notification'] as _ihb11yhk.NotificationEndpoint)
+                  .watch(
+                    session,
+                    afterId: params['afterId'],
+                  ),
+        ),
+      },
+    );
     connectors['profile'] = _is.EndpointConnector(
       name: 'profile',
       endpoint: endpoints['profile']!,
@@ -768,6 +953,66 @@ class Endpoints extends _is.EndpointDispatch {
                     countryCode: params['countryCode'],
                     locale: params['locale'],
                   ),
+        ),
+      },
+    );
+    connectors['progressUpdate'] = _is.EndpointConnector(
+      name: 'progressUpdate',
+      endpoint: endpoints['progressUpdate']!,
+      methodConnectors: {
+        'create': _is.MethodConnector(
+          name: 'create',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'draft': _is.ParameterDescription(
+              name: 'draft',
+              type: _is.getType<_ie8srvsh.ProgressUpdateDraft>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['progressUpdate']
+                          as _i95o6e4v.ProgressUpdateEndpoint)
+                      .create(
+                        session,
+                        params['projectId'],
+                        params['draft'],
+                      ),
+        ),
+        'get': _is.MethodConnector(
+          name: 'get',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'updateId': _is.ParameterDescription(
+              name: 'updateId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['progressUpdate']
+                          as _i95o6e4v.ProgressUpdateEndpoint)
+                      .get(
+                        session,
+                        params['projectId'],
+                        params['updateId'],
+                      ),
         ),
       },
     );
@@ -1274,6 +1519,91 @@ class Endpoints extends _is.EndpointDispatch {
                 params['projectId'],
                 params['stageId'],
               ),
+        ),
+        'submit': _is.MethodConnector(
+          name: 'submit',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'stageId': _is.ParameterDescription(
+              name: 'stageId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['stage'] as _id8pc9av.StageEndpoint).submit(
+                session,
+                params['projectId'],
+                params['stageId'],
+              ),
+        ),
+        'review': _is.MethodConnector(
+          name: 'review',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'stageId': _is.ParameterDescription(
+              name: 'stageId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'decision': _is.ParameterDescription(
+              name: 'decision',
+              type: _is.getType<_iykfo9bc.ReviewDecision>(),
+              nullable: false,
+            ),
+            'comment': _is.ParameterDescription(
+              name: 'comment',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['stage'] as _id8pc9av.StageEndpoint).review(
+                session,
+                params['projectId'],
+                params['stageId'],
+                params['decision'],
+                comment: params['comment'],
+              ),
+        ),
+        'reviews': _is.MethodConnector(
+          name: 'reviews',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'stageId': _is.ParameterDescription(
+              name: 'stageId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['stage'] as _id8pc9av.StageEndpoint).reviews(
+                    session,
+                    params['projectId'],
+                    params['stageId'],
+                  ),
         ),
       },
     );

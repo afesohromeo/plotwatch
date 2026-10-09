@@ -1,9 +1,10 @@
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
+import 'live_service.dart';
 
-/// Writes a project's activity feed (FEED). Publishing to the members'
-/// streams is added in M5. Cross-cutting: any service may call it
+/// Writes a project's activity feed (FEED) and wakes up the members' open
+/// streams (doc/04e M5-5). Cross-cutting: any service may call it
 /// (`_standards/14` §4.2).
 class ActivityService {
   const ActivityService();
@@ -17,8 +18,8 @@ class ActivityService {
     int? targetId,
     Map<String, String>? payload,
     Transaction? transaction,
-  }) {
-    return ActivityEvent.db.insertRow(
+  }) async {
+    final event = await ActivityEvent.db.insertRow(
       session,
       ActivityEvent(
         projectId: projectId,
@@ -31,5 +32,7 @@ class ActivityService {
       ),
       transaction: transaction,
     );
+    await LiveService.signal(session, LiveService.projectChannel(projectId));
+    return event;
   }
 }

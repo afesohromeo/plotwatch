@@ -1,3 +1,6 @@
+activity:
+  - list:
+  - watch:
 emailIdp:
   - finishRegistrationWithProfile:
   - login:
@@ -27,9 +30,18 @@ membership:
   - listMembers:
   - changeRole:
   - removeMember:
+notification:
+  - list:
+  - unreadCount:
+  - markRead:
+  - markAllRead:
+  - watch:
 profile:
   - getMe:
   - updateMe:
+progressUpdate:
+  - create:
+  - get:
 project:
   - create:
   - list:
@@ -52,3 +64,6 @@ stage:
   - delete:
   - reorder:
   - start:
+  - submit:
+  - review:
+  - reviews:

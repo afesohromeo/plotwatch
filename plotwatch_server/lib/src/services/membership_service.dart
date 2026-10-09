@@ -6,6 +6,8 @@ import 'package:serverpod_auth_idp_server/core.dart';
 import '../generated/protocol.dart';
 import 'activity_service.dart';
 import 'audit_service.dart';
+import 'notification_service.dart';
+import 'people_service.dart';
 
 /// Invitations and members (MEMB-01–05, 08). Callers check permissions first
 /// with `PermissionService`; previewing and accepting need only sign-in,
@@ -15,6 +17,8 @@ class MembershipService {
 
   static const _audit = AuditService();
   static const _activity = ActivityService();
+  static const _notifications = NotificationService();
+  static const _people = PeopleService();
 
   /// No look-alikes (0/O, 1/I/L), decision M2-6.
   static const codeAlphabet = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
@@ -226,6 +230,32 @@ class MembershipService {
         payload: {'role': member.role.name},
         transaction: transaction,
       );
+      // The owner learns who joined (NOT-02, doc/04e M5-4).
+      final owner = await _people.owner(
+        session,
+        member.projectId,
+        transaction: transaction,
+      );
+      final project = await Project.db.findById(
+        session,
+        member.projectId,
+        transaction: transaction,
+      );
+      if (owner != null) {
+        await _notifications.notify(
+          session,
+          userIds: [owner],
+          actorId: userId,
+          projectId: member.projectId,
+          type: NotificationType.memberJoined,
+          payload: {
+            'role': member.role.name,
+            'projectName': ?project?.name,
+            'memberName': ?await _people.name(session, userId),
+          },
+          transaction: transaction,
+        );
+      }
       return member;
     });
   }

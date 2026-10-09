@@ -190,7 +190,7 @@ class _EvidenceBody extends StatelessWidget {
           const Gap.vertical(height: AppSpacing.sm),
           VerificationBreakdown(checks: evidence.checks ?? const []),
           Text(l10n.verificationNotice, style: context.textTheme.bodySmall),
-          ],
+        ],
         const Gap.vertical(height: AppSpacing.lg),
         Text(l10n.evidenceDetailsTitle, style: context.textTheme.titleMedium),
         const Gap.vertical(height: AppSpacing.sm),

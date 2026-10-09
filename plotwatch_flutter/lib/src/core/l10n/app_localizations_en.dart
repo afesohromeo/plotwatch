@@ -1429,4 +1429,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get captureNeverReceived =>
       'This photo was never received. Take it again if it\'s still needed.';
+
+  @override
+  String get errorChecklistIncomplete =>
+      'Every required item needs at least one photo before the stage can be submitted.';
+
+  @override
+  String get errorReviewCommentRequired => 'Say what needs to change.';
+
+  @override
+  String get errorNotificationNotFound => 'This notification doesn\'t exist.';
+
+  @override
+  String get errorInvalidProgressUpdate =>
+      'Check the update: text up to 2,000 characters, 0 to 999 workers, issues up to 1,000 characters.';
+
+  @override
+  String get errorUpdateNotFound =>
+      'This update doesn\'t exist in this project.';
 }
