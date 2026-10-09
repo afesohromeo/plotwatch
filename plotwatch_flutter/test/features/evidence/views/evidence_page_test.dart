@@ -1,6 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
@@ -145,5 +147,72 @@ void main() {
 
     expect(find.text(l10n.captureRetractedReason('Blurred')), findsOneWidget);
     expect(find.byKey(EvidencePage.retractButtonKey), findsNothing);
+  });
+
+  // M4-F4: a capture that never arrived can be opened and withdrawn.
+  testWidgets('Given a capture never received then it says so, shows no '
+      'photo, and its author can withdraw it', (tester) async {
+    await pumpWith(
+      tester,
+      loaded(
+        isMine: true,
+        role: ProjectRole.siteManager,
+        evidence: testEvidence(status: EvidenceStatus.committed),
+      ),
+    );
+
+    expect(find.text(l10n.captureNeverReceived), findsOneWidget);
+    expect(find.byType(EvidenceImage), findsNothing);
+    expect(find.byKey(EvidencePage.retractButtonKey), findsOneWidget);
+  });
+
+  // M4-F5: after withdrawing, back to the stage.
+  testWidgets('Given the author withdrew the photo when the confirmation has '
+      'closed then the stage page opens', (tester) async {
+    final mine = loaded(isMine: true, role: ProjectRole.siteManager);
+    when(() => bloc.state).thenReturn(mine);
+    whenListen(
+      bloc,
+      Stream.fromIterable([
+        mine.copyWith(actionStatus: GenericStatus.loading),
+        mine.copyWith(actionStatus: GenericStatus.success),
+      ]),
+      initialState: mine,
+    );
+    final router = GoRouter(
+      initialLocation: '/projects/1/stages/1/evidence/9',
+      routes: [
+        GoRoute(
+          name: stageRouteName,
+          path: '/projects/:projectId/stages/:stageId',
+          builder: (context, state) => const Text('the stage'),
+          routes: [
+            GoRoute(
+              path: 'evidence/:evidenceId',
+              builder: (context, state) => BlocProvider<EvidenceMediaBloc>.value(
+                value: media,
+                child: BlocProvider<EvidenceBloc>.value(
+                  value: bloc,
+                  child: const EvidencePage(
+                    projectId: 1,
+                    stageId: 1,
+                    evidenceId: 9,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+
+    await tester.pumpRouterApp(router);
+    await tester.pump();
+    // The confirmation closes itself after 3 s (DialogUtils.handleSuccess).
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pumpAndSettle();
+
+    expect(find.text('the stage'), findsOneWidget);
   });
 }

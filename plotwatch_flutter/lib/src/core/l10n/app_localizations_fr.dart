@@ -1463,4 +1463,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get capturePhotoUnavailable => 'Photo indisponible';
+
+  @override
+  String get captureNeverReceived =>
+      'Cette photo n\'a jamais été reçue. Reprenez-la si elle est encore utile.';
 }

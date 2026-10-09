@@ -79,7 +79,8 @@ class _EvidencePageState extends State<EvidencePage> {
             DialogUtils.handleSuccess(
               context,
               l10n.captureRetractedDone,
-              postActions: [reset],
+              // Back to the stage, as after deleting a stage (M4-F5).
+              postActions: [reset, _backToStage],
             );
           } else if (state.actionStatus == GenericStatus.failure &&
               state.actionErrorMessage != null) {
@@ -129,6 +130,9 @@ class _EvidenceBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final retracted = evidence.status == EvidenceStatus.retracted;
+    final received =
+        evidence.status == EvidenceStatus.finalized ||
+        (retracted && evidence.finalizedAt != null);
     String time(DateTime value) => formatDate(value.toLocal(), withTime: true);
     final lat = evidence.lat;
     final lng = evidence.lng;
@@ -139,37 +143,54 @@ class _EvidenceBody extends StatelessWidget {
       title: l10n.evidenceTitle,
       subtitle: evidence.caption,
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          child: Opacity(
-            opacity: retracted ? .4 : 1,
-            child: EvidenceImage(
-              projectId: evidence.projectId,
-              evidenceId: evidence.id!,
-              variant: MediaVariant.photo,
-              height: 320,
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
-        const Gap.vertical(height: AppSpacing.md),
-        if (retracted)
+        // The phone recorded it, but the photo never arrived (M4-F4).
+        if (!received) ...[
           Text(
-            l10n.captureRetractedReason(evidence.retractedReason ?? ''),
+            l10n.captureNeverReceived,
             style: context.textTheme.bodyLarge?.copyWith(
               color: customColors.unverified,
             ),
-          )
-        else
-          Align(
-            alignment: Alignment.centerLeft,
-            child: VerificationBadge(level: evidence.verificationLevel),
           ),
-        const Gap.vertical(height: AppSpacing.md),
-        Text(l10n.checksTitle, style: context.textTheme.titleMedium),
-        const Gap.vertical(height: AppSpacing.sm),
-        VerificationBreakdown(checks: evidence.checks ?? const []),
-        Text(l10n.verificationNotice, style: context.textTheme.bodySmall),
+          if (retracted) ...[
+            const Gap.vertical(height: AppSpacing.sm),
+            Text(
+              l10n.captureRetractedReason(evidence.retractedReason ?? ''),
+              style: context.textTheme.bodyMedium,
+            ),
+          ],
+        ] else ...[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            child: Opacity(
+              opacity: retracted ? .4 : 1,
+              child: EvidenceImage(
+                projectId: evidence.projectId,
+                evidenceId: evidence.id!,
+                variant: MediaVariant.photo,
+                height: 320,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          const Gap.vertical(height: AppSpacing.md),
+          if (retracted)
+            Text(
+              l10n.captureRetractedReason(evidence.retractedReason ?? ''),
+              style: context.textTheme.bodyLarge?.copyWith(
+                color: customColors.unverified,
+              ),
+            )
+          else
+            Align(
+              alignment: Alignment.centerLeft,
+              child: VerificationBadge(level: evidence.verificationLevel),
+            ),
+          const Gap.vertical(height: AppSpacing.md),
+          Text(l10n.checksTitle, style: context.textTheme.titleMedium),
+          const Gap.vertical(height: AppSpacing.sm),
+          VerificationBreakdown(checks: evidence.checks ?? const []),
+          Text(l10n.verificationNotice, style: context.textTheme.bodySmall),
+          ],
         const Gap.vertical(height: AppSpacing.lg),
         Text(l10n.evidenceDetailsTitle, style: context.textTheme.titleMedium),
         const Gap.vertical(height: AppSpacing.sm),

@@ -329,12 +329,16 @@ class _CaptureTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    // A photo exists only if the capture was finalized, even if withdrawn
+    // since (doc/04d M4-F4).
     final shown =
         capture.status == EvidenceStatus.finalized ||
-        capture.status == EvidenceStatus.retracted;
+        (capture.status == EvidenceStatus.retracted &&
+            capture.finalizedAt != null);
 
     return InkWell(
-      onTap: shown ? onTap : null,
+      // Every capture opens, also one never received (doc/04d M4-F4).
+      onTap: onTap,
       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
       child: SizedBox(
         width: 132,

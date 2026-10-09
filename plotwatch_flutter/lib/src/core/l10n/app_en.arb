@@ -1267,5 +1267,7 @@
     "capturePhotoLabel": "Site photo",
     "@capturePhotoLabel": {"description":"Screen reader label of a capture"},
     "capturePhotoUnavailable": "Photo unavailable",
-    "@capturePhotoUnavailable": {"description":"Screen reader label when a photo can't load"}
+    "@capturePhotoUnavailable": {"description":"Screen reader label when a photo can't load"},
+    "captureNeverReceived": "This photo was never received. Take it again if it's still needed.",
+    "@captureNeverReceived": {"description": "Evidence page: a capture committed but never uploaded (doc/04d M4-F4)"}
 }

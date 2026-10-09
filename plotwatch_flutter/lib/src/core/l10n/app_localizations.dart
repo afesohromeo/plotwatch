@@ -2647,6 +2647,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Photo unavailable'**
   String get capturePhotoUnavailable;
+
+  /// Evidence page: a capture committed but never uploaded (doc/04d M4-F4)
+  ///
+  /// In en, this message translates to:
+  /// **'This photo was never received. Take it again if it\'s still needed.'**
+  String get captureNeverReceived;
 }
 
 class _AppLocalizationsDelegate

@@ -223,6 +223,30 @@ void main() {
       expect(find.text(l10n.captureNotReceived), findsOneWidget);
     });
 
+    // M4-F4: such a capture can be opened (to withdraw it).
+    testWidgets('then a photo not received yet can be opened', (tester) async {
+      await pumpWith(
+        tester,
+        loaded(role: ProjectRole.siteManager).copyWith(
+          evidence: [
+            testEvidence(
+              id: 9,
+              checklistItemId: 20,
+              status: EvidenceStatus.committed,
+            ),
+          ],
+        ),
+      );
+
+      final tile = tester.widget<InkWell>(
+        find.descendant(
+          of: find.byKey(StagePage.captureTileKey(9)),
+          matching: find.byType(InkWell),
+        ),
+      );
+      expect(tile.onTap, isNotNull);
+    });
+
     testWidgets('then the site manager can take a photo for each item on the '
         'phone', (tester) async {
       await pumpWith(tester, loaded(role: ProjectRole.siteManager));

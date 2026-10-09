@@ -1425,4 +1425,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get capturePhotoUnavailable => 'Photo unavailable';
+
+  @override
+  String get captureNeverReceived =>
+      'This photo was never received. Take it again if it\'s still needed.';
 }

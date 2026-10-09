@@ -424,5 +424,6 @@
     "retractReasonLabel": "Pourquoi ? (reste dans l'historique)",
     "validateRetractReasonRequired": "Indiquez pourquoi la photo est retirée",
     "capturePhotoLabel": "Photo du chantier",
-    "capturePhotoUnavailable": "Photo indisponible"
+    "capturePhotoUnavailable": "Photo indisponible",
+    "captureNeverReceived": "Cette photo n'a jamais été reçue. Reprenez-la si elle est encore utile."
 }

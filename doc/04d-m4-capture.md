@@ -112,3 +112,15 @@ Found by the developer on the emulator: the photo never finished sending (endles
 
 ### Fixes outcome (2026-10-09)
 M4-F1 to F3 done. `flutter test` **674/674** (new: 5 upload URL cases, the upload timeout, the "Not received yet" label). Seen red first: the new tests failed to compile until the code existed. Checked by the developer on the emulator: photos now reach the server and are finalized; withdrawing works. Feedback F-12 added to `serverpod-feedback.md`.
+
+### M4-F4 and M4-F5 (approved 2026-10-09)
+Checked by the developer on the emulator: the photo outside the radius came back Unverified with "Taken … m from the site; allowed: 58 m" (AC-3, second case).
+
+| # | Found | Fix |
+|---|-------|-----|
+| M4-F4 | Captures shown as "Not received yet" can't be opened, so they can't be withdrawn and stay on the stage. | Their tile opens the evidence page too. The page shows "This photo was never received" instead of the photo and the checks, keeps the details the phone sent, and offers **Withdraw this photo** to its author (the server already allows retracting a capture in any status but `retracted`). |
+| M4-F5 | After withdrawing, the app stays on the photo's page. | After the confirmation, the app goes back to the stage page (as after deleting a stage). |
+
+Tests first: a committed capture's tile opens the evidence page; the evidence page of a capture not received shows the notice and no photo, and offers Withdraw to its author; a successful withdrawal goes back to the stage (router test).
+
+M4-F4 and M4-F5 done. `flutter test` **677/677**. The return-to-stage test was checked to fail without the change (red), then to pass with it. Also from the self-review: a capture withdrawn before it was received shows the withdrawal reason and no longer tries to load a photo that doesn't exist.
