@@ -46,8 +46,7 @@ void main() {
     seed: () => EvidenceMediaState(images: {key: bytes}),
     act: (bloc) => bloc.add(request),
     expect: () => <EvidenceMediaState>[],
-    verify: (_) =>
-        verifyNever(() => repository.media(any(), any(), any())),
+    verify: (_) => verifyNever(() => repository.media(any(), any(), any())),
   );
 
   blocTest<EvidenceMediaBloc, EvidenceMediaState>(

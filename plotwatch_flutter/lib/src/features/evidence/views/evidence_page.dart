@@ -129,8 +129,7 @@ class _EvidenceBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final retracted = evidence.status == EvidenceStatus.retracted;
-    String time(DateTime value) =>
-        formatDate(value.toLocal(), withTime: true);
+    String time(DateTime value) => formatDate(value.toLocal(), withTime: true);
     final lat = evidence.lat;
     final lng = evidence.lng;
     final accuracy = evidence.accuracyM;

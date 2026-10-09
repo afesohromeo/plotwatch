@@ -2528,11 +2528,11 @@ abstract class AppLocalizations {
   /// **'Upload failed'**
   String get captureUploadFailed;
 
-  /// Stage page: a capture not finalized yet
+  /// Stage page: a capture committed but not finalized (doc/04d M4-F3)
   ///
   /// In en, this message translates to:
-  /// **'Uploading…'**
-  String get captureUploading;
+  /// **'Not received yet'**
+  String get captureNotReceived;
 
   /// Evidence page title
   ///

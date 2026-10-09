@@ -19,12 +19,12 @@ void main() {
         // scaffold.
         Material(
           child: Form(
-          key: formKey,
-          child: MoneyField(
-            key: fieldKey,
-            controller: controller,
-            currencyCode: 'XAF',
-            labelText: l10n.labelBudget,
+            key: formKey,
+            child: MoneyField(
+              key: fieldKey,
+              controller: controller,
+              currencyCode: 'XAF',
+              labelText: l10n.labelBudget,
             ),
           ),
         ),

@@ -379,8 +379,9 @@ class _CaptureTile extends StatelessWidget {
                   color: customColors.unverified,
                 ),
               ),
+              // Nothing uploads once the phone left the capture (M4-F3).
               EvidenceStatus.committed => Text(
-                l10n.captureUploading,
+                l10n.captureNotReceived,
                 style: context.textTheme.bodySmall,
               ),
             },

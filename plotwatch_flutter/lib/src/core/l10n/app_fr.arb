@@ -405,7 +405,7 @@
     "captureAccuracy": "GPS ± {accuracy} m",
     "captureRetracted": "Retirée",
     "captureUploadFailed": "Échec de l'envoi",
-    "captureUploading": "Envoi en cours…",
+    "captureNotReceived": "Pas encore reçue",
     "evidenceTitle": "Photo",
     "captureRetractedDone": "La photo a été retirée.",
     "errorEvidenceLoad": "Impossible de charger la photo. Réessayez.",

@@ -100,3 +100,15 @@ Changes from the plan:
 - The evidence page knows the photo's author from the signed-in user's ID (`AuthRepository.currentUserId`, from the client session); the server still checks it.
 
 Found by the tests and fixed: the badge overflowed in a photo tile (now 132 px wide, with the label shortened when needed); a test closed the bloc twice. Two test names had an apostrophe inside a single-quoted string (fixed after the developer's analysis).
+
+## Fixes found in testing (approved 2026-10-09)
+Found by the developer on the emulator: the photo never finished sending (endless spinner); the stage showed it as "Uploading…" for good. The server log shows `evidence.commit` succeeding and **no upload request and no finalize** after it.
+
+| # | Cause | Fix |
+|---|-------|-----|
+| M4-F1 | **Upload address.** With the database storage (development), Serverpod builds the upload URL from `apiServer.publicHost`, which is `localhost:8080` in `development.yaml`. On the Android emulator `localhost` is the emulator, not the PC (`10.0.2.2`), so the phone can't reach it. Changing `publicHost` would break the web app's `config.json`. On Cloud the upload goes to the cloud storage's own address, so this is development only. | The evidence API provider rewrites the upload URL **only when its host is `localhost` or `127.0.0.1` and differs from the server address the app is using**: host and port become those of `SERVER_URL` (e.g. `10.0.2.2:8080`). Cloud storage URLs are left as they are. A pure function with unit tests. |
+| M4-F2 | **The upload hangs instead of failing.** `FileUploader` (serverpod_client 4.0.3) waits for both "pipe the bytes into the request" and "send the request" (`(pipe, send).wait`). When the connection fails, nothing reads the request's body, so the pipe never completes and the call never returns, with no timeout. | `EvidenceRepository.upload` gives up after **60 seconds** and throws `UploadException`, so the screen shows "The photo couldn't be uploaded" with **Try again**. Test with an upload that never answers and a short timeout. Reported to Serverpod as feedback F-12. |
+| M4-F3 | **"Uploading…" on the stage page is misleading** once the phone has left the capture screen: nothing is uploading any more. | A committed capture is labelled **"Not received yet"** instead of "Uploading…" (after 24 h the server already shows "Upload failed", M4-12). |
+
+### Fixes outcome (2026-10-09)
+M4-F1 to F3 done. `flutter test` **674/674** (new: 5 upload URL cases, the upload timeout, the "Not received yet" label). Seen red first: the new tests failed to compile until the code existed. Checked by the developer on the emulator: photos now reach the server and are finalized; withdrawing works. Feedback F-12 added to `serverpod-feedback.md`.

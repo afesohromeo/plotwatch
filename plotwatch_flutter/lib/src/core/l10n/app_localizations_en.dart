@@ -1363,7 +1363,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get captureUploadFailed => 'Upload failed';
 
   @override
-  String get captureUploading => 'Uploading…';
+  String get captureNotReceived => 'Not received yet';
 
   @override
   String get evidenceTitle => 'Photo';

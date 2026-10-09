@@ -183,7 +183,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('the plan'), findsOneWidget);
-    expect(router.routerDelegate.currentConfiguration.uri.path, '/projects/1/stages');
+    expect(
+      router.routerDelegate.currentConfiguration.uri.path,
+      '/projects/1/stages',
+    );
   });
 
   // doc/04d group D: each item's photos, and who may add one.
@@ -202,6 +205,24 @@ void main() {
       expect(find.text(l10n.verificationVerified), findsOneWidget);
     });
 
+    // M4-F3: nothing is uploading once the phone has left the capture.
+    testWidgets('then a photo not received yet says so', (tester) async {
+      await pumpWith(
+        tester,
+        loaded(role: ProjectRole.viewer).copyWith(
+          evidence: [
+            testEvidence(
+              id: 9,
+              checklistItemId: 20,
+              status: EvidenceStatus.committed,
+            ),
+          ],
+        ),
+      );
+
+      expect(find.text(l10n.captureNotReceived), findsOneWidget);
+    });
+
     testWidgets('then the site manager can take a photo for each item on the '
         'phone', (tester) async {
       await pumpWith(tester, loaded(role: ProjectRole.siteManager));
@@ -211,7 +232,11 @@ void main() {
     });
 
     testWidgets('then the web has no camera button', (tester) async {
-      await pumpWith(tester, loaded(role: ProjectRole.siteManager), isWeb: true);
+      await pumpWith(
+        tester,
+        loaded(role: ProjectRole.siteManager),
+        isWeb: true,
+      );
 
       expect(find.byKey(StagePage.captureButtonKey(20)), findsNothing);
     });

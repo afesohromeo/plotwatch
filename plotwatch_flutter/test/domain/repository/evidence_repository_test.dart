@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -36,14 +37,36 @@ void main() {
       expect(await repository.retract(1, 9, 'Blurred'), finalized);
     });
 
-    test('when the upload is refused then it throws an UploadException', () async {
+    test(
+      'when the upload is refused then it throws an UploadException',
+      () async {
+        final bytes = Uint8List.fromList([1, 2, 3]);
+        when(
+          () => apiProvider.upload('desc', bytes),
+        ).thenAnswer((_) async => false);
+
+        await expectLater(
+          repository.upload('desc', bytes),
+          throwsA(isA<UploadException>()),
+        );
+      },
+    );
+
+    // M4-F2: Serverpod's FileUploader can hang forever when the connection
+    // fails, which left the capture screen spinning.
+    test('when the upload never answers then it gives up with an '
+        'UploadException', () async {
       final bytes = Uint8List.fromList([1, 2, 3]);
       when(
         () => apiProvider.upload('desc', bytes),
-      ).thenAnswer((_) async => false);
+      ).thenAnswer((_) => Completer<bool>().future);
+      final impatient = EvidenceRepository(
+        apiProvider: apiProvider,
+        uploadTimeout: const Duration(milliseconds: 20),
+      );
 
       await expectLater(
-        repository.upload('desc', bytes),
+        impatient.upload('desc', bytes),
         throwsA(isA<UploadException>()),
       );
     });

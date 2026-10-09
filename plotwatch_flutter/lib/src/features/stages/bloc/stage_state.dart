@@ -48,8 +48,7 @@ sealed class StageState with _$StageState {
   bool get canStart =>
       _role == ProjectRole.siteManager && _status == StageStatus.notStarted;
 
-  bool get isProjectActive =>
-      overview?.project.status == ProjectStatus.active;
+  bool get isProjectActive => overview?.project.status == ProjectStatus.active;
 
   /// The site manager adds photos on an active project to a stage that
   /// isn't submitted or approved (doc/04d M4-9; the server checks it too).

@@ -136,7 +136,10 @@ class MembersBloc extends Bloc<MembersEvent, MembersState> {
       // The flow step is set again: a reload meanwhile resets it (doc/04c
       // M3-F1).
       emit(
-        updated.copyWith(flowStep: flowStep, actionStatus: GenericStatus.success),
+        updated.copyWith(
+          flowStep: flowStep,
+          actionStatus: GenericStatus.success,
+        ),
       );
     } on HttpException400 catch (e) {
       emit(_actionFailure(e.code.message(l10n), flowStep));

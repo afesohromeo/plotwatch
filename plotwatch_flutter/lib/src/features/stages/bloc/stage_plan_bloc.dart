@@ -161,9 +161,9 @@ class StagePlanBloc extends Bloc<StagePlanEvent, StagePlanState> {
     GenericFlowStep flowStep,
     StagePlan? restore,
   ) => state.copyWith(
-        plan: restore ?? state.plan,
-        flowStep: flowStep,
-        actionStatus: GenericStatus.failure,
-        actionErrorMessage: message,
-      );
+    plan: restore ?? state.plan,
+    flowStep: flowStep,
+    actionStatus: GenericStatus.failure,
+    actionErrorMessage: message,
+  );
 }

@@ -51,7 +51,12 @@ void main() {
         value: camera,
         child: BlocProvider<CaptureBloc>.value(
           value: bloc,
-          child: CapturePage(projectId: 1, stageId: 1, itemId: 10, isWeb: isWeb),
+          child: CapturePage(
+            projectId: 1,
+            stageId: 1,
+            itemId: 10,
+            isWeb: isWeb,
+          ),
         ),
       ),
     );
@@ -222,10 +227,7 @@ void main() {
     );
 
     expect(find.text(l10n.verificationUnverified), findsOneWidget);
-    expect(
-      find.text(l10n.checkInsideSiteFailed(137, 58)),
-      findsOneWidget,
-    );
+    expect(find.text(l10n.checkInsideSiteFailed(137, 58)), findsOneWidget);
     expect(find.text(l10n.verificationNotice), findsOneWidget);
     expect(find.byKey(CapturePage.doneKey), findsOneWidget);
   });

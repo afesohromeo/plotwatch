@@ -7,10 +7,16 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 /// capture flow chains the three sending steps so it can retry the one that
 /// failed. Errors are logged and rethrown (RULE-012).
 class EvidenceRepository {
-  EvidenceRepository({EvidenceApiProvider? apiProvider})
-    : _apiProvider = apiProvider ?? EvidenceApiProvider();
+  EvidenceRepository({
+    EvidenceApiProvider? apiProvider,
+    this._uploadTimeout = const Duration(seconds: 60),
+  }) : _apiProvider = apiProvider ?? EvidenceApiProvider();
 
   final EvidenceApiProvider _apiProvider;
+
+  /// Serverpod's FileUploader (4.0.3) can wait forever when the connection
+  /// fails; the upload gives up after this (doc/04d M4-F2).
+  final Duration _uploadTimeout;
 
   Future<EvidenceCommitResult> commit(int projectId, EvidenceCommit commit) =>
       _logged(
@@ -27,9 +33,10 @@ class EvidenceRepository {
   /// Throws [UploadException] when the storage refuses the bytes.
   Future<void> upload(String uploadDescription, Uint8List bytes) =>
       _logged('uploading a photo', () async {
-        if (!await _apiProvider.upload(uploadDescription, bytes)) {
-          throw const UploadException();
-        }
+        final uploaded = await _apiProvider
+            .upload(uploadDescription, bytes)
+            .timeout(_uploadTimeout, onTimeout: () => false);
+        if (!uploaded) throw const UploadException();
       });
 
   Future<Evidence> finalize(int projectId, int evidenceId) => _logged(
@@ -38,10 +45,7 @@ class EvidenceRepository {
   );
 
   Future<List<Evidence>> fetchStageEvidence(int projectId, int stageId) =>
-      _logged(
-        'fetching captures',
-        () => _apiProvider.list(projectId, stageId),
-      );
+      _logged('fetching captures', () => _apiProvider.list(projectId, stageId));
 
   Future<Evidence> fetchEvidence(int projectId, int evidenceId) => _logged(
     'fetching a capture',

@@ -383,14 +383,16 @@ class RouteManager {
                     providers: [
                       BlocProvider(
                         create: (context) => EvidenceBloc(
-                          evidenceRepository: context.read<EvidenceRepository>(),
+                          evidenceRepository: context
+                              .read<EvidenceRepository>(),
                           projectRepository: context.read<ProjectRepository>(),
                           authRepository: context.read<AuthRepository>(),
                         ),
                       ),
                       BlocProvider(
                         create: (context) => EvidenceMediaBloc(
-                          evidenceRepository: context.read<EvidenceRepository>(),
+                          evidenceRepository: context
+                              .read<EvidenceRepository>(),
                         ),
                       ),
                     ],

@@ -13,10 +13,11 @@ class EvidenceApiProvider {
   Future<String> uploadDescription(int projectId, int evidenceId) =>
       _call(() => _client.evidence.uploadDescription(projectId, evidenceId));
 
-  /// True when the storage accepted the bytes.
+  /// True when the storage accepted the bytes. A development upload URL on
+  /// localhost is pointed at the server the app uses (doc/04d M4-F1).
   Future<bool> upload(String uploadDescription, Uint8List bytes) => _call(
     () => FileUploader(
-      uploadDescription,
+      reachableUploadDescription(uploadDescription, Uri.parse(_client.host)),
     ).uploadByteData(ByteData.sublistView(bytes)),
   );
 

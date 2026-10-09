@@ -88,10 +88,7 @@ void main() {
 
   testWidgets('Given the author when they retract with a reason then it is '
       'sent', (tester) async {
-    await pumpWith(
-      tester,
-      loaded(isMine: true, role: ProjectRole.siteManager),
-    );
+    await pumpWith(tester, loaded(isMine: true, role: ProjectRole.siteManager));
 
     await tester.ensureVisible(find.byKey(EvidencePage.retractButtonKey));
     await tester.tap(find.byKey(EvidencePage.retractButtonKey));
@@ -110,10 +107,7 @@ void main() {
 
   testWidgets('Given the author when the reason is left empty then nothing '
       'is sent', (tester) async {
-    await pumpWith(
-      tester,
-      loaded(isMine: true, role: ProjectRole.siteManager),
-    );
+    await pumpWith(tester, loaded(isMine: true, role: ProjectRole.siteManager));
 
     await tester.ensureVisible(find.byKey(EvidencePage.retractButtonKey));
     await tester.tap(find.byKey(EvidencePage.retractButtonKey));

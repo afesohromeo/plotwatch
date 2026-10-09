@@ -117,11 +117,10 @@ void main() {
 
     blocTest<EvidenceBloc, EvidenceState>(
       'when it was already retracted then it shows why',
-      setUp: () => when(
-        () => evidenceRepository.retract(any(), any(), any()),
-      ).thenThrow(
-        const HttpException400(code: AppErrorCode.evidenceAlreadyRetracted),
-      ),
+      setUp: () =>
+          when(() => evidenceRepository.retract(any(), any(), any())).thenThrow(
+            const HttpException400(code: AppErrorCode.evidenceAlreadyRetracted),
+          ),
       build: build,
       seed: () => loaded,
       act: (bloc) =>

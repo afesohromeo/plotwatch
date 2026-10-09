@@ -1400,7 +1400,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get captureUploadFailed => 'Échec de l\'envoi';
 
   @override
-  String get captureUploading => 'Envoi en cours…';
+  String get captureNotReceived => 'Pas encore reçue';
 
   @override
   String get evidenceTitle => 'Photo';

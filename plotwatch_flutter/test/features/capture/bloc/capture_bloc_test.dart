@@ -270,7 +270,9 @@ void main() {
       setUp: () {
         stubSend();
         var uploads = 0;
-        when(() => evidenceRepository.upload(any(), photo)).thenAnswer((_) async {
+        when(() => evidenceRepository.upload(any(), photo)).thenAnswer((
+          _,
+        ) async {
           if (uploads++ == 0) throw const UploadException();
         });
         when(
