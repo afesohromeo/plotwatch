@@ -288,6 +288,7 @@ class _UpdateFormState extends State<_UpdateForm> {
                                     style: context.textTheme.titleSmall,
                                   ),
                                 ),
+                                const Gap.horizontal(width: AppSpacing.sm),
                                 _StepButton(
                                   key: UpdateFormPage.fewerWorkersKey,
                                   icon: Icons.remove_rounded,
@@ -296,9 +297,8 @@ class _UpdateFormState extends State<_UpdateForm> {
                                 ),
                                 // Room for 999 (UPD-01), without the
                                 // field's own padding.
-                                const Gap.horizontal(width: 4),
                                 SizedBox(
-                                  width: 72,
+                                  width: 48,
                                   child: TextFormField(
                                     key: UpdateFormPage.workersFieldKey,
                                     controller: _workers,
@@ -328,7 +328,6 @@ class _UpdateFormState extends State<_UpdateForm> {
                                         : '',
                                   ),
                                 ),
-                                const Gap.horizontal(width: 4),
                                 _StepButton(
                                   key: UpdateFormPage.moreWorkersKey,
                                   icon: Icons.add_rounded,
