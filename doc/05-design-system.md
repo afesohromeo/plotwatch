@@ -111,3 +111,34 @@ Widget tests for `ErrorDialog` cover the message, the icon and the OK button clo
 
 - The SVGs are the source. `tool/export_brand_pngs.cmd` exports the PNGs with headless Chrome; `flutter_launcher_icons.yaml` and `flutter_native_splash.yaml` turn them into platform icons and splash screens. The PNGs are committed so a clone builds without Chrome.
 - Icon and splash background `primary` (the whole screen on the splash, developer's choice); marks white on `primary`.
+
+## 9. Design pass: "Calm Ledger, with depth" (2026-10-10) — proposed, waiting for approval
+**Canvas:** [Plotwatch design pass](https://claude.ai/artifact/568P9kVka8RQ8wLvWeNDmT): page 1 the three directions, page 2 the chosen one on the phone, page 3 on tablet and web.
+**Chosen by the developer (2026-10-10):** direction **A** (Ledger, with depth) **with B's photos** (latest photo on the project card, photo grid on the stage page). It answers "too flat" (M3-13) and the navigation problem (`04e` M5-F3).
+
+### 9.1 Decisions
+| # | Decision |
+|---|----------|
+| DP-1 | **Palette and font unchanged** (§2, §3). New tokens: `primarySoft` `#E6EFED` (selected tab, icon tiles), `lineSoft` `#E7ECEA` (dividers inside cards), `surfaceSubtle` `#FAFBFA` (card footers). The `accentOnDark` `#E8A27E` joins `MyAppColors` for the stage bar on the teal hero. Terracotta keeps its role and gains one: **"needs your attention"** (the review card, a submitted stage). Status colours stay as they are. |
+| DP-2 | **Depth:** cards get radius **16** (was 12) and a soft two-layer shadow over the 1 px `line` border; the hero block radius 18 with a teal shadow. Inputs and buttons stay at 12. |
+| DP-3 | **Project shell (N-2):** inside a project, four destinations: **Overview · Stages · Money · Activity**, the same on every width. **Money appears with M6**; until then three. Phone (< 600 px): bottom bar. Tablet (600–1100): side rail, icons and labels. Web (> 1100): sidebar with the project's name and role, the tabs, a counter on Stages for what waits for the user, and "All projects". Built with GoRouter's `StatefulShellRoute`: each tab keeps its own page stack, so switching tabs and coming back returns where you were. |
+| DP-4 | **Members** is not a tab: a **members card** on the Overview tab (initials, "4 members", roles, **Invite** for the owner) opens the current Members page, unchanged; the ⋮ menu of the project page links to it too (developer, 2026-10-10). |
+| DP-5 | **Breadcrumb (N-1)** under the app bar on every page below a tab: *Projects › Maison Douala › Stages › Walls › Photo*; every part but the last can be tapped; on a phone the middle parts fold into "…" when it doesn't fit. Built from the router's matched routes and the names the pages already load. |
+| DP-6 | **The bell (N-3)** with its unread count in the app bar of every signed-in page, not only the project list. |
+| DP-7 | **Back** keeps going up one level (the Android button too); the breadcrumb and the tabs are the shortcuts. |
+| DP-8 | **Wide layouts move widgets, not just stretch them:** project list 1 / 2 / 3 columns of cards; project page one column / two columns (hero, review, members, photos left; activity right) / hero beside the latest photo, stage table, live activity on the right; stage page one column / checklist beside the photo (tap an item, its photo shows) / checklist, photo with thumbnails, the checks with Approve and Request changes. Forms, sign-in and the profile stay one centred readable column on wide screens. |
+| DP-9 | **Screens redrawn:** project list, project Overview tab, Stages tab (vertical timeline, the stage needing you outlined in terracotta, a photo per stage), stage page (photo grid, checklist with badges, review buttons fixed at the bottom), photo page (large photo, the verdict block, who took it and when, link to the checks), Activity tab (grouped by day, updates as posts), Members page, notifications ("New" and "Earlier"). Other screens get the new look from the theme and the shared widgets only. |
+
+### 9.2 Work, in this order
+| Group | What | Estimate |
+|-------|------|----------|
+| DP-A | Theme and tokens (DP-1, DP-2); shared widgets: `AppCard`, `StageBar` (one segment per stage, coloured by status), `HeroProgress`, `AttentionCard`, `MembersCard`, `PhotoStrip` / `PhotoGrid`, `Breadcrumb`, `NotificationBell` everywhere | 2 h |
+| DP-B | Project shell: `StatefulShellRoute` with Overview, Stages, Activity (Money slot ready for M6); bottom bar / rail / sidebar by width; stage, photo, capture, members, update pages below their tab; breadcrumb from the routes; deep links and Back unchanged | 3 h |
+| DP-C | Phone screens of DP-9 | 3 h |
+| DP-D | Tablet and web layouts of DP-8 | 2–3 h |
+
+About a day in total, which pushes M6 to D8 afternoon. If time runs short, the web stage page's three columns (DP-D) fall back to the tablet's two.
+
+**Tests:** the theme test updated (tokens, radii); the shell shows the bottom bar at 390 px, the rail at 800 px and the sidebar at 1280 px, and keeps each tab's page when switching; the breadcrumb's parts open their pages; the members card opens the Members page; the bell is on every signed-in page; `StageBar` colours one segment per stage status. Existing page tests are updated where layouts move. As agreed for this session, the tests run once at the end of each group.
+
+**You run** after each group: `dart run build_runner build --delete-conflicting-outputs` (if a BLoC changes), `flutter gen-l10n` (new texts), `dart format .`, `dart analyze`; then a look on the emulator and in Chrome at full width and narrowed.
