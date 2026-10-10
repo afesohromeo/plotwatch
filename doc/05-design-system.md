@@ -112,7 +112,7 @@ Widget tests for `ErrorDialog` cover the message, the icon and the OK button clo
 - The SVGs are the source. `tool/export_brand_pngs.cmd` exports the PNGs with headless Chrome; `flutter_launcher_icons.yaml` and `flutter_native_splash.yaml` turn them into platform icons and splash screens. The PNGs are committed so a clone builds without Chrome.
 - Icon and splash background `primary` (the whole screen on the splash, developer's choice); marks white on `primary`.
 
-## 9. Design pass: "Calm Ledger, with depth" (2026-10-10) — proposed, waiting for approval
+## 9. Design pass: "Calm Ledger, with depth" (2026-10-10) — approved as written by the developer
 **Canvas:** [Plotwatch design pass](https://claude.ai/artifact/568P9kVka8RQ8wLvWeNDmT): page 1 the three directions, page 2 the chosen one on the phone, page 3 on tablet and web.
 **Chosen by the developer (2026-10-10):** direction **A** (Ledger, with depth) **with B's photos** (latest photo on the project card, photo grid on the stage page). It answers "too flat" (M3-13) and the navigation problem (`04e` M5-F3).
 
@@ -142,3 +142,11 @@ About a day in total, which pushes M6 to D8 afternoon. If time runs short, the w
 **Tests:** the theme test updated (tokens, radii); the shell shows the bottom bar at 390 px, the rail at 800 px and the sidebar at 1280 px, and keeps each tab's page when switching; the breadcrumb's parts open their pages; the members card opens the Members page; the bell is on every signed-in page; `StageBar` colours one segment per stage status. Existing page tests are updated where layouts move. As agreed for this session, the tests run once at the end of each group.
 
 **You run** after each group: `dart run build_runner build --delete-conflicting-outputs` (if a BLoC changes), `flutter gen-l10n` (new texts), `dart format .`, `dart analyze`; then a look on the emulator and in Chrome at full width and narrowed.
+
+### 9.3 Fidelity fix (2026-10-10, approved)
+The developer's review of the first build: about 60/100 against the canvas. The app bar, its actions, the create button and most bodies didn't follow the mockups, and the Members page wasn't redrawn ("preserve the design" meant the canvas's Members page, not the old screen). The result had never been compared to the canvas.
+
+**Fix:**
+1. Rebuild screen by screen from the canvas's markup (sizes, colours, spacing, type), starting with the shared app bar and the project list: the app bar (title with a subtitle line, the bell, ⋮ for the rest), the labelled "+ New project" button, then Overview, Stages, stage page, photo page, Activity, Members, notifications, and the tablet and web layouts.
+2. Check before handing over: a screenshot test (`tool/screenshots/`, not part of the test suite) renders each page at 390×844, 1024×768 and 1440×900 with the real font and sample data; each image is compared with its mockup and the gaps fixed; the screenshots go on a "built vs design" page of the canvas.
+3. The developer's two changes: the logo and the app name in the primary colour (app bar, sidebar, rail); the bell opens the notifications on top of the current page, so Back returns there.
