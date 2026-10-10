@@ -9,5 +9,9 @@ sealed class UpdateState with _$UpdateState {
     String? stageName,
     @Default(GenericStatus.initial) GenericStatus loadStatus,
     String? loadErrorMessage,
+
+    /// The update is gone (or never was): the page says so and offers the
+    /// way back instead of Retry (doc/05 §9.6).
+    @Default(false) bool notFound,
   }) = _UpdateState;
 }

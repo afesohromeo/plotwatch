@@ -53,7 +53,8 @@ class ProjectShell extends StatelessWidget {
   }
 
   /// The tab an address belongs to: the stages and everything under them,
-  /// the feed, or the project's other pages (members, edit, site, updates).
+  /// the feed and the updates in it (doc/05 §9.6), or the project's other
+  /// pages (members, edit, site, posting an update).
   static ProjectTab tabOf(String location) {
     final path = Uri.parse(location).path;
     final segments = Uri(path: path).pathSegments;
@@ -62,9 +63,19 @@ class ProjectShell extends StatelessWidget {
     return switch (section) {
       stagesPage => ProjectTab.stages,
       feedPage => ProjectTab.activity,
+      _ when section == _updatesSection && !isFocused(location) =>
+        ProjectTab.activity,
       _ => ProjectTab.overview,
     };
   }
+
+  static final _updatesSection = createUpdatePage.split('/').first;
+
+  /// A page that takes the whole phone screen, without the bottom bar, so
+  /// its own button stays at the bottom: posting an update (doc/05 §9.6).
+  /// Never remembered as a tab's last page.
+  static bool isFocused(String location) =>
+      Uri.parse(location).path.endsWith('/$createUpdatePage');
 
   String _rootOf(ProjectTab tab) => switch (tab) {
     ProjectTab.overview => '/projects/$projectId',
@@ -96,10 +107,12 @@ class ProjectShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final current = tabOf(location);
-    _memory['$projectId/${current.name}'] = location;
+    final focused = isFocused(location);
+    if (!focused) _memory['$projectId/${current.name}'] = location;
     final tabs = ProjectTab.values;
 
     return switch (layoutFor(MediaQuery.sizeOf(context))) {
+      ShellLayout.bottomBar when focused => Scaffold(body: child),
       ShellLayout.bottomBar => Scaffold(
         body: child,
         bottomNavigationBar: DecoratedBox(

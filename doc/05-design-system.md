@@ -200,3 +200,26 @@ The developer's review of the first build: about 60/100 against the canvas. The 
   - widget tests: choosing a chip or a sort refreshes with it, search waits for the debounce, Clear filters resets, the local filters on Stages and photos;
   - component tests for `FilterChips` and `SortButton`.
 - **You run:** `dart run build_runner build --delete-conflicting-outputs` (the Freezed events and states), `flutter gen-l10n` (the new texts), `dart format .`, `dart analyze`.
+
+### 9.6 Progress update page and form (2026-10-10, approved)
+Mockups on the canvas, page "4 · Progress updates": `U-Update`, `U-Form`, `U-WebUpdate`.
+- **Update page:**
+  - App bar: "Progress update" with "Maison Douala · Today, 11:05" under it.
+  - Author card: initials, name, role and time, then the text at reading size.
+  - Three tiles: **Stage** (opens the stage), **Workers** and **Weather**, each shown only when set.
+  - Issues in an amber callout, only when set.
+  - "Open the stage" row at the end.
+  - Web: the text and the issues on the left; an "On site" card and the stage link on the right.
+  - No photos: updates have none yet (UPD-01).
+- **Form:**
+  - A focused page with a close button (✕), opened over the project. The bottom bar is hidden so **Post update** stays fixed at the bottom.
+  - The text has a live counter (2,000).
+  - The stage row is prefilled when exactly one stage is being worked on (as today).
+  - Workers: a − / + stepper, which can also be typed into, 0–999.
+  - Weather: four tiles with icons, the chosen one framed in the primary colour, no tick.
+  - Issues: optional.
+  - The subtitle says the funders are notified.
+- **States:**
+  - loading: a spinner;
+  - error: the message with Retry;
+  - an update that no longer exists: "This update is no longer available", with Back to Activity.

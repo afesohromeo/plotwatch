@@ -2075,4 +2075,54 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get showLess => 'Show less';
+
+  @override
+  String get updateIssuesTitle => 'Issues on site';
+
+  @override
+  String get updateOnSite => 'On site';
+
+  @override
+  String get labelPosted => 'Posted';
+
+  @override
+  String openStageTitle(String stage) {
+    return 'Open the $stage stage';
+  }
+
+  @override
+  String get openStageHint => 'Its checklist and photos';
+
+  @override
+  String get updateGone => 'This update is no longer available.';
+
+  @override
+  String get backToActivity => 'Back to Activity';
+
+  @override
+  String updateFormSubtitle(String project) {
+    return '$project · the funders are notified';
+  }
+
+  @override
+  String get postUpdateSave => 'Post update';
+
+  @override
+  String get closeWithoutPosting => 'Close without posting';
+
+  @override
+  String get fewerWorkers => 'One fewer';
+
+  @override
+  String get moreWorkers => 'One more';
+
+  @override
+  String get labelUpdateIssuesOptional => 'Issues (optional)';
+
+  @override
+  String get updateIssuesHint =>
+      'Delays, shortages, anything the funders should know';
+
+  @override
+  String get updateTextHint => 'Walls, deliveries, what is next…';
 }

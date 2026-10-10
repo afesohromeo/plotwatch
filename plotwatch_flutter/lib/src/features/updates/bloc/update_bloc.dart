@@ -38,7 +38,11 @@ class UpdateBloc extends Bloc<UpdateEvent, UpdateState> {
         ),
       );
     } on HttpException400 catch (e) {
-      emit(_failure(e.code.message(l10n)));
+      emit(
+        _failure(
+          e.code.message(l10n),
+        ).copyWith(notFound: e.code == AppErrorCode.updateNotFound),
+      );
     } on HttpException401 catch (_) {
       emit(_failure(l10n.errorUnauthorized));
     } on NetworkException catch (_) {

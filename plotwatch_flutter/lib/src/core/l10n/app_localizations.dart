@@ -3602,6 +3602,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show less'**
   String get showLess;
+
+  /// Progress update page and form (doc/05 §9.6)
+  ///
+  /// In en, this message translates to:
+  /// **'Issues on site'**
+  String get updateIssuesTitle;
+
+  /// Progress update page and form (doc/05 §9.6): the web side card
+  ///
+  /// In en, this message translates to:
+  /// **'On site'**
+  String get updateOnSite;
+
+  /// Progress update page and form (doc/05 §9.6)
+  ///
+  /// In en, this message translates to:
+  /// **'Posted'**
+  String get labelPosted;
+
+  /// Progress update page and form (doc/05 §9.6)
+  ///
+  /// In en, this message translates to:
+  /// **'Open the {stage} stage'**
+  String openStageTitle(String stage);
+
+  /// Progress update page and form (doc/05 §9.6)
+  ///
+  /// In en, this message translates to:
+  /// **'Its checklist and photos'**
+  String get openStageHint;
+
+  /// Progress update page and form (doc/05 §9.6)
+  ///
+  /// In en, this message translates to:
+  /// **'This update is no longer available.'**
+  String get updateGone;
+
+  /// Progress update page and form (doc/05 §9.6)
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Activity'**
+  String get backToActivity;
+
+  /// Progress update page and form (doc/05 §9.6)
+  ///
+  /// In en, this message translates to:
+  /// **'{project} · the funders are notified'**
+  String updateFormSubtitle(String project);
+
+  /// Progress update page and form (doc/05 §9.6): the form button
+  ///
+  /// In en, this message translates to:
+  /// **'Post update'**
+  String get postUpdateSave;
+
+  /// Progress update page and form (doc/05 §9.6)
+  ///
+  /// In en, this message translates to:
+  /// **'Close without posting'**
+  String get closeWithoutPosting;
+
+  /// Progress update page and form (doc/05 §9.6): workers stepper
+  ///
+  /// In en, this message translates to:
+  /// **'One fewer'**
+  String get fewerWorkers;
+
+  /// Progress update page and form (doc/05 §9.6): workers stepper
+  ///
+  /// In en, this message translates to:
+  /// **'One more'**
+  String get moreWorkers;
+
+  /// Progress update page and form (doc/05 §9.6)
+  ///
+  /// In en, this message translates to:
+  /// **'Issues (optional)'**
+  String get labelUpdateIssuesOptional;
+
+  /// Progress update page and form (doc/05 §9.6)
+  ///
+  /// In en, this message translates to:
+  /// **'Delays, shortages, anything the funders should know'**
+  String get updateIssuesHint;
+
+  /// Progress update page and form (doc/05 §9.6)
+  ///
+  /// In en, this message translates to:
+  /// **'Walls, deliveries, what is next…'**
+  String get updateTextHint;
 }
 
 class _AppLocalizationsDelegate

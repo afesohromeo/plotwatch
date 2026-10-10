@@ -124,11 +124,14 @@ void main() {
           bloc.add(const UpdateEvent.load(projectId: 1, updateId: 4)),
       skip: 1,
       expect: () => [
-        isA<UpdateState>().having(
-          (s) => s.loadErrorMessage,
-          'message',
-          AppErrorCode.updateNotFound.message(l10n),
-        ),
+        isA<UpdateState>()
+            .having(
+              (s) => s.loadErrorMessage,
+              'message',
+              AppErrorCode.updateNotFound.message(l10n),
+            )
+            // doc/05 §9.6: the page offers the way back, not Retry.
+            .having((s) => s.notFound, 'notFound', isTrue),
       ],
     );
   });

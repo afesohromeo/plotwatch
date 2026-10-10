@@ -115,10 +115,52 @@ void main() {
   ) async {
     await pumpForm(tester);
 
-    final chip = tester.widget<ChoiceChip>(
-      find.byKey(UpdateFormPage.weatherKey(Weather.sunny)),
-    );
+    final tile = find.byKey(UpdateFormPage.weatherKey(Weather.sunny));
+    await tester.ensureVisible(tile);
+    await tester.tap(tile);
+    await tester.pump();
 
-    expect(chip.showCheckmark, isFalse);
+    expect(
+      find.descendant(of: tile, matching: find.byIcon(Weather.sunny.icon)),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: tile, matching: find.byIcon(Icons.check)),
+      findsNothing,
+    );
+  });
+
+  // doc/05 §9.6: − and + on the workers, within 0–999.
+  testWidgets('Given the workers stepper then + and − change the count', (
+    tester,
+  ) async {
+    await pumpForm(tester);
+    final more = find.byKey(UpdateFormPage.moreWorkersKey);
+    final fewer = find.byKey(UpdateFormPage.fewerWorkersKey);
+    String count() => tester
+        .widget<EditableText>(
+          find.descendant(
+            of: find.byKey(UpdateFormPage.workersFieldKey),
+            matching: find.byType(EditableText),
+          ),
+        )
+        .controller
+        .text;
+
+    await tester.ensureVisible(more);
+    await tester.tap(fewer);
+    await tester.pump();
+    expect(count(), isEmpty);
+
+    await tester.tap(more);
+    await tester.tap(more);
+    await tester.pump();
+    expect(count(), '2');
+
+    await tester.tap(fewer);
+    await tester.tap(fewer);
+    await tester.tap(fewer);
+    await tester.pump();
+    expect(count(), '0');
   });
 }

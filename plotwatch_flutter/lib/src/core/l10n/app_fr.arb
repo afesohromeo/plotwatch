@@ -581,5 +581,20 @@
     "allItems": "Tous les éléments",
     "badgePartial": "Partiel",
     "noPhotoHere": "Aucune photo ici.",
-    "showLess": "Voir moins"
+    "showLess": "Voir moins",
+    "updateIssuesTitle": "Problèmes sur le chantier",
+    "updateOnSite": "Sur le chantier",
+    "labelPosted": "Publié",
+    "openStageTitle": "Ouvrir l’étape {stage}",
+    "openStageHint": "Sa liste et ses photos",
+    "updateGone": "Cette mise à jour n’est plus disponible.",
+    "backToActivity": "Retour à l’activité",
+    "updateFormSubtitle": "{project} · les financeurs sont prévenus",
+    "postUpdateSave": "Publier",
+    "closeWithoutPosting": "Fermer sans publier",
+    "fewerWorkers": "Un de moins",
+    "moreWorkers": "Un de plus",
+    "labelUpdateIssuesOptional": "Problèmes (facultatif)",
+    "updateIssuesHint": "Retards, manques, tout ce que les financeurs doivent savoir",
+    "updateTextHint": "Murs, livraisons, la suite…"
 }

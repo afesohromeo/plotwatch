@@ -66,6 +66,17 @@ void main() {
         ProjectTab.stages,
       );
       expect(ProjectShell.tabOf('/projects/1/feed'), ProjectTab.activity);
+      // An update is read from the Activity tab (doc/05 §9.6).
+      expect(
+        ProjectShell.tabOf('/projects/1/updates/4'),
+        ProjectTab.activity,
+      );
+    });
+
+    test('then only posting an update is a focused page', () {
+      expect(ProjectShell.isFocused('/projects/1/updates/new'), isTrue);
+      expect(ProjectShell.isFocused('/projects/1/updates/4'), isFalse);
+      expect(ProjectShell.isFocused('/projects/1'), isFalse);
     });
   });
 
@@ -111,6 +122,11 @@ void main() {
                       path: 'feed',
                       builder: (context, state) => const Text('feed'),
                     ),
+                    GoRoute(
+                      name: createUpdateRouteName,
+                      path: 'updates/new',
+                      builder: (context, state) => const Text('the form'),
+                    ),
                   ],
                 ),
               ],
@@ -142,6 +158,15 @@ void main() {
       expect(find.byKey(ProjectShell.bottomBarKey), findsOneWidget);
       expect(find.byKey(ProjectShell.railKey), findsNothing);
       expect(find.text('overview'), findsOneWidget);
+    });
+
+    // doc/05 §9.6: the form's button stays at the bottom.
+    testWidgets('on a phone when posting an update then there is no bottom '
+        'bar', (tester) async {
+      await pumpAt(tester, const Size(390, 844), '/projects/1/updates/new');
+
+      expect(find.text('the form'), findsOneWidget);
+      expect(find.byKey(ProjectShell.bottomBarKey), findsNothing);
     });
 
     testWidgets('on a tablet then the tabs are a rail', (tester) async {

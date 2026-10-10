@@ -2116,4 +2116,54 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get showLess => 'Voir moins';
+
+  @override
+  String get updateIssuesTitle => 'Problèmes sur le chantier';
+
+  @override
+  String get updateOnSite => 'Sur le chantier';
+
+  @override
+  String get labelPosted => 'Publié';
+
+  @override
+  String openStageTitle(String stage) {
+    return 'Ouvrir l’étape $stage';
+  }
+
+  @override
+  String get openStageHint => 'Sa liste et ses photos';
+
+  @override
+  String get updateGone => 'Cette mise à jour n’est plus disponible.';
+
+  @override
+  String get backToActivity => 'Retour à l’activité';
+
+  @override
+  String updateFormSubtitle(String project) {
+    return '$project · les financeurs sont prévenus';
+  }
+
+  @override
+  String get postUpdateSave => 'Publier';
+
+  @override
+  String get closeWithoutPosting => 'Fermer sans publier';
+
+  @override
+  String get fewerWorkers => 'Un de moins';
+
+  @override
+  String get moreWorkers => 'Un de plus';
+
+  @override
+  String get labelUpdateIssuesOptional => 'Problèmes (facultatif)';
+
+  @override
+  String get updateIssuesHint =>
+      'Retards, manques, tout ce que les financeurs doivent savoir';
+
+  @override
+  String get updateTextHint => 'Murs, livraisons, la suite…';
 }

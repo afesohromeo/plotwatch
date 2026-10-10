@@ -277,7 +277,9 @@ as int,
 mixin _$UpdateState {
 
  ProgressUpdate? get update;/// The stage it is about, if any.
- String? get stageName; GenericStatus get loadStatus; String? get loadErrorMessage;
+ String? get stageName; GenericStatus get loadStatus; String? get loadErrorMessage;/// The update is gone (or never was): the page says so and offers the
+/// way back instead of Retry (doc/05 §9.6).
+ bool get notFound;
 /// Create a copy of UpdateState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -289,20 +291,20 @@ $UpdateStateCopyWith<UpdateState> get copyWith => _$UpdateStateCopyWithImpl<Upda
 @override
 bool operator ==(Object other) {
   final _this = this as UpdateState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateState&&(identical(other.update, _this.update) || other.update == _this.update)&&(identical(other.stageName, _this.stageName) || other.stageName == _this.stageName)&&(identical(other.loadStatus, _this.loadStatus) || other.loadStatus == _this.loadStatus)&&(identical(other.loadErrorMessage, _this.loadErrorMessage) || other.loadErrorMessage == _this.loadErrorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateState&&(identical(other.update, _this.update) || other.update == _this.update)&&(identical(other.stageName, _this.stageName) || other.stageName == _this.stageName)&&(identical(other.loadStatus, _this.loadStatus) || other.loadStatus == _this.loadStatus)&&(identical(other.loadErrorMessage, _this.loadErrorMessage) || other.loadErrorMessage == _this.loadErrorMessage)&&(identical(other.notFound, _this.notFound) || other.notFound == _this.notFound));
 }
 
 
 @override
 int get hashCode {
   final _this = this as UpdateState;
-  return Object.hash(runtimeType,_this.update,_this.stageName,_this.loadStatus,_this.loadErrorMessage);
+  return Object.hash(runtimeType,_this.update,_this.stageName,_this.loadStatus,_this.loadErrorMessage,_this.notFound);
 }
 
 @override
 String toString() {
   final _this = this as UpdateState;
-  return 'UpdateState(update: ${_this.update}, stageName: ${_this.stageName}, loadStatus: ${_this.loadStatus}, loadErrorMessage: ${_this.loadErrorMessage})';
+  return 'UpdateState(update: ${_this.update}, stageName: ${_this.stageName}, loadStatus: ${_this.loadStatus}, loadErrorMessage: ${_this.loadErrorMessage}, notFound: ${_this.notFound})';
 }
 
 
@@ -313,7 +315,7 @@ abstract mixin class $UpdateStateCopyWith<$Res>  {
   factory $UpdateStateCopyWith(UpdateState value, $Res Function(UpdateState) _then) = _$UpdateStateCopyWithImpl;
 @useResult
 $Res call({
- ProgressUpdate? update, String? stageName, GenericStatus loadStatus, String? loadErrorMessage
+ ProgressUpdate? update, String? stageName, GenericStatus loadStatus, String? loadErrorMessage, bool notFound
 });
 
 
@@ -330,13 +332,14 @@ class _$UpdateStateCopyWithImpl<$Res>
 
 /// Create a copy of UpdateState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? update = freezed,Object? stageName = freezed,Object? loadStatus = null,Object? loadErrorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? update = freezed,Object? stageName = freezed,Object? loadStatus = null,Object? loadErrorMessage = freezed,Object? notFound = null,}) {
   return _then(UpdateState(
 update: freezed == update ? _self.update : update // ignore: cast_nullable_to_non_nullable
 as ProgressUpdate?,stageName: freezed == stageName ? _self.stageName : stageName // ignore: cast_nullable_to_non_nullable
 as String?,loadStatus: null == loadStatus ? _self.loadStatus : loadStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,loadErrorMessage: freezed == loadErrorMessage ? _self.loadErrorMessage : loadErrorMessage // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,notFound: null == notFound ? _self.notFound : notFound // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -418,10 +421,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProgressUpdate? update,  String? stageName,  GenericStatus loadStatus,  String? loadErrorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProgressUpdate? update,  String? stageName,  GenericStatus loadStatus,  String? loadErrorMessage,  bool notFound)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UpdateState() when $default != null:
-return $default(_that.update,_that.stageName,_that.loadStatus,_that.loadErrorMessage);case _:
+return $default(_that.update,_that.stageName,_that.loadStatus,_that.loadErrorMessage,_that.notFound);case _:
   return orElse();
 
 }
@@ -439,10 +442,10 @@ return $default(_that.update,_that.stageName,_that.loadStatus,_that.loadErrorMes
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProgressUpdate? update,  String? stageName,  GenericStatus loadStatus,  String? loadErrorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProgressUpdate? update,  String? stageName,  GenericStatus loadStatus,  String? loadErrorMessage,  bool notFound)  $default,) {final _that = this;
 switch (_that) {
 case _UpdateState():
-return $default(_that.update,_that.stageName,_that.loadStatus,_that.loadErrorMessage);}
+return $default(_that.update,_that.stageName,_that.loadStatus,_that.loadErrorMessage,_that.notFound);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -456,10 +459,10 @@ return $default(_that.update,_that.stageName,_that.loadStatus,_that.loadErrorMes
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProgressUpdate? update,  String? stageName,  GenericStatus loadStatus,  String? loadErrorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProgressUpdate? update,  String? stageName,  GenericStatus loadStatus,  String? loadErrorMessage,  bool notFound)?  $default,) {final _that = this;
 switch (_that) {
 case _UpdateState() when $default != null:
-return $default(_that.update,_that.stageName,_that.loadStatus,_that.loadErrorMessage);case _:
+return $default(_that.update,_that.stageName,_that.loadStatus,_that.loadErrorMessage,_that.notFound);case _:
   return null;
 
 }
@@ -471,7 +474,7 @@ return $default(_that.update,_that.stageName,_that.loadStatus,_that.loadErrorMes
 
 
 class _UpdateState implements UpdateState {
-  const _UpdateState({this.update, this.stageName, this.loadStatus = GenericStatus.initial, this.loadErrorMessage});
+  const _UpdateState({this.update, this.stageName, this.loadStatus = GenericStatus.initial, this.loadErrorMessage, this.notFound = false});
   
 
 @override final  ProgressUpdate? update;
@@ -479,6 +482,9 @@ class _UpdateState implements UpdateState {
 @override final  String? stageName;
 @override@JsonKey() final  GenericStatus loadStatus;
 @override final  String? loadErrorMessage;
+/// The update is gone (or never was): the page says so and offers the
+/// way back instead of Retry (doc/05 §9.6).
+@override@JsonKey() final  bool notFound;
 
 /// Create a copy of UpdateState
 /// with the given fields replaced by the non-null parameter values.
@@ -490,18 +496,18 @@ _$UpdateStateCopyWith<_UpdateState> get copyWith => __$UpdateStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateState&&(identical(other.update, update) || other.update == update)&&(identical(other.stageName, stageName) || other.stageName == stageName)&&(identical(other.loadStatus, loadStatus) || other.loadStatus == loadStatus)&&(identical(other.loadErrorMessage, loadErrorMessage) || other.loadErrorMessage == loadErrorMessage));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateState&&(identical(other.update, update) || other.update == update)&&(identical(other.stageName, stageName) || other.stageName == stageName)&&(identical(other.loadStatus, loadStatus) || other.loadStatus == loadStatus)&&(identical(other.loadErrorMessage, loadErrorMessage) || other.loadErrorMessage == loadErrorMessage)&&(identical(other.notFound, notFound) || other.notFound == notFound));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,update,stageName,loadStatus,loadErrorMessage);
+    return Object.hash(runtimeType,update,stageName,loadStatus,loadErrorMessage,notFound);
 }
 
 @override
 String toString() {
-    return 'UpdateState(update: $update, stageName: $stageName, loadStatus: $loadStatus, loadErrorMessage: $loadErrorMessage)';
+    return 'UpdateState(update: $update, stageName: $stageName, loadStatus: $loadStatus, loadErrorMessage: $loadErrorMessage, notFound: $notFound)';
 }
 
 
@@ -512,7 +518,7 @@ abstract mixin class _$UpdateStateCopyWith<$Res> implements $UpdateStateCopyWith
   factory _$UpdateStateCopyWith(_UpdateState value, $Res Function(_UpdateState) _then) = __$UpdateStateCopyWithImpl;
 @override @useResult
 $Res call({
- ProgressUpdate? update, String? stageName, GenericStatus loadStatus, String? loadErrorMessage
+ ProgressUpdate? update, String? stageName, GenericStatus loadStatus, String? loadErrorMessage, bool notFound
 });
 
 
@@ -529,13 +535,14 @@ class __$UpdateStateCopyWithImpl<$Res>
 
 /// Create a copy of UpdateState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? update = freezed,Object? stageName = freezed,Object? loadStatus = null,Object? loadErrorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? update = freezed,Object? stageName = freezed,Object? loadStatus = null,Object? loadErrorMessage = freezed,Object? notFound = null,}) {
   return _then(_UpdateState(
 update: freezed == update ? _self.update : update // ignore: cast_nullable_to_non_nullable
 as ProgressUpdate?,stageName: freezed == stageName ? _self.stageName : stageName // ignore: cast_nullable_to_non_nullable
 as String?,loadStatus: null == loadStatus ? _self.loadStatus : loadStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,loadErrorMessage: freezed == loadErrorMessage ? _self.loadErrorMessage : loadErrorMessage // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,notFound: null == notFound ? _self.notFound : notFound // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
