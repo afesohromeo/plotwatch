@@ -36,37 +36,43 @@ class _LatestActivityState extends State<LatestActivity> {
     return BlocBuilder<FeedBloc, FeedState>(
       builder: (context, state) {
         final latest = state.activity.take(LatestActivity.shown).toList();
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              l10n.latestActivityTitle,
-              style: context.textTheme.titleMedium,
-            ),
-            if (state.reconnecting) const ReconnectingLine(),
-            const Gap.vertical(height: AppSpacing.xs),
-            if (latest.isEmpty)
-              Text(switch (state.activityListStatus) {
-                GenericStatus.failure =>
-                  state.activityListError ?? l10n.errorActivityLoad,
-                GenericStatus.success => l10n.activityEmpty,
-                _ => l10n.loading,
-              }, style: context.textTheme.bodyMedium)
-            else ...[
-              for (final entry in latest) ActivityTile(entry: entry),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  key: LatestActivity.seeAllButtonKey,
-                  onPressed: () => context.goNamed(
-                    feedRouteName,
-                    pathParameters: {'projectId': '${widget.projectId}'},
+        // A card with "See all" in its header (doc/05 §9).
+        return AppCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.latestActivityTitle,
+                      style: context.textTheme.titleMedium,
+                    ),
                   ),
-                  child: Text(l10n.seeAll),
-                ),
+                  if (latest.isNotEmpty)
+                    TextButton(
+                      key: LatestActivity.seeAllButtonKey,
+                      onPressed: () => context.goNamed(
+                        feedRouteName,
+                        pathParameters: {'projectId': '${widget.projectId}'},
+                      ),
+                      child: Text(l10n.seeAll),
+                    ),
+                ],
               ),
+              if (state.reconnecting) const ReconnectingLine(),
+              const Gap.vertical(height: AppSpacing.xs),
+              if (latest.isEmpty)
+                Text(switch (state.activityListStatus) {
+                  GenericStatus.failure =>
+                    state.activityListError ?? l10n.errorActivityLoad,
+                  GenericStatus.success => l10n.activityEmpty,
+                  _ => l10n.loading,
+                }, style: context.textTheme.bodyMedium)
+              else
+                for (final entry in latest) ActivityTile(entry: entry),
             ],
-          ],
+          ),
         );
       },
     );

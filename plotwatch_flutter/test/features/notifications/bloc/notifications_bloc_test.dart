@@ -157,4 +157,29 @@ void main() {
           .having((s) => s.maxNotifications, 'last page', isTrue),
     ],
   );
+
+  // doc/05 §9.5: only the unread ones, on the server.
+  blocTest<NotificationsBloc, NotificationsState>(
+    'Given Unread is chosen then only the unread ones are asked for',
+    build: build,
+    setUp: () =>
+        when(
+          () => repository.fetchNotifications(size: 20, unreadOnly: true),
+        ).thenAnswer(
+          (_) async => PaginatedList(
+            content: [testNotification(id: 9)],
+            pagination: const Pagination(size: 20),
+          ),
+        ),
+    act: (bloc) =>
+        bloc.add(const NotificationsEvent.fetchNotifications(unreadOnly: true)),
+    skip: 1,
+    expect: () => [
+      isA<NotificationsState>().having(
+        (s) => s.notifications.map((n) => n.id),
+        'ids',
+        [9],
+      ),
+    ],
+  );
 }

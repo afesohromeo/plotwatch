@@ -689,7 +689,7 @@ abstract class AppLocalizations {
   /// Title of the project list (signed-in home page)
   ///
   /// In en, this message translates to:
-  /// **'My projects'**
+  /// **'Projects'**
   String get projectsTitle;
 
   /// Button and page title for creating a project
@@ -3242,6 +3242,366 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Archive'**
   String get archiveProjectAction;
+
+  /// Screen reader label of the breadcrumb trail (doc/05 §9 DP-5)
+  ///
+  /// In en, this message translates to:
+  /// **'Where you are'**
+  String get breadcrumbLabel;
+
+  /// Project tab (doc/05 §9 DP-3)
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overviewTab;
+
+  /// Rail and sidebar: back to the project list
+  ///
+  /// In en, this message translates to:
+  /// **'All projects'**
+  String get allProjects;
+
+  /// Project card cover label
+  ///
+  /// In en, this message translates to:
+  /// **'Latest photo'**
+  String get latestPhoto;
+
+  /// Project page section
+  ///
+  /// In en, this message translates to:
+  /// **'Latest photos'**
+  String get latestPhotosTitle;
+
+  /// After the percentage on a project card
+  ///
+  /// In en, this message translates to:
+  /// **'of the budget'**
+  String get ofTheBudget;
+
+  /// Hero caption after the percentage
+  ///
+  /// In en, this message translates to:
+  /// **'of the budget approved'**
+  String get budgetApprovedCaption;
+
+  /// Hero caption when no stage has a budget
+  ///
+  /// In en, this message translates to:
+  /// **'of the stages approved'**
+  String get stagesApprovedCaption;
+
+  /// Hero figure: approved stages
+  ///
+  /// In en, this message translates to:
+  /// **'{approved} of {total}'**
+  String stagesOfTotal(int approved, int total);
+
+  /// Hero figure label
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get figureBudget;
+
+  /// Hero figure label: planned end
+  ///
+  /// In en, this message translates to:
+  /// **'Ends'**
+  String get figureEnds;
+
+  /// What waits for an approver (doc/05 §9)
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{name} is waiting for your review} other{{count} stages are waiting for your review}}'**
+  String attentionReview(int count, String name);
+
+  /// What waits for the site manager (doc/05 §9)
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Changes were requested on {name}} other{Changes were requested on {count} stages}}'**
+  String attentionChanges(int count, String name);
+
+  /// Stage chip for an approver
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for your review'**
+  String get waitingForYourReview;
+
+  /// Members card
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 member} other{{count} members}}'**
+  String membersCount(int count);
+
+  /// Project page section
+  ///
+  /// In en, this message translates to:
+  /// **'About the project'**
+  String get aboutTitle;
+
+  /// Activity day heading
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get todayLabel;
+
+  /// Activity day heading
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterdayLabel;
+
+  /// Notification centre section
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get notificationsNew;
+
+  /// Notification centre section
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier'**
+  String get notificationsEarlier;
+
+  /// Photo page verdict line
+  ///
+  /// In en, this message translates to:
+  /// **'{passed} of {total} checks passed'**
+  String checksPassed(int passed, int total);
+
+  /// Stage page section
+  ///
+  /// In en, this message translates to:
+  /// **'Photos of this stage'**
+  String get stagePhotosTitle;
+
+  /// Project list: join a project
+  ///
+  /// In en, this message translates to:
+  /// **'Join with a code'**
+  String get joinWithCode;
+
+  /// Web project list heading
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No projects yet} =1{1 project} other{{count} projects}}'**
+  String projectsCount(int count);
+
+  /// Web project list heading
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 stage waiting for your review} other{{count} stages waiting for your review}}'**
+  String stagesWaitingForReview(int count);
+
+  /// Web grid's last tile
+  ///
+  /// In en, this message translates to:
+  /// **'Start a new project'**
+  String get startProjectTitle;
+
+  /// Web grid's last tile
+  ///
+  /// In en, this message translates to:
+  /// **'From a template or from scratch'**
+  String get startProjectHint;
+
+  /// The ⋮ menu of an app bar
+  ///
+  /// In en, this message translates to:
+  /// **'More actions'**
+  String get moreActions;
+
+  /// Checklist row
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{no photo yet} =1{1 photo} other{{count} photos}}'**
+  String photoCount(int count);
+
+  /// Photo verdict line
+  ///
+  /// In en, this message translates to:
+  /// **'{meters} m from the site centre'**
+  String distanceFromCentre(int meters);
+
+  /// Photo page: open the checks
+  ///
+  /// In en, this message translates to:
+  /// **'See the {count} checks'**
+  String seeChecks(int count);
+
+  /// Members page subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 person} other{{count} people}}'**
+  String peopleCount(int count);
+
+  /// Member row of an approving co-funder
+  ///
+  /// In en, this message translates to:
+  /// **'Can approve stages'**
+  String get canApproveShort;
+
+  /// Activity tab subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get liveLabel;
+
+  /// Activity post: after the name
+  ///
+  /// In en, this message translates to:
+  /// **'posted an update'**
+  String get postedAnUpdate;
+
+  /// Overview switch on a phone: the project details
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get aboutShort;
+
+  /// Stage page switch on a phone: the required evidence
+  ///
+  /// In en, this message translates to:
+  /// **'Checklist'**
+  String get checklistShort;
+
+  /// Stage page switch on a phone: the stage's photos
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get photosTitle;
+
+  /// Stage page switch on a phone: the review history
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get historyTitle;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5)
+  ///
+  /// In en, this message translates to:
+  /// **'Search projects'**
+  String get searchProjects;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): the chip that filters nothing
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): the sort button
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get sortAction;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5)
+  ///
+  /// In en, this message translates to:
+  /// **'Latest activity'**
+  String get sortRecent;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5)
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get sortName;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5)
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get sortProgress;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5)
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing matches these filters.'**
+  String get noMatches;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5)
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get clearFilters;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): Activity kind
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get kindPhotos;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): Activity kind
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get kindReviews;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): Activity kind
+  ///
+  /// In en, this message translates to:
+  /// **'Updates'**
+  String get kindUpdates;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): Activity kind
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get kindMembers;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): Activity kind
+  ///
+  /// In en, this message translates to:
+  /// **'Site'**
+  String get kindSite;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): Activity stage picker
+  ///
+  /// In en, this message translates to:
+  /// **'All stages'**
+  String get allStages;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): notifications chip
+  ///
+  /// In en, this message translates to:
+  /// **'Unread'**
+  String get notificationsUnread;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): Stages tab chip
+  ///
+  /// In en, this message translates to:
+  /// **'Needs you'**
+  String get stageFilterNeedsYou;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): Stages tab, a chip with no stage
+  ///
+  /// In en, this message translates to:
+  /// **'No stage here.'**
+  String get noStageHere;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): a stage's photos, item picker
+  ///
+  /// In en, this message translates to:
+  /// **'All items'**
+  String get allItems;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): a stage's photos, badge chip
+  ///
+  /// In en, this message translates to:
+  /// **'Partial'**
+  String get badgePartial;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): a stage's photos, nothing matches
+  ///
+  /// In en, this message translates to:
+  /// **'No photo here.'**
+  String get noPhotoHere;
+
+  /// Lists: search, filters, sorting (doc/05 §9.5): a stage's photos, back to the mosaic
+  ///
+  /// In en, this message translates to:
+  /// **'Show less'**
+  String get showLess;
 }
 
 class _AppLocalizationsDelegate

@@ -17,6 +17,10 @@ sealed class FeedState with _$FeedState {
     @Default(GenericStatus.initial) GenericStatus activityListStatus,
     String? activityListError,
 
+    // --- Filter (doc/05 §9.5): the last fetch's, applied to live events
+    List<ActivityType>? filterTypes,
+    int? filterStageId,
+
     // --- Live (doc/04e M5-5, M5-6)
     /// Counts the live events added on top, so the page knows to redraw.
     @Default(0) int liveCount,

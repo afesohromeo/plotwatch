@@ -40,3 +40,6 @@ key.properties
 
 # Serverpod Cloud CLI
 .scloud/
+
+# Design check screenshots (doc/05 §9.3)
+plotwatch_flutter/tool/screenshots/out/

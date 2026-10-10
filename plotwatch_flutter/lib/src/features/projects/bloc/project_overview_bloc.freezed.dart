@@ -423,7 +423,8 @@ String toString() {
 /// @nodoc
 mixin _$ProjectOverviewState {
 
- ProjectOverview? get overview; GenericStatus get overviewStatus; String? get overviewErrorMessage; GenericStatus get actionStatus; GenericFlowStep get flowStep; String? get actionErrorMessage;
+ ProjectOverview? get overview;/// For the members card (doc/05 §9 DP-4); empty when not loaded.
+ List<MemberView> get members; GenericStatus get overviewStatus; String? get overviewErrorMessage; GenericStatus get actionStatus; GenericFlowStep get flowStep; String? get actionErrorMessage;
 /// Create a copy of ProjectOverviewState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -435,20 +436,20 @@ $ProjectOverviewStateCopyWith<ProjectOverviewState> get copyWith => _$ProjectOve
 @override
 bool operator ==(Object other) {
   final _this = this as ProjectOverviewState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProjectOverviewState&&(identical(other.overview, _this.overview) || other.overview == _this.overview)&&(identical(other.overviewStatus, _this.overviewStatus) || other.overviewStatus == _this.overviewStatus)&&(identical(other.overviewErrorMessage, _this.overviewErrorMessage) || other.overviewErrorMessage == _this.overviewErrorMessage)&&(identical(other.actionStatus, _this.actionStatus) || other.actionStatus == _this.actionStatus)&&(identical(other.flowStep, _this.flowStep) || other.flowStep == _this.flowStep)&&(identical(other.actionErrorMessage, _this.actionErrorMessage) || other.actionErrorMessage == _this.actionErrorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProjectOverviewState&&(identical(other.overview, _this.overview) || other.overview == _this.overview)&&const DeepCollectionEquality().equals(other.members, _this.members)&&(identical(other.overviewStatus, _this.overviewStatus) || other.overviewStatus == _this.overviewStatus)&&(identical(other.overviewErrorMessage, _this.overviewErrorMessage) || other.overviewErrorMessage == _this.overviewErrorMessage)&&(identical(other.actionStatus, _this.actionStatus) || other.actionStatus == _this.actionStatus)&&(identical(other.flowStep, _this.flowStep) || other.flowStep == _this.flowStep)&&(identical(other.actionErrorMessage, _this.actionErrorMessage) || other.actionErrorMessage == _this.actionErrorMessage));
 }
 
 
 @override
 int get hashCode {
   final _this = this as ProjectOverviewState;
-  return Object.hash(runtimeType,_this.overview,_this.overviewStatus,_this.overviewErrorMessage,_this.actionStatus,_this.flowStep,_this.actionErrorMessage);
+  return Object.hash(runtimeType,_this.overview,const DeepCollectionEquality().hash(_this.members),_this.overviewStatus,_this.overviewErrorMessage,_this.actionStatus,_this.flowStep,_this.actionErrorMessage);
 }
 
 @override
 String toString() {
   final _this = this as ProjectOverviewState;
-  return 'ProjectOverviewState(overview: ${_this.overview}, overviewStatus: ${_this.overviewStatus}, overviewErrorMessage: ${_this.overviewErrorMessage}, actionStatus: ${_this.actionStatus}, flowStep: ${_this.flowStep}, actionErrorMessage: ${_this.actionErrorMessage})';
+  return 'ProjectOverviewState(overview: ${_this.overview}, members: ${_this.members}, overviewStatus: ${_this.overviewStatus}, overviewErrorMessage: ${_this.overviewErrorMessage}, actionStatus: ${_this.actionStatus}, flowStep: ${_this.flowStep}, actionErrorMessage: ${_this.actionErrorMessage})';
 }
 
 
@@ -459,7 +460,7 @@ abstract mixin class $ProjectOverviewStateCopyWith<$Res>  {
   factory $ProjectOverviewStateCopyWith(ProjectOverviewState value, $Res Function(ProjectOverviewState) _then) = _$ProjectOverviewStateCopyWithImpl;
 @useResult
 $Res call({
- ProjectOverview? overview, GenericStatus overviewStatus, String? overviewErrorMessage, GenericStatus actionStatus, GenericFlowStep flowStep, String? actionErrorMessage
+ ProjectOverview? overview, List<MemberView> members, GenericStatus overviewStatus, String? overviewErrorMessage, GenericStatus actionStatus, GenericFlowStep flowStep, String? actionErrorMessage
 });
 
 
@@ -476,10 +477,11 @@ class _$ProjectOverviewStateCopyWithImpl<$Res>
 
 /// Create a copy of ProjectOverviewState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? overview = freezed,Object? overviewStatus = null,Object? overviewErrorMessage = freezed,Object? actionStatus = null,Object? flowStep = null,Object? actionErrorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? overview = freezed,Object? members = null,Object? overviewStatus = null,Object? overviewErrorMessage = freezed,Object? actionStatus = null,Object? flowStep = null,Object? actionErrorMessage = freezed,}) {
   return _then(ProjectOverviewState(
 overview: freezed == overview ? _self.overview : overview // ignore: cast_nullable_to_non_nullable
-as ProjectOverview?,overviewStatus: null == overviewStatus ? _self.overviewStatus : overviewStatus // ignore: cast_nullable_to_non_nullable
+as ProjectOverview?,members: null == members ? _self.members : members // ignore: cast_nullable_to_non_nullable
+as List<MemberView>,overviewStatus: null == overviewStatus ? _self.overviewStatus : overviewStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,overviewErrorMessage: freezed == overviewErrorMessage ? _self.overviewErrorMessage : overviewErrorMessage // ignore: cast_nullable_to_non_nullable
 as String?,actionStatus: null == actionStatus ? _self.actionStatus : actionStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,flowStep: null == flowStep ? _self.flowStep : flowStep // ignore: cast_nullable_to_non_nullable
@@ -566,10 +568,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProjectOverview? overview,  GenericStatus overviewStatus,  String? overviewErrorMessage,  GenericStatus actionStatus,  GenericFlowStep flowStep,  String? actionErrorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProjectOverview? overview,  List<MemberView> members,  GenericStatus overviewStatus,  String? overviewErrorMessage,  GenericStatus actionStatus,  GenericFlowStep flowStep,  String? actionErrorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProjectOverviewState() when $default != null:
-return $default(_that.overview,_that.overviewStatus,_that.overviewErrorMessage,_that.actionStatus,_that.flowStep,_that.actionErrorMessage);case _:
+return $default(_that.overview,_that.members,_that.overviewStatus,_that.overviewErrorMessage,_that.actionStatus,_that.flowStep,_that.actionErrorMessage);case _:
   return orElse();
 
 }
@@ -587,10 +589,10 @@ return $default(_that.overview,_that.overviewStatus,_that.overviewErrorMessage,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProjectOverview? overview,  GenericStatus overviewStatus,  String? overviewErrorMessage,  GenericStatus actionStatus,  GenericFlowStep flowStep,  String? actionErrorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProjectOverview? overview,  List<MemberView> members,  GenericStatus overviewStatus,  String? overviewErrorMessage,  GenericStatus actionStatus,  GenericFlowStep flowStep,  String? actionErrorMessage)  $default,) {final _that = this;
 switch (_that) {
 case _ProjectOverviewState():
-return $default(_that.overview,_that.overviewStatus,_that.overviewErrorMessage,_that.actionStatus,_that.flowStep,_that.actionErrorMessage);}
+return $default(_that.overview,_that.members,_that.overviewStatus,_that.overviewErrorMessage,_that.actionStatus,_that.flowStep,_that.actionErrorMessage);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -604,10 +606,10 @@ return $default(_that.overview,_that.overviewStatus,_that.overviewErrorMessage,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProjectOverview? overview,  GenericStatus overviewStatus,  String? overviewErrorMessage,  GenericStatus actionStatus,  GenericFlowStep flowStep,  String? actionErrorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProjectOverview? overview,  List<MemberView> members,  GenericStatus overviewStatus,  String? overviewErrorMessage,  GenericStatus actionStatus,  GenericFlowStep flowStep,  String? actionErrorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _ProjectOverviewState() when $default != null:
-return $default(_that.overview,_that.overviewStatus,_that.overviewErrorMessage,_that.actionStatus,_that.flowStep,_that.actionErrorMessage);case _:
+return $default(_that.overview,_that.members,_that.overviewStatus,_that.overviewErrorMessage,_that.actionStatus,_that.flowStep,_that.actionErrorMessage);case _:
   return null;
 
 }
@@ -619,10 +621,19 @@ return $default(_that.overview,_that.overviewStatus,_that.overviewErrorMessage,_
 
 
 class _ProjectOverviewState implements ProjectOverviewState {
-  const _ProjectOverviewState({this.overview, this.overviewStatus = GenericStatus.initial, this.overviewErrorMessage, this.actionStatus = GenericStatus.initial, this.flowStep = GenericFlowStep.none, this.actionErrorMessage});
+  const _ProjectOverviewState({this.overview,  List<MemberView> members = const [], this.overviewStatus = GenericStatus.initial, this.overviewErrorMessage, this.actionStatus = GenericStatus.initial, this.flowStep = GenericFlowStep.none, this.actionErrorMessage}): _members = members;
   
 
 @override final  ProjectOverview? overview;
+/// For the members card (doc/05 §9 DP-4); empty when not loaded.
+ final  List<MemberView> _members;
+/// For the members card (doc/05 §9 DP-4); empty when not loaded.
+@override@JsonKey() List<MemberView> get members {
+  if (_members is EqualUnmodifiableListView) return _members;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_members);
+}
+
 @override@JsonKey() final  GenericStatus overviewStatus;
 @override final  String? overviewErrorMessage;
 @override@JsonKey() final  GenericStatus actionStatus;
@@ -639,18 +650,18 @@ _$ProjectOverviewStateCopyWith<_ProjectOverviewState> get copyWith => __$Project
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProjectOverviewState&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.overviewStatus, overviewStatus) || other.overviewStatus == overviewStatus)&&(identical(other.overviewErrorMessage, overviewErrorMessage) || other.overviewErrorMessage == overviewErrorMessage)&&(identical(other.actionStatus, actionStatus) || other.actionStatus == actionStatus)&&(identical(other.flowStep, flowStep) || other.flowStep == flowStep)&&(identical(other.actionErrorMessage, actionErrorMessage) || other.actionErrorMessage == actionErrorMessage));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProjectOverviewState&&(identical(other.overview, overview) || other.overview == overview)&&const DeepCollectionEquality().equals(other.members, _members)&&(identical(other.overviewStatus, overviewStatus) || other.overviewStatus == overviewStatus)&&(identical(other.overviewErrorMessage, overviewErrorMessage) || other.overviewErrorMessage == overviewErrorMessage)&&(identical(other.actionStatus, actionStatus) || other.actionStatus == actionStatus)&&(identical(other.flowStep, flowStep) || other.flowStep == flowStep)&&(identical(other.actionErrorMessage, actionErrorMessage) || other.actionErrorMessage == actionErrorMessage));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,overview,overviewStatus,overviewErrorMessage,actionStatus,flowStep,actionErrorMessage);
+    return Object.hash(runtimeType,overview,const DeepCollectionEquality().hash(_members),overviewStatus,overviewErrorMessage,actionStatus,flowStep,actionErrorMessage);
 }
 
 @override
 String toString() {
-    return 'ProjectOverviewState(overview: $overview, overviewStatus: $overviewStatus, overviewErrorMessage: $overviewErrorMessage, actionStatus: $actionStatus, flowStep: $flowStep, actionErrorMessage: $actionErrorMessage)';
+    return 'ProjectOverviewState(overview: $overview, members: $members, overviewStatus: $overviewStatus, overviewErrorMessage: $overviewErrorMessage, actionStatus: $actionStatus, flowStep: $flowStep, actionErrorMessage: $actionErrorMessage)';
 }
 
 
@@ -661,7 +672,7 @@ abstract mixin class _$ProjectOverviewStateCopyWith<$Res> implements $ProjectOve
   factory _$ProjectOverviewStateCopyWith(_ProjectOverviewState value, $Res Function(_ProjectOverviewState) _then) = __$ProjectOverviewStateCopyWithImpl;
 @override @useResult
 $Res call({
- ProjectOverview? overview, GenericStatus overviewStatus, String? overviewErrorMessage, GenericStatus actionStatus, GenericFlowStep flowStep, String? actionErrorMessage
+ ProjectOverview? overview, List<MemberView> members, GenericStatus overviewStatus, String? overviewErrorMessage, GenericStatus actionStatus, GenericFlowStep flowStep, String? actionErrorMessage
 });
 
 
@@ -678,10 +689,11 @@ class __$ProjectOverviewStateCopyWithImpl<$Res>
 
 /// Create a copy of ProjectOverviewState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? overview = freezed,Object? overviewStatus = null,Object? overviewErrorMessage = freezed,Object? actionStatus = null,Object? flowStep = null,Object? actionErrorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? overview = freezed,Object? members = null,Object? overviewStatus = null,Object? overviewErrorMessage = freezed,Object? actionStatus = null,Object? flowStep = null,Object? actionErrorMessage = freezed,}) {
   return _then(_ProjectOverviewState(
 overview: freezed == overview ? _self.overview : overview // ignore: cast_nullable_to_non_nullable
-as ProjectOverview?,overviewStatus: null == overviewStatus ? _self.overviewStatus : overviewStatus // ignore: cast_nullable_to_non_nullable
+as ProjectOverview?,members: null == members ? _self._members : members // ignore: cast_nullable_to_non_nullable
+as List<MemberView>,overviewStatus: null == overviewStatus ? _self.overviewStatus : overviewStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,overviewErrorMessage: freezed == overviewErrorMessage ? _self.overviewErrorMessage : overviewErrorMessage // ignore: cast_nullable_to_non_nullable
 as String?,actionStatus: null == actionStatus ? _self.actionStatus : actionStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,flowStep: null == flowStep ? _self.flowStep : flowStep // ignore: cast_nullable_to_non_nullable

@@ -25,6 +25,7 @@ abstract class ActivityEvent
     required this.type,
     required this.targetType,
     this.targetId,
+    this.stageId,
     this.payload,
     required this.createdAt,
   });
@@ -36,6 +37,7 @@ abstract class ActivityEvent
     required _iorr0e24.ActivityType type,
     required String targetType,
     int? targetId,
+    int? stageId,
     Map<String, String>? payload,
     required DateTime createdAt,
   }) = _ActivityEventImpl;
@@ -52,6 +54,7 @@ abstract class ActivityEvent
       ),
       targetType: jsonSerialization['targetType'] as String,
       targetId: jsonSerialization['targetId'] as int?,
+      stageId: jsonSerialization['stageId'] as int?,
       payload: jsonSerialization['payload'] == null
           ? null
           : _irbavk3a.Protocol().deserialize<Map<String, String>>(
@@ -80,6 +83,10 @@ abstract class ActivityEvent
 
   int? targetId;
 
+  /// The stage it concerns, for the feed's stage filter (doc/05 §9.4).
+  /// No relation: a stage's deletion is recorded after the row is gone.
+  int? stageId;
+
   /// Small summary so the feed renders without extra calls.
   Map<String, String>? payload;
 
@@ -98,6 +105,7 @@ abstract class ActivityEvent
     _iorr0e24.ActivityType? type,
     String? targetType,
     int? targetId,
+    int? stageId,
     Map<String, String>? payload,
     DateTime? createdAt,
   });
@@ -111,6 +119,7 @@ abstract class ActivityEvent
       'type': type.toJson(),
       'targetType': targetType,
       if (targetId != null) 'targetId': targetId,
+      if (stageId != null) 'stageId': stageId,
       if (payload != null) 'payload': payload?.toJson(),
       'createdAt': createdAt.toJson(),
     };
@@ -126,6 +135,7 @@ abstract class ActivityEvent
       'type': type.toJson(),
       'targetType': targetType,
       if (targetId != null) 'targetId': targetId,
+      if (stageId != null) 'stageId': stageId,
       if (payload != null) 'payload': payload?.toJson(),
       'createdAt': createdAt.toJson(),
     };
@@ -169,6 +179,7 @@ class _ActivityEventImpl extends ActivityEvent {
     required _iorr0e24.ActivityType type,
     required String targetType,
     int? targetId,
+    int? stageId,
     Map<String, String>? payload,
     required DateTime createdAt,
   }) : super._(
@@ -178,6 +189,7 @@ class _ActivityEventImpl extends ActivityEvent {
          type: type,
          targetType: targetType,
          targetId: targetId,
+         stageId: stageId,
          payload: payload,
          createdAt: createdAt,
        );
@@ -193,6 +205,7 @@ class _ActivityEventImpl extends ActivityEvent {
     _iorr0e24.ActivityType? type,
     String? targetType,
     Object? targetId = _Undefined,
+    Object? stageId = _Undefined,
     Object? payload = _Undefined,
     DateTime? createdAt,
   }) {
@@ -203,6 +216,7 @@ class _ActivityEventImpl extends ActivityEvent {
       type: type ?? this.type,
       targetType: targetType ?? this.targetType,
       targetId: targetId is int? ? targetId : this.targetId,
+      stageId: stageId is int? ? stageId : this.stageId,
       payload: payload is Map<String, String>?
           ? payload
           : this.payload?.map(
@@ -250,6 +264,11 @@ class ActivityEventUpdateTable extends _is.UpdateTable<ActivityEventTable> {
     value,
   );
 
+  _is.ColumnValue<int, int> stageId(int? value) => _is.ColumnValue(
+    table.stageId,
+    value,
+  );
+
   _is.ColumnValue<Map<String, String>, Map<String, String>> payload(
     Map<String, String>? value,
   ) => _is.ColumnValue(
@@ -289,6 +308,10 @@ class ActivityEventTable extends _is.Table<int?> {
       'targetId',
       this,
     );
+    stageId = _is.ColumnInt(
+      'stageId',
+      this,
+    );
     payload = _is.ColumnSerializable<Map<String, String>>(
       'payload',
       this,
@@ -311,6 +334,10 @@ class ActivityEventTable extends _is.Table<int?> {
 
   late final _is.ColumnInt targetId;
 
+  /// The stage it concerns, for the feed's stage filter (doc/05 §9.4).
+  /// No relation: a stage's deletion is recorded after the row is gone.
+  late final _is.ColumnInt stageId;
+
   /// Small summary so the feed renders without extra calls.
   late final _is.ColumnSerializable<Map<String, String>> payload;
 
@@ -324,6 +351,7 @@ class ActivityEventTable extends _is.Table<int?> {
     type,
     targetType,
     targetId,
+    stageId,
     payload,
     createdAt,
   ];

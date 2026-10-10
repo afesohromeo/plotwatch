@@ -123,10 +123,10 @@ return liveUpdateReceived(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int projectId,  int pageKey,  int? size)?  fetchActivity,TResult Function()?  refreshActivity,TResult Function( LiveUpdate<ActivityEntry> update)?  liveUpdateReceived,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int projectId,  int pageKey,  List<ActivityType>? types,  int? stageId,  int? size)?  fetchActivity,TResult Function()?  refreshActivity,TResult Function( LiveUpdate<ActivityEntry> update)?  liveUpdateReceived,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FetchActivity() when fetchActivity != null:
-return fetchActivity(_that.projectId,_that.pageKey,_that.size);case _RefreshActivity() when refreshActivity != null:
+return fetchActivity(_that.projectId,_that.pageKey,_that.types,_that.stageId,_that.size);case _RefreshActivity() when refreshActivity != null:
 return refreshActivity();case _LiveUpdateReceived() when liveUpdateReceived != null:
 return liveUpdateReceived(_that.update);case _:
   return orElse();
@@ -146,10 +146,10 @@ return liveUpdateReceived(_that.update);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int projectId,  int pageKey,  int? size)  fetchActivity,required TResult Function()  refreshActivity,required TResult Function( LiveUpdate<ActivityEntry> update)  liveUpdateReceived,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int projectId,  int pageKey,  List<ActivityType>? types,  int? stageId,  int? size)  fetchActivity,required TResult Function()  refreshActivity,required TResult Function( LiveUpdate<ActivityEntry> update)  liveUpdateReceived,}) {final _that = this;
 switch (_that) {
 case _FetchActivity():
-return fetchActivity(_that.projectId,_that.pageKey,_that.size);case _RefreshActivity():
+return fetchActivity(_that.projectId,_that.pageKey,_that.types,_that.stageId,_that.size);case _RefreshActivity():
 return refreshActivity();case _LiveUpdateReceived():
 return liveUpdateReceived(_that.update);}
 }
@@ -165,10 +165,10 @@ return liveUpdateReceived(_that.update);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int projectId,  int pageKey,  int? size)?  fetchActivity,TResult? Function()?  refreshActivity,TResult? Function( LiveUpdate<ActivityEntry> update)?  liveUpdateReceived,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int projectId,  int pageKey,  List<ActivityType>? types,  int? stageId,  int? size)?  fetchActivity,TResult? Function()?  refreshActivity,TResult? Function( LiveUpdate<ActivityEntry> update)?  liveUpdateReceived,}) {final _that = this;
 switch (_that) {
 case _FetchActivity() when fetchActivity != null:
-return fetchActivity(_that.projectId,_that.pageKey,_that.size);case _RefreshActivity() when refreshActivity != null:
+return fetchActivity(_that.projectId,_that.pageKey,_that.types,_that.stageId,_that.size);case _RefreshActivity() when refreshActivity != null:
 return refreshActivity();case _LiveUpdateReceived() when liveUpdateReceived != null:
 return liveUpdateReceived(_that.update);case _:
   return null;
@@ -182,11 +182,21 @@ return liveUpdateReceived(_that.update);case _:
 
 
 class _FetchActivity implements FeedEvent {
-  const _FetchActivity({required this.projectId, this.pageKey = 0, this.size});
+  const _FetchActivity({required this.projectId, this.pageKey = 0,  List<ActivityType>? types, this.stageId, this.size}): _types = types;
   
 
  final  int projectId;
 @JsonKey() final  int pageKey;
+ final  List<ActivityType>? _types;
+ List<ActivityType>? get types {
+  final value = _types;
+  if (value == null) return null;
+  if (_types is EqualUnmodifiableListView) return _types;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  int? stageId;
  final  int? size;
 
 /// Create a copy of FeedEvent
@@ -199,18 +209,18 @@ _$FetchActivityCopyWith<_FetchActivity> get copyWith => __$FetchActivityCopyWith
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FetchActivity&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.pageKey, pageKey) || other.pageKey == pageKey)&&(identical(other.size, size) || other.size == size));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FetchActivity&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.pageKey, pageKey) || other.pageKey == pageKey)&&const DeepCollectionEquality().equals(other.types, _types)&&(identical(other.stageId, stageId) || other.stageId == stageId)&&(identical(other.size, size) || other.size == size));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,projectId,pageKey,size);
+    return Object.hash(runtimeType,projectId,pageKey,const DeepCollectionEquality().hash(_types),stageId,size);
 }
 
 @override
 String toString() {
-    return 'FeedEvent.fetchActivity(projectId: $projectId, pageKey: $pageKey, size: $size)';
+    return 'FeedEvent.fetchActivity(projectId: $projectId, pageKey: $pageKey, types: $types, stageId: $stageId, size: $size)';
 }
 
 
@@ -221,7 +231,7 @@ abstract mixin class _$FetchActivityCopyWith<$Res> implements $FeedEventCopyWith
   factory _$FetchActivityCopyWith(_FetchActivity value, $Res Function(_FetchActivity) _then) = __$FetchActivityCopyWithImpl;
 @useResult
 $Res call({
- int projectId, int pageKey, int? size
+ int projectId, int pageKey, List<ActivityType>? types, int? stageId, int? size
 });
 
 
@@ -238,11 +248,13 @@ class __$FetchActivityCopyWithImpl<$Res>
 
 /// Create a copy of FeedEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? projectId = null,Object? pageKey = null,Object? size = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? projectId = null,Object? pageKey = null,Object? types = freezed,Object? stageId = freezed,Object? size = freezed,}) {
   return _then(_FetchActivity(
 projectId: null == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as int,pageKey: null == pageKey ? _self.pageKey : pageKey // ignore: cast_nullable_to_non_nullable
-as int,size: freezed == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
+as int,types: freezed == types ? _self._types : types // ignore: cast_nullable_to_non_nullable
+as List<ActivityType>?,stageId: freezed == stageId ? _self.stageId : stageId // ignore: cast_nullable_to_non_nullable
+as int?,size: freezed == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
 }
@@ -355,7 +367,7 @@ mixin _$FeedState {
 
  int? get projectId;/// Everything shown, newest first: live events on top, then the pages.
  List<ActivityEntry> get activity; List<ActivityEntry> get paginatedActivity; bool get maxActivity; bool get activityRefreshController;/// The ID of the last event of the last page: the next page's key.
- int get activityPageKey; GenericStatus get activityListStatus; String? get activityListError;/// Counts the live events added on top, so the page knows to redraw.
+ int get activityPageKey; GenericStatus get activityListStatus; String? get activityListError; List<ActivityType>? get filterTypes; int? get filterStageId;/// Counts the live events added on top, so the page knows to redraw.
  int get liveCount; bool get reconnecting;
 /// Create a copy of FeedState
 /// with the given fields replaced by the non-null parameter values.
@@ -368,20 +380,20 @@ $FeedStateCopyWith<FeedState> get copyWith => _$FeedStateCopyWithImpl<FeedState>
 @override
 bool operator ==(Object other) {
   final _this = this as FeedState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedState&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&const DeepCollectionEquality().equals(other.activity, _this.activity)&&const DeepCollectionEquality().equals(other.paginatedActivity, _this.paginatedActivity)&&(identical(other.maxActivity, _this.maxActivity) || other.maxActivity == _this.maxActivity)&&(identical(other.activityRefreshController, _this.activityRefreshController) || other.activityRefreshController == _this.activityRefreshController)&&(identical(other.activityPageKey, _this.activityPageKey) || other.activityPageKey == _this.activityPageKey)&&(identical(other.activityListStatus, _this.activityListStatus) || other.activityListStatus == _this.activityListStatus)&&(identical(other.activityListError, _this.activityListError) || other.activityListError == _this.activityListError)&&(identical(other.liveCount, _this.liveCount) || other.liveCount == _this.liveCount)&&(identical(other.reconnecting, _this.reconnecting) || other.reconnecting == _this.reconnecting));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedState&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&const DeepCollectionEquality().equals(other.activity, _this.activity)&&const DeepCollectionEquality().equals(other.paginatedActivity, _this.paginatedActivity)&&(identical(other.maxActivity, _this.maxActivity) || other.maxActivity == _this.maxActivity)&&(identical(other.activityRefreshController, _this.activityRefreshController) || other.activityRefreshController == _this.activityRefreshController)&&(identical(other.activityPageKey, _this.activityPageKey) || other.activityPageKey == _this.activityPageKey)&&(identical(other.activityListStatus, _this.activityListStatus) || other.activityListStatus == _this.activityListStatus)&&(identical(other.activityListError, _this.activityListError) || other.activityListError == _this.activityListError)&&const DeepCollectionEquality().equals(other.filterTypes, _this.filterTypes)&&(identical(other.filterStageId, _this.filterStageId) || other.filterStageId == _this.filterStageId)&&(identical(other.liveCount, _this.liveCount) || other.liveCount == _this.liveCount)&&(identical(other.reconnecting, _this.reconnecting) || other.reconnecting == _this.reconnecting));
 }
 
 
 @override
 int get hashCode {
   final _this = this as FeedState;
-  return Object.hash(runtimeType,_this.projectId,const DeepCollectionEquality().hash(_this.activity),const DeepCollectionEquality().hash(_this.paginatedActivity),_this.maxActivity,_this.activityRefreshController,_this.activityPageKey,_this.activityListStatus,_this.activityListError,_this.liveCount,_this.reconnecting);
+  return Object.hash(runtimeType,_this.projectId,const DeepCollectionEquality().hash(_this.activity),const DeepCollectionEquality().hash(_this.paginatedActivity),_this.maxActivity,_this.activityRefreshController,_this.activityPageKey,_this.activityListStatus,_this.activityListError,const DeepCollectionEquality().hash(_this.filterTypes),_this.filterStageId,_this.liveCount,_this.reconnecting);
 }
 
 @override
 String toString() {
   final _this = this as FeedState;
-  return 'FeedState(projectId: ${_this.projectId}, activity: ${_this.activity}, paginatedActivity: ${_this.paginatedActivity}, maxActivity: ${_this.maxActivity}, activityRefreshController: ${_this.activityRefreshController}, activityPageKey: ${_this.activityPageKey}, activityListStatus: ${_this.activityListStatus}, activityListError: ${_this.activityListError}, liveCount: ${_this.liveCount}, reconnecting: ${_this.reconnecting})';
+  return 'FeedState(projectId: ${_this.projectId}, activity: ${_this.activity}, paginatedActivity: ${_this.paginatedActivity}, maxActivity: ${_this.maxActivity}, activityRefreshController: ${_this.activityRefreshController}, activityPageKey: ${_this.activityPageKey}, activityListStatus: ${_this.activityListStatus}, activityListError: ${_this.activityListError}, filterTypes: ${_this.filterTypes}, filterStageId: ${_this.filterStageId}, liveCount: ${_this.liveCount}, reconnecting: ${_this.reconnecting})';
 }
 
 
@@ -392,7 +404,7 @@ abstract mixin class $FeedStateCopyWith<$Res>  {
   factory $FeedStateCopyWith(FeedState value, $Res Function(FeedState) _then) = _$FeedStateCopyWithImpl;
 @useResult
 $Res call({
- int? projectId, List<ActivityEntry> activity, List<ActivityEntry> paginatedActivity, bool maxActivity, bool activityRefreshController, int activityPageKey, GenericStatus activityListStatus, String? activityListError, int liveCount, bool reconnecting
+ int? projectId, List<ActivityEntry> activity, List<ActivityEntry> paginatedActivity, bool maxActivity, bool activityRefreshController, int activityPageKey, GenericStatus activityListStatus, String? activityListError, List<ActivityType>? filterTypes, int? filterStageId, int liveCount, bool reconnecting
 });
 
 
@@ -409,7 +421,7 @@ class _$FeedStateCopyWithImpl<$Res>
 
 /// Create a copy of FeedState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? projectId = freezed,Object? activity = null,Object? paginatedActivity = null,Object? maxActivity = null,Object? activityRefreshController = null,Object? activityPageKey = null,Object? activityListStatus = null,Object? activityListError = freezed,Object? liveCount = null,Object? reconnecting = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? projectId = freezed,Object? activity = null,Object? paginatedActivity = null,Object? maxActivity = null,Object? activityRefreshController = null,Object? activityPageKey = null,Object? activityListStatus = null,Object? activityListError = freezed,Object? filterTypes = freezed,Object? filterStageId = freezed,Object? liveCount = null,Object? reconnecting = null,}) {
   return _then(FeedState(
 projectId: freezed == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as int?,activity: null == activity ? _self.activity : activity // ignore: cast_nullable_to_non_nullable
@@ -419,7 +431,9 @@ as bool,activityRefreshController: null == activityRefreshController ? _self.act
 as bool,activityPageKey: null == activityPageKey ? _self.activityPageKey : activityPageKey // ignore: cast_nullable_to_non_nullable
 as int,activityListStatus: null == activityListStatus ? _self.activityListStatus : activityListStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,activityListError: freezed == activityListError ? _self.activityListError : activityListError // ignore: cast_nullable_to_non_nullable
-as String?,liveCount: null == liveCount ? _self.liveCount : liveCount // ignore: cast_nullable_to_non_nullable
+as String?,filterTypes: freezed == filterTypes ? _self.filterTypes : filterTypes // ignore: cast_nullable_to_non_nullable
+as List<ActivityType>?,filterStageId: freezed == filterStageId ? _self.filterStageId : filterStageId // ignore: cast_nullable_to_non_nullable
+as int?,liveCount: null == liveCount ? _self.liveCount : liveCount // ignore: cast_nullable_to_non_nullable
 as int,reconnecting: null == reconnecting ? _self.reconnecting : reconnecting // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -503,10 +517,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? projectId,  List<ActivityEntry> activity,  List<ActivityEntry> paginatedActivity,  bool maxActivity,  bool activityRefreshController,  int activityPageKey,  GenericStatus activityListStatus,  String? activityListError,  int liveCount,  bool reconnecting)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? projectId,  List<ActivityEntry> activity,  List<ActivityEntry> paginatedActivity,  bool maxActivity,  bool activityRefreshController,  int activityPageKey,  GenericStatus activityListStatus,  String? activityListError,  List<ActivityType>? filterTypes,  int? filterStageId,  int liveCount,  bool reconnecting)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FeedState() when $default != null:
-return $default(_that.projectId,_that.activity,_that.paginatedActivity,_that.maxActivity,_that.activityRefreshController,_that.activityPageKey,_that.activityListStatus,_that.activityListError,_that.liveCount,_that.reconnecting);case _:
+return $default(_that.projectId,_that.activity,_that.paginatedActivity,_that.maxActivity,_that.activityRefreshController,_that.activityPageKey,_that.activityListStatus,_that.activityListError,_that.filterTypes,_that.filterStageId,_that.liveCount,_that.reconnecting);case _:
   return orElse();
 
 }
@@ -524,10 +538,10 @@ return $default(_that.projectId,_that.activity,_that.paginatedActivity,_that.max
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? projectId,  List<ActivityEntry> activity,  List<ActivityEntry> paginatedActivity,  bool maxActivity,  bool activityRefreshController,  int activityPageKey,  GenericStatus activityListStatus,  String? activityListError,  int liveCount,  bool reconnecting)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? projectId,  List<ActivityEntry> activity,  List<ActivityEntry> paginatedActivity,  bool maxActivity,  bool activityRefreshController,  int activityPageKey,  GenericStatus activityListStatus,  String? activityListError,  List<ActivityType>? filterTypes,  int? filterStageId,  int liveCount,  bool reconnecting)  $default,) {final _that = this;
 switch (_that) {
 case _FeedState():
-return $default(_that.projectId,_that.activity,_that.paginatedActivity,_that.maxActivity,_that.activityRefreshController,_that.activityPageKey,_that.activityListStatus,_that.activityListError,_that.liveCount,_that.reconnecting);}
+return $default(_that.projectId,_that.activity,_that.paginatedActivity,_that.maxActivity,_that.activityRefreshController,_that.activityPageKey,_that.activityListStatus,_that.activityListError,_that.filterTypes,_that.filterStageId,_that.liveCount,_that.reconnecting);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -541,10 +555,10 @@ return $default(_that.projectId,_that.activity,_that.paginatedActivity,_that.max
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? projectId,  List<ActivityEntry> activity,  List<ActivityEntry> paginatedActivity,  bool maxActivity,  bool activityRefreshController,  int activityPageKey,  GenericStatus activityListStatus,  String? activityListError,  int liveCount,  bool reconnecting)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? projectId,  List<ActivityEntry> activity,  List<ActivityEntry> paginatedActivity,  bool maxActivity,  bool activityRefreshController,  int activityPageKey,  GenericStatus activityListStatus,  String? activityListError,  List<ActivityType>? filterTypes,  int? filterStageId,  int liveCount,  bool reconnecting)?  $default,) {final _that = this;
 switch (_that) {
 case _FeedState() when $default != null:
-return $default(_that.projectId,_that.activity,_that.paginatedActivity,_that.maxActivity,_that.activityRefreshController,_that.activityPageKey,_that.activityListStatus,_that.activityListError,_that.liveCount,_that.reconnecting);case _:
+return $default(_that.projectId,_that.activity,_that.paginatedActivity,_that.maxActivity,_that.activityRefreshController,_that.activityPageKey,_that.activityListStatus,_that.activityListError,_that.filterTypes,_that.filterStageId,_that.liveCount,_that.reconnecting);case _:
   return null;
 
 }
@@ -556,7 +570,7 @@ return $default(_that.projectId,_that.activity,_that.paginatedActivity,_that.max
 
 
 class _FeedState implements FeedState {
-  const _FeedState({this.projectId,  List<ActivityEntry> activity = const [],  List<ActivityEntry> paginatedActivity = const [], this.maxActivity = false, this.activityRefreshController = false, this.activityPageKey = 0, this.activityListStatus = GenericStatus.initial, this.activityListError, this.liveCount = 0, this.reconnecting = false}): _activity = activity,_paginatedActivity = paginatedActivity;
+  const _FeedState({this.projectId,  List<ActivityEntry> activity = const [],  List<ActivityEntry> paginatedActivity = const [], this.maxActivity = false, this.activityRefreshController = false, this.activityPageKey = 0, this.activityListStatus = GenericStatus.initial, this.activityListError,  List<ActivityType>? filterTypes, this.filterStageId, this.liveCount = 0, this.reconnecting = false}): _activity = activity,_paginatedActivity = paginatedActivity,_filterTypes = filterTypes;
   
 
 @override final  int? projectId;
@@ -582,6 +596,16 @@ class _FeedState implements FeedState {
 @override@JsonKey() final  int activityPageKey;
 @override@JsonKey() final  GenericStatus activityListStatus;
 @override final  String? activityListError;
+ final  List<ActivityType>? _filterTypes;
+@override List<ActivityType>? get filterTypes {
+  final value = _filterTypes;
+  if (value == null) return null;
+  if (_filterTypes is EqualUnmodifiableListView) return _filterTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+@override final  int? filterStageId;
 /// Counts the live events added on top, so the page knows to redraw.
 @override@JsonKey() final  int liveCount;
 @override@JsonKey() final  bool reconnecting;
@@ -596,18 +620,18 @@ _$FeedStateCopyWith<_FeedState> get copyWith => __$FeedStateCopyWithImpl<_FeedSt
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedState&&(identical(other.projectId, projectId) || other.projectId == projectId)&&const DeepCollectionEquality().equals(other.activity, _activity)&&const DeepCollectionEquality().equals(other.paginatedActivity, _paginatedActivity)&&(identical(other.maxActivity, maxActivity) || other.maxActivity == maxActivity)&&(identical(other.activityRefreshController, activityRefreshController) || other.activityRefreshController == activityRefreshController)&&(identical(other.activityPageKey, activityPageKey) || other.activityPageKey == activityPageKey)&&(identical(other.activityListStatus, activityListStatus) || other.activityListStatus == activityListStatus)&&(identical(other.activityListError, activityListError) || other.activityListError == activityListError)&&(identical(other.liveCount, liveCount) || other.liveCount == liveCount)&&(identical(other.reconnecting, reconnecting) || other.reconnecting == reconnecting));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedState&&(identical(other.projectId, projectId) || other.projectId == projectId)&&const DeepCollectionEquality().equals(other.activity, _activity)&&const DeepCollectionEquality().equals(other.paginatedActivity, _paginatedActivity)&&(identical(other.maxActivity, maxActivity) || other.maxActivity == maxActivity)&&(identical(other.activityRefreshController, activityRefreshController) || other.activityRefreshController == activityRefreshController)&&(identical(other.activityPageKey, activityPageKey) || other.activityPageKey == activityPageKey)&&(identical(other.activityListStatus, activityListStatus) || other.activityListStatus == activityListStatus)&&(identical(other.activityListError, activityListError) || other.activityListError == activityListError)&&const DeepCollectionEquality().equals(other.filterTypes, _filterTypes)&&(identical(other.filterStageId, filterStageId) || other.filterStageId == filterStageId)&&(identical(other.liveCount, liveCount) || other.liveCount == liveCount)&&(identical(other.reconnecting, reconnecting) || other.reconnecting == reconnecting));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,projectId,const DeepCollectionEquality().hash(_activity),const DeepCollectionEquality().hash(_paginatedActivity),maxActivity,activityRefreshController,activityPageKey,activityListStatus,activityListError,liveCount,reconnecting);
+    return Object.hash(runtimeType,projectId,const DeepCollectionEquality().hash(_activity),const DeepCollectionEquality().hash(_paginatedActivity),maxActivity,activityRefreshController,activityPageKey,activityListStatus,activityListError,const DeepCollectionEquality().hash(_filterTypes),filterStageId,liveCount,reconnecting);
 }
 
 @override
 String toString() {
-    return 'FeedState(projectId: $projectId, activity: $activity, paginatedActivity: $paginatedActivity, maxActivity: $maxActivity, activityRefreshController: $activityRefreshController, activityPageKey: $activityPageKey, activityListStatus: $activityListStatus, activityListError: $activityListError, liveCount: $liveCount, reconnecting: $reconnecting)';
+    return 'FeedState(projectId: $projectId, activity: $activity, paginatedActivity: $paginatedActivity, maxActivity: $maxActivity, activityRefreshController: $activityRefreshController, activityPageKey: $activityPageKey, activityListStatus: $activityListStatus, activityListError: $activityListError, filterTypes: $filterTypes, filterStageId: $filterStageId, liveCount: $liveCount, reconnecting: $reconnecting)';
 }
 
 
@@ -618,7 +642,7 @@ abstract mixin class _$FeedStateCopyWith<$Res> implements $FeedStateCopyWith<$Re
   factory _$FeedStateCopyWith(_FeedState value, $Res Function(_FeedState) _then) = __$FeedStateCopyWithImpl;
 @override @useResult
 $Res call({
- int? projectId, List<ActivityEntry> activity, List<ActivityEntry> paginatedActivity, bool maxActivity, bool activityRefreshController, int activityPageKey, GenericStatus activityListStatus, String? activityListError, int liveCount, bool reconnecting
+ int? projectId, List<ActivityEntry> activity, List<ActivityEntry> paginatedActivity, bool maxActivity, bool activityRefreshController, int activityPageKey, GenericStatus activityListStatus, String? activityListError, List<ActivityType>? filterTypes, int? filterStageId, int liveCount, bool reconnecting
 });
 
 
@@ -635,7 +659,7 @@ class __$FeedStateCopyWithImpl<$Res>
 
 /// Create a copy of FeedState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? projectId = freezed,Object? activity = null,Object? paginatedActivity = null,Object? maxActivity = null,Object? activityRefreshController = null,Object? activityPageKey = null,Object? activityListStatus = null,Object? activityListError = freezed,Object? liveCount = null,Object? reconnecting = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? projectId = freezed,Object? activity = null,Object? paginatedActivity = null,Object? maxActivity = null,Object? activityRefreshController = null,Object? activityPageKey = null,Object? activityListStatus = null,Object? activityListError = freezed,Object? filterTypes = freezed,Object? filterStageId = freezed,Object? liveCount = null,Object? reconnecting = null,}) {
   return _then(_FeedState(
 projectId: freezed == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as int?,activity: null == activity ? _self._activity : activity // ignore: cast_nullable_to_non_nullable
@@ -645,7 +669,9 @@ as bool,activityRefreshController: null == activityRefreshController ? _self.act
 as bool,activityPageKey: null == activityPageKey ? _self.activityPageKey : activityPageKey // ignore: cast_nullable_to_non_nullable
 as int,activityListStatus: null == activityListStatus ? _self.activityListStatus : activityListStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,activityListError: freezed == activityListError ? _self.activityListError : activityListError // ignore: cast_nullable_to_non_nullable
-as String?,liveCount: null == liveCount ? _self.liveCount : liveCount // ignore: cast_nullable_to_non_nullable
+as String?,filterTypes: freezed == filterTypes ? _self._filterTypes : filterTypes // ignore: cast_nullable_to_non_nullable
+as List<ActivityType>?,filterStageId: freezed == filterStageId ? _self.filterStageId : filterStageId // ignore: cast_nullable_to_non_nullable
+as int?,liveCount: null == liveCount ? _self.liveCount : liveCount // ignore: cast_nullable_to_non_nullable
 as int,reconnecting: null == reconnecting ? _self.reconnecting : reconnecting // ignore: cast_nullable_to_non_nullable
 as bool,
   ));

@@ -16,6 +16,7 @@ import 'project.dart' as _ifiazq2p;
 import 'project_role.dart' as _i46wx1t7;
 import 'site.dart' as _iz8v5x4v;
 import 'site_proposal.dart' as _ira79kry;
+import 'stage_brief.dart' as _is1lynby;
 
 /// One project as a member sees it: details, validated site and their role.
 abstract class ProjectOverview
@@ -30,6 +31,7 @@ abstract class ProjectOverview
     required this.budgetTotalMinor,
     required this.progressPercent,
     int? approvedStageCount,
+    this.stages,
   }) : approvedStageCount = approvedStageCount ?? 0;
 
   factory ProjectOverview({
@@ -42,6 +44,7 @@ abstract class ProjectOverview
     required int budgetTotalMinor,
     required int progressPercent,
     int? approvedStageCount,
+    List<_is1lynby.StageBrief>? stages,
   }) = _ProjectOverviewImpl;
 
   factory ProjectOverview.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -69,6 +72,11 @@ abstract class ProjectOverview
       budgetTotalMinor: jsonSerialization['budgetTotalMinor'] as int,
       progressPercent: jsonSerialization['progressPercent'] as int,
       approvedStageCount: jsonSerialization['approvedStageCount'] as int?,
+      stages: jsonSerialization['stages'] == null
+          ? null
+          : _irbavk3a.Protocol().deserialize<List<_is1lynby.StageBrief>>(
+              jsonSerialization['stages'],
+            ),
     );
   }
 
@@ -96,6 +104,10 @@ abstract class ProjectOverview
   /// Shown beside the percentage (doc/04e M5-F2).
   int approvedStageCount;
 
+  /// The stages in plan order, for the stage bar and what waits for
+  /// someone (doc/05 §9).
+  List<_is1lynby.StageBrief>? stages;
+
   /// Returns a shallow copy of this [ProjectOverview]
   /// with some or all fields replaced by the given arguments.
   @_is.useResult
@@ -109,6 +121,7 @@ abstract class ProjectOverview
     int? budgetTotalMinor,
     int? progressPercent,
     int? approvedStageCount,
+    List<_is1lynby.StageBrief>? stages,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -124,6 +137,8 @@ abstract class ProjectOverview
       'budgetTotalMinor': budgetTotalMinor,
       'progressPercent': progressPercent,
       'approvedStageCount': approvedStageCount,
+      if (stages != null)
+        'stages': stages?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -141,6 +156,8 @@ abstract class ProjectOverview
       'budgetTotalMinor': budgetTotalMinor,
       'progressPercent': progressPercent,
       'approvedStageCount': approvedStageCount,
+      if (stages != null)
+        'stages': stages?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
     };
   }
 
@@ -163,6 +180,7 @@ class _ProjectOverviewImpl extends ProjectOverview {
     required int budgetTotalMinor,
     required int progressPercent,
     int? approvedStageCount,
+    List<_is1lynby.StageBrief>? stages,
   }) : super._(
          project: project,
          site: site,
@@ -173,6 +191,7 @@ class _ProjectOverviewImpl extends ProjectOverview {
          budgetTotalMinor: budgetTotalMinor,
          progressPercent: progressPercent,
          approvedStageCount: approvedStageCount,
+         stages: stages,
        );
 
   /// Returns a shallow copy of this [ProjectOverview]
@@ -189,6 +208,7 @@ class _ProjectOverviewImpl extends ProjectOverview {
     int? budgetTotalMinor,
     int? progressPercent,
     int? approvedStageCount,
+    Object? stages = _Undefined,
   }) {
     return ProjectOverview(
       project: project ?? this.project.copyWith(),
@@ -202,6 +222,9 @@ class _ProjectOverviewImpl extends ProjectOverview {
       budgetTotalMinor: budgetTotalMinor ?? this.budgetTotalMinor,
       progressPercent: progressPercent ?? this.progressPercent,
       approvedStageCount: approvedStageCount ?? this.approvedStageCount,
+      stages: stages is List<_is1lynby.StageBrief>?
+          ? stages
+          : this.stages?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }

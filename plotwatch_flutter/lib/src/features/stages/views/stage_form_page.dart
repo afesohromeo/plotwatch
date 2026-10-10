@@ -68,6 +68,11 @@ class _StageFormPageState extends State<StageFormPage> {
       props: ScaffoldWrapperProps(
         leading: BackButton(onPressed: _back),
         title: Text(isNew ? l10n.addStageAction : l10n.editStageAction),
+        bottom: ProjectBreadcrumbBar(
+          projectId: widget.projectId,
+          section: ProjectTab.stages,
+          leaf: isNew ? l10n.addStageAction : l10n.editStageAction,
+        ),
         resizeToAvoidBottomInset: true,
       ),
       mobileBody: BlocConsumer<StageFormBloc, StageFormState>(

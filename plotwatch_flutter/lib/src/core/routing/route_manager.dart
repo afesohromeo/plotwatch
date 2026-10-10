@@ -124,10 +124,20 @@ class RouteManager {
         path: homePage,
         pageBuilder: (context, state) => NoTransitionPage<void>(
           key: state.pageKey,
-          child: BlocProvider(
-            create: (context) => ProjectListBloc(
-              projectRepository: context.read<ProjectRepository>(),
-            ),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => ProjectListBloc(
+                  projectRepository: context.read<ProjectRepository>(),
+                ),
+              ),
+              // The cards' covers (doc/05 §9).
+              BlocProvider(
+                create: (context) => EvidenceMediaBloc(
+                  evidenceRepository: context.read<EvidenceRepository>(),
+                ),
+              ),
+            ],
             child: const ProjectListPage(),
           ),
         ),
@@ -146,30 +156,72 @@ class RouteManager {
               ),
             ),
           ),
-          GoRoute(
-            name: projectRouteName,
-            path: projectPage,
-            redirect: _requireProjectId,
-            pageBuilder: (context, state) => NoTransitionPage<void>(
-              key: state.pageKey,
-              child: MultiBlocProvider(
-                providers: [
-                  BlocProvider(
-                    create: (context) => ProjectOverviewBloc(
-                      projectRepository: context.read<ProjectRepository>(),
+          // Every project page inside its tabs (doc/05 §9 DP-3). The
+          // addresses don't change, so deep links and Back still work.
+          ShellRoute(
+            pageBuilder: (context, state, child) {
+              final projectId = _projectId(state) ?? 0;
+              return NoTransitionPage<void>(
+                key: state.pageKey,
+                child: KeyedSubtree(
+                  key: ValueKey('project.$projectId'),
+                  // The sidebar's name and the breadcrumbs (DP-5).
+                  child: BlocProvider(
+                    lazy: true,
+                    create: (context) =>
+                        ProjectOverviewBloc(
+                          projectRepository: context.read<ProjectRepository>(),
+                        )..add(
+                          ProjectOverviewEvent.fetchProject(
+                            projectId: projectId,
+                          ),
+                        ),
+                    // Thumbnails of the project's photos (doc/05 §9).
+                    child: BlocProvider(
+                      create: (context) => EvidenceMediaBloc(
+                        evidenceRepository: context.read<EvidenceRepository>(),
+                      ),
+                      child: ProjectShell(
+                        projectId: projectId,
+                        location: state.uri.toString(),
+                        child: child,
+                      ),
                     ),
                   ),
-                  // The latest activity, live (doc/04e M5-7).
-                  BlocProvider(
-                    create: (context) => FeedBloc(
-                      activityRepository: context.read<ActivityRepository>(),
-                    ),
+                ),
+              );
+            },
+            routes: [
+              GoRoute(
+                name: projectRouteName,
+                path: projectPage,
+                redirect: _requireProjectId,
+                pageBuilder: (context, state) => NoTransitionPage<void>(
+                  key: state.pageKey,
+                  child: MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: (context) => ProjectOverviewBloc(
+                          projectRepository: context.read<ProjectRepository>(),
+                          // The members card (doc/05 §9 DP-4).
+                          membershipRepository: context
+                              .read<MembershipRepository>(),
+                        ),
+                      ),
+                      // The latest activity, live (doc/04e M5-7).
+                      BlocProvider(
+                        create: (context) => FeedBloc(
+                          activityRepository: context
+                              .read<ActivityRepository>(),
+                        ),
+                      ),
+                    ],
+                    child: ProjectOverviewPage(projectId: _projectId(state)!),
                   ),
-                ],
-                child: ProjectOverviewPage(projectId: _projectId(state)!),
+                ),
+                routes: _projectSubRoutes,
               ),
-            ),
-            routes: _projectSubRoutes,
+            ],
           ),
           GoRoute(
             name: joinRouteName,

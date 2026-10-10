@@ -16,3 +16,6 @@ fields:
   progressPercent: int
   ### Shown beside the percentage (doc/04e M5-F2).
   approvedStageCount: int, default=0
+  ### The stages in plan order, for the stage bar and what waits for
+  ### someone (doc/05 §9).
+  stages: List<StageBrief>?

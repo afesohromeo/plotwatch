@@ -53,6 +53,10 @@ class _LocalizeSitePageState extends State<LocalizeSitePage> {
       props: ScaffoldWrapperProps(
         leading: BackButton(onPressed: _backToProject),
         title: Text(l10n.localizeSiteTitle),
+        bottom: ProjectBreadcrumbBar(
+          projectId: widget.projectId,
+          leaf: l10n.localizeSiteTitle,
+        ),
       ),
       mobileBody: widget.isWeb
           ? AuthFormLayout(

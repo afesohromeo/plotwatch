@@ -107,6 +107,7 @@ class StageService {
     final stageIds = {for (final s in stages) s.id!};
     final items = await _itemsOf(session, stageIds, transaction);
     final covered = await _coveredItems(session, stageIds, transaction);
+    final latest = await _latestEvidence(session, stageIds, transaction);
     return StagePlan(
       stages: [
         for (final stage in stages)
@@ -114,6 +115,7 @@ class StageService {
             stage: stage,
             items: items[stage.id] ?? [],
             itemsCovered: covered[stage.id] ?? 0,
+            latestEvidenceId: latest[stage.id],
           ),
       ],
       budgetTotalMinor: budgetTotal(stages),
@@ -124,6 +126,40 @@ class StageService {
   Future<StageView> get(Session session, int projectId, int stageId) async {
     final stage = await _stage(session, projectId, stageId, null);
     return _view(session, stage, null);
+  }
+
+  /// The stages in plan order, in short (doc/05 §9).
+  static List<StageBrief> briefs(List<Stage> stages) => [
+    for (final stage in [
+      ...stages,
+    ]..sort((a, b) => a.orderIndex.compareTo(b.orderIndex)))
+      StageBrief(
+        id: stage.id!,
+        name: stage.name,
+        status: stage.status,
+        budgetMinor: stage.budgetMinor,
+      ),
+  ];
+
+  /// Per stage, its latest finalized photo (doc/05 §9).
+  Future<Map<int, int>> _latestEvidence(
+    Session session,
+    Set<int> stageIds,
+    Transaction? transaction,
+  ) async {
+    if (stageIds.isEmpty) return {};
+    final photos = await Evidence.db.find(
+      session,
+      where: (t) =>
+          t.stageId.inSet(stageIds) & t.status.equals(EvidenceStatus.finalized),
+      orderBy: (t) => t.id.desc(),
+      transaction: transaction,
+    );
+    final latest = <int, int>{};
+    for (final photo in photos) {
+      latest.putIfAbsent(photo.stageId, () => photo.id!);
+    }
+    return latest;
   }
 
   /// The stages of several projects, for the project list's progress.

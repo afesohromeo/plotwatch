@@ -13,6 +13,9 @@ void main() {
   });
 
   test('Given someone who has left then they are marked former', () {
-    expect(personLabel(l10n, 'Bob', former: true), l10n.formerMemberName('Bob'));
+    expect(
+      personLabel(l10n, 'Bob', former: true),
+      l10n.formerMemberName('Bob'),
+    );
   });
 }

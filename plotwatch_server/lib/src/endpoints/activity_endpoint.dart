@@ -14,13 +14,16 @@ class ActivityEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  /// Newest first, older than [beforeId] (`_standards/14` §3.3). Nullable
-  /// instead of default values: see `ProjectEndpoint.list`.
+  /// Newest first, older than [beforeId] (`_standards/14` §3.3), only
+  /// the [types] given and only [stageId]'s events when given (doc/05
+  /// §9.4). Nullable instead of default values: see `ProjectEndpoint.list`.
   Future<ActivityPage> list(
     Session session,
     int projectId, {
     int? beforeId,
     int? pageSize,
+    List<ActivityType>? types,
+    int? stageId,
   }) async {
     await _permissions.require(session, projectId, ProjectAction.viewProject);
     return _service.list(
@@ -28,6 +31,8 @@ class ActivityEndpoint extends Endpoint {
       projectId,
       beforeId: beforeId,
       pageSize: pageSize ?? 20,
+      types: types,
+      stageId: stageId,
     );
   }
 

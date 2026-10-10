@@ -22,12 +22,14 @@ abstract class StageView
     required this.stage,
     required this.items,
     required this.itemsCovered,
+    this.latestEvidenceId,
   });
 
   factory StageView({
     required _igkbma1f.Stage stage,
     required List<_ifywsnp6.ChecklistItem> items,
     required int itemsCovered,
+    int? latestEvidenceId,
   }) = _StageViewImpl;
 
   factory StageView.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -39,6 +41,7 @@ abstract class StageView
         jsonSerialization['items'],
       ),
       itemsCovered: jsonSerialization['itemsCovered'] as int,
+      latestEvidenceId: jsonSerialization['latestEvidenceId'] as int?,
     );
   }
 
@@ -50,6 +53,9 @@ abstract class StageView
   /// Items with at least one capture; 0 until captures exist (M4).
   int itemsCovered;
 
+  /// The stage's latest finalized photo, filled in the plan (doc/05 §9).
+  int? latestEvidenceId;
+
   /// Returns a shallow copy of this [StageView]
   /// with some or all fields replaced by the given arguments.
   @_is.useResult
@@ -57,6 +63,7 @@ abstract class StageView
     _igkbma1f.Stage? stage,
     List<_ifywsnp6.ChecklistItem>? items,
     int? itemsCovered,
+    int? latestEvidenceId,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -65,6 +72,7 @@ abstract class StageView
       'stage': stage.toJson(),
       'items': items.toJson(valueToJson: (v) => v.toJson()),
       'itemsCovered': itemsCovered,
+      if (latestEvidenceId != null) 'latestEvidenceId': latestEvidenceId,
     };
   }
 
@@ -75,6 +83,7 @@ abstract class StageView
       'stage': stage.toJsonForProtocol(),
       'items': items.toJson(valueToJson: (v) => v.toJsonForProtocol()),
       'itemsCovered': itemsCovered,
+      if (latestEvidenceId != null) 'latestEvidenceId': latestEvidenceId,
     };
   }
 
@@ -84,15 +93,19 @@ abstract class StageView
   }
 }
 
+class _Undefined {}
+
 class _StageViewImpl extends StageView {
   _StageViewImpl({
     required _igkbma1f.Stage stage,
     required List<_ifywsnp6.ChecklistItem> items,
     required int itemsCovered,
+    int? latestEvidenceId,
   }) : super._(
          stage: stage,
          items: items,
          itemsCovered: itemsCovered,
+         latestEvidenceId: latestEvidenceId,
        );
 
   /// Returns a shallow copy of this [StageView]
@@ -103,11 +116,15 @@ class _StageViewImpl extends StageView {
     _igkbma1f.Stage? stage,
     List<_ifywsnp6.ChecklistItem>? items,
     int? itemsCovered,
+    Object? latestEvidenceId = _Undefined,
   }) {
     return StageView(
       stage: stage ?? this.stage.copyWith(),
       items: items ?? this.items.map((e0) => e0.copyWith()).toList(),
       itemsCovered: itemsCovered ?? this.itemsCovered,
+      latestEvidenceId: latestEvidenceId is int?
+          ? latestEvidenceId
+          : this.latestEvidenceId,
     );
   }
 }

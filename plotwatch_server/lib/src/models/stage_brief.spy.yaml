@@ -1,0 +1,9 @@
+### A stage in short, in plan order: the project list's and the project
+### page's stage bar and "waiting for your review" (doc/05 §9).
+class: StageBrief
+fields:
+  id: int
+  name: String
+  status: StageStatus
+  ### In minor units, for the web stage table.
+  budgetMinor: int, default=0

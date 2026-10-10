@@ -17,9 +17,22 @@ class ProjectApiProvider {
     }
   }
 
-  Future<ProjectSummaryPage> list({int? page, int? pageSize}) async {
+  /// [status], [search] and [sort]: doc/05 §9.5.
+  Future<ProjectSummaryPage> list({
+    int? page,
+    int? pageSize,
+    ProjectStatus? status,
+    String? search,
+    ProjectSort? sort,
+  }) async {
     try {
-      return await _client.project.list(page: page, pageSize: pageSize);
+      return await _client.project.list(
+        page: page,
+        pageSize: pageSize,
+        status: status,
+        search: search,
+        sort: sort,
+      );
     } catch (e) {
       throw ApiErrorHandler.handle(e);
     }

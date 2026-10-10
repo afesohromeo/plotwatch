@@ -7,10 +7,15 @@ class EmptyWidget extends StatelessWidget {
     required this.emptyText,
     required this.onPressed,
     this.parentContext,
+    this.actionText,
   });
   final String emptyText;
   final VoidCallback onPressed;
   final BuildContext? parentContext;
+
+  /// The button's text; Refresh by default (e.g. Clear filters, doc/05
+  /// §9.5).
+  final String? actionText;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +38,8 @@ class EmptyWidget extends StatelessWidget {
             TextButton(
               onPressed: onPressed,
               child: Text(
-                AppLocalizations.of(parentContext ?? context)!.refresh,
+                actionText ??
+                    AppLocalizations.of(parentContext ?? context)!.refresh,
                 style: context.textTheme.displayLarge!.copyWith(fontSize: 16),
               ),
             ),

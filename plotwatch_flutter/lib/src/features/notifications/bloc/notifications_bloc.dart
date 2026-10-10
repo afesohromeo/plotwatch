@@ -79,6 +79,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       final result = await _notificationRepository.fetchNotifications(
         beforeId: event.pageKey == 0 ? null : event.pageKey,
         size: size,
+        unreadOnly: event.unreadOnly,
       );
       final page = result.content;
       final known = {for (final n in state.notifications) n.id};

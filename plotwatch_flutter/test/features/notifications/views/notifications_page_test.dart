@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -149,6 +151,101 @@ void main() {
       await tester.pump();
 
       verify(() => bloc.add(const NotificationsEvent.markAllRead())).called(1);
+    });
+  });
+
+  // doc/05 §9 DP-9.
+  testWidgets('Given unread and read notifications then they sit under New '
+      'and Earlier', (tester) async {
+    whenListen(
+      bloc,
+      Stream.value(
+        NotificationsState(
+          notifications: [unread, read],
+          paginatedNotifications: [unread, read],
+          maxNotifications: true,
+          notificationsPageKey: 6,
+          notificationsListStatus: GenericStatus.success,
+        ),
+      ),
+      initialState: const NotificationsState(),
+    );
+
+    await pumpPage(tester, const NotificationsPage());
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.notificationsNew), findsOneWidget);
+    expect(find.text(l10n.notificationsEarlier), findsOneWidget);
+  });
+
+  // doc/05 §9.5: All / Unread, on the server.
+  group('Given the Unread chip', () {
+    late StreamController<NotificationsState> states;
+
+    setUp(() => states = StreamController<NotificationsState>());
+    tearDown(() {
+      states.close();
+    });
+
+    Future<void> pumpCentre(WidgetTester tester) async {
+      whenListen(bloc, states.stream, initialState: const NotificationsState());
+      await pumpPage(tester, const NotificationsPage());
+      await tester.pump();
+    }
+
+    Future<void> refreshed(WidgetTester tester) async {
+      states.add(
+        const NotificationsState(notificationsRefreshController: true),
+      );
+      await tester.pump();
+    }
+
+    testWidgets('when it is chosen then only the unread ones are asked for', (
+      tester,
+    ) async {
+      await pumpCentre(tester);
+
+      await tester.tap(
+        find.byKey(FilterChips.chipKey(NotificationsPage.filterChipsPrefix, 1)),
+      );
+      await tester.pump();
+      verify(
+        () => bloc.add(const NotificationsEvent.refreshNotifications()),
+      ).called(1);
+      await refreshed(tester);
+
+      verify(
+        () => bloc.add(
+          const NotificationsEvent.fetchNotifications(unreadOnly: true),
+        ),
+      ).called(1);
+    });
+
+    testWidgets('when none is unread then it offers to show them all', (
+      tester,
+    ) async {
+      await pumpCentre(tester);
+      await tester.tap(
+        find.byKey(FilterChips.chipKey(NotificationsPage.filterChipsPrefix, 1)),
+      );
+      await tester.pump();
+      await refreshed(tester);
+      states.add(
+        const NotificationsState(
+          notificationsListStatus: GenericStatus.success,
+          maxNotifications: true,
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.text(l10n.noMatches), findsOneWidget);
+      await tester.tap(find.text(l10n.clearFilters));
+      await tester.pump();
+      await refreshed(tester);
+      verify(
+        () => bloc.add(const NotificationsEvent.fetchNotifications()),
+      ).called(greaterThanOrEqualTo(1));
     });
   });
 }

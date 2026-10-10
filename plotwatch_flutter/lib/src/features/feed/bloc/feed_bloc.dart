@@ -33,6 +33,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     emit(
       state.copyWith(
         projectId: event.projectId,
+        filterTypes: event.types,
+        filterStageId: event.stageId,
         activityListStatus: GenericStatus.loading,
         activityListError: null,
         activity: event.pageKey == 0 ? [] : state.activity,
@@ -45,6 +47,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         event.projectId,
         beforeId: event.pageKey == 0 ? null : event.pageKey,
         size: size,
+        types: event.types,
+        stageId: event.stageId,
       );
       final page = result.content;
       // A live event may already be on top (_standards/14 §3.3).
@@ -99,7 +103,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       case LiveItem(:final item):
         final known = state.activity.any((e) => e.event.id == item.event.id);
         emit(
-          known
+          known || !_matches(item.event)
               ? state.copyWith(reconnecting: false)
               : state.copyWith(
                   // Oldest first from the stream: each goes on top.
@@ -113,6 +117,14 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       case LiveConnected():
         emit(state.copyWith(reconnecting: false));
     }
+  }
+
+  /// Whether a live event fits the chosen filter (doc/05 §9.5).
+  bool _matches(ActivityEvent event) {
+    final types = state.filterTypes;
+    final stageId = state.filterStageId;
+    return (types == null || types.isEmpty || types.contains(event.type)) &&
+        (stageId == null || event.stageId == stageId);
   }
 
   void _watch(int projectId, {required int afterId}) {

@@ -9,9 +9,11 @@ sealed class NotificationsEvent with _$NotificationsEvent {
   const factory NotificationsEvent.stopped() = _Stopped;
 
   /// Fetches the notifications older than [pageKey] (the last loaded ID; 0
-  /// for the newest), `_standards/14` §3.3.
+  /// for the newest), `_standards/14` §3.3; only the unread ones with
+  /// [unreadOnly] (doc/05 §9.5).
   const factory NotificationsEvent.fetchNotifications({
     @Default(0) int pageKey,
+    @Default(false) bool unreadOnly,
     int? size,
   }) = _FetchNotifications;
 

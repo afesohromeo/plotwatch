@@ -38,6 +38,10 @@ class _EditProjectPageState extends State<EditProjectPage> {
       props: ScaffoldWrapperProps(
         leading: BackButton(onPressed: _backToProject),
         title: Text(l10n.editProjectTitle),
+        bottom: ProjectBreadcrumbBar(
+          projectId: widget.projectId,
+          leaf: l10n.editProjectTitle,
+        ),
         resizeToAvoidBottomInset: true,
       ),
       mobileBody: BlocConsumer<ProjectOverviewBloc, ProjectOverviewState>(

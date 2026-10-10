@@ -6,3 +6,5 @@ fields:
   items: List<ChecklistItem>
   ### Items with at least one capture; 0 until captures exist (M4).
   itemsCovered: int
+  ### The stage's latest finalized photo, filled in the plan (doc/05 §9).
+  latestEvidenceId: int?

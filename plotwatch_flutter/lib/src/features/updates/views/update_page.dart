@@ -43,6 +43,11 @@ class _UpdatePageState extends State<UpdatePage> {
           ),
         ),
         title: Text(l10n.updateTitle),
+        bottom: ProjectBreadcrumbBar(
+          projectId: widget.projectId,
+          section: ProjectTab.activity,
+          leaf: l10n.updateTitle,
+        ),
       ),
       mobileBody: BlocBuilder<UpdateBloc, UpdateState>(
         builder: (context, state) {
@@ -57,11 +62,7 @@ class _UpdatePageState extends State<UpdatePage> {
                 if (update.authorName case final name?)
                   DetailRow(
                     label: l10n.labelPostedBy,
-                    value: personLabel(
-                      l10n,
-                      name,
-                      former: update.authorFormer,
-                    ),
+                    value: personLabel(l10n, name, former: update.authorFormer),
                   ),
                 if (state.stageName case final stage?)
                   DetailRow(label: l10n.labelUpdateStage, value: stage),

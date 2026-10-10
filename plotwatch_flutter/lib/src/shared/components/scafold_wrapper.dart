@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 enum DrawerMode {
@@ -32,11 +33,19 @@ class ScaffoldWrapper extends StatelessWidget {
     this.elevation,
     this.toolBarHeight,
     this.showDrawer = true,
+    this.showBell = true,
+    this.subtitle,
+    this.buttonLabel,
     this.drawerMode = DrawerMode.overlay,
     this.fixedDrawerWidth = 280,
   });
 
   final Widget? body;
+
+  /// doc/05 §9 DP-6.
+  final bool showBell;
+  final String? subtitle;
+  final String? buttonLabel;
   final Widget? leading;
   final Widget? title;
   final PreferredSizeWidget? bottom;
@@ -60,10 +69,44 @@ class ScaffoldWrapper extends StatelessWidget {
   final DrawerMode drawerMode;
   final double fixedDrawerWidth;
 
+  /// Signed in, with the app-wide notifications: some widget tests pump a
+  /// page without them.
+  static bool _signedIn(BuildContext context) {
+    try {
+      context.read<NotificationsBloc>();
+      return context.read<AuthenticationBloc>().state.status ==
+          AuthenticationStatus.authenticated;
+    } on ProviderNotFoundException {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     log('scalfold wrapper $showDrawer');
     final scaffoldBody = SafeArea(top: false, child: body!);
+    // The design's labelled button (doc/05 §9.3).
+    final label = buttonLabel;
+    final labelledFab = label == null
+        ? null
+        : FloatingActionButton.extended(
+            onPressed: onPressed,
+            backgroundColor: buttonColor ?? customColors.primary,
+            foregroundColor: customColors.onPrimary,
+            elevation: 4,
+            highlightElevation: 6,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(PlotwatchTheme.cardRadius),
+            ),
+            icon: buttonIcon ?? const Icon(Icons.add_rounded),
+            label: Text(
+              label,
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                color: customColors.onPrimary,
+                fontSize: 15,
+              ),
+            ),
+          );
     final buildFab = Padding(
       padding: floatingButtonpadding ?? const EdgeInsets.only(top: 65.0),
       child: FloatingActionButton(
@@ -80,7 +123,7 @@ class ScaffoldWrapper extends StatelessWidget {
       ),
     );
     return Scaffold(
-      backgroundColor: bgColor ?? customColors.background,
+      backgroundColor: bgColor ?? customColors.ground,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       floatingActionButtonLocation: floatingActionButtonLocation,
       appBar: hasAppbar
@@ -89,21 +132,44 @@ class ScaffoldWrapper extends StatelessWidget {
               elevation: elevation,
               centerTitle: false,
               automaticallyImplyLeading: false,
-              leadingWidth: 60,
+              leadingWidth: 56,
               bottom: bottom,
 
               leading: leading,
 
-              actions: actions,
+              actions: [
+                if (showBell && _signedIn(context)) const NotificationBell(),
+                ...?actions,
+                const SizedBox(width: 8),
+              ],
               toolbarHeight: toolBarHeight ?? 64,
               backgroundColor: appBarBgColor,
-              title: title,
-              titleSpacing: 0,
+              // The title with its muted line under it (doc/05 §9.3).
+              title: subtitle == null
+                  ? title
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ?title,
+                        Text(
+                          subtitle!,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(fontSize: 12),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+              titleSpacing: leading == null ? 20 : 4,
               // title of appbar
             )
           : null,
       body: scaffoldBody,
-      floatingActionButton: showFloatingButton ? buildFab : null,
+      floatingActionButton: showFloatingButton
+          ? (labelledFab ?? buildFab)
+          : null,
       drawer: drawerMode == DrawerMode.overlay && showDrawer == true
           ? AppDrawer(parentContext: context)
           : null,

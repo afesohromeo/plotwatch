@@ -9,13 +9,23 @@ class ProjectRepository {
 
   final ProjectApiProvider _apiProvider;
 
-  /// A page of the caller's projects (`_standards/14` §3.2).
+  /// A page of the caller's projects (`_standards/14` §3.2), filtered and
+  /// ordered on the server (doc/05 §9.5).
   Future<PaginatedList<ProjectSummary>> fetchProjects(
     int pageKey, {
     int? size,
+    ProjectStatus? status,
+    String? keyword,
+    ProjectSort? sort,
   }) async {
     try {
-      final page = await _apiProvider.list(page: pageKey, pageSize: size);
+      final page = await _apiProvider.list(
+        page: pageKey,
+        pageSize: size,
+        status: status,
+        search: keyword,
+        sort: sort,
+      );
       return PaginatedList(
         content: page.items,
         pagination: Pagination(size: page.pageSize),

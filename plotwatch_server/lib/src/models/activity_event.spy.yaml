@@ -8,9 +8,14 @@ fields:
   type: ActivityType
   targetType: String
   targetId: int?
+  ### The stage it concerns, for the feed's stage filter (doc/05 §9.4).
+  ### No relation: a stage's deletion is recorded after the row is gone.
+  stageId: int?
   ### Small summary so the feed renders without extra calls.
   payload: Map<String, String>?
   createdAt: DateTime
 indexes:
   activity_event_project_idx:
     fields: projectId, id
+  activity_event_stage_idx:
+    fields: projectId, stageId, id

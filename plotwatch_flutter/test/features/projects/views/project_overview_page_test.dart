@@ -336,7 +336,9 @@ void main() {
   group('Given a closed project', () {
     for (final status in [ProjectStatus.completed, ProjectStatus.archived]) {
       testWidgets('when it is ${status.name} then a banner says it is '
-          'read-only and the owner has no edit or site buttons', (tester) async {
+          'read-only and the owner has no edit or site buttons', (
+        tester,
+      ) async {
         await pumpWith(
           tester,
           loaded(
@@ -490,6 +492,47 @@ void main() {
           ),
         ),
       ).called(1);
+    });
+  });
+
+  // doc/05 §9 DP-1, DP-4.
+  group('Given the redrawn Overview tab', () {
+    testWidgets('when a stage waits for the owner then the review card shows '
+        'it', (tester) async {
+      await pumpWith(
+        tester,
+        loaded(
+          testOverview(
+            project: testProject(status: ProjectStatus.active),
+            stages: testBriefs([StageStatus.approved, StageStatus.submitted]),
+          ),
+        ),
+      );
+
+      expect(find.byKey(ProjectOverviewPage.attentionCardKey), findsOneWidget);
+      expect(find.text(l10n.attentionReview(1, 'Stage 2')), findsOneWidget);
+    });
+
+    testWidgets('when the members are loaded then the card counts them', (
+      tester,
+    ) async {
+      await pumpWith(
+        tester,
+        loaded(testOverview()).copyWith(
+          members: [
+            testMember(),
+            testMember(
+              id: 2,
+              fullName: 'Bob Mbarga',
+              role: ProjectRole.siteManager,
+            ),
+          ],
+        ),
+      );
+
+      expect(find.byKey(ProjectOverviewPage.membersButtonKey), findsOneWidget);
+      expect(find.text(l10n.membersCount(2)), findsOneWidget);
+      expect(find.text('AL'), findsOneWidget);
     });
   });
 }

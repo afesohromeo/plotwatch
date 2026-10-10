@@ -30,18 +30,26 @@ class ProjectEndpoint extends Endpoint {
     stages: StageService.validatePlan(stages ?? []),
   );
 
-  /// The caller's projects, a page at a time (`_standards/14` §3.1).
+  /// The caller's projects, a page at a time (`_standards/14` §3.1): only
+  /// [status] when given, only names containing [search], ordered by
+  /// [sort] (the latest activity first by default; doc/05 §9.4).
   /// Nullable instead of default values: the generated client makes a named
   /// parameter with a default required (Serverpod 4.0.3).
   Future<ProjectSummaryPage> list(
     Session session, {
     int? page,
     int? pageSize,
+    ProjectStatus? status,
+    String? search,
+    ProjectSort? sort,
   }) => _service.list(
     session,
     session.authenticated!.authUserId,
     page: page ?? 0,
     pageSize: pageSize ?? 20,
+    status: status,
+    search: search,
+    sort: sort ?? ProjectSort.recent,
   );
 
   Future<ProjectOverview> get(Session session, int projectId) async {

@@ -10,6 +10,7 @@
 // ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:plotwatch_server/src/generated/activity_type.dart' as _idpi4lil;
 import 'package:plotwatch_server/src/generated/evidence_commit.dart'
     as _idi5nd8p;
 import 'package:plotwatch_server/src/generated/media_variant.dart' as _i70qn4qh;
@@ -18,6 +19,7 @@ import 'package:plotwatch_server/src/generated/progress_update_draft.dart'
 import 'package:plotwatch_server/src/generated/project_details.dart'
     as _i4y7utee;
 import 'package:plotwatch_server/src/generated/project_role.dart' as _izsiizob;
+import 'package:plotwatch_server/src/generated/project_sort.dart' as _ickpqaa4;
 import 'package:plotwatch_server/src/generated/project_status.dart'
     as _ipfaavrx;
 import 'package:plotwatch_server/src/generated/review_decision.dart'
@@ -133,6 +135,16 @@ class Endpoints extends _is.EndpointDispatch {
               type: _is.getType<int?>(),
               nullable: true,
             ),
+            'types': _is.ParameterDescription(
+              name: 'types',
+              type: _is.getType<List<_idpi4lil.ActivityType>?>(),
+              nullable: true,
+            ),
+            'stageId': _is.ParameterDescription(
+              name: 'stageId',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -144,6 +156,8 @@ class Endpoints extends _is.EndpointDispatch {
                     params['projectId'],
                     beforeId: params['beforeId'],
                     pageSize: params['pageSize'],
+                    types: params['types'],
+                    stageId: params['stageId'],
                   ),
         ),
         'watch': _is.MethodStreamConnector(
@@ -850,6 +864,11 @@ class Endpoints extends _is.EndpointDispatch {
               type: _is.getType<int?>(),
               nullable: true,
             ),
+            'unreadOnly': _is.ParameterDescription(
+              name: 'unreadOnly',
+              type: _is.getType<bool?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -861,6 +880,7 @@ class Endpoints extends _is.EndpointDispatch {
                         session,
                         beforeId: params['beforeId'],
                         pageSize: params['pageSize'],
+                        unreadOnly: params['unreadOnly'],
                       ),
         ),
         'unreadCount': _is.MethodConnector(
@@ -1078,6 +1098,21 @@ class Endpoints extends _is.EndpointDispatch {
               type: _is.getType<int?>(),
               nullable: true,
             ),
+            'status': _is.ParameterDescription(
+              name: 'status',
+              type: _is.getType<_ipfaavrx.ProjectStatus?>(),
+              nullable: true,
+            ),
+            'search': _is.ParameterDescription(
+              name: 'search',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+            'sort': _is.ParameterDescription(
+              name: 'sort',
+              type: _is.getType<_ickpqaa4.ProjectSort?>(),
+              nullable: true,
+            ),
           },
           call:
               (
@@ -1088,6 +1123,9 @@ class Endpoints extends _is.EndpointDispatch {
                     session,
                     page: params['page'],
                     pageSize: params['pageSize'],
+                    status: params['status'],
+                    search: params['search'],
+                    sort: params['sort'],
                   ),
         ),
         'get': _is.MethodConnector(

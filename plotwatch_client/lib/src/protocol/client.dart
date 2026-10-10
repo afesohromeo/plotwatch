@@ -15,6 +15,7 @@ import 'dart:typed_data' as _idt;
 import 'package:http/http.dart' as _i85jenna;
 import 'package:plotwatch_client/src/protocol/activity_entry.dart' as _i1w9howa;
 import 'package:plotwatch_client/src/protocol/activity_page.dart' as _i6kb728u;
+import 'package:plotwatch_client/src/protocol/activity_type.dart' as _ip4wlfh9;
 import 'package:plotwatch_client/src/protocol/evidence.dart' as _iqq0l4bs;
 import 'package:plotwatch_client/src/protocol/evidence_commit.dart'
     as _imtsa3z6;
@@ -39,6 +40,7 @@ import 'package:plotwatch_client/src/protocol/project_member.dart' as _ibpqw7ry;
 import 'package:plotwatch_client/src/protocol/project_overview.dart'
     as _ixsm3hkh;
 import 'package:plotwatch_client/src/protocol/project_role.dart' as _iei5qef1;
+import 'package:plotwatch_client/src/protocol/project_sort.dart' as _i50ipmum;
 import 'package:plotwatch_client/src/protocol/project_status.dart' as _id1x6c7u;
 import 'package:plotwatch_client/src/protocol/project_summary_page.dart'
     as _i5ea8tcf;
@@ -68,12 +70,15 @@ class EndpointActivity extends _isc.EndpointRef {
   @override
   String get name => 'activity';
 
-  /// Newest first, older than [beforeId] (`_standards/14` §3.3). Nullable
-  /// instead of default values: see `ProjectEndpoint.list`.
+  /// Newest first, older than [beforeId] (`_standards/14` §3.3), only
+  /// the [types] given and only [stageId]'s events when given (doc/05
+  /// §9.4). Nullable instead of default values: see `ProjectEndpoint.list`.
   _ida.Future<_i6kb728u.ActivityPage> list(
     int projectId, {
     int? beforeId,
     int? pageSize,
+    List<_ip4wlfh9.ActivityType>? types,
+    int? stageId,
   }) => caller.callServerEndpoint<_i6kb728u.ActivityPage>(
     'activity',
     'list',
@@ -81,6 +86,8 @@ class EndpointActivity extends _isc.EndpointRef {
       'projectId': projectId,
       'beforeId': beforeId,
       'pageSize': pageSize,
+      'types': types,
+      'stageId': stageId,
     },
   );
 
@@ -566,17 +573,20 @@ class EndpointNotification extends _isc.EndpointRef {
   @override
   String get name => 'notification';
 
-  /// Newest first, older than [beforeId], with the unread count. Nullable
-  /// instead of default values: see `ProjectEndpoint.list`.
+  /// Newest first, older than [beforeId], with the unread count; only the
+  /// unread ones with [unreadOnly] (doc/05 §9.4). Nullable instead of
+  /// default values: see `ProjectEndpoint.list`.
   _ida.Future<_irwyz7rs.NotificationPage> list({
     int? beforeId,
     int? pageSize,
+    bool? unreadOnly,
   }) => caller.callServerEndpoint<_irwyz7rs.NotificationPage>(
     'notification',
     'list',
     {
       'beforeId': beforeId,
       'pageSize': pageSize,
+      'unreadOnly': unreadOnly,
     },
   );
 
@@ -704,18 +714,26 @@ class EndpointProject extends _isc.EndpointRef {
     },
   );
 
-  /// The caller's projects, a page at a time (`_standards/14` §3.1).
+  /// The caller's projects, a page at a time (`_standards/14` §3.1): only
+  /// [status] when given, only names containing [search], ordered by
+  /// [sort] (the latest activity first by default; doc/05 §9.4).
   /// Nullable instead of default values: the generated client makes a named
   /// parameter with a default required (Serverpod 4.0.3).
   _ida.Future<_i5ea8tcf.ProjectSummaryPage> list({
     int? page,
     int? pageSize,
+    _id1x6c7u.ProjectStatus? status,
+    String? search,
+    _i50ipmum.ProjectSort? sort,
   }) => caller.callServerEndpoint<_i5ea8tcf.ProjectSummaryPage>(
     'project',
     'list',
     {
       'page': page,
       'pageSize': pageSize,
+      'status': status,
+      'search': search,
+      'sort': sort,
     },
   );
 

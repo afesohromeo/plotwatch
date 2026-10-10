@@ -240,7 +240,9 @@ void main() {
         'them', (tester) async {
       await pumpWith(
         tester,
-        loaded(ProjectRole.viewer).copyWith(formerMembers: [testFormerMember()]),
+        loaded(
+          ProjectRole.viewer,
+        ).copyWith(formerMembers: [testFormerMember()]),
       );
 
       expect(find.text(l10n.formerMembersTitle), findsOneWidget);

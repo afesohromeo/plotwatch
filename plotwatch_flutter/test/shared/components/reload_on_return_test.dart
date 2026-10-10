@@ -98,4 +98,60 @@ void main() {
     expect(find.text('x'), findsOneWidget);
     expect(returns, 0);
   });
+
+  // doc/05 §9.4 bug 4: the project pages sit inside a shell route since the
+  // design pass; a stage page must still reload when its photo page closes.
+  testWidgets('Given a page inside a shell route when the page above it goes '
+      'back to it then it reloads once', (tester) async {
+    var shellReturns = 0;
+    final shellRouter = GoRouter(
+      initialLocation: '/stages/3',
+      routes: [
+        ShellRoute(
+          builder: (context, state, child) => Scaffold(body: child),
+          routes: [
+            GoRoute(
+              path: '/stages/:stageId',
+              builder: (context, state) => ReloadOnReturn(
+                onReturn: () => shellReturns++,
+                child: const Text('stage'),
+              ),
+              routes: [
+                GoRoute(
+                  path: 'photo',
+                  builder: (context, state) => const Text('photo'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+    await tester.pumpWidget(MaterialApp.router(routerConfig: shellRouter));
+    await tester.pumpAndSettle();
+
+    shellRouter.go('/stages/3/photo');
+    await tester.pumpAndSettle();
+    shellRouter.go('/stages/3');
+    await tester.pumpAndSettle();
+
+    expect(find.text('stage'), findsOneWidget);
+    expect(shellReturns, 1);
+  });
+
+  // doc/05 §9.4 bug 4: a photo opened directly (from the latest photos, the
+  // activity or a notification) builds its stage page underneath; closing
+  // the photo must still reload the stage.
+  testWidgets('Given the page above was opened directly when it closes then '
+      'the page below reloads once', (tester) async {
+    router.go('/child');
+    await pump(tester);
+    expect(find.text('child'), findsOneWidget);
+
+    router.go('/');
+    await tester.pumpAndSettle();
+
+    expect(find.text('parent'), findsOneWidget);
+    expect(returns, 1);
+  });
 }

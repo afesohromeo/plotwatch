@@ -13,6 +13,9 @@ class ProjectOverviewPage extends StatefulWidget {
 
   static const editButtonKey = Key('project.edit');
   static const statusButtonKey = Key('project.status');
+  static const membersMenuKey = Key('project.menu.members');
+  static Key statusItemKey(ProjectStatus status) =>
+      Key('project.status.${status.name}');
   static const membersButtonKey = Key('project.members');
   static const refreshButtonKey = Key('project.refresh');
   static const localizeButtonKey = Key('project.localizeSite');
@@ -21,6 +24,8 @@ class ProjectOverviewPage extends StatefulWidget {
   static const stagesCardKey = Key('project.stages');
   static const postUpdateButtonKey = Key('project.postUpdate');
   static const closedBannerKey = Key('project.closed');
+  static const attentionCardKey = Key('project.attention');
+  static Key photoKey(int evidenceId) => Key('project.photo.$evidenceId');
   static const archiveNameFieldKey = Key('project.archiveName');
   static const archiveConfirmKey = Key('project.archiveConfirm');
 
@@ -72,6 +77,7 @@ class _ProjectOverviewPageState extends State<ProjectOverviewPage> {
         },
         buildWhen: (previous, current) =>
             previous.overview != current.overview ||
+            previous.members != current.members ||
             previous.overviewStatus != current.overviewStatus,
         builder: (context, state) {
           final overview = state.overview;
@@ -81,20 +87,41 @@ class _ProjectOverviewPageState extends State<ProjectOverviewPage> {
                 onPressed: () => context.goNamed(homeRouteName),
               ),
               title: Text(overview?.project.name ?? l10n.projectsTitle),
+              // "New house · Owner · Active" (doc/05 §9.3).
+              subtitle: overview == null
+                  ? null
+                  : [
+                      overview.project.type.label(l10n),
+                      overview.myRole.label(l10n),
+                      overview.project.status.label(l10n),
+                    ].join(' · '),
               actions: [
-                IconButton(
-                  key: ProjectOverviewPage.refreshButtonKey,
-                  tooltip: l10n.refresh,
-                  color: customColors.primary,
-                  icon: const Icon(Icons.refresh_rounded),
-                  onPressed: _load,
+                AppBarMenu(
+                  items: [
+                    AppBarMenuItem(
+                      key: ProjectOverviewPage.membersMenuKey,
+                      icon: Icons.group_outlined,
+                      label: l10n.membersTitle,
+                      onTap: () => context.goNamed(
+                        membersRouteName,
+                        pathParameters: {'projectId': '${widget.projectId}'},
+                      ),
+                    ),
+                    if (overview != null) ..._ownerActions(overview, l10n),
+                    AppBarMenuItem(
+                      key: ProjectOverviewPage.refreshButtonKey,
+                      icon: Icons.refresh_rounded,
+                      label: l10n.refresh,
+                      onTap: _load,
+                    ),
+                  ],
                 ),
-                if (overview != null) ...?_ownerActions(overview, l10n),
               ],
             ),
             mobileBody: switch (state.overviewStatus) {
               _ when overview != null => _OverviewBody(
                 overview: overview,
+                members: state.members,
                 onRefresh: () async => _load(),
               ),
               GenericStatus.failure => ErrorrWidget(
@@ -147,34 +174,33 @@ class _ProjectOverviewPageState extends State<ProjectOverviewPage> {
   }
 
   /// Edit and status change, for the owner only (doc/02 §3.2; the server
-  /// enforces it too).
-  List<Widget>? _ownerActions(ProjectOverview overview, AppLocalizations l10n) {
-    if (overview.myRole != ProjectRole.owner) return null;
+  /// enforces it too), as items of the ⋮ menu (doc/05 §9.3).
+  List<AppBarMenuItem> _ownerActions(
+    ProjectOverview overview,
+    AppLocalizations l10n,
+  ) {
+    if (overview.myRole != ProjectRole.owner) return const [];
     final nextStatuses = overview.project.status.nextStatuses;
 
     final closed = overview.project.status.isClosed;
     return [
       if (!closed)
-      IconButton(
-        key: ProjectOverviewPage.editButtonKey,
-        tooltip: l10n.editAction,
-        color: customColors.primary,
-        icon: const Icon(Icons.edit_outlined),
-        onPressed: () => context.goNamed(
-          editProjectRouteName,
-          pathParameters: {'projectId': '${widget.projectId}'},
+        AppBarMenuItem(
+          key: ProjectOverviewPage.editButtonKey,
+          icon: Icons.edit_outlined,
+          label: l10n.editAction,
+          onTap: () => context.goNamed(
+            editProjectRouteName,
+            pathParameters: {'projectId': '${widget.projectId}'},
+          ),
         ),
-      ),
-      if (nextStatuses.isNotEmpty)
-        PopupMenuButton<ProjectStatus>(
-          key: ProjectOverviewPage.statusButtonKey,
-          tooltip: l10n.changeStatus,
-          icon: Icon(Icons.flag_outlined, color: customColors.primary),
-          onSelected: (status) => _changeStatus(overview, status, l10n),
-          itemBuilder: (context) => [
-            for (final status in nextStatuses)
-              PopupMenuItem(value: status, child: Text(status.label(l10n))),
-          ],
+      for (final status in nextStatuses)
+        AppBarMenuItem(
+          key: ProjectOverviewPage.statusItemKey(status),
+          icon: Icons.flag_outlined,
+          label: '${l10n.changeStatus}: ${status.label(l10n)}',
+          destructive: status == ProjectStatus.archived,
+          onTap: () => _changeStatus(overview, status, l10n),
         ),
     ];
   }
@@ -246,32 +272,48 @@ class _ArchiveDialogState extends State<_ArchiveDialog> {
   }
 }
 
+/// The Overview tab (doc/05 §9 DP-9): the progress at a glance, what waits
+/// for the user, the members, the latest photos; beside them on wide
+/// screens (below on a phone) the activity, the site and the details.
 class _OverviewBody extends StatelessWidget {
-  const _OverviewBody({required this.overview, required this.onRefresh});
+  const _OverviewBody({
+    required this.overview,
+    required this.members,
+    required this.onRefresh,
+  });
 
   final ProjectOverview overview;
+  final List<MemberView> members;
   final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
     final project = overview.project;
+    final projectId = project.id!;
+    final path = {'projectId': '$projectId'};
+    final stages = overview.stages ?? const <StageBrief>[];
+    final hasBudget = overview.budgetTotalMinor > 0;
+    final attention = attentionFor(
+      stages: stages,
+      role: overview.myRole,
+      canApprove: overview.myCanApprove,
+    );
     String date(DateTime? value) =>
         value == null ? l10n.notSet : formatDate(value.toLocal());
 
-    return AuthFormLayout(
-      title: project.name,
-      subtitle: project.type.label(l10n),
+    return ContentLayout(
       onRefresh: onRefresh,
-      children: [
+      main: [
         // Read-only from now on (doc/04e C-3).
-        if (project.status.isClosed) ...[
+        if (project.status.isClosed)
           Container(
             key: ProjectOverviewPage.closedBannerKey,
             padding: const EdgeInsets.all(AppSpacing.md),
             decoration: BoxDecoration(
               color: customColors.muted.withValues(alpha: .12),
-              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              borderRadius: BorderRadius.circular(PlotwatchTheme.cardRadius),
             ),
             child: Row(
               children: [
@@ -288,60 +330,129 @@ class _OverviewBody extends StatelessWidget {
               ],
             ),
           ),
-          const Gap.vertical(height: AppSpacing.md),
-        ],
-        Wrap(
-          spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.xs,
-          children: [
-            ProjectChip(label: overview.myRole.label(l10n)),
-            ProjectChip(
-              label: project.status.label(l10n),
-              color: project.status.color,
+        // The progress at a glance; opens the Stages tab (doc/04c M3-11).
+        InkWell(
+          key: ProjectOverviewPage.stagesCardKey,
+          borderRadius: BorderRadius.circular(PlotwatchTheme.heroRadius),
+          onTap: () => context.goNamed(stagesRouteName, pathParameters: path),
+          child: HeroProgress(
+            headline: hasBudget
+                ? '${overview.progressPercent}%'
+                : '${overview.approvedStageCount}/${overview.stageCount}',
+            caption: hasBudget
+                ? l10n.budgetApprovedCaption
+                : l10n.stagesApprovedCaption,
+            statuses: [for (final stage in stages) stage.status],
+            stagesSemanticLabel: progressLine(
+              l10n,
+              percent: overview.progressPercent,
+              approved: overview.approvedStageCount,
+              total: overview.stageCount,
+              budgetTotalMinor: overview.budgetTotalMinor,
             ),
-          ],
-        ),
-        const Gap.vertical(height: AppSpacing.lg),
-        if (project.description != null)
-          DetailRow(label: l10n.labelDescription, value: project.description!),
-        DetailRow(label: l10n.labelCurrency, value: project.currencyCode),
-        DetailRow(
-          label: l10n.labelPlannedDates,
-          value: '${date(project.plannedStart)} – ${date(project.plannedEnd)}',
-        ),
-        const Gap.vertical(height: AppSpacing.md),
-        _StagesCard(overview: overview),
-        const Gap.vertical(height: AppSpacing.lg),
-        Text(l10n.siteTitle, style: context.textTheme.titleMedium),
-        const Gap.vertical(height: AppSpacing.sm),
-        ..._site(context, l10n),
-        const Gap.vertical(height: AppSpacing.lg),
-        PrimaryButton(
-          key: ProjectOverviewPage.membersButtonKey,
-          withBg: false,
-          width: double.infinity,
-          onPressed: () => context.goNamed(
-            membersRouteName,
-            pathParameters: {'projectId': '${project.id}'},
+            figures: [
+              (
+                l10n.figureBudget,
+                formatMoneyShort(
+                  overview.budgetTotalMinor,
+                  project.currencyCode,
+                  locale: locale,
+                ),
+              ),
+              (
+                l10n.stagesTitle,
+                l10n.stagesOfTotal(
+                  overview.approvedStageCount,
+                  overview.stageCount,
+                ),
+              ),
+              (l10n.figureEnds, date(project.plannedEnd)),
+            ],
           ),
-          child: Text(l10n.membersTitle),
         ),
+        // What waits for this user (doc/05 §9 DP-1).
+        if (attention case final waiting?)
+          AttentionCard(
+            key: ProjectOverviewPage.attentionCardKey,
+            icon: waiting.review
+                ? Icons.rate_review_outlined
+                : Icons.replay_rounded,
+            title: waiting.review
+                ? l10n.attentionReview(waiting.count, waiting.first.name)
+                : l10n.attentionChanges(waiting.count, waiting.first.name),
+            onTap: () => waiting.count == 1
+                ? context.goNamed(
+                    stageRouteName,
+                    pathParameters: {...path, 'stageId': '${waiting.first.id}'},
+                  )
+                : context.goNamed(stagesRouteName, pathParameters: path),
+          ),
         // News from the site, by the site manager (UPD-01, doc/04e M5-9 b).
         if (overview.myRole == ProjectRole.siteManager &&
-            project.status == ProjectStatus.active) ...[
-          const Gap.vertical(height: AppSpacing.sm),
+            project.status == ProjectStatus.active)
           PrimaryButton(
             key: ProjectOverviewPage.postUpdateButtonKey,
             width: double.infinity,
-            onPressed: () => context.goNamed(
-              createUpdateRouteName,
-              pathParameters: {'projectId': '${project.id}'},
-            ),
+            onPressed: () =>
+                context.goNamed(createUpdateRouteName, pathParameters: path),
             child: Text(l10n.postUpdateAction),
           ),
-        ],
-        const Gap.vertical(height: AppSpacing.lg),
-        LatestActivity(projectId: project.id!),
+        // Members open from here, not from a tab (doc/05 §9 DP-4).
+        _MembersCard(
+          members: members,
+          canInvite:
+              overview.myRole == ProjectRole.owner && !project.status.isClosed,
+          onTap: () => context.goNamed(membersRouteName, pathParameters: path),
+        ),
+        _LatestPhotos(projectId: projectId),
+      ],
+      // Activity · Site · About behind a switch on a phone (doc/05 §9.4).
+      sideLabels: [l10n.activityTitle, l10n.siteTitle, l10n.aboutShort],
+      side: [
+        LatestActivity(projectId: projectId),
+        AppCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(l10n.siteTitle, style: context.textTheme.titleMedium),
+              const Gap.vertical(height: AppSpacing.sm),
+              ..._site(context, l10n),
+            ],
+          ),
+        ),
+        AppCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(l10n.aboutTitle, style: context.textTheme.titleMedium),
+              const Gap.vertical(height: AppSpacing.sm),
+              Wrap(
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.xs,
+                children: [
+                  ProjectChip(label: overview.myRole.label(l10n)),
+                  ProjectChip(
+                    label: project.status.label(l10n),
+                    color: project.status.color,
+                  ),
+                  ProjectChip(label: project.type.label(l10n)),
+                ],
+              ),
+              const Gap.vertical(height: AppSpacing.sm),
+              if (project.description != null)
+                DetailRow(
+                  label: l10n.labelDescription,
+                  value: project.description!,
+                ),
+              DetailRow(label: l10n.labelCurrency, value: project.currencyCode),
+              DetailRow(
+                label: l10n.labelPlannedDates,
+                value:
+                    '${date(project.plannedStart)} – ${date(project.plannedEnd)}',
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -379,10 +490,7 @@ class _OverviewBody extends StatelessWidget {
       ],
     ];
     if (overview.project.status.isClosed) {
-      return [
-        ...details,
-        if (site == null) text(l10n.siteWaiting),
-      ];
+      return [...details, if (site == null) text(l10n.siteWaiting)];
     }
     return [
       ...details,
@@ -445,68 +553,162 @@ class _OverviewBody extends StatelessWidget {
   }
 }
 
-/// The stage plan in short: count, total budget and progress; opens the
-/// plan (doc/04c M3-11).
-class _StagesCard extends StatelessWidget {
-  const _StagesCard({required this.overview});
+/// The members in short: their initials, how many, their roles; opens the
+/// Members page (doc/05 §9 DP-4).
+class _MembersCard extends StatelessWidget {
+  const _MembersCard({
+    required this.members,
+    required this.canInvite,
+    required this.onTap,
+  });
 
-  final ProjectOverview overview;
+  final List<MemberView> members;
+  final bool canInvite;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final locale = Localizations.localeOf(context).languageCode;
+    final roles = {for (final m in members) m.member.role}.toList()
+      ..sort((a, b) => a.index.compareTo(b.index));
 
-    return InkWell(
-      key: ProjectOverviewPage.stagesCardKey,
-      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-      onTap: () => context.goNamed(
-        stagesRouteName,
-        pathParameters: {'projectId': '${overview.project.id}'},
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          border: Border.all(color: customColors.primary.withValues(alpha: .3)),
-          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(l10n.stagesTitle, style: context.textTheme.titleMedium),
-                  const Gap.vertical(height: AppSpacing.xs),
+    return AppCard(
+      key: ProjectOverviewPage.membersButtonKey,
+      onTap: onTap,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      child: Row(
+        children: [
+          if (members.isEmpty)
+            IconTile(
+              icon: Icons.group_outlined,
+              color: customColors.primary,
+              background: customColors.primarySoft,
+            )
+          else
+            AvatarStack(
+              names: [for (final m in members) m.fullName ?? m.email ?? '?'],
+            ),
+          const Gap.horizontal(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  members.isEmpty
+                      ? l10n.membersTitle
+                      : l10n.membersCount(members.length),
+                  style: context.textTheme.titleSmall,
+                ),
+                if (roles.isNotEmpty)
                   Text(
-                    l10n.stageCount(overview.stageCount),
-                    style: context.textTheme.bodyMedium,
-                  ),
-                  Text(
-                    formatMoney(
-                      overview.budgetTotalMinor,
-                      overview.project.currencyCode,
-                      locale: locale,
-                    ),
-                    style: context.textTheme.bodyMedium,
-                  ),
-                  Text(
-                    progressLine(
-                      l10n,
-                      percent: overview.progressPercent,
-                      approved: overview.approvedStageCount,
-                      total: overview.stageCount,
-                      budgetTotalMinor: overview.budgetTotalMinor,
-                    ),
+                    roles.map((role) => role.label(l10n)).join(', '),
                     style: context.textTheme.bodySmall,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
+              ],
+            ),
+          ),
+          if (canInvite)
+            Padding(
+              padding: const EdgeInsets.only(left: AppSpacing.sm),
+              child: Text(
+                l10n.inviteAction,
+                style: context.textTheme.titleSmall?.copyWith(
+                  color: customColors.primary,
+                ),
               ),
             ),
-            Icon(Icons.chevron_right_rounded, color: customColors.primary),
-          ],
-        ),
+          Icon(Icons.chevron_right_rounded, color: customColors.muted),
+        ],
       ),
+    );
+  }
+}
+
+/// The project's latest photos, from its feed; each opens its page
+/// (doc/05 §9, B's photos).
+class _LatestPhotos extends StatelessWidget {
+  const _LatestPhotos({required this.projectId});
+
+  final int projectId;
+
+  static const shown = 4;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return BlocBuilder<FeedBloc, FeedState>(
+      buildWhen: (previous, current) => previous.activity != current.activity,
+      builder: (context, state) {
+        final photos = [
+          for (final entry in state.activity)
+            if (entry.event.type == ActivityType.evidenceCaptured &&
+                entry.event.targetId != null &&
+                entry.event.payload?['stageId'] != null)
+              entry.event,
+        ].take(shown).toList();
+        if (photos.isEmpty) return const SizedBox.shrink();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l10n.latestPhotosTitle, style: context.textTheme.titleMedium),
+            const Gap.vertical(height: AppSpacing.sm),
+            Row(
+              children: [
+                for (var i = 0; i < shown; i++) ...[
+                  if (i > 0) const Gap.horizontal(width: 6),
+                  Expanded(
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: i < photos.length
+                          ? InkWell(
+                              key: ProjectOverviewPage.photoKey(
+                                photos[i].targetId!,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                              onTap: () => context.goNamed(
+                                evidenceRouteName,
+                                pathParameters: {
+                                  'projectId': '$projectId',
+                                  'stageId': photos[i].payload!['stageId']!,
+                                  'evidenceId': '${photos[i].targetId}',
+                                },
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    EvidenceImage(
+                                      projectId: projectId,
+                                      evidenceId: photos[i].targetId!,
+                                      variant: MediaVariant.thumbnail,
+                                    ),
+                                    // The badge as a dot (doc/05 §9.3).
+                                    if (VerificationLevel.values
+                                            .asNameMap()[photos[i]
+                                            .payload?['verificationLevel']]
+                                        case final level?)
+                                      Positioned(
+                                        left: 5,
+                                        bottom: 5,
+                                        child: BadgeDot(level: level),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }

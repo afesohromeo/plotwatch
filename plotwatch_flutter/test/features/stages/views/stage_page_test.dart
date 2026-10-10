@@ -447,4 +447,102 @@ void main() {
     expect(find.byKey(StagePage.approveButtonKey), findsNothing);
     expect(find.byKey(StagePage.requestChangesButtonKey), findsNothing);
   });
+
+  // doc/05 §9.5: the mosaic, "+N" for all of them, filters by badge and item.
+  group("Given the stage's photos", () {
+    // Seven photos, newest first on screen: items 20 (odd) and 21 (even).
+    final captures = [
+      for (var id = 1; id <= 7; id++)
+        testEvidence(
+          id: id,
+          checklistItemId: id.isOdd ? 20 : 21,
+          level: switch (id) {
+            2 || 5 => VerificationLevel.partiallyVerified,
+            3 => VerificationLevel.unverified,
+            _ => VerificationLevel.verified,
+          },
+        ),
+    ];
+
+    Future<void> pumpPhotos(WidgetTester tester) async {
+      // Wide: the photos are in the side column, not behind the switch.
+      tester.view.physicalSize = const Size(1200, 2400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await pumpWith(
+        tester,
+        loaded(role: ProjectRole.viewer).copyWith(evidence: captures),
+      );
+    }
+
+    Iterable<int> shownIds() => [
+      for (var id = 1; id <= 7; id++)
+        if (find.byKey(StagePage.photoKey(id)).evaluate().isNotEmpty) id,
+    ];
+
+    Future<void> chooseBadge(WidgetTester tester, int index) async {
+      await tester.tap(
+        find.byKey(FilterChips.chipKey(StagePage.photoBadgeChipsPrefix, index)),
+      );
+      await tester.pump();
+    }
+
+    Future<void> chooseItem(WidgetTester tester, int index) async {
+      await tester.tap(find.byKey(const Key(StagePage.photoItemPickerPrefix)));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(
+          PickerPill.optionKey(StagePage.photoItemPickerPrefix, index),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('then the mosaic shows the newest and +N opens them all', (
+      tester,
+    ) async {
+      await pumpPhotos(tester);
+
+      expect(shownIds(), [4, 5, 6, 7]);
+      expect(find.text('+2'), findsOneWidget);
+
+      await tester.tap(find.byKey(StagePage.morePhotosKey));
+      await tester.pump();
+      expect(shownIds(), [1, 2, 3, 4, 5, 6, 7]);
+
+      await tester.tap(find.byKey(StagePage.showLessKey));
+      await tester.pump();
+      expect(find.text('+2'), findsOneWidget);
+    });
+
+    testWidgets('when a badge is chosen then only those photos show', (
+      tester,
+    ) async {
+      await pumpPhotos(tester);
+
+      await chooseBadge(tester, 2);
+
+      expect(shownIds(), [2, 5]);
+    });
+
+    testWidgets('when an item is picked then only its photos show', (
+      tester,
+    ) async {
+      await pumpPhotos(tester);
+
+      await chooseItem(tester, 2);
+
+      expect(shownIds(), [2, 4, 6]);
+    });
+
+    testWidgets('when nothing fits then it says so', (tester) async {
+      await pumpPhotos(tester);
+
+      await chooseBadge(tester, 3);
+      await chooseItem(tester, 2);
+
+      expect(shownIds(), isEmpty);
+      expect(find.text(l10n.noPhotoHere), findsOneWidget);
+    });
+  });
 }

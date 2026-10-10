@@ -28,7 +28,9 @@ class ProjectListBloc extends Bloc<ProjectListEvent, ProjectListState> {
     final l10n = LocalizationService.localization;
     emit(
       state.copyWith(
-        projectsListStatus: GenericStatus.loading,
+        projectsListStatus: event.searchTerm != null
+            ? GenericStatus.filtering
+            : GenericStatus.loading,
         projectsListError: null,
         projects: event.pageKey == 0 ? [] : state.projects,
         projectsRefreshController: false,
@@ -39,6 +41,9 @@ class ProjectListBloc extends Bloc<ProjectListEvent, ProjectListState> {
       final result = await _projectRepository.fetchProjects(
         event.pageKey,
         size: event.size ?? _kProjectsPageSize,
+        status: event.statusFilter,
+        keyword: event.searchTerm,
+        sort: event.sort,
       );
       final newItems = List<ProjectSummary>.from(result.content);
       emit(

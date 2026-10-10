@@ -5,11 +5,17 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 class NotificationApiProvider {
   Client get _client => ApiProvider().client;
 
-  Future<NotificationPage> list({int? beforeId, int? pageSize}) async {
+  /// [unreadOnly]: doc/05 §9.5.
+  Future<NotificationPage> list({
+    int? beforeId,
+    int? pageSize,
+    bool? unreadOnly,
+  }) async {
     try {
       return await _client.notification.list(
         beforeId: beforeId,
         pageSize: pageSize,
+        unreadOnly: unreadOnly,
       );
     } catch (e) {
       throw ApiErrorHandler.handle(e);

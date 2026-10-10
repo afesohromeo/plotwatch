@@ -10,6 +10,7 @@ class CustomPaginatedGridList<T> extends StatelessWidget {
     this.pageKey,
     this.wrap = false,
     this.physics,
+    this.showNoMoreItemsIndicatorAsGridChild = false,
   });
   final PagingController<int, T> pagingController;
   final PagedChildBuilderDelegate<T> pagedChildBuilderDelegate;
@@ -17,6 +18,7 @@ class CustomPaginatedGridList<T> extends StatelessWidget {
   final PageStorageKey? pageKey;
   final bool wrap;
   final ScrollPhysics? physics;
+  final bool showNoMoreItemsIndicatorAsGridChild;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class CustomPaginatedGridList<T> extends StatelessWidget {
       pagingController: pagingController,
       gridDelegate: gridDelegate,
       builderDelegate: pagedChildBuilderDelegate,
+      showNoMoreItemsIndicatorAsGridChild: showNoMoreItemsIndicatorAsGridChild,
       // key: pageKey,
     );
   }

@@ -41,6 +41,10 @@ class _ReloadOnReturnState extends State<ReloadOnReturn> {
     // No router in some widget tests: nothing to follow.
     if (router == null) return;
     _location = GoRouterState.of(context).matchedLocation;
+    // Not shown yet when built under a page opened directly (a photo from
+    // the activity or a notification): closing that page is a return too
+    // (doc/05 §9.4).
+    _isShown = router.routerDelegate.currentConfiguration.uri.path == _location;
     router.routerDelegate.addListener(_onAddressChanged);
   }
 

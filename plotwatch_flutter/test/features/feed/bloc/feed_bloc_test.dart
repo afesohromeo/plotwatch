@@ -185,4 +185,73 @@ void main() {
           ),
     ],
   );
+
+  // doc/05 §9.5: pages are filtered on the server, live events here.
+  group('Given a filter by kind and stage', () {
+    const types = [ActivityType.evidenceCaptured];
+    setUp(() {
+      when(
+        () => repository.fetchActivity(
+          1,
+          beforeId: null,
+          size: 20,
+          types: types,
+          stageId: 2,
+        ),
+      ).thenAnswer((_) async => page);
+    });
+
+    blocTest<FeedBloc, FeedState>(
+      'when it is fetched then the filter is sent and kept',
+      build: build,
+      act: (bloc) => bloc.add(
+        const FeedEvent.fetchActivity(projectId: 1, types: types, stageId: 2),
+      ),
+      skip: 1,
+      expect: () => [
+        isA<FeedState>()
+            .having((s) => s.filterTypes, 'filterTypes', types)
+            .having((s) => s.filterStageId, 'filterStageId', 2)
+            .having((s) => s.activity, 'activity', [newest, older]),
+      ],
+    );
+
+    blocTest<FeedBloc, FeedState>(
+      'when live events arrive then only the matching ones go on top',
+      build: build,
+      act: (bloc) async {
+        bloc.add(
+          const FeedEvent.fetchActivity(projectId: 1, types: types, stageId: 2),
+        );
+        await pumpEventQueue();
+        live
+          // Another kind.
+          ..add(LiveItem(testActivity(id: 13, stageId: 2)))
+          // Another stage.
+          ..add(
+            LiveItem(
+              testActivity(
+                id: 14,
+                type: ActivityType.evidenceCaptured,
+                stageId: 3,
+              ),
+            ),
+          )
+          ..add(
+            LiveItem(
+              testActivity(
+                id: 15,
+                type: ActivityType.evidenceCaptured,
+                stageId: 2,
+              ),
+            ),
+          );
+        await pumpEventQueue();
+      },
+      verify: (bloc) {
+        expect(bloc.state.activity.map((e) => e.event.id), [15, 12, 11]);
+        expect(bloc.state.liveCount, 1);
+      },
+    );
+  });
 }

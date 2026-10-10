@@ -17,6 +17,7 @@ import 'dart:typed_data' as _idt;
 import 'package:plotwatch_server/src/generated/activity_entry.dart'
     as _i83erjyt;
 import 'package:plotwatch_server/src/generated/activity_page.dart' as _izt89793;
+import 'package:plotwatch_server/src/generated/activity_type.dart' as _idpi4lil;
 import 'package:plotwatch_server/src/generated/evidence.dart' as _icm5mt5e;
 import 'package:plotwatch_server/src/generated/evidence_commit.dart'
     as _idi5nd8p;
@@ -42,6 +43,7 @@ import 'package:plotwatch_server/src/generated/project_member.dart'
 import 'package:plotwatch_server/src/generated/project_overview.dart'
     as _ixpv9kns;
 import 'package:plotwatch_server/src/generated/project_role.dart' as _izsiizob;
+import 'package:plotwatch_server/src/generated/project_sort.dart' as _ickpqaa4;
 import 'package:plotwatch_server/src/generated/project_status.dart'
     as _ipfaavrx;
 import 'package:plotwatch_server/src/generated/project_summary_page.dart'
@@ -284,6 +286,8 @@ class _ActivityEndpoint {
     int projectId, {
     int? beforeId,
     int? pageSize,
+    List<_idpi4lil.ActivityType>? types,
+    int? stageId,
   }) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -300,6 +304,8 @@ class _ActivityEndpoint {
             'projectId': projectId,
             'beforeId': beforeId,
             'pageSize': pageSize,
+            'types': types,
+            'stageId': stageId,
           }),
           serializationManager: _serializationManager,
         );
@@ -1295,6 +1301,7 @@ class _NotificationEndpoint {
     _ist.TestSessionBuilder sessionBuilder, {
     int? beforeId,
     int? pageSize,
+    bool? unreadOnly,
   }) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1310,6 +1317,7 @@ class _NotificationEndpoint {
           parameters: _ist.testObjectToJson({
             'beforeId': beforeId,
             'pageSize': pageSize,
+            'unreadOnly': unreadOnly,
           }),
           serializationManager: _serializationManager,
         );
@@ -1655,6 +1663,9 @@ class _ProjectEndpoint {
     _ist.TestSessionBuilder sessionBuilder, {
     int? page,
     int? pageSize,
+    _ipfaavrx.ProjectStatus? status,
+    String? search,
+    _ickpqaa4.ProjectSort? sort,
   }) async {
     return _ist.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1670,6 +1681,9 @@ class _ProjectEndpoint {
           parameters: _ist.testObjectToJson({
             'page': page,
             'pageSize': pageSize,
+            'status': status,
+            'search': search,
+            'sort': sort,
           }),
           serializationManager: _serializationManager,
         );

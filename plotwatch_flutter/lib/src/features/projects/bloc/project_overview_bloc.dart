@@ -12,8 +12,10 @@ part 'project_overview_bloc.freezed.dart';
 /// and changes its status (PROJ-04, PROJ-05).
 class ProjectOverviewBloc
     extends Bloc<ProjectOverviewEvent, ProjectOverviewState> {
-  ProjectOverviewBloc({required this._projectRepository})
-    : super(const ProjectOverviewState()) {
+  ProjectOverviewBloc({
+    required this._projectRepository,
+    this._membershipRepository,
+  }) : super(const ProjectOverviewState()) {
     on<_FetchProject>(_onFetchProject);
     on<_UpdateProject>(_onUpdateProject);
     on<_ChangeStatus>(_onChangeStatus);
@@ -21,6 +23,9 @@ class ProjectOverviewBloc
   }
 
   final ProjectRepository _projectRepository;
+
+  /// Only the project page passes it: it shows the members card.
+  final MembershipRepository? _membershipRepository;
 
   Future<void> _onFetchProject(
     _FetchProject event,
@@ -39,6 +44,7 @@ class ProjectOverviewBloc
         state.copyWith(
           overviewStatus: GenericStatus.success,
           overview: overview,
+          members: await _members(event.projectId),
         ),
       );
     } on HttpException400 catch (e) {
@@ -50,6 +56,18 @@ class ProjectOverviewBloc
     } catch (e) {
       log('ProjectOverviewBloc._onFetchProject error: $e');
       emit(_loadFailure(l10n.errorProjectLoad));
+    }
+  }
+
+  /// The card is a nicety: a failure leaves it without initials.
+  Future<List<MemberView>> _members(int projectId) async {
+    final repository = _membershipRepository;
+    if (repository == null) return const [];
+    try {
+      return await repository.fetchMembers(projectId);
+    } catch (e) {
+      log('ProjectOverviewBloc._members error: $e');
+      return const [];
     }
   }
 

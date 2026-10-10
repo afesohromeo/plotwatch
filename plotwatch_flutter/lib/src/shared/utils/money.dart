@@ -71,3 +71,22 @@ num _major(int minor, String currencyCode) {
 }
 
 String get _appLocale => LocalizationService.localization.localeName;
+
+/// A large amount in short, for figures: "12.5 M XAF", "850 k XAF"
+/// (doc/05 §9.3). Below ten thousand it is [formatMoney].
+String formatMoneyShort(int minor, String currencyCode, {String? locale}) {
+  final major = _major(minor, currencyCode);
+  final (value, unit) = switch (major.abs()) {
+    >= 1000000 => (major / 1000000, 'M'),
+    >= 10000 => (major / 1000, 'k'),
+    _ => (0.0, ''),
+  };
+  if (unit.isEmpty) return formatMoney(minor, currencyCode, locale: locale);
+  final number = NumberFormat.decimalPatternDigits(
+    locale: locale ?? _appLocale,
+    decimalDigits: value.abs() >= 100 ? 0 : 1,
+  ).format(value);
+  // "12.0" reads as "12".
+  final trimmed = number.replaceFirst(RegExp(r'[.,]0$'), '');
+  return '$trimmed\u00A0$unit $currencyCode';
+}

@@ -118,4 +118,36 @@ void main() {
       expect: () => [const ProjectListState(projectsRefreshController: true)],
     );
   });
+
+  // doc/05 §9.5: the choices go to the server with every page.
+  blocTest<ProjectListBloc, ProjectListState>(
+    'Given a search, a status and a sort then they are sent, and a search '
+    'shows as filtering',
+    setUp: () => when(
+      () => repository.fetchProjects(
+        0,
+        size: 20,
+        status: ProjectStatus.paused,
+        keyword: 'villa',
+        sort: ProjectSort.name,
+      ),
+    ).thenAnswer((_) async => page([first])),
+    build: build,
+    act: (bloc) => bloc.add(
+      const ProjectListEvent.fetchProjects(
+        searchTerm: 'villa',
+        statusFilter: ProjectStatus.paused,
+        sort: ProjectSort.name,
+      ),
+    ),
+    expect: () => [
+      const ProjectListState(projectsListStatus: GenericStatus.filtering),
+      ProjectListState(
+        projectsListStatus: GenericStatus.success,
+        projects: [first],
+        paginatedProjects: [first],
+        maxProjects: true,
+      ),
+    ],
+  );
 }

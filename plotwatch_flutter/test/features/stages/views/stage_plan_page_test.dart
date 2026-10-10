@@ -225,4 +225,93 @@ void main() {
 
     expect(find.text(l10n.stageLate), findsOneWidget);
   });
+
+  // doc/05 §9 DP-9: the stage that waits for the owner stands out.
+  testWidgets('Given a submitted stage then the owner sees it waiting for '
+      'their review', (tester) async {
+    await pumpWith(
+      tester,
+      loaded(
+        plan: testStagePlan(
+          stages: [testStageView(id: 1, status: StageStatus.submitted)],
+        ),
+      ),
+    );
+
+    expect(find.text(l10n.waitingForYourReview), findsOneWidget);
+  });
+
+  // doc/05 §9.5: chips filter the loaded plan; each stage keeps its number.
+  group('Given the Stages chips', () {
+    final plan = testStagePlan(
+      stages: [
+        testStageView(id: 1, name: 'Foundation', status: StageStatus.approved),
+        testStageView(
+          id: 2,
+          name: 'Walls',
+          orderIndex: 1,
+          status: StageStatus.submitted,
+        ),
+        testStageView(
+          id: 3,
+          name: 'Roof',
+          orderIndex: 2,
+          status: StageStatus.changesRequested,
+        ),
+        testStageView(id: 4, name: 'Plaster', orderIndex: 3),
+      ],
+    );
+
+    Future<void> choose(WidgetTester tester, StagePlanFilter filter) async {
+      await tester.tap(
+        find.byKey(
+          FilterChips.chipKey(
+            StagePlanPage.filterChipsPrefix,
+            StagePlanFilter.values.indexOf(filter),
+          ),
+        ),
+      );
+      await tester.pump();
+    }
+
+    testWidgets('when Approved is chosen then only approved stages show, '
+        'and none can be dragged', (tester) async {
+      await pumpWith(tester, loaded(plan: plan));
+
+      await choose(tester, StagePlanFilter.approved);
+
+      expect(find.byKey(StagePlanPage.stageTileKey(1)), findsOneWidget);
+      expect(find.byKey(StagePlanPage.stageTileKey(2)), findsNothing);
+      expect(find.byKey(StagePlanPage.dragHandleKey(1)), findsNothing);
+    });
+
+    testWidgets('when In progress is chosen then a stage with changes '
+        'requested shows, with its number in the plan', (tester) async {
+      await pumpWith(tester, loaded(plan: plan));
+
+      await choose(tester, StagePlanFilter.inProgress);
+
+      expect(find.byKey(StagePlanPage.stageTileKey(3)), findsOneWidget);
+      expect(find.byKey(StagePlanPage.stageTileKey(4)), findsNothing);
+      expect(find.textContaining('3 · Roof'), findsOneWidget);
+    });
+
+    testWidgets('when Needs you is chosen then the owner sees the stage to '
+        'review', (tester) async {
+      await pumpWith(tester, loaded(plan: plan));
+
+      await choose(tester, StagePlanFilter.needsYou);
+
+      expect(find.byKey(StagePlanPage.stageTileKey(2)), findsOneWidget);
+      expect(find.byKey(StagePlanPage.stageTileKey(1)), findsNothing);
+    });
+
+    testWidgets('when no stage fits then it says so', (tester) async {
+      await pumpWith(tester, loaded(plan: plan));
+
+      await choose(tester, StagePlanFilter.late);
+
+      expect(find.text(l10n.noStageHere), findsOneWidget);
+    });
+  });
 }

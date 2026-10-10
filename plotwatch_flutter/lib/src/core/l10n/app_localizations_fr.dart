@@ -338,7 +338,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Impossible d\'enregistrer votre profil. Réessayez.';
 
   @override
-  String get projectsTitle => 'Mes projets';
+  String get projectsTitle => 'Projets';
 
   @override
   String get newProject => 'Nouveau projet';
@@ -1870,4 +1870,250 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get archiveProjectAction => 'Archiver';
+
+  @override
+  String get breadcrumbLabel => 'Où vous êtes';
+
+  @override
+  String get overviewTab => 'Aperçu';
+
+  @override
+  String get allProjects => 'Tous les projets';
+
+  @override
+  String get latestPhoto => 'Dernière photo';
+
+  @override
+  String get latestPhotosTitle => 'Dernières photos';
+
+  @override
+  String get ofTheBudget => 'du budget';
+
+  @override
+  String get budgetApprovedCaption => 'du budget approuvé';
+
+  @override
+  String get stagesApprovedCaption => 'des étapes approuvées';
+
+  @override
+  String stagesOfTotal(int approved, int total) {
+    return '$approved sur $total';
+  }
+
+  @override
+  String get figureBudget => 'Budget';
+
+  @override
+  String get figureEnds => 'Fin';
+
+  @override
+  String attentionReview(int count, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count étapes attendent votre validation',
+      one: '$name attend votre validation',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String attentionChanges(int count, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Des modifications sont demandées sur $count étapes',
+      one: 'Des modifications sont demandées sur $name',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get waitingForYourReview => 'Attend votre validation';
+
+  @override
+  String membersCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count membres',
+      one: '1 membre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get aboutTitle => 'À propos du projet';
+
+  @override
+  String get todayLabel => 'Aujourd\'hui';
+
+  @override
+  String get yesterdayLabel => 'Hier';
+
+  @override
+  String get notificationsNew => 'Nouvelles';
+
+  @override
+  String get notificationsEarlier => 'Plus anciennes';
+
+  @override
+  String checksPassed(int passed, int total) {
+    return '$passed contrôles réussis sur $total';
+  }
+
+  @override
+  String get stagePhotosTitle => 'Photos de cette étape';
+
+  @override
+  String get joinWithCode => 'Rejoindre avec un code';
+
+  @override
+  String projectsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count projets',
+      one: '1 projet',
+      zero: 'Aucun projet pour l\'instant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String stagesWaitingForReview(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count étapes attendent votre validation',
+      one: '1 étape attend votre validation',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get startProjectTitle => 'Démarrer un projet';
+
+  @override
+  String get startProjectHint => 'À partir d\'un modèle ou de zéro';
+
+  @override
+  String get moreActions => 'Plus d\'actions';
+
+  @override
+  String photoCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count photos',
+      one: '1 photo',
+      zero: 'pas encore de photo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String distanceFromCentre(int meters) {
+    return 'à $meters m du centre du chantier';
+  }
+
+  @override
+  String seeChecks(int count) {
+    return 'Voir les $count contrôles';
+  }
+
+  @override
+  String peopleCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count personnes',
+      one: '1 personne',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get canApproveShort => 'Peut approuver les étapes';
+
+  @override
+  String get liveLabel => 'En direct';
+
+  @override
+  String get postedAnUpdate => 'a publié une mise à jour';
+
+  @override
+  String get aboutShort => 'À propos';
+
+  @override
+  String get checklistShort => 'Liste';
+
+  @override
+  String get photosTitle => 'Photos';
+
+  @override
+  String get historyTitle => 'Historique';
+
+  @override
+  String get searchProjects => 'Rechercher un projet';
+
+  @override
+  String get filterAll => 'Tout';
+
+  @override
+  String get sortAction => 'Trier';
+
+  @override
+  String get sortRecent => 'Activité récente';
+
+  @override
+  String get sortName => 'Nom';
+
+  @override
+  String get sortProgress => 'Avancement';
+
+  @override
+  String get noMatches => 'Rien ne correspond à ces filtres.';
+
+  @override
+  String get clearFilters => 'Effacer les filtres';
+
+  @override
+  String get kindPhotos => 'Photos';
+
+  @override
+  String get kindReviews => 'Validations';
+
+  @override
+  String get kindUpdates => 'Nouvelles';
+
+  @override
+  String get kindMembers => 'Membres';
+
+  @override
+  String get kindSite => 'Terrain';
+
+  @override
+  String get allStages => 'Toutes les étapes';
+
+  @override
+  String get notificationsUnread => 'Non lues';
+
+  @override
+  String get stageFilterNeedsYou => 'Pour vous';
+
+  @override
+  String get noStageHere => 'Aucune étape ici.';
+
+  @override
+  String get allItems => 'Tous les éléments';
+
+  @override
+  String get badgePartial => 'Partiel';
+
+  @override
+  String get noPhotoHere => 'Aucune photo ici.';
+
+  @override
+  String get showLess => 'Voir moins';
 }

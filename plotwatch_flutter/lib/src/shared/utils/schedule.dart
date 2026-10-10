@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 /// Schedule status (STG-10, doc/04e M5-10). Planned dates are calendar days
@@ -29,3 +30,23 @@ DateTime _day(DateTime time) {
 /// A planned date is a calendar day stored at UTC midnight.
 DateTime _plannedDay(DateTime planned) =>
     DateTime(planned.year, planned.month, planned.day);
+
+/// A day heading for a list (doc/05 §9): "Today", "Yesterday", or the date.
+String dayHeading(DateTime time, AppLocalizations l10n, {DateTime? now}) {
+  final day = _day(time);
+  final today = _day(now ?? DateTime.now());
+  final days = today.difference(day).inDays;
+  return switch (days) {
+    0 => l10n.todayLabel,
+    1 => l10n.yesterdayLabel,
+    _ => formatDate(day),
+  };
+}
+
+/// Whether two moments fall on the same local day.
+bool sameDay(DateTime a, DateTime b) => _day(a) == _day(b);
+
+/// "Today, 10:12", "Yesterday, 17:30", "4 Oct 2026, 09:48" (doc/05 §9.3).
+String dayAndTime(DateTime time, AppLocalizations l10n, {DateTime? now}) =>
+    '${dayHeading(time, l10n, now: now)}, '
+    '${DateFormat.Hm(l10n.localeName).format(time.toLocal())}';

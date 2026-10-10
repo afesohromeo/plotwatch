@@ -41,6 +41,9 @@ class ResponsiveScaffoldWrapper extends StatelessWidget {
         bgColor: props.bgColor,
         elevation: props.elevation,
         toolBarHeight: props.toolBarHeight,
+        showBell: props.showBell,
+        subtitle: props.subtitle,
+        buttonLabel: props.buttonLabel,
       ),
       tablet: (context, _) => ScaffoldWrapper(
         drawerMode: DrawerMode.overlay,
@@ -65,6 +68,9 @@ class ResponsiveScaffoldWrapper extends StatelessWidget {
         bgColor: props.bgColor,
         elevation: props.elevation,
         toolBarHeight: props.toolBarHeight,
+        showBell: props.showBell,
+        subtitle: props.subtitle,
+        buttonLabel: props.buttonLabel,
       ),
       desktop: (context, _) => Row(
         children: [
@@ -107,6 +113,9 @@ class ResponsiveScaffoldWrapper extends StatelessWidget {
                   bgColor: props.bgColor,
                   elevation: props.elevation,
                   toolBarHeight: props.toolBarHeight,
+                  showBell: props.showBell,
+                  subtitle: props.subtitle,
+                  buttonLabel: props.buttonLabel,
                 ),
               ),
             ),

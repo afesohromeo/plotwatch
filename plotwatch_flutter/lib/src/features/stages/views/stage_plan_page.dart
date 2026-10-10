@@ -21,6 +21,10 @@ class StagePlanPage extends StatefulWidget {
   static Key templateButtonKey(StageTemplate template) =>
       Key('stagePlan.template.${template.name}');
 
+  /// The filter chips (doc/05 §9.5), keyed `stagePlan.filter.<index>` in
+  /// [StagePlanFilter] order.
+  static const filterChipsPrefix = 'stagePlan.filter';
+
   @override
   State<StagePlanPage> createState() => _StagePlanPageState();
 }
@@ -73,16 +77,25 @@ class _StagePlanPageState extends State<StagePlanPage> {
                 ),
               ),
               title: Text(l10n.stagesTitle),
+              // "Maison Douala · 12.5 M XAF" (doc/05 §9.3).
+              subtitle: state.overview == null || plan == null
+                  ? null
+                  : '${state.overview!.project.name} · '
+                        '${formatMoneyShort(plan.budgetTotalMinor, state.currencyCode, locale: Localizations.localeOf(context).languageCode)}',
               actions: [
-                IconButton(
-                  key: StagePlanPage.refreshButtonKey,
-                  tooltip: l10n.refresh,
-                  color: customColors.primary,
-                  icon: const Icon(Icons.refresh_rounded),
-                  onPressed: _load,
+                AppBarMenu(
+                  items: [
+                    AppBarMenuItem(
+                      key: StagePlanPage.refreshButtonKey,
+                      icon: Icons.refresh_rounded,
+                      label: l10n.refresh,
+                      onTap: _load,
+                    ),
+                  ],
                 ),
               ],
               showFloatingButton: state.canEdit && plan != null,
+              buttonLabel: l10n.addStageAction,
               onPressed: () => context.goNamed(
                 createStageRouteName,
                 pathParameters: pathParameters,
@@ -113,7 +126,50 @@ class _StagePlanPageState extends State<StagePlanPage> {
   }
 }
 
-class _PlanBody extends StatelessWidget {
+/// The Stages tab's chips, applied in the app: the plan is loaded whole
+/// (doc/05 §9.5).
+enum StagePlanFilter {
+  all,
+
+  /// What waits for this user (the attention rule, DP-1).
+  needsYou,
+
+  /// Being worked on: in progress, or changes requested.
+  inProgress,
+
+  /// Past its planned end and not approved (M5-10).
+  late,
+  approved;
+
+  String label(AppLocalizations l10n) => switch (this) {
+    StagePlanFilter.all => l10n.filterAll,
+    StagePlanFilter.needsYou => l10n.stageFilterNeedsYou,
+    StagePlanFilter.inProgress => l10n.stageStatusInProgress,
+    StagePlanFilter.late => l10n.stageLate,
+    StagePlanFilter.approved => l10n.stageStatusApproved,
+  };
+
+  bool keeps(
+    Stage stage, {
+    required ProjectRole role,
+    required bool canApprove,
+    required DateTime now,
+  }) => switch (this) {
+    StagePlanFilter.all => true,
+    StagePlanFilter.needsYou => waitsFor(
+      stage.status,
+      role: role,
+      canApprove: canApprove,
+    ),
+    StagePlanFilter.inProgress =>
+      stage.status == StageStatus.inProgress ||
+          stage.status == StageStatus.changesRequested,
+    StagePlanFilter.late => stage.isLateOn(now),
+    StagePlanFilter.approved => stage.status == StageStatus.approved,
+  };
+}
+
+class _PlanBody extends StatefulWidget {
   const _PlanBody({
     required this.state,
     required this.plan,
@@ -125,41 +181,93 @@ class _PlanBody extends StatelessWidget {
   final Future<void> Function() onRefresh;
 
   @override
+  State<_PlanBody> createState() => _PlanBodyState();
+}
+
+class _PlanBodyState extends State<_PlanBody> {
+  StagePlanFilter _filter = StagePlanFilter.all;
+
+  StagePlanState get state => widget.state;
+  StagePlan get plan => widget.plan;
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final locale = Localizations.localeOf(context).languageCode;
     final bloc = context.read<StagePlanBloc>();
-    final overview = state.overview!;
     final isBusy = state.actionStatus == GenericStatus.loading;
+    final role = state.overview?.myRole ?? ProjectRole.viewer;
+    final canApprove = state.overview?.myCanApprove ?? false;
+    final now = DateTime.now();
+    // Each stage keeps its number in the plan.
+    final shown = [
+      for (var i = 0; i < plan.stages.length; i++)
+        if (_filter.keeps(
+          plan.stages[i].stage,
+          role: role,
+          canApprove: canApprove,
+          now: now,
+        ))
+          (index: i, view: plan.stages[i]),
+    ];
+    // Moving stages only makes sense with all of them in sight.
+    final canDrag = state.canEdit && !isBusy && _filter == StagePlanFilter.all;
 
+    // One line above the timeline (doc/05 §9.3): the progress, the budget
+    // share in bold.
+    final approvedCount = plan.stages
+        .where((v) => v.stage.status == StageStatus.approved)
+        .length;
     final header = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(overview.project.name, style: context.textTheme.headlineSmall),
-        const Gap.vertical(height: AppSpacing.sm),
-        Text(l10n.stagesTitle, style: context.textTheme.bodyMedium),
-        const Gap.vertical(height: AppSpacing.lg),
-        DetailRow(
-          label: l10n.labelTotalBudget,
-          value: formatMoney(
-            plan.budgetTotalMinor,
-            state.currencyCode,
-            locale: locale,
+        if (plan.stages.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 0, 4, 14),
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  if (plan.budgetTotalMinor > 0) ...[
+                    TextSpan(
+                      text: '${plan.progressPercent}% ',
+                      style: TextStyle(
+                        color: customColors.ink,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    TextSpan(text: '${l10n.ofTheBudget} · '),
+                  ],
+                  TextSpan(
+                    text: l10n.progressStagesOnly(
+                      approvedCount,
+                      plan.stages.length,
+                    ),
+                  ),
+                ],
+              ),
+              style: context.textTheme.bodyMedium?.copyWith(fontSize: 14),
+            ),
           ),
-        ),
-        DetailRow(
-          label: l10n.labelProgress,
-          value: progressLine(
-            l10n,
-            percent: plan.progressPercent,
-            approved: plan.stages
-                .where((v) => v.stage.status == StageStatus.approved)
-                .length,
-            total: plan.stages.length,
-            budgetTotalMinor: plan.budgetTotalMinor,
+        if (plan.stages.isNotEmpty) ...[
+          FilterChips<StagePlanFilter>(
+            keyPrefix: StagePlanPage.filterChipsPrefix,
+            choices: [
+              for (final filter in StagePlanFilter.values)
+                FilterChoice(filter, filter.label(l10n)),
+            ],
+            selected: _filter,
+            onSelected: (filter) => setState(() => _filter = filter),
           ),
-        ),
-        const Gap.vertical(height: AppSpacing.md),
+          const Gap.vertical(height: AppSpacing.md),
+          if (shown.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+              child: Text(
+                l10n.noStageHere,
+                textAlign: TextAlign.center,
+                style: context.textTheme.bodyMedium,
+              ),
+            ),
+        ],
         if (plan.stages.isEmpty) ..._empty(context, l10n, bloc, isBusy),
       ],
     );
@@ -168,44 +276,54 @@ class _PlanBody extends StatelessWidget {
     // bottom edge scrolls the page with it (doc/04c M3-F3). Same width as
     // AuthFormLayout: 420 px at most, centred.
     return RefreshIndicator(
-      onRefresh: onRefresh,
+      onRefresh: widget.onRefresh,
       child: LayoutBuilder(
         builder: (context, constraints) {
           final side = math.max(
             AppSpacing.lg,
-            (constraints.maxWidth - AuthFormLayout.maxWidth) / 2,
+            (constraints.maxWidth - 640) / 2,
           );
           return CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               SliverPadding(
-                padding: EdgeInsets.fromLTRB(side, AppSpacing.lg, side, 0),
+                padding: EdgeInsets.fromLTRB(side, AppSpacing.md, side, 0),
                 sliver: SliverToBoxAdapter(child: header),
               ),
               SliverPadding(
-                padding: EdgeInsets.fromLTRB(side, 0, side, AppSpacing.lg),
+                // Room for the "Add a stage" button below the last stage.
+                padding: EdgeInsets.fromLTRB(side, 0, side, 96),
                 sliver: SliverReorderableList(
-                  itemCount: plan.stages.length,
-                  onReorderItem: (oldIndex, newIndex) => bloc.add(
-                    StagePlanEvent.reorderRequested(
-                      oldIndex: oldIndex,
-                      newIndex: newIndex,
-                    ),
-                  ),
+                  itemCount: shown.length,
+                  onReorderItem: (oldIndex, newIndex) {
+                    if (!canDrag) return;
+                    bloc.add(
+                      StagePlanEvent.reorderRequested(
+                        oldIndex: oldIndex,
+                        newIndex: newIndex,
+                      ),
+                    );
+                  },
                   proxyDecorator: (child, index, animation) => Material(
                     elevation: 4,
                     color: customColors.background,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     child: child,
                   ),
-                  itemBuilder: (context, index) {
-                    final view = plan.stages[index];
+                  itemBuilder: (context, position) {
+                    final (:index, :view) = shown[position];
                     return _StageTile(
                       key: StagePlanPage.stageTileKey(view.stage.id!),
                       index: index,
                       view: view,
                       currencyCode: state.currencyCode,
-                      canDrag: state.canEdit && !isBusy,
+                      canDrag: canDrag,
+                      isLast: position == shown.length - 1,
+                      waitsForMe: waitsFor(
+                        view.stage.status,
+                        role: role,
+                        canApprove: canApprove,
+                      ),
                     );
                   },
                 ),
@@ -252,7 +370,10 @@ class _PlanBody extends StatelessWidget {
   }
 }
 
-/// One stage: position, name, status, budget and checklist progress.
+/// One stage on the timeline (doc/05 §9 DP-9): a node coloured by its
+/// status joined to the next, then a card with its position and name,
+/// budget, checklist progress, status and schedule, and its latest photo.
+/// A stage waiting for the user is outlined in terracotta.
 class _StageTile extends StatelessWidget {
   const _StageTile({
     super.key,
@@ -260,93 +381,192 @@ class _StageTile extends StatelessWidget {
     required this.view,
     required this.currencyCode,
     required this.canDrag,
+    required this.isLast,
+    required this.waitsForMe,
   });
 
   final int index;
   final StageView view;
   final String currencyCode;
   final bool canDrag;
+  final bool isLast;
+  final bool waitsForMe;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).languageCode;
     final stage = view.stage;
+    final photo = view.latestEvidenceId;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          onTap: () => context.goNamed(
-            stageRouteName,
-            pathParameters: {
-              'projectId': '${stage.projectId}',
-              'stageId': '${stage.id}',
-            },
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-            child: Row(
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            width: 32,
+            child: Column(
               children: [
-                SizedBox(
-                  width: 32,
-                  child: Text(
-                    '${index + 1}',
-                    style: context.textTheme.titleMedium?.copyWith(
-                      color: customColors.muted,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(stage.name, style: context.textTheme.bodyLarge),
-                      const Gap.vertical(height: AppSpacing.xs),
-                      Text(
-                        '${formatMoney(stage.budgetMinor, currencyCode, locale: locale)}'
-                        ' · ${l10n.itemsCovered(view.itemsCovered, view.items.length)}',
-                        style: context.textTheme.bodySmall,
-                      ),
-                      const Gap.vertical(height: AppSpacing.xs),
-                      Wrap(
-                        spacing: AppSpacing.xs,
-                        children: [
-                          ProjectChip(
-                            label: stage.status.label(l10n),
-                            color: stage.status.color,
-                          ),
-                          // Schedule status (STG-10, doc/04e M5-10).
-                          if (stage.isLateOn(DateTime.now()))
-                            ProjectChip(
-                              label: l10n.stageLate,
-                              color: customColors.unverified,
-                            ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                if (canDrag)
-                  ReorderableDragStartListener(
-                    key: StagePlanPage.dragHandleKey(stage.id!),
-                    index: index,
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.sm),
-                      child: Icon(
-                        Icons.drag_indicator_rounded,
-                        color: customColors.muted,
-                        semanticLabel: l10n.reorderStageHint,
-                      ),
+                const Gap.vertical(height: 18),
+                _Node(status: stage.status),
+                if (!isLast)
+                  Expanded(
+                    child: Container(
+                      width: 2,
+                      color: stage.status == StageStatus.approved
+                          ? customColors.verified
+                          : customColors.line,
                     ),
                   ),
               ],
             ),
           ),
-        ),
+          const Gap.horizontal(width: AppSpacing.sm),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: AppCard(
+                borderColor: waitsForMe ? customColors.accent : null,
+                padding: const EdgeInsets.all(12),
+                onTap: () => context.goNamed(
+                  stageRouteName,
+                  pathParameters: {
+                    'projectId': '${stage.projectId}',
+                    'stageId': '${stage.id}',
+                  },
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${index + 1} · ${stage.name}',
+                            style: context.textTheme.titleSmall,
+                          ),
+                          const Gap.vertical(height: 2),
+                          Text(
+                            '${formatMoney(stage.budgetMinor, currencyCode, locale: locale)}'
+                            ' · ${l10n.itemsCovered(view.itemsCovered, view.items.length)}',
+                            style: context.textTheme.bodySmall,
+                          ),
+                          const Gap.vertical(height: AppSpacing.xs),
+                          Wrap(
+                            spacing: AppSpacing.xs,
+                            runSpacing: AppSpacing.xs,
+                            children: [
+                              ProjectChip(
+                                label:
+                                    waitsForMe &&
+                                        stage.status == StageStatus.submitted
+                                    ? l10n.waitingForYourReview
+                                    : stage.status.label(l10n),
+                                color: waitsForMe
+                                    ? customColors.accent
+                                    : stage.status.color,
+                              ),
+                              // Schedule status (STG-10, doc/04e M5-10).
+                              if (stage.isLateOn(DateTime.now()))
+                                ProjectChip(
+                                  label: l10n.stageLate,
+                                  color: customColors.unverified,
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (photo != null) ...[
+                      const Gap.horizontal(width: AppSpacing.sm),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: EvidenceImage(
+                          projectId: stage.projectId,
+                          evidenceId: photo,
+                          variant: MediaVariant.thumbnail,
+                          width: 52,
+                          height: 52,
+                        ),
+                      ),
+                    ],
+                    if (canDrag)
+                      ReorderableDragStartListener(
+                        key: StagePlanPage.dragHandleKey(stage.id!),
+                        index: index,
+                        child: Padding(
+                          padding: const EdgeInsets.all(AppSpacing.sm),
+                          child: Icon(
+                            Icons.drag_indicator_rounded,
+                            color: customColors.muted,
+                            semanticLabel: l10n.reorderStageHint,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+}
+
+/// A timeline node: a check when approved, a speech mark when it waits for
+/// someone, a dot in progress, an empty ring before it starts.
+class _Node extends StatelessWidget {
+  const _Node({required this.status});
+
+  final StageStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    final (fill, border, icon) = switch (status) {
+      StageStatus.approved => (
+        customColors.verified,
+        customColors.verified,
+        Icons.check_rounded,
+      ),
+      StageStatus.submitted || StageStatus.changesRequested => (
+        customColors.accent,
+        customColors.accent,
+        Icons.chat_bubble_outline_rounded,
+      ),
+      StageStatus.inProgress => (
+        customColors.surfaceWhite,
+        customColors.primary,
+        null,
+      ),
+      StageStatus.notStarted => (
+        customColors.surfaceWhite,
+        customColors.line,
+        null,
+      ),
+    };
+    return Container(
+      width: 28,
+      height: 28,
+      decoration: BoxDecoration(
+        color: fill,
+        shape: BoxShape.circle,
+        border: Border.all(color: border, width: 2),
+      ),
+      child: icon == null
+          ? status == StageStatus.inProgress
+                ? Center(
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: customColors.primary,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  )
+                : null
+          : Icon(icon, size: 15, color: customColors.onPrimary),
     );
   }
 }

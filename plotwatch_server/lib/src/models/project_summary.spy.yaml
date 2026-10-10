@@ -5,3 +5,14 @@ fields:
   myRole: ProjectRole
   ### 0–100, the budget-weighted share of approved stages (STG-09).
   progressPercent: int
+  ### Whether the caller may approve stages, for "waiting for your review"
+  ### (doc/05 §9).
+  myCanApprove: bool, default=false
+  ### The stages in plan order, for the card's stage bar.
+  stages: List<StageBrief>?
+  ### Sum of the stage budgets: with none, progress is the stage count.
+  budgetTotalMinor: int, default=0
+  ### The project's latest finalized photo, the card's cover.
+  latestEvidenceId: int?
+  ### Its badge, shown on the cover.
+  latestEvidenceLevel: VerificationLevel?

@@ -64,6 +64,10 @@ class _ValidateSitePageState extends State<ValidateSitePage> {
       props: ScaffoldWrapperProps(
         leading: BackButton(onPressed: _backToProject),
         title: Text(l10n.validateSiteTitle),
+        bottom: ProjectBreadcrumbBar(
+          projectId: widget.projectId,
+          leaf: l10n.validateSiteTitle,
+        ),
         resizeToAvoidBottomInset: true,
       ),
       mobileBody: BlocConsumer<ValidateSiteBloc, ValidateSiteState>(

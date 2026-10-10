@@ -135,12 +135,12 @@ return liveUpdateReceived(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  stopped,TResult Function( int pageKey,  int? size)?  fetchNotifications,TResult Function()?  refreshNotifications,TResult Function( int notificationId)?  markRead,TResult Function()?  markAllRead,TResult Function( LiveUpdate<AppNotification> update)?  liveUpdateReceived,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function()?  stopped,TResult Function( int pageKey,  bool unreadOnly,  int? size)?  fetchNotifications,TResult Function()?  refreshNotifications,TResult Function( int notificationId)?  markRead,TResult Function()?  markAllRead,TResult Function( LiveUpdate<AppNotification> update)?  liveUpdateReceived,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _Stopped() when stopped != null:
 return stopped();case _FetchNotifications() when fetchNotifications != null:
-return fetchNotifications(_that.pageKey,_that.size);case _RefreshNotifications() when refreshNotifications != null:
+return fetchNotifications(_that.pageKey,_that.unreadOnly,_that.size);case _RefreshNotifications() when refreshNotifications != null:
 return refreshNotifications();case _MarkRead() when markRead != null:
 return markRead(_that.notificationId);case _MarkAllRead() when markAllRead != null:
 return markAllRead();case _LiveUpdateReceived() when liveUpdateReceived != null:
@@ -162,12 +162,12 @@ return liveUpdateReceived(_that.update);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  stopped,required TResult Function( int pageKey,  int? size)  fetchNotifications,required TResult Function()  refreshNotifications,required TResult Function( int notificationId)  markRead,required TResult Function()  markAllRead,required TResult Function( LiveUpdate<AppNotification> update)  liveUpdateReceived,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function()  stopped,required TResult Function( int pageKey,  bool unreadOnly,  int? size)  fetchNotifications,required TResult Function()  refreshNotifications,required TResult Function( int notificationId)  markRead,required TResult Function()  markAllRead,required TResult Function( LiveUpdate<AppNotification> update)  liveUpdateReceived,}) {final _that = this;
 switch (_that) {
 case _Started():
 return started();case _Stopped():
 return stopped();case _FetchNotifications():
-return fetchNotifications(_that.pageKey,_that.size);case _RefreshNotifications():
+return fetchNotifications(_that.pageKey,_that.unreadOnly,_that.size);case _RefreshNotifications():
 return refreshNotifications();case _MarkRead():
 return markRead(_that.notificationId);case _MarkAllRead():
 return markAllRead();case _LiveUpdateReceived():
@@ -185,12 +185,12 @@ return liveUpdateReceived(_that.update);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  stopped,TResult? Function( int pageKey,  int? size)?  fetchNotifications,TResult? Function()?  refreshNotifications,TResult? Function( int notificationId)?  markRead,TResult? Function()?  markAllRead,TResult? Function( LiveUpdate<AppNotification> update)?  liveUpdateReceived,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function()?  stopped,TResult? Function( int pageKey,  bool unreadOnly,  int? size)?  fetchNotifications,TResult? Function()?  refreshNotifications,TResult? Function( int notificationId)?  markRead,TResult? Function()?  markAllRead,TResult? Function( LiveUpdate<AppNotification> update)?  liveUpdateReceived,}) {final _that = this;
 switch (_that) {
 case _Started() when started != null:
 return started();case _Stopped() when stopped != null:
 return stopped();case _FetchNotifications() when fetchNotifications != null:
-return fetchNotifications(_that.pageKey,_that.size);case _RefreshNotifications() when refreshNotifications != null:
+return fetchNotifications(_that.pageKey,_that.unreadOnly,_that.size);case _RefreshNotifications() when refreshNotifications != null:
 return refreshNotifications();case _MarkRead() when markRead != null:
 return markRead(_that.notificationId);case _MarkAllRead() when markAllRead != null:
 return markAllRead();case _LiveUpdateReceived() when liveUpdateReceived != null:
@@ -270,10 +270,11 @@ String toString() {
 
 
 class _FetchNotifications implements NotificationsEvent {
-  const _FetchNotifications({this.pageKey = 0, this.size});
+  const _FetchNotifications({this.pageKey = 0, this.unreadOnly = false, this.size});
   
 
 @JsonKey() final  int pageKey;
+@JsonKey() final  bool unreadOnly;
  final  int? size;
 
 /// Create a copy of NotificationsEvent
@@ -286,18 +287,18 @@ _$FetchNotificationsCopyWith<_FetchNotifications> get copyWith => __$FetchNotifi
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FetchNotifications&&(identical(other.pageKey, pageKey) || other.pageKey == pageKey)&&(identical(other.size, size) || other.size == size));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FetchNotifications&&(identical(other.pageKey, pageKey) || other.pageKey == pageKey)&&(identical(other.unreadOnly, unreadOnly) || other.unreadOnly == unreadOnly)&&(identical(other.size, size) || other.size == size));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,pageKey,size);
+    return Object.hash(runtimeType,pageKey,unreadOnly,size);
 }
 
 @override
 String toString() {
-    return 'NotificationsEvent.fetchNotifications(pageKey: $pageKey, size: $size)';
+    return 'NotificationsEvent.fetchNotifications(pageKey: $pageKey, unreadOnly: $unreadOnly, size: $size)';
 }
 
 
@@ -308,7 +309,7 @@ abstract mixin class _$FetchNotificationsCopyWith<$Res> implements $Notification
   factory _$FetchNotificationsCopyWith(_FetchNotifications value, $Res Function(_FetchNotifications) _then) = __$FetchNotificationsCopyWithImpl;
 @useResult
 $Res call({
- int pageKey, int? size
+ int pageKey, bool unreadOnly, int? size
 });
 
 
@@ -325,10 +326,11 @@ class __$FetchNotificationsCopyWithImpl<$Res>
 
 /// Create a copy of NotificationsEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? pageKey = null,Object? size = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? pageKey = null,Object? unreadOnly = null,Object? size = freezed,}) {
   return _then(_FetchNotifications(
 pageKey: null == pageKey ? _self.pageKey : pageKey // ignore: cast_nullable_to_non_nullable
-as int,size: freezed == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
+as int,unreadOnly: null == unreadOnly ? _self.unreadOnly : unreadOnly // ignore: cast_nullable_to_non_nullable
+as bool,size: freezed == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
 }

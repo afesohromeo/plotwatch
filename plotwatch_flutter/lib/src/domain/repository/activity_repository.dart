@@ -15,17 +15,21 @@ class ActivityRepository {
   final Duration Function(int attempt) _backoff;
 
   /// The events older than [beforeId] (the newest without it), newest
-  /// first.
+  /// first; only [types] and [stageId]'s when given (doc/05 §9.5).
   Future<PaginatedList<ActivityEntry>> fetchActivity(
     int projectId, {
     int? beforeId,
     required int size,
+    List<ActivityType>? types,
+    int? stageId,
   }) async {
     try {
       final page = await _apiProvider.list(
         projectId,
         beforeId: beforeId,
         pageSize: size,
+        types: types,
+        stageId: stageId,
       );
       return PaginatedList(
         content: page.items,

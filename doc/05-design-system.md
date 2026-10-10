@@ -153,7 +153,7 @@ The developer's review of the first build: about 60/100 against the canvas. The 
 
 ### 9.4 Review round 2 (2026-10-10, approved)
 1. **Secondary panels on a phone:** a segmented switch shows one panel at a time instead of a long column of cards: Overview *Activity · Site · About*, stage page *Checklist · Photos · History*, photo page *Details · Checks*. Side by side in columns on tablet and web.
-2. **App bar actions:** one action is its own icon button; ⋮ only for two or more. Refresh is pull-down on phones and an icon on the web.
+2. **App bar actions:** one action is its own icon button; ⋮ only for two or more. Refresh is an action on every platform, as well as pull-down (corrected 2026-10-10: the developer asked for single actions to leave the menu, not for Refresh to go on phones).
 3. **The progress update page** (and the form to post one) is designed on the canvas first, then built.
 4. **Bug:** after withdrawing a photo, the stage page didn't show it withdrawn until refreshed by hand. Reproduced in a test first, then fixed.
 5. **Sorting, filtering, search** where lists grow:
@@ -163,3 +163,40 @@ The developer's review of the first build: about 60/100 against the canvas. The 
    - Stages tab: All · Needs you · In progress · Late · Approved, in the app;
    - a stage's photos: by checklist item and by badge, in the app.
 6. **Also checked on every redrawn screen:** empty, loading and error states, and that each action refreshes what it changed.
+
+### 9.5 Step 5 in detail: search, filters, sorting (2026-10-10, approved)
+**Server (built and tested, 13 tests in `list_filters_test.dart`; recorded here):**
+- `project.list(status?, search?, sort?)`. Search finds names containing the term, whatever the case; `%` and `_` are literal. `ProjectSort` is `recent` (the latest activity first, the default), `name`, or `progress` (the furthest along first). `recent` and `progress` are ordered in the server's memory before paging: a user is in tens of projects, and progress is computed from the stages.
+- `activity.list(types?, stageId?)`. `ActivityEvent` gains `stageId`, filled where events are recorded (the target stage, or the `stageId` in the payload). No foreign key: a stage's deletion is recorded after the row is gone. Events recorded before the migration have no stage, so the stage filter leaves them out.
+- `notification.list(unreadOnly?)`.
+
+**App (to build):**
+- **Shared components:**
+  - `FilterChips<T>`: one row of pill chips, scrolling sideways, one chosen at a time. The chosen one is filled in the primary colour; the others are white with a line.
+  - `SortButton<T>`: an icon that opens the choices, with a check on the current one.
+  - The kit's `SearchInputField`, with the standard 500 ms debounce (`_standards/06`).
+- **Pattern** (`_standards/13`): the page keeps the choices, every fetch event carries them, and changing one refreshes the list from page 0. The status is `filtering` while a search term is set (`_standards/02`).
+- **Empty results:** when a filter or search is on, "Nothing matches" with **Clear filters**, instead of the empty-list text.
+- **Project list:**
+  - Layout: a search field with the sort button beside it, then the status chips.
+  - Drafts show under *All* only.
+  - Web: the heading's count is the number shown.
+- **Activity:**
+  - Kind chips: *All · Photos · Reviews · Updates · Members · Site*.
+  - The kinds group the event types: Photos = taken, withdrawn; Reviews = submitted, approved, changes requested; Updates = progress updates; Members = joined, removed, role changed; Site = proposed, rejected, changed. Project and plan events, and a stage starting, show under *All* only.
+  - The stage picker is a chip, "All stages ▾". It opens the project's stages, taken from the project shell.
+  - Live events that don't match the choice are left out.
+- **Notifications:** *All · Unread* chips under the app bar. In *Unread*, a notification read by tapping it stays until the list is refreshed, so nothing moves under the finger.
+- **Stages tab:**
+  - Chips: *All · Needs you · In progress · Late · Approved*. *Needs you* uses the attention rule (DP-1); *Late* is `isLateOn` (M5-10).
+  - Each stage keeps its plan number.
+  - Dragging to reorder works under *All* only.
+  - A chip with no stage shows "No stage here".
+- **A stage's photos:**
+  - A badge row (*All · Verified · Partial · Unverified*) and a checklist item picker ("All items ▾").
+  - With no filter, the five-photo mosaic stays as designed. Tapping "+N", or choosing a filter, shows a grid of every matching photo, three across, each with its badge dot.
+- **Tests:**
+  - bloc tests: the fetch events carry the filters, live events are filtered;
+  - widget tests: choosing a chip or a sort refreshes with it, search waits for the debounce, Clear filters resets, the local filters on Stages and photos;
+  - component tests for `FilterChips` and `SortButton`.
+- **You run:** `dart run build_runner build --delete-conflicting-outputs` (the Freezed events and states), `flutter gen-l10n` (the new texts), `dart format .`, `dart analyze`.

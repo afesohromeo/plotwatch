@@ -14,7 +14,8 @@ void main() {
       expect(theme.colorScheme.error, customColors.unverified);
       expect(theme.colorScheme.surface, customColors.surfaceWhite);
       expect(theme.colorScheme.onSurface, customColors.ink);
-      expect(theme.scaffoldBackgroundColor, customColors.surfaceWhite);
+      // Pages on the ground, cards in white (doc/05 §9 DP-2).
+      expect(theme.scaffoldBackgroundColor, customColors.ground);
     });
 
     test('then the app bar is white with an ink title and no elevation', () {

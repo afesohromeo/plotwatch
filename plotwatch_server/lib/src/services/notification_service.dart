@@ -45,12 +45,16 @@ class NotificationService {
     UuidValue userId, {
     required int? beforeId,
     required int pageSize,
+    bool unreadOnly = false,
   }) async {
     final items = await AppNotification.db.find(
       session,
-      where: (t) => beforeId == null
-          ? t.userId.equals(userId)
-          : t.userId.equals(userId) & (t.id < beforeId),
+      where: (t) {
+        var where = t.userId.equals(userId);
+        if (beforeId != null) where &= t.id < beforeId;
+        if (unreadOnly) where &= t.readAt.equals(null);
+        return where;
+      },
       orderBy: (t) => t.id.desc(),
       limit: pageSize.clamp(1, maxPageSize),
     );

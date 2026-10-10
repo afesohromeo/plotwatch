@@ -12,17 +12,20 @@ class NotificationEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  /// Newest first, older than [beforeId], with the unread count. Nullable
-  /// instead of default values: see `ProjectEndpoint.list`.
+  /// Newest first, older than [beforeId], with the unread count; only the
+  /// unread ones with [unreadOnly] (doc/05 §9.4). Nullable instead of
+  /// default values: see `ProjectEndpoint.list`.
   Future<NotificationPage> list(
     Session session, {
     int? beforeId,
     int? pageSize,
+    bool? unreadOnly,
   }) => _service.list(
     session,
     _userId(session),
     beforeId: beforeId,
     pageSize: pageSize ?? 20,
+    unreadOnly: unreadOnly ?? false,
   );
 
   Future<int> unreadCount(Session session) =>

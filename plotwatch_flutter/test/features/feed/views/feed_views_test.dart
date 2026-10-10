@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +13,10 @@ import '../../../helpers/helpers.dart';
 // Plan: doc/04e-m5-review-realtime.md, group E (M5-7): the project page's
 // latest 5 with "See all", the full feed, live events on top, tap opens
 // the source.
+class MockProjectOverviewBloc
+    extends MockBloc<ProjectOverviewEvent, ProjectOverviewState>
+    implements ProjectOverviewBloc {}
+
 void main() {
   late AppLocalizations l10n;
   late MockFeedBloc bloc;
@@ -139,6 +145,138 @@ void main() {
       final tiles = tester.widgetList<ActivityTile>(find.byType(ActivityTile));
       expect(tiles.first.entry.event.id, 7);
       expect(find.text(fresh.sentence(l10n)), findsOneWidget);
+    });
+  });
+
+  // doc/05 §9 DP-9: the Activity tab is grouped by day.
+  testWidgets('Given events on two days then each day has its heading', (
+    tester,
+  ) async {
+    final today = testActivity(id: 2);
+    final before = testActivity(id: 1);
+    final earlier = ActivityEntry(
+      event: before.event.copyWith(createdAt: DateTime.utc(2026, 10, 1, 10)),
+      actorName: before.actorName,
+    );
+    when(() => bloc.state).thenReturn(loaded([today, earlier]));
+    whenListen(
+      bloc,
+      Stream.value(loaded([today, earlier])),
+      initialState: const FeedState(),
+    );
+
+    await tester.pumpRouterApp(router(const FeedPage(projectId: 1)));
+    await tester.pumpAndSettle();
+
+    expect(find.text(dayHeading(today.event.createdAt, l10n)), findsOneWidget);
+    expect(
+      find.text(dayHeading(earlier.event.createdAt, l10n)),
+      findsOneWidget,
+    );
+  });
+
+  // doc/05 §9.5: kind chips and a stage picker, sent with every page.
+  group('Given the feed filters', () {
+    late StreamController<FeedState> states;
+    late MockProjectOverviewBloc overviewBloc;
+
+    setUp(() {
+      states = StreamController<FeedState>();
+      overviewBloc = MockProjectOverviewBloc();
+      when(() => overviewBloc.state).thenReturn(
+        ProjectOverviewState(
+          overview: testOverview(
+            stages: [
+              StageBrief(
+                id: 21,
+                name: 'Foundation',
+                status: StageStatus.approved,
+              ),
+              StageBrief(id: 22, name: 'Walls', status: StageStatus.inProgress),
+            ],
+          ),
+        ),
+      );
+    });
+    tearDown(() {
+      states.close();
+    });
+
+    Future<void> pumpFeed(WidgetTester tester) async {
+      whenListen(bloc, states.stream, initialState: const FeedState());
+      await tester.pumpRouterApp(
+        router(
+          BlocProvider<ProjectOverviewBloc>.value(
+            value: overviewBloc,
+            child: const FeedPage(projectId: 1),
+          ),
+        ),
+      );
+      await tester.pump();
+    }
+
+    Future<void> refreshed(WidgetTester tester) async {
+      states.add(const FeedState(activityRefreshController: true));
+      await tester.pump();
+    }
+
+    testWidgets('when a kind is chosen then the feed reloads with its types', (
+      tester,
+    ) async {
+      await pumpFeed(tester);
+
+      await tester.tap(
+        find.byKey(FilterChips.chipKey(FeedPage.kindChipsPrefix, 1)),
+      );
+      await tester.pump();
+      verify(() => bloc.add(const FeedEvent.refreshActivity())).called(1);
+      await refreshed(tester);
+
+      verify(
+        () => bloc.add(
+          FeedEvent.fetchActivity(
+            projectId: 1,
+            types: ActivityKind.photos.types.toList(),
+          ),
+        ),
+      ).called(1);
+    });
+
+    testWidgets('when a stage is picked then the feed reloads with it', (
+      tester,
+    ) async {
+      await pumpFeed(tester);
+
+      await tester.tap(find.byKey(const Key(FeedPage.stagePickerPrefix)));
+      await tester.pumpAndSettle();
+      expect(find.text('Walls'), findsOneWidget);
+      await tester.tap(
+        find.byKey(PickerPill.optionKey(FeedPage.stagePickerPrefix, 2)),
+      );
+      await tester.pumpAndSettle();
+      await refreshed(tester);
+
+      verify(
+        () =>
+            bloc.add(const FeedEvent.fetchActivity(projectId: 1, stageId: 22)),
+      ).called(1);
+    });
+
+    testWidgets('when nothing matches then it offers to clear the filters', (
+      tester,
+    ) async {
+      await pumpFeed(tester);
+      await tester.tap(
+        find.byKey(FilterChips.chipKey(FeedPage.kindChipsPrefix, 3)),
+      );
+      await tester.pump();
+      await refreshed(tester);
+      states.add(loaded(const []));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.text(l10n.noMatches), findsOneWidget);
+      expect(find.text(l10n.activityEmpty), findsNothing);
     });
   });
 }

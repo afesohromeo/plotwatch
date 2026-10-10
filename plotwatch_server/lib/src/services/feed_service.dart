@@ -20,12 +20,21 @@ class FeedService {
     int projectId, {
     required int? beforeId,
     required int pageSize,
+    List<ActivityType>? types,
+    int? stageId,
   }) async {
     final events = await ActivityEvent.db.find(
       session,
-      where: (t) => beforeId == null
-          ? t.projectId.equals(projectId)
-          : t.projectId.equals(projectId) & (t.id < beforeId),
+      where: (t) {
+        var where = t.projectId.equals(projectId);
+        if (beforeId != null) where &= t.id < beforeId;
+        // An empty list filters nothing, like none (doc/05 §9.4).
+        if (types != null && types.isNotEmpty) {
+          where &= t.type.inSet(types.toSet());
+        }
+        if (stageId != null) where &= t.stageId.equals(stageId);
+        return where;
+      },
       orderBy: (t) => t.id.desc(),
       limit: pageSize.clamp(1, maxPageSize),
     );

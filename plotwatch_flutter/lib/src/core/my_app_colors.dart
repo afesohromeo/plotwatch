@@ -10,11 +10,15 @@ class MyAppColors extends AppColors {
     required this.onPrimary,
     required this.accent,
     required this.accentSoft,
+    required this.accentOnDark,
     required this.ink,
     required this.muted,
     required this.line,
+    required this.lineSoft,
     required this.ground,
     required this.surfaceWhite,
+    required this.surfaceSubtle,
+    required this.primarySoft,
     required this.verified,
     required this.verifiedSoft,
     required this.partial,
@@ -35,6 +39,10 @@ class MyAppColors extends AppColors {
   final Color accent;
   final Color accentSoft;
 
+  /// The accent on [primary] backgrounds: the hero's stage bar, the logo
+  /// (doc/05 §9 DP-1).
+  final Color accentOnDark;
+
   /// Main text and icons.
   final Color ink;
 
@@ -44,11 +52,20 @@ class MyAppColors extends AppColors {
   /// Borders, dividers, input outlines.
   final Color line;
 
+  /// Dividers inside a card.
+  final Color lineSoft;
+
   /// Page background behind cards.
   final Color ground;
 
   /// Cards, app bar, inputs, dialogs.
   final Color surfaceWhite;
+
+  /// Card footers.
+  final Color surfaceSubtle;
+
+  /// Behind a selected tab and icon tiles in [primary].
+  final Color primarySoft;
 
   /// Verification status (badges); [unverified] is also the error colour.
   final Color verified;

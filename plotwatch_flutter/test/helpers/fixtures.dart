@@ -26,11 +26,24 @@ ProjectSummary testSummary({
   String name = 'House in Bafoussam',
   ProjectRole role = ProjectRole.owner,
   ProjectStatus status = ProjectStatus.draft,
+  bool canApprove = false,
+  List<StageBrief>? stages,
+  int progressPercent = 0,
+  int budgetTotalMinor = 0,
 }) => ProjectSummary(
   project: testProject(id: id, name: name, status: status),
   myRole: role,
-  progressPercent: 0,
+  progressPercent: progressPercent,
+  myCanApprove: canApprove,
+  stages: stages,
+  budgetTotalMinor: budgetTotalMinor,
 );
+
+/// Stages in short (doc/05 §9).
+List<StageBrief> testBriefs(List<StageStatus> statuses) => [
+  for (var i = 0; i < statuses.length; i++)
+    StageBrief(id: i + 1, name: 'Stage ${i + 1}', status: statuses[i]),
+];
 
 ProjectOverview testOverview({
   Project? project,
@@ -42,6 +55,7 @@ ProjectOverview testOverview({
   int budgetTotalMinor = 0,
   int progressPercent = 0,
   int approvedStageCount = 0,
+  List<StageBrief>? stages,
 }) => ProjectOverview(
   project: project ?? testProject(),
   site: site,
@@ -52,6 +66,7 @@ ProjectOverview testOverview({
   budgetTotalMinor: budgetTotalMinor,
   progressPercent: progressPercent,
   approvedStageCount: approvedStageCount,
+  stages: stages,
 );
 
 Site testSite({int projectId = 1}) => Site(
@@ -90,23 +105,25 @@ Invitation testInvitation({
 );
 
 /// A removed member (doc/04e C-2b).
-MemberView testFormerMember({int id = 9, String? removedByName = 'Ada Lovelace'}) =>
-    MemberView(
-      member: ProjectMember(
-        id: id,
-        projectId: 1,
-        authUserId: UuidValue.fromString(
-          '00000000-0000-4000-8000-${id.toString().padLeft(12, '0')}',
-        ),
-        role: ProjectRole.siteManager,
-        status: MemberStatus.removed,
-        joinedAt: DateTime.utc(2026, 10, 7),
-        removedAt: DateTime.utc(2026, 10, 9),
-      ),
-      fullName: 'Bob Mbarga',
-      email: 'bob@example.com',
-      removedByName: removedByName,
-    );
+MemberView testFormerMember({
+  int id = 9,
+  String? removedByName = 'Ada Lovelace',
+}) => MemberView(
+  member: ProjectMember(
+    id: id,
+    projectId: 1,
+    authUserId: UuidValue.fromString(
+      '00000000-0000-4000-8000-${id.toString().padLeft(12, '0')}',
+    ),
+    role: ProjectRole.siteManager,
+    status: MemberStatus.removed,
+    joinedAt: DateTime.utc(2026, 10, 7),
+    removedAt: DateTime.utc(2026, 10, 9),
+  ),
+  fullName: 'Bob Mbarga',
+  email: 'bob@example.com',
+  removedByName: removedByName,
+);
 
 MemberView testMember({
   int id = 1,
@@ -304,6 +321,7 @@ ActivityEntry testActivity({
   ActivityType type = ActivityType.stageApproved,
   String targetType = 'stage',
   int? targetId = 2,
+  int? stageId,
   Map<String, String>? payload = const {'name': 'Foundation'},
   String? actorName = 'Ada',
 }) => ActivityEntry(
@@ -314,6 +332,7 @@ ActivityEntry testActivity({
     type: type,
     targetType: targetType,
     targetId: targetId,
+    stageId: stageId,
     payload: payload,
     createdAt: DateTime.utc(2026, 10, 9, 10),
   ),

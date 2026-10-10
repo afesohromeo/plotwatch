@@ -207,3 +207,37 @@ extension AppNotificationX on AppNotification {
 
 String _role(String? name, AppLocalizations l10n) =>
     ProjectRole.values.asNameMap()[name]?.label(l10n) ?? name ?? '';
+
+/// The Activity page's kind chips (doc/05 §9.5). Project and plan events,
+/// and a stage starting, belong to none: they show under "All" only.
+enum ActivityKind {
+  photos({ActivityType.evidenceCaptured, ActivityType.evidenceRetracted}),
+  reviews({
+    ActivityType.stageSubmitted,
+    ActivityType.stageApproved,
+    ActivityType.stageChangesRequested,
+  }),
+  updates({ActivityType.progressUpdatePosted}),
+  members({
+    ActivityType.memberJoined,
+    ActivityType.memberRemoved,
+    ActivityType.memberRoleChanged,
+  }),
+  site({
+    ActivityType.siteProposed,
+    ActivityType.siteProposalRejected,
+    ActivityType.siteChanged,
+  });
+
+  const ActivityKind(this.types);
+
+  final Set<ActivityType> types;
+
+  String label(AppLocalizations l10n) => switch (this) {
+    ActivityKind.photos => l10n.kindPhotos,
+    ActivityKind.reviews => l10n.kindReviews,
+    ActivityKind.updates => l10n.kindUpdates,
+    ActivityKind.members => l10n.kindMembers,
+    ActivityKind.site => l10n.kindSite,
+  };
+}

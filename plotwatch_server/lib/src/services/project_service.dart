@@ -133,6 +133,9 @@ class ProjectService {
     UuidValue userId, {
     required int page,
     required int pageSize,
+    ProjectStatus? status,
+    String? search,
+    ProjectSort sort = ProjectSort.recent,
   }) async {
     final safePage = page < 0 ? 0 : page;
     final safeSize = pageSize.clamp(1, maxPageSize);
@@ -142,18 +145,70 @@ class ProjectService {
           t.authUserId.equals(userId) & t.status.equals(MemberStatus.active),
     );
     final roles = {for (final m in memberships) m.projectId: m.role};
-    final projects = roles.isEmpty
-        ? <Project>[]
-        : await Project.db.find(
+    final canApprove = {
+      for (final m in memberships) m.projectId: m.canApprove,
+    };
+    final term = search?.trim() ?? '';
+    final List<Project> projects;
+    final Map<int, List<Stage>> stages;
+    if (roles.isEmpty) {
+      projects = [];
+      stages = {};
+    } else if (sort == ProjectSort.name) {
+      projects = await Project.db.find(
+        session,
+        where: (t) => _listFilter(t, roles.keys.toSet(), status, term),
+        orderByList: (t) => [t.name.asc(), t.id.desc()],
+        limit: safeSize,
+        offset: safePage * safeSize,
+      );
+      stages = await _stages.stagesByProject(session, {
+        for (final p in projects) p.id!,
+      });
+    } else {
+      // Ordered here, not in SQL: a user is in tens of projects, not
+      // thousands, and progress is computed from the stages.
+      final all = await Project.db.find(
+        session,
+        where: (t) => _listFilter(t, roles.keys.toSet(), status, term),
+      );
+      final ids = {for (final p in all) p.id!};
+      final allStages = sort == ProjectSort.progress
+          ? await _stages.stagesByProject(session, ids)
+          : <int, List<Stage>>{};
+      final key = sort == ProjectSort.progress
+          ? {
+              for (final id in ids)
+                id: StageService.progressPercent(allStages[id] ?? []),
+            }
+          : await _latestActivity(session, ids);
+      // Highest first; the newest project breaks a tie.
+      all.sort((a, b) {
+        final byKey = (key[b.id] ?? 0).compareTo(key[a.id] ?? 0);
+        return byKey != 0 ? byKey : b.id!.compareTo(a.id!);
+      });
+      projects = all.skip(safePage * safeSize).take(safeSize).toList();
+      stages = sort == ProjectSort.progress
+          ? allStages
+          : await _stages.stagesByProject(session, {
+              for (final p in projects) p.id!,
+            });
+    }
+    final projectIds = {for (final p in projects) p.id!};
+    // Each project's latest finalized photo, the card's cover (doc/05 §9).
+    final photos = projectIds.isEmpty
+        ? <Evidence>[]
+        : await Evidence.db.find(
             session,
-            where: (t) => t.id.inSet(roles.keys.toSet()),
-            orderByList: (t) => [t.updatedAt.desc(), t.id.desc()],
-            limit: safeSize,
-            offset: safePage * safeSize,
+            where: (t) =>
+                t.projectId.inSet(projectIds) &
+                t.status.equals(EvidenceStatus.finalized),
+            orderBy: (t) => t.id.desc(),
           );
-    final stages = await _stages.stagesByProject(session, {
-      for (final p in projects) p.id!,
-    });
+    final latestPhoto = <int, Evidence>{};
+    for (final photo in photos) {
+      latestPhoto.putIfAbsent(photo.projectId, () => photo);
+    }
     return ProjectSummaryPage(
       items: [
         for (final project in projects)
@@ -163,11 +218,53 @@ class ProjectService {
             progressPercent: StageService.progressPercent(
               stages[project.id] ?? [],
             ),
+            myCanApprove: canApprove[project.id] ?? false,
+            budgetTotalMinor: StageService.budgetTotal(
+              stages[project.id] ?? [],
+            ),
+            stages: StageService.briefs(stages[project.id] ?? []),
+            latestEvidenceId: latestPhoto[project.id]?.id,
+            latestEvidenceLevel: latestPhoto[project.id]?.verificationLevel,
           ),
       ],
       page: safePage,
       pageSize: safeSize,
     );
+  }
+
+  /// The caller's projects, narrowed to [status] and to names containing
+  /// [term], whatever their case (doc/05 §9.4).
+  static Expression _listFilter(
+    ProjectTable t,
+    Set<int> ids,
+    ProjectStatus? status,
+    String term,
+  ) {
+    var where = t.id.inSet(ids);
+    if (status != null) where &= t.status.equals(status);
+    if (term.isNotEmpty) where &= t.name.ilike('%${escapeLike(term)}%');
+    return where;
+  }
+
+  /// [term] with the LIKE wildcards taken literally: "50%" finds "50%".
+  static String escapeLike(String term) =>
+      term.replaceAllMapped(RegExp(r'[\\%_]'), (m) => '\\${m[0]}');
+
+  /// Each project's newest activity event ID, for the "recent" order: one
+  /// indexed lookup per project (activity_event_project_idx).
+  Future<Map<int, int>> _latestActivity(Session session, Set<int> ids) async {
+    final latest = await Future.wait([
+      for (final id in ids)
+        ActivityEvent.db.findFirstRow(
+          session,
+          where: (t) => t.projectId.equals(id),
+          orderBy: (t) => t.id.desc(),
+        ),
+    ]);
+    return {
+      for (final event in latest)
+        if (event != null) event.projectId: event.id!,
+    };
   }
 
   Future<ProjectOverview> get(Session session, ProjectMember member) async {
@@ -317,6 +414,7 @@ class ProjectService {
       approvedStageCount: stages
           .where((s) => s.status == StageStatus.approved)
           .length,
+      stages: StageService.briefs(stages),
     );
   }
 

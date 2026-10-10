@@ -5,6 +5,8 @@ export 'views/create_project_page.dart';
 export 'views/edit_project_page.dart';
 export 'views/project_list_page.dart';
 export 'views/project_overview_page.dart';
+export 'views/project_shell.dart';
+export 'views/widgets/project_breadcrumb.dart';
 export 'views/widgets/detail_row.dart';
 export 'views/widgets/project_card.dart';
 export 'views/widgets/project_details_form.dart';

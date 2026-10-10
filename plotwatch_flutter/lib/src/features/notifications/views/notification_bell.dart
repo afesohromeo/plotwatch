@@ -17,16 +17,20 @@ class NotificationBell extends StatelessWidget {
       builder: (context, unread) => IconButton(
         key: buttonKey,
         tooltip: l10n.notificationsTitle,
-        color: customColors.primary,
-        onPressed: () => context.goNamed(notificationsRouteName),
+        color: customColors.ink,
+        // On top of the current page, so Back returns there (developer,
+        // 2026-10-10).
+        onPressed: () => context.pushNamed(notificationsRouteName),
+        // The design: an ink outline bell with a red count (doc/05 §9.3).
         icon: Badge(
           isLabelVisible: unread > 0,
-          label: Text(unread > 99 ? '99+' : '$unread'),
-          child: Icon(
-            unread > 0
-                ? Icons.notifications_rounded
-                : Icons.notifications_none_rounded,
+          backgroundColor: customColors.unverified,
+          textColor: customColors.onPrimary,
+          label: Text(
+            unread > 99 ? '99+' : '$unread',
+            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
           ),
+          child: const Icon(Icons.notifications_none_rounded),
         ),
       ),
     );

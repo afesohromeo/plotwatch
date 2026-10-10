@@ -120,10 +120,10 @@ return refreshProjects(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int pageKey,  int? size)?  fetchProjects,TResult Function()?  refreshProjects,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int pageKey,  String? searchTerm,  ProjectStatus? statusFilter,  ProjectSort? sort,  int? size)?  fetchProjects,TResult Function()?  refreshProjects,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FetchProjects() when fetchProjects != null:
-return fetchProjects(_that.pageKey,_that.size);case _RefreshProjects() when refreshProjects != null:
+return fetchProjects(_that.pageKey,_that.searchTerm,_that.statusFilter,_that.sort,_that.size);case _RefreshProjects() when refreshProjects != null:
 return refreshProjects();case _:
   return orElse();
 
@@ -142,10 +142,10 @@ return refreshProjects();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int pageKey,  int? size)  fetchProjects,required TResult Function()  refreshProjects,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int pageKey,  String? searchTerm,  ProjectStatus? statusFilter,  ProjectSort? sort,  int? size)  fetchProjects,required TResult Function()  refreshProjects,}) {final _that = this;
 switch (_that) {
 case _FetchProjects():
-return fetchProjects(_that.pageKey,_that.size);case _RefreshProjects():
+return fetchProjects(_that.pageKey,_that.searchTerm,_that.statusFilter,_that.sort,_that.size);case _RefreshProjects():
 return refreshProjects();}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -160,10 +160,10 @@ return refreshProjects();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int pageKey,  int? size)?  fetchProjects,TResult? Function()?  refreshProjects,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int pageKey,  String? searchTerm,  ProjectStatus? statusFilter,  ProjectSort? sort,  int? size)?  fetchProjects,TResult? Function()?  refreshProjects,}) {final _that = this;
 switch (_that) {
 case _FetchProjects() when fetchProjects != null:
-return fetchProjects(_that.pageKey,_that.size);case _RefreshProjects() when refreshProjects != null:
+return fetchProjects(_that.pageKey,_that.searchTerm,_that.statusFilter,_that.sort,_that.size);case _RefreshProjects() when refreshProjects != null:
 return refreshProjects();case _:
   return null;
 
@@ -176,10 +176,13 @@ return refreshProjects();case _:
 
 
 class _FetchProjects implements ProjectListEvent {
-  const _FetchProjects({this.pageKey = 0, this.size});
+  const _FetchProjects({this.pageKey = 0, this.searchTerm, this.statusFilter, this.sort, this.size});
   
 
 @JsonKey() final  int pageKey;
+ final  String? searchTerm;
+ final  ProjectStatus? statusFilter;
+ final  ProjectSort? sort;
  final  int? size;
 
 /// Create a copy of ProjectListEvent
@@ -192,18 +195,18 @@ _$FetchProjectsCopyWith<_FetchProjects> get copyWith => __$FetchProjectsCopyWith
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FetchProjects&&(identical(other.pageKey, pageKey) || other.pageKey == pageKey)&&(identical(other.size, size) || other.size == size));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FetchProjects&&(identical(other.pageKey, pageKey) || other.pageKey == pageKey)&&(identical(other.searchTerm, searchTerm) || other.searchTerm == searchTerm)&&(identical(other.statusFilter, statusFilter) || other.statusFilter == statusFilter)&&(identical(other.sort, sort) || other.sort == sort)&&(identical(other.size, size) || other.size == size));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,pageKey,size);
+    return Object.hash(runtimeType,pageKey,searchTerm,statusFilter,sort,size);
 }
 
 @override
 String toString() {
-    return 'ProjectListEvent.fetchProjects(pageKey: $pageKey, size: $size)';
+    return 'ProjectListEvent.fetchProjects(pageKey: $pageKey, searchTerm: $searchTerm, statusFilter: $statusFilter, sort: $sort, size: $size)';
 }
 
 
@@ -214,7 +217,7 @@ abstract mixin class _$FetchProjectsCopyWith<$Res> implements $ProjectListEventC
   factory _$FetchProjectsCopyWith(_FetchProjects value, $Res Function(_FetchProjects) _then) = __$FetchProjectsCopyWithImpl;
 @useResult
 $Res call({
- int pageKey, int? size
+ int pageKey, String? searchTerm, ProjectStatus? statusFilter, ProjectSort? sort, int? size
 });
 
 
@@ -231,10 +234,13 @@ class __$FetchProjectsCopyWithImpl<$Res>
 
 /// Create a copy of ProjectListEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? pageKey = null,Object? size = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? pageKey = null,Object? searchTerm = freezed,Object? statusFilter = freezed,Object? sort = freezed,Object? size = freezed,}) {
   return _then(_FetchProjects(
 pageKey: null == pageKey ? _self.pageKey : pageKey // ignore: cast_nullable_to_non_nullable
-as int,size: freezed == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
+as int,searchTerm: freezed == searchTerm ? _self.searchTerm : searchTerm // ignore: cast_nullable_to_non_nullable
+as String?,statusFilter: freezed == statusFilter ? _self.statusFilter : statusFilter // ignore: cast_nullable_to_non_nullable
+as ProjectStatus?,sort: freezed == sort ? _self.sort : sort // ignore: cast_nullable_to_non_nullable
+as ProjectSort?,size: freezed == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
 }

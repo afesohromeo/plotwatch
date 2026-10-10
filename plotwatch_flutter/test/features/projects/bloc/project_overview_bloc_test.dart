@@ -9,6 +9,8 @@ import '../../../helpers/helpers.dart';
 void main() {
   late AppLocalizations l10n;
   late MockProjectRepository repository;
+  late MockMembershipRepository membershipRepository;
+  final member = testMember();
 
   final overview = testOverview();
   final loaded = ProjectOverviewState(
@@ -21,7 +23,10 @@ void main() {
     registerFallbackValue(testDetails);
     registerFallbackValue(ProjectStatus.active);
   });
-  setUp(() => repository = MockProjectRepository());
+  setUp(() {
+    repository = MockProjectRepository();
+    membershipRepository = MockMembershipRepository();
+  });
 
   ProjectOverviewBloc build() =>
       ProjectOverviewBloc(projectRepository: repository);
@@ -177,4 +182,47 @@ void main() {
       expect: () => [loaded],
     );
   });
+
+  // doc/05 §9 DP-4.
+  blocTest<ProjectOverviewBloc, ProjectOverviewState>(
+    'Given the project page then its members load with it',
+    setUp: () {
+      when(() => repository.fetchProject(1)).thenAnswer((_) async => overview);
+      when(
+        () => membershipRepository.fetchMembers(1),
+      ).thenAnswer((_) async => [member]);
+    },
+    build: () => ProjectOverviewBloc(
+      projectRepository: repository,
+      membershipRepository: membershipRepository,
+    ),
+    act: (bloc) =>
+        bloc.add(const ProjectOverviewEvent.fetchProject(projectId: 1)),
+    skip: 1,
+    expect: () => [
+      isA<ProjectOverviewState>().having((s) => s.members, 'members', [member]),
+    ],
+  );
+
+  blocTest<ProjectOverviewBloc, ProjectOverviewState>(
+    'Given the members fail to load then the project still shows',
+    setUp: () {
+      when(() => repository.fetchProject(1)).thenAnswer((_) async => overview);
+      when(
+        () => membershipRepository.fetchMembers(1),
+      ).thenThrow(const NetworkException());
+    },
+    build: () => ProjectOverviewBloc(
+      projectRepository: repository,
+      membershipRepository: membershipRepository,
+    ),
+    act: (bloc) =>
+        bloc.add(const ProjectOverviewEvent.fetchProject(projectId: 1)),
+    skip: 1,
+    expect: () => [
+      isA<ProjectOverviewState>()
+          .having((s) => s.overviewStatus, 'status', GenericStatus.success)
+          .having((s) => s.members, 'members', isEmpty),
+    ],
+  );
 }

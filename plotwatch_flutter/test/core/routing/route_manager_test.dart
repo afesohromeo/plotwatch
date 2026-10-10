@@ -125,7 +125,14 @@ void main() {
       List<String> above,
       String name,
     ) {
-      for (final route in routes.whereType<GoRoute>()) {
+      for (final route in routes) {
+        // The project shell has no name: look inside it (doc/05 §9 DP-3).
+        if (route is ShellRouteBase) {
+          final found = search(route.routes, above, name);
+          if (found != null) return found;
+          continue;
+        }
+        if (route is! GoRoute) continue;
         final path = [...above, ?route.name];
         if (route.name == name) return path;
         final found = search(route.routes, path, name);
@@ -136,6 +143,16 @@ void main() {
 
     List<String>? ancestry(String name) =>
         search(RouteManager.shellSubRoutes, [], name);
+
+    test('then every project page sits inside the project shell', () {
+      final home = RouteManager.shellSubRoutes.whereType<GoRoute>().firstWhere(
+        (r) => r.name == homeRouteName,
+      );
+      final shell = home.routes.whereType<ShellRoute>().single;
+      final project = shell.routes.whereType<GoRoute>().single;
+
+      expect(project.name, projectRouteName);
+    });
 
     test('then the project list is the home page at /', () {
       expect(homePage, '/');

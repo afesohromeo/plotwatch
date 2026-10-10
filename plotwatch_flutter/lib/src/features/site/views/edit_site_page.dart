@@ -46,6 +46,10 @@ class _EditSitePageState extends State<EditSitePage> {
       props: ScaffoldWrapperProps(
         leading: BackButton(onPressed: _backToProject),
         title: Text(l10n.editSiteTitle),
+        bottom: ProjectBreadcrumbBar(
+          projectId: widget.projectId,
+          leaf: l10n.editSiteTitle,
+        ),
         resizeToAvoidBottomInset: true,
       ),
       mobileBody: BlocConsumer<EditSiteBloc, EditSiteState>(

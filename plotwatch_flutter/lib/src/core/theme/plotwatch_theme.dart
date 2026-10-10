@@ -12,6 +12,16 @@ class PlotwatchTheme {
   static const fontFamily = 'Manrope';
 
   static const double radius = 12;
+
+  /// Cards (doc/05 §9 DP-2); the hero block is a little rounder.
+  static const double cardRadius = 16;
+  static const double heroRadius = 18;
+
+  /// The soft two-layer shadow under cards (DP-2).
+  static const List<BoxShadow> cardShadow = [
+    BoxShadow(color: Color(0x0F15201E), blurRadius: 2, offset: Offset(0, 1)),
+    BoxShadow(color: Color(0x0D15201E), blurRadius: 16, offset: Offset(0, 6)),
+  ];
   static const double dialogRadius = 20;
   static const double controlHeight = 52;
 
@@ -42,9 +52,56 @@ class PlotwatchTheme {
         outline: c.line,
         outlineVariant: c.line,
       ),
-      scaffoldBackgroundColor: c.surfaceWhite,
+      // Pages on the ground, cards in white (doc/05 §9 DP-2).
+      scaffoldBackgroundColor: c.ground,
       textTheme: textTheme,
       dividerTheme: DividerThemeData(color: c.line, thickness: 1, space: 1),
+      cardTheme: CardThemeData(
+        color: c.surfaceWhite,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(cardRadius),
+          side: BorderSide(color: c.line),
+        ),
+      ),
+      // The project tabs (doc/05 §9 DP-3).
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: c.surfaceWhite,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        height: 72,
+        indicatorColor: c.primarySoft,
+        iconTheme: WidgetStateProperty.resolveWith(
+          (states) => IconThemeData(
+            color: states.contains(WidgetState.selected) ? c.primary : c.muted,
+          ),
+        ),
+        labelTextStyle: WidgetStateProperty.resolveWith(
+          (states) => textTheme.labelSmall?.copyWith(
+            color: states.contains(WidgetState.selected) ? c.primary : c.muted,
+            fontWeight: states.contains(WidgetState.selected)
+                ? FontWeight.w800
+                : FontWeight.w600,
+          ),
+        ),
+      ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: c.surfaceWhite,
+        elevation: 0,
+        indicatorColor: c.primarySoft,
+        selectedIconTheme: IconThemeData(color: c.primary),
+        unselectedIconTheme: IconThemeData(color: c.muted),
+        selectedLabelTextStyle: textTheme.labelSmall?.copyWith(
+          color: c.primary,
+          fontWeight: FontWeight.w800,
+        ),
+        unselectedLabelTextStyle: textTheme.labelSmall?.copyWith(
+          color: c.muted,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: c.surfaceWhite,
         foregroundColor: c.ink,
@@ -52,9 +109,12 @@ class PlotwatchTheme {
         scrolledUnderElevation: 0,
         surfaceTintColor: Colors.transparent,
         centerTitle: false,
-        titleTextStyle: textTheme.titleLarge,
+        titleTextStyle: textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.w800,
+        ),
         iconTheme: IconThemeData(color: c.ink),
-        actionsIconTheme: IconThemeData(color: c.primary),
+        // Ink icons in the bar, as in the design (doc/05 §9.3).
+        actionsIconTheme: IconThemeData(color: c.ink),
         shape: Border(bottom: BorderSide(color: c.line)),
       ),
       inputDecorationTheme: InputDecorationTheme(

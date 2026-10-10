@@ -50,6 +50,10 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       props: ScaffoldWrapperProps(
         leading: BackButton(onPressed: _back),
         title: Text(l10n.postUpdateAction),
+        bottom: ProjectBreadcrumbBar(
+          projectId: widget.projectId,
+          leaf: l10n.postUpdateAction,
+        ),
         resizeToAvoidBottomInset: true,
       ),
       mobileBody: BlocConsumer<UpdateFormBloc, UpdateFormState>(

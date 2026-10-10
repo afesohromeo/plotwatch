@@ -27,6 +27,7 @@ class ActivityService {
         type: type,
         targetType: targetType,
         targetId: targetId,
+        stageId: stageOf(targetType, targetId, payload),
         payload: payload,
         createdAt: DateTime.now().toUtc(),
       ),
@@ -35,4 +36,14 @@ class ActivityService {
     await LiveService.signal(session, LiveService.projectChannel(projectId));
     return event;
   }
+
+  /// The stage an event concerns: its target when that is a stage, else the
+  /// `stageId` its payload names (a photo, an update), else none.
+  static int? stageOf(
+    String targetType,
+    int? targetId,
+    Map<String, String>? payload,
+  ) => targetType == 'stage'
+      ? targetId
+      : int.tryParse(payload?['stageId'] ?? '');
 }

@@ -1,0 +1,9 @@
+### How the project list is ordered (doc/05 §9.4).
+enum: ProjectSort
+serialized: byName
+values:
+  # The latest activity first (the default).
+  - recent
+  - name
+  # The furthest along first.
+  - progress

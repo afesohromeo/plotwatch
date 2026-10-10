@@ -243,10 +243,9 @@ void main() {
     await pumpWith(
       tester,
       loaded(
-        evidence: testEvidence(level: VerificationLevel.unverified).copyWith(
-          capturedByName: 'Bob Mbarga',
-          capturedByFormer: true,
-        ),
+        evidence: testEvidence(
+          level: VerificationLevel.unverified,
+        ).copyWith(capturedByName: 'Bob Mbarga', capturedByFormer: true),
       ),
     );
 

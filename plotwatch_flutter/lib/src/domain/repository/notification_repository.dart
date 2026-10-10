@@ -16,12 +16,17 @@ class NotificationRepository {
   final Duration Function(int attempt) _backoff;
 
   /// The notifications older than [beforeId] (the newest without it),
-  /// newest first.
+  /// newest first; only the unread ones with [unreadOnly] (doc/05 §9.5).
   Future<PaginatedList<AppNotification>> fetchNotifications({
     int? beforeId,
     required int size,
+    bool unreadOnly = false,
   }) => _logged('fetching notifications', () async {
-    final page = await _apiProvider.list(beforeId: beforeId, pageSize: size);
+    final page = await _apiProvider.list(
+      beforeId: beforeId,
+      pageSize: size,
+      unreadOnly: unreadOnly ? true : null,
+    );
     return PaginatedList(
       content: page.items,
       pagination: Pagination(size: size),

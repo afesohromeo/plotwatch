@@ -69,6 +69,10 @@ class _EvidencePageState extends State<EvidencePage> {
       props: ScaffoldWrapperProps(
         leading: BackButton(onPressed: _backToStage),
         title: Text(l10n.evidenceTitle),
+        bottom: _EvidenceBreadcrumb(
+          projectId: widget.projectId,
+          stageId: widget.stageId,
+        ),
       ),
       mobileBody: BlocConsumer<EvidenceBloc, EvidenceState>(
         listenWhen: (previous, current) =>
@@ -137,6 +141,8 @@ class _EvidenceBody extends StatelessWidget {
   final bool isRetracting;
   final VoidCallback onRetract;
 
+  static const checksToggleKey = Key('evidence.checks');
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -144,122 +150,359 @@ class _EvidenceBody extends StatelessWidget {
     final received =
         evidence.status == EvidenceStatus.finalized ||
         (retracted && evidence.finalizedAt != null);
-    String time(DateTime value) => formatDate(value.toLocal(), withTime: true);
+    String time(DateTime value) => dayAndTime(value, l10n);
     final lat = evidence.lat;
     final lng = evidence.lng;
     final accuracy = evidence.accuracyM;
     final distance = evidence.distanceFromSiteM;
+    final checks = evidence.checks ?? const <VerificationCheck>[];
+    final passed = checks.where((c) => c.passed).length;
+    final level = evidence.verificationLevel;
 
-    return AuthFormLayout(
-      title: l10n.evidenceTitle,
-      subtitle: evidence.caption,
-      children: [
-        // The phone recorded it, but the photo never arrived (M4-F4).
-        if (!received) ...[
-          Text(
+    // The design's verdict block: the badge's colour, the result in words.
+    final verdict = received && !retracted
+        ? Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: switch (level) {
+                VerificationLevel.verified => customColors.verifiedSoft,
+                VerificationLevel.partiallyVerified => customColors.partialSoft,
+                VerificationLevel.unverified => customColors.unverifiedSoft,
+                VerificationLevel.pending => customColors.lineSoft,
+              },
+              borderRadius: BorderRadius.circular(PlotwatchTheme.cardRadius),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: level.color,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(switch (level) {
+                    VerificationLevel.verified => Icons.check_rounded,
+                    VerificationLevel.partiallyVerified =>
+                      Icons.priority_high_rounded,
+                    VerificationLevel.unverified => Icons.close_rounded,
+                    VerificationLevel.pending => Icons.hourglass_top_rounded,
+                  }, color: customColors.onPrimary),
+                ),
+                const Gap.horizontal(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        level.label(l10n),
+                        style: context.textTheme.titleMedium?.copyWith(
+                          color: level.color,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      if (checks.isNotEmpty)
+                        Text(
+                          [
+                            l10n.checksPassed(passed, checks.length),
+                            if (distance != null)
+                              l10n.distanceFromCentre(distance.round()),
+                          ].join(' · '),
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: customColors.ink,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+        : null;
+
+    final notReceived = received
+        ? null
+        : Text(
             l10n.captureNeverReceived,
             style: context.textTheme.bodyLarge?.copyWith(
               color: customColors.unverified,
             ),
+          );
+    final reason = retracted
+        ? Text(
+            l10n.captureRetractedReason(evidence.retractedReason ?? ''),
+            style: context.textTheme.bodyLarge?.copyWith(
+              color: customColors.unverified,
+            ),
+          )
+        : null;
+    // Information only: lateness never changes the badge (M5-10).
+    final late = switch (daysLate) {
+      final days? => Text(
+        l10n.takenAfterPlannedEnd(days, formatDate(plannedEnd!)),
+        style: context.textTheme.bodyMedium?.copyWith(
+          color: customColors.partial,
+        ),
+      ),
+      null => null,
+    };
+
+    final details = AppCard(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+      child: Column(
+        children: [
+          if (evidence.capturedByName case final name?)
+            _InfoRow(
+              label: l10n.labelTakenBy,
+              value: personLabel(l10n, name, former: evidence.capturedByFormer),
+            ),
+          _InfoRow(
+            label: l10n.labelTakenAt,
+            value: time(evidence.deviceCapturedAt),
           ),
-          if (retracted) ...[
-            const Gap.vertical(height: AppSpacing.sm),
-            Text(
-              l10n.captureRetractedReason(evidence.retractedReason ?? ''),
-              style: context.textTheme.bodyMedium,
-            ),
-          ],
-        ] else ...[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-            child: Opacity(
-              opacity: retracted ? .4 : 1,
-              child: EvidenceImage(
-                projectId: evidence.projectId,
-                evidenceId: evidence.id!,
-                variant: MediaVariant.photo,
-                height: 320,
-                fit: BoxFit.contain,
-              ),
-            ),
+          _InfoRow(
+            label: l10n.labelReceivedAt,
+            value: time(evidence.serverCommittedAt),
           ),
-          const Gap.vertical(height: AppSpacing.md),
-          if (retracted)
-            Text(
-              l10n.captureRetractedReason(evidence.retractedReason ?? ''),
-              style: context.textTheme.bodyLarge?.copyWith(
-                color: customColors.unverified,
-              ),
-            )
-          else
-            Align(
-              alignment: Alignment.centerLeft,
-              child: VerificationBadge(level: evidence.verificationLevel),
+          _InfoRow(
+            label: l10n.labelPosition,
+            value: lat == null || lng == null
+                ? l10n.notSet
+                : '${lat.toStringAsFixed(5)}, ${lng.toStringAsFixed(5)}',
+          ),
+          if (accuracy != null)
+            _InfoRow(
+              label: l10n.labelAccuracy,
+              value: l10n.accuracyMeters(accuracy.round()),
             ),
-          const Gap.vertical(height: AppSpacing.md),
-          Text(l10n.checksTitle, style: context.textTheme.titleMedium),
-          const Gap.vertical(height: AppSpacing.sm),
-          VerificationBreakdown(checks: evidence.checks ?? const []),
-          Text(l10n.verificationNotice, style: context.textTheme.bodySmall),
+          _InfoRow(
+            label: l10n.labelDevice,
+            value: '${evidence.deviceModel} · ${evidence.osVersion}',
+          ),
+          _InfoRow(
+            label: l10n.labelAppVersion,
+            value: evidence.appVersion,
+            last: true,
+          ),
         ],
-        const Gap.vertical(height: AppSpacing.lg),
-        Text(l10n.evidenceDetailsTitle, style: context.textTheme.titleMedium),
-        // Information only: lateness never changes the badge (M5-10).
-        if (daysLate case final days?) ...[
-          const Gap.vertical(height: AppSpacing.xs),
-          Text(
-            l10n.takenAfterPlannedEnd(days, formatDate(plannedEnd!)),
-            style: context.textTheme.bodyMedium?.copyWith(
-              color: customColors.partial,
-            ),
-          ),
-        ],
-        const Gap.vertical(height: AppSpacing.sm),
-        if (evidence.capturedByName case final name?)
-          DetailRow(
-            label: l10n.labelTakenBy,
-            value: personLabel(l10n, name, former: evidence.capturedByFormer),
-          ),
-        DetailRow(
-          label: l10n.labelTakenAt,
-          value: time(evidence.deviceCapturedAt),
-        ),
-        DetailRow(
-          label: l10n.labelReceivedAt,
-          value: time(evidence.serverCommittedAt),
-        ),
-        DetailRow(
-          label: l10n.labelPosition,
-          value: lat == null || lng == null
-              ? l10n.notSet
-              : '${lat.toStringAsFixed(5)}, ${lng.toStringAsFixed(5)}',
-        ),
-        if (accuracy != null)
-          DetailRow(
-            label: l10n.labelAccuracy,
-            value: l10n.accuracyMeters(accuracy.round()),
-          ),
-        if (distance != null)
-          DetailRow(
-            label: l10n.labelDistanceToSite,
-            value: l10n.distanceMeters(distance.round()),
-          ),
-        DetailRow(
-          label: l10n.labelDevice,
-          value: '${evidence.deviceModel} · ${evidence.osVersion}',
-        ),
-        DetailRow(label: l10n.labelAppVersion, value: evidence.appVersion),
-        if (canRetract) ...[
-          const Gap.vertical(height: AppSpacing.lg),
-          PrimaryButton(
+      ),
+    );
+
+    final checksCard = received && checks.isNotEmpty
+        ? _ChecksCard(checks: checks)
+        : null;
+    final retract = canRetract
+        ? PrimaryButton(
             key: EvidencePage.retractButtonKey,
             withBg: false,
             width: double.infinity,
             onPressed: isRetracting ? null : onRetract,
             child: Text(l10n.retractAction),
+          )
+        : null;
+
+    Widget photo({required double height, required bool rounded}) => ClipRRect(
+      borderRadius: BorderRadius.circular(
+        rounded ? PlotwatchTheme.cardRadius : 0,
+      ),
+      child: ColoredBox(
+        color: customColors.ink,
+        child: Opacity(
+          opacity: retracted ? .4 : 1,
+          child: EvidenceImage(
+            projectId: evidence.projectId,
+            evidenceId: evidence.id!,
+            variant: MediaVariant.photo,
+            width: double.infinity,
+            height: height,
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth >= 840) {
+          // The photo and its verdict, the details beside (DP-8).
+          return ContentLayout(
+            main: [
+              if (evidence.caption case final caption?)
+                Text(caption, style: context.textTheme.bodyLarge),
+              ?notReceived,
+              if (received) photo(height: 480, rounded: true),
+              ?verdict,
+              ?reason,
+            ],
+            side: [?late, details, ?checksCard, ?retract],
+          );
+        }
+        // On a phone the photo runs edge to edge (doc/05 §9.3).
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (received) photo(height: 260, rounded: false),
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final part in [
+                      if (evidence.caption case final caption?)
+                        Text(caption, style: context.textTheme.bodyLarge),
+                      ?notReceived,
+                      ?verdict,
+                      ?reason,
+                      // Details · Checks, one at a time (doc/05 §9.4).
+                      if (received && checks.isNotEmpty)
+                        SegmentedPanels(
+                          panels: [
+                            Panel(
+                              label: l10n.evidenceDetailsTitle,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  if (late != null) ...[
+                                    late,
+                                    const Gap.vertical(height: 12),
+                                  ],
+                                  details,
+                                ],
+                              ),
+                            ),
+                            Panel(
+                              label: l10n.checksTitle,
+                              child: AppCard(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    VerificationBreakdown(checks: checks),
+                                    Text(
+                                      l10n.verificationNotice,
+                                      style: context.textTheme.bodySmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      else ...[
+                        ?late,
+                        details,
+                      ],
+                      ?retract,
+                    ]) ...[part, const Gap.vertical(height: 12)],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// A label on the left, its value on the right in bold (doc/05 §9.3).
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({required this.label, required this.value, this.last = false});
+
+  final String label;
+  final String value;
+  final bool last;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        border: last
+            ? null
+            : Border(bottom: BorderSide(color: customColors.lineSoft)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: context.textTheme.bodyMedium?.copyWith(fontSize: 14),
+          ),
+          const Gap.horizontal(width: AppSpacing.md),
+          Expanded(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: context.textTheme.titleSmall,
+            ),
           ),
         ],
-      ],
+      ),
+    );
+  }
+}
+
+/// "See the 8 checks": opens the list of checks under it.
+class _ChecksCard extends StatefulWidget {
+  const _ChecksCard({required this.checks});
+
+  final List<VerificationCheck> checks;
+
+  @override
+  State<_ChecksCard> createState() => _ChecksCardState();
+}
+
+class _ChecksCardState extends State<_ChecksCard> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AppCard(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          InkWell(
+            key: _EvidenceBody.checksToggleKey,
+            onTap: () => setState(() => _open = !_open),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.seeChecks(widget.checks.length),
+                      style: context.textTheme.titleSmall?.copyWith(
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    _open
+                        ? Icons.expand_less_rounded
+                        : Icons.chevron_right_rounded,
+                    color: customColors.muted,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_open) ...[
+            VerificationBreakdown(checks: widget.checks),
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: Text(
+                l10n.verificationNotice,
+                style: context.textTheme.bodySmall,
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -318,6 +561,36 @@ class _RetractReasonDialogState extends State<_RetractReasonDialog> {
           child: Text(l10n.confirm),
         ),
       ],
+    );
+  }
+}
+
+/// Projects › {project} › Stages › {stage} › Photo (doc/05 §9 DP-5), with
+/// the names once the page has loaded them.
+class _EvidenceBreadcrumb extends StatelessWidget
+    implements PreferredSizeWidget {
+  const _EvidenceBreadcrumb({required this.projectId, required this.stageId});
+
+  final int projectId;
+  final int stageId;
+
+  @override
+  Size get preferredSize => const Size.fromHeight(36);
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return BlocBuilder<EvidenceBloc, EvidenceState>(
+      buildWhen: (previous, current) =>
+          previous.stage != current.stage ||
+          previous.overview != current.overview,
+      builder: (context, state) => ProjectBreadcrumbBar(
+        projectId: projectId,
+        projectName: state.overview?.project.name,
+        section: ProjectTab.stages,
+        stage: (id: stageId, name: state.stage?.name),
+        leaf: l10n.evidenceTitle,
+      ),
     );
   }
 }

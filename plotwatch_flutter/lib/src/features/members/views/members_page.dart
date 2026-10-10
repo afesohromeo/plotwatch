@@ -15,6 +15,7 @@ class MembersPage extends StatefulWidget {
   static const refreshButtonKey = Key('members.refresh');
   static Key removeButtonKey(int memberId) => Key('members.remove.$memberId');
   static Key formerMemberKey(int memberId) => Key('members.former.$memberId');
+  static Key memberMenuKey(int memberId) => Key('members.menu.$memberId');
   static Key changeRoleButtonKey(int memberId) =>
       Key('members.changeRole.$memberId');
   static Key roleOptionKey(ProjectRole role) =>
@@ -143,21 +144,34 @@ class _MembersPageState extends State<MembersPage> {
               ),
             ),
             title: Text(l10n.membersTitle),
+            // "Maison Douala · 4 people" (doc/05 §9.3).
+            subtitle: state.overview == null
+                ? null
+                : '${state.overview!.project.name} · '
+                      '${l10n.peopleCount(state.members.length)}',
+            bottom: ProjectBreadcrumbBar(
+              projectId: widget.projectId,
+              projectName: state.overview?.project.name,
+              leaf: l10n.membersTitle,
+            ),
             actions: [
-              IconButton(
-                key: MembersPage.refreshButtonKey,
-                tooltip: l10n.refresh,
-                color: customColors.primary,
-                icon: const Icon(Icons.refresh_rounded),
-                onPressed: _load,
+              AppBarMenu(
+                items: [
+                  AppBarMenuItem(
+                    key: MembersPage.refreshButtonKey,
+                    icon: Icons.refresh_rounded,
+                    label: l10n.refresh,
+                    onTap: _load,
+                  ),
+                ],
               ),
             ],
             showFloatingButton: state.isOwner && !state.isClosed,
             onPressed: _openInviteSheet,
+            buttonLabel: l10n.inviteAction,
             buttonIcon: Icon(
               Icons.person_add_alt_1_outlined,
               key: MembersPage.inviteButtonKey,
-              semanticLabel: l10n.inviteAction,
             ),
           ),
           mobileBody: switch (state.membersStatus) {
@@ -206,86 +220,121 @@ class _MembersList extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return AuthFormLayout(
-      title: state.overview!.project.name,
-      subtitle: l10n.membersTitle,
+    final canManage = state.isOwner;
+    return ContentLayout(
+      maxWidth: 720,
       onRefresh: onRefresh,
-      children: [
-        for (final view in state.members)
-          _Row(
-            title: view.fullName ?? view.email ?? '',
-            subtitle: view.fullName == null ? null : view.email,
-            chip: ProjectChip(label: view.member.role.label(l10n)),
-            action: state.isOwner && view.member.role != ProjectRole.owner
-                ? Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (!state.isClosed)
-                      IconButton(
-                        key: MembersPage.changeRoleButtonKey(view.member.id!),
-                        tooltip: l10n.changeRoleTitle(view.fullName ?? ''),
-                        color: customColors.primary,
-                        icon: const Icon(Icons.manage_accounts_outlined),
-                        onPressed: () => onChangeRole(view),
-                      ),
-                      IconButton(
-                        key: MembersPage.removeButtonKey(view.member.id!),
-                        tooltip: l10n.removeMemberTitle(view.fullName ?? ''),
-                        color: customColors.unverified,
-                        icon: const Icon(Icons.person_remove_outlined),
-                        onPressed: () => onRemove(view),
-                      ),
-                    ],
-                  )
-                : null,
+      main: [
+        // Everyone in one card (doc/05 §9.3).
+        AppCard(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+          child: Column(
+            children: [
+              for (var i = 0; i < state.members.length; i++)
+                _MemberRow(
+                  view: state.members[i],
+                  last: i == state.members.length - 1,
+                  menu:
+                      canManage &&
+                          state.members[i].member.role != ProjectRole.owner
+                      ? [
+                          if (!state.isClosed)
+                            AppBarMenuItem(
+                              key: MembersPage.changeRoleButtonKey(
+                                state.members[i].member.id!,
+                              ),
+                              icon: Icons.manage_accounts_outlined,
+                              label: l10n.changeRoleTitle(
+                                state.members[i].fullName ?? '',
+                              ),
+                              onTap: () => onChangeRole(state.members[i]),
+                            ),
+                          AppBarMenuItem(
+                            key: MembersPage.removeButtonKey(
+                              state.members[i].member.id!,
+                            ),
+                            icon: Icons.person_remove_outlined,
+                            label: l10n.removeMemberTitle(
+                              state.members[i].fullName ?? '',
+                            ),
+                            destructive: true,
+                            onTap: () => onRemove(state.members[i]),
+                          ),
+                        ]
+                      : const [],
+                ),
+            ],
           ),
-        // Removed members stay on record (doc/04e C-2b).
-        if (state.formerMembers.isNotEmpty) ...[
-          const Gap.vertical(height: AppSpacing.md),
-          Text(l10n.formerMembersTitle, style: context.textTheme.titleMedium),
-          const Gap.vertical(height: AppSpacing.sm),
-          for (final view in state.formerMembers)
-            _Row(
-              key: MembersPage.formerMemberKey(view.member.id!),
-              title: view.fullName ?? view.email ?? '',
-              subtitle: _removedLine(l10n, view),
-              chip: ProjectChip(
-                label: view.member.role.label(l10n),
-                color: customColors.muted,
+        ),
+        if (canManage && state.invitations.isNotEmpty) ...[
+          Text(l10n.pendingInvitations, style: context.textTheme.titleMedium),
+          for (final invitation in state.invitations)
+            DashedBorder(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(14, 10, 6, 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            formatInvitationCode(invitation.code),
+                            style: context.textTheme.titleMedium?.copyWith(
+                              letterSpacing: 1,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          Text(
+                            '${invitation.role.label(l10n)} · '
+                            '${l10n.invitationExpires(formatDate(invitation.expiresAt.toLocal()))}',
+                            style: context.textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                    TextButton(
+                      key: MembersPage.shareInvitationKey(invitation.id!),
+                      onPressed: () => onShareInvitation(invitation),
+                      child: Text(l10n.shareInvitationAction),
+                    ),
+                    IconButton(
+                      key: MembersPage.cancelInvitationKey(invitation.id!),
+                      tooltip: l10n.cancelInvitationAction,
+                      color: customColors.muted,
+                      icon: const Icon(Icons.close_rounded),
+                      onPressed: () => onCancelInvitation(invitation),
+                    ),
+                  ],
+                ),
               ),
             ),
         ],
-        if (state.isOwner && state.invitations.isNotEmpty) ...[
-          const Gap.vertical(height: AppSpacing.md),
-          Text(l10n.pendingInvitations, style: context.textTheme.titleMedium),
-          const Gap.vertical(height: AppSpacing.sm),
-          for (final invitation in state.invitations)
-            _Row(
-              title: formatInvitationCode(invitation.code),
-              subtitle: l10n.invitationExpires(
-                formatDate(invitation.expiresAt.toLocal()),
-              ),
-              chip: ProjectChip(label: invitation.role.label(l10n)),
-              action: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    key: MembersPage.shareInvitationKey(invitation.id!),
-                    tooltip: l10n.shareInvitationAction,
-                    color: customColors.primary,
-                    icon: const Icon(Icons.ios_share_rounded),
-                    onPressed: () => onShareInvitation(invitation),
-                  ),
-                  IconButton(
-                    key: MembersPage.cancelInvitationKey(invitation.id!),
-                    tooltip: l10n.cancelInvitationAction,
-                    color: customColors.unverified,
-                    icon: const Icon(Icons.close_rounded),
-                    onPressed: () => onCancelInvitation(invitation),
-                  ),
-                ],
-              ),
+        // Removed members stay on record (doc/04e C-2b).
+        if (state.formerMembers.isNotEmpty) ...[
+          Text(
+            l10n.formerMembersTitle,
+            style: context.textTheme.titleMedium?.copyWith(
+              color: customColors.muted,
             ),
+          ),
+          AppCard(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+            child: Column(
+              children: [
+                for (var i = 0; i < state.formerMembers.length; i++)
+                  _MemberRow(
+                    key: MembersPage.formerMemberKey(
+                      state.formerMembers[i].member.id!,
+                    ),
+                    view: state.formerMembers[i],
+                    former: true,
+                    subtitle: _removedLine(l10n, state.formerMembers[i]),
+                    last: i == state.formerMembers.length - 1,
+                  ),
+              ],
+            ),
+          ),
         ],
       ],
     );
@@ -303,40 +352,143 @@ String _removedLine(AppLocalizations l10n, MemberView view) {
   };
 }
 
-/// One member or invitation: title, optional subtitle, role chip, action.
-class _Row extends StatelessWidget {
-  const _Row({
+/// One member (doc/05 §9.3): their initials in the role's tone, name and
+/// a line under it, the role chip, and the owner's ⋮.
+class _MemberRow extends StatelessWidget {
+  const _MemberRow({
     super.key,
-    required this.title,
-    required this.chip,
+    required this.view,
+    required this.last,
+    this.menu = const [],
+    this.former = false,
     this.subtitle,
-    this.action,
   });
 
-  final String title;
+  final MemberView view;
+  final bool last;
+  final List<AppBarMenuItem> menu;
+  final bool former;
   final String? subtitle;
-  final Widget chip;
-  final Widget? action;
+
+  static (Color, Color) toneOf(ProjectRole role) => switch (role) {
+    ProjectRole.owner => (customColors.primary, customColors.onPrimary),
+    ProjectRole.siteManager => (customColors.ink, customColors.onPrimary),
+    ProjectRole.coFunder => (customColors.accent, customColors.onPrimary),
+    ProjectRole.viewer => (customColors.line, customColors.ink),
+  };
+
+  static (Color, Color) chipOf(ProjectRole role) => switch (role) {
+    ProjectRole.owner => (customColors.primarySoft, customColors.primary),
+    ProjectRole.siteManager => (
+      customColors.accentSoft,
+      const Color(0xFF7E3719),
+    ),
+    _ => (customColors.ground, customColors.ink),
+  };
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+    final l10n = AppLocalizations.of(context)!;
+    final name = view.fullName ?? view.email ?? '';
+    final role = view.member.role;
+    final (avatar, initials) = former
+        ? (customColors.ground, customColors.muted)
+        : toneOf(role);
+    final (chipBg, chipText) = former
+        ? (customColors.ground, customColors.muted)
+        : chipOf(role);
+    final line =
+        subtitle ??
+        [
+          if (view.fullName != null && view.email != null) view.email!,
+          if (role == ProjectRole.coFunder && view.member.canApprove)
+            l10n.canApproveShort,
+        ].join(' · ');
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        border: last
+            ? null
+            : Border(bottom: BorderSide(color: customColors.lineSoft)),
+      ),
       child: Row(
         children: [
+          Container(
+            width: 40,
+            height: 40,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: avatar, shape: BoxShape.circle),
+            child: Text(
+              initialsOf(name),
+              style: context.textTheme.labelMedium?.copyWith(
+                color: initials,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+          const Gap.horizontal(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: context.textTheme.bodyLarge),
-                if (subtitle != null)
-                  Text(subtitle!, style: context.textTheme.bodySmall),
-                const Gap.vertical(height: AppSpacing.xs),
-                chip,
+                Text(
+                  name,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                    color: former ? customColors.muted : customColors.ink,
+                  ),
+                ),
+                if (line.isNotEmpty)
+                  Text(
+                    line,
+                    style: context.textTheme.bodySmall,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
               ],
             ),
           ),
-          ?action,
+          const Gap.horizontal(width: AppSpacing.sm),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+            decoration: BoxDecoration(
+              color: chipBg,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Text(
+              role.label(l10n),
+              style: context.textTheme.labelSmall?.copyWith(color: chipText),
+            ),
+          ),
+          if (menu.isNotEmpty)
+            PopupMenuButton<int>(
+              key: MembersPage.memberMenuKey(view.member.id!),
+              tooltip: l10n.moreActions,
+              icon: Icon(Icons.more_vert_rounded, color: customColors.muted),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              color: customColors.surfaceWhite,
+              surfaceTintColor: Colors.transparent,
+              onSelected: (index) => menu[index].onTap(),
+              itemBuilder: (context) => [
+                for (var i = 0; i < menu.length; i++)
+                  PopupMenuItem<int>(
+                    key: menu[i].key,
+                    value: i,
+                    child: Text(
+                      menu[i].label,
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        color: menu[i].destructive
+                            ? customColors.unverified
+                            : customColors.ink,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
         ],
       ),
     );

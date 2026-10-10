@@ -11,6 +11,7 @@
 // ignore_for_file: dead_code, unnecessary_type_check
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:plotwatch_client/src/protocol/activity_type.dart' as _ip4wlfh9;
 import 'package:plotwatch_client/src/protocol/evidence.dart' as _iqq0l4bs;
 import 'package:plotwatch_client/src/protocol/invitation.dart' as _idw8kw5i;
 import 'package:plotwatch_client/src/protocol/member_view.dart' as _ifqht5qj;
@@ -53,6 +54,7 @@ import 'project_details.dart' as _irbn6ip5;
 import 'project_member.dart' as _i7o7d07j;
 import 'project_overview.dart' as _iy1z8w9e;
 import 'project_role.dart' as _i46wx1t7;
+import 'project_sort.dart' as _i7c3tk4z;
 import 'project_status.dart' as _iqsxbscs;
 import 'project_summary.dart' as _ivxocntb;
 import 'project_summary_page.dart' as _i4o32k29;
@@ -62,6 +64,7 @@ import 'site.dart' as _iz8v5x4v;
 import 'site_proposal.dart' as _ira79kry;
 import 'site_proposal_status.dart' as _i8b5g94r;
 import 'stage.dart' as _igkbma1f;
+import 'stage_brief.dart' as _is1lynby;
 import 'stage_draft.dart' as _i7mtby60;
 import 'stage_plan.dart' as _iwmsx3av;
 import 'stage_review.dart' as _ie5kygoh;
@@ -103,6 +106,7 @@ export 'project_details.dart';
 export 'project_member.dart';
 export 'project_overview.dart';
 export 'project_role.dart';
+export 'project_sort.dart';
 export 'project_status.dart';
 export 'project_summary.dart';
 export 'project_summary_page.dart';
@@ -112,6 +116,7 @@ export 'site.dart';
 export 'site_proposal.dart';
 export 'site_proposal_status.dart';
 export 'stage.dart';
+export 'stage_brief.dart';
 export 'stage_draft.dart';
 export 'stage_plan.dart';
 export 'stage_review.dart';
@@ -249,6 +254,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _i46wx1t7.ProjectRole) {
       return _i46wx1t7.ProjectRole.fromJson(data) as T;
     }
+    if (t == _i7c3tk4z.ProjectSort) {
+      return _i7c3tk4z.ProjectSort.fromJson(data) as T;
+    }
     if (t == _iqsxbscs.ProjectStatus) {
       return _iqsxbscs.ProjectStatus.fromJson(data) as T;
     }
@@ -275,6 +283,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _igkbma1f.Stage) {
       return _igkbma1f.Stage.fromJson(data) as T;
+    }
+    if (t == _is1lynby.StageBrief) {
+      return _is1lynby.StageBrief.fromJson(data) as T;
     }
     if (t == _i7mtby60.StageDraft) {
       return _i7mtby60.StageDraft.fromJson(data) as T;
@@ -420,6 +431,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _isc.getType<_i46wx1t7.ProjectRole?>()) {
       return (data != null ? _i46wx1t7.ProjectRole.fromJson(data) : null) as T;
     }
+    if (t == _isc.getType<_i7c3tk4z.ProjectSort?>()) {
+      return (data != null ? _i7c3tk4z.ProjectSort.fromJson(data) : null) as T;
+    }
     if (t == _isc.getType<_iqsxbscs.ProjectStatus?>()) {
       return (data != null ? _iqsxbscs.ProjectStatus.fromJson(data) : null)
           as T;
@@ -451,6 +465,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (t == _isc.getType<_igkbma1f.Stage?>()) {
       return (data != null ? _igkbma1f.Stage.fromJson(data) : null) as T;
+    }
+    if (t == _isc.getType<_is1lynby.StageBrief?>()) {
+      return (data != null ? _is1lynby.StageBrief.fromJson(data) : null) as T;
     }
     if (t == _isc.getType<_i7mtby60.StageDraft?>()) {
       return (data != null ? _i7mtby60.StageDraft.fromJson(data) : null) as T;
@@ -532,6 +549,20 @@ class Protocol extends _isc.SerializationManager {
               .toList()
           as T;
     }
+    if (t == List<_is1lynby.StageBrief>) {
+      return (data as List)
+              .map((e) => deserialize<_is1lynby.StageBrief>(e))
+              .toList()
+          as T;
+    }
+    if (t == _isc.getType<List<_is1lynby.StageBrief>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_is1lynby.StageBrief>(e))
+                    .toList()
+              : null)
+          as T;
+    }
     if (t == List<_ivxocntb.ProjectSummary>) {
       return (data as List)
               .map((e) => deserialize<_ivxocntb.ProjectSummary>(e))
@@ -554,6 +585,20 @@ class Protocol extends _isc.SerializationManager {
       return (data as List)
               .map((e) => deserialize<_ifywsnp6.ChecklistItem>(e))
               .toList()
+          as T;
+    }
+    if (t == List<_ip4wlfh9.ActivityType>) {
+      return (data as List)
+              .map((e) => deserialize<_ip4wlfh9.ActivityType>(e))
+              .toList()
+          as T;
+    }
+    if (t == _isc.getType<List<_ip4wlfh9.ActivityType>?>()) {
+      return (data != null
+              ? (data as List)
+                    .map((e) => deserialize<_ip4wlfh9.ActivityType>(e))
+                    .toList()
+              : null)
           as T;
     }
     if (t == List<_iqq0l4bs.Evidence>) {
@@ -644,6 +689,7 @@ class Protocol extends _isc.SerializationManager {
       _i7o7d07j.ProjectMember => 'ProjectMember',
       _iy1z8w9e.ProjectOverview => 'ProjectOverview',
       _i46wx1t7.ProjectRole => 'ProjectRole',
+      _i7c3tk4z.ProjectSort => 'ProjectSort',
       _iqsxbscs.ProjectStatus => 'ProjectStatus',
       _ivxocntb.ProjectSummary => 'ProjectSummary',
       _i4o32k29.ProjectSummaryPage => 'ProjectSummaryPage',
@@ -653,6 +699,7 @@ class Protocol extends _isc.SerializationManager {
       _ira79kry.SiteProposal => 'SiteProposal',
       _i8b5g94r.SiteProposalStatus => 'SiteProposalStatus',
       _igkbma1f.Stage => 'Stage',
+      _is1lynby.StageBrief => 'StageBrief',
       _i7mtby60.StageDraft => 'StageDraft',
       _iwmsx3av.StagePlan => 'StagePlan',
       _ie5kygoh.StageReview => 'StageReview',
@@ -738,6 +785,8 @@ class Protocol extends _isc.SerializationManager {
         return 'ProjectOverview';
       case _i46wx1t7.ProjectRole():
         return 'ProjectRole';
+      case _i7c3tk4z.ProjectSort():
+        return 'ProjectSort';
       case _iqsxbscs.ProjectStatus():
         return 'ProjectStatus';
       case _ivxocntb.ProjectSummary():
@@ -756,6 +805,8 @@ class Protocol extends _isc.SerializationManager {
         return 'SiteProposalStatus';
       case _igkbma1f.Stage():
         return 'Stage';
+      case _is1lynby.StageBrief():
+        return 'StageBrief';
       case _i7mtby60.StageDraft():
         return 'StageDraft';
       case _iwmsx3av.StagePlan():
@@ -890,6 +941,9 @@ class Protocol extends _isc.SerializationManager {
     if (dataClassName == 'ProjectRole') {
       return deserialize<_i46wx1t7.ProjectRole>(data['data']);
     }
+    if (dataClassName == 'ProjectSort') {
+      return deserialize<_i7c3tk4z.ProjectSort>(data['data']);
+    }
     if (dataClassName == 'ProjectStatus') {
       return deserialize<_iqsxbscs.ProjectStatus>(data['data']);
     }
@@ -916,6 +970,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'Stage') {
       return deserialize<_igkbma1f.Stage>(data['data']);
+    }
+    if (dataClassName == 'StageBrief') {
+      return deserialize<_is1lynby.StageBrief>(data['data']);
     }
     if (dataClassName == 'StageDraft') {
       return deserialize<_i7mtby60.StageDraft>(data['data']);
