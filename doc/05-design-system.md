@@ -223,3 +223,12 @@ Mockups on the canvas, page "4 · Progress updates": `U-Update`, `U-Form`, `U-We
   - loading: a spinner;
   - error: the message with Retry;
   - an update that no longer exists: "This update is no longer available", with Back to Activity.
+
+### 9.7 Step 6 outcome: empty, loading and error states (2026-10-10)
+- Checked on the project list, Overview, Stages tab, stage page, photo page, Activity, Members, notifications, the update page and the update form.
+- Every page shows a spinner while loading and the error with Retry.
+- Every list has an empty text, and "Nothing matches" with Clear filters when filtered (§9.5).
+- **Gap fixed:** when the Overview's latest activity card failed, it showed the message with no way to retry. It now has a Retry button.
+- **Left as is:**
+  - The latest photos card hides itself when there are no photos yet (as designed).
+  - On a page whose subject no longer exists, the stage and photo pages show the server's message with Retry; only the update page offers the way back (§9.6).

@@ -104,6 +104,24 @@ void main() {
       expect(find.text(l10n.activityEmpty), findsOneWidget);
     });
 
+    testWidgets('when it failed then it can be tried again', (tester) async {
+      await pumpLatest(
+        tester,
+        const FeedState(
+          projectId: 1,
+          activityListStatus: GenericStatus.failure,
+          activityListError: 'No connection',
+        ),
+      );
+      clearInteractions(bloc);
+
+      await tester.tap(find.byKey(LatestActivity.retryButtonKey));
+
+      verify(
+        () => bloc.add(const FeedEvent.fetchActivity(projectId: 1, size: 5)),
+      ).called(1);
+    });
+
     testWidgets('when the stream is down then "Reconnecting…" shows', (
       tester,
     ) async {

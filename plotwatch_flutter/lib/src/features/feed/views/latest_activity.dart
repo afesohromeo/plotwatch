@@ -12,6 +12,7 @@ class LatestActivity extends StatefulWidget {
 
   static const shown = 5;
   static const seeAllButtonKey = Key('activity.seeAll');
+  static const retryButtonKey = Key('activity.retry');
 
   @override
   State<LatestActivity> createState() => _LatestActivityState();
@@ -21,13 +22,15 @@ class _LatestActivityState extends State<LatestActivity> {
   @override
   void initState() {
     super.initState();
-    context.read<FeedBloc>().add(
-      FeedEvent.fetchActivity(
-        projectId: widget.projectId,
-        size: LatestActivity.shown,
-      ),
-    );
+    _load();
   }
+
+  void _load() => context.read<FeedBloc>().add(
+    FeedEvent.fetchActivity(
+      projectId: widget.projectId,
+      size: LatestActivity.shown,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -62,14 +65,24 @@ class _LatestActivityState extends State<LatestActivity> {
               ),
               if (state.reconnecting) const ReconnectingLine(),
               const Gap.vertical(height: AppSpacing.xs),
-              if (latest.isEmpty)
+              if (latest.isEmpty) ...[
                 Text(switch (state.activityListStatus) {
                   GenericStatus.failure =>
                     state.activityListError ?? l10n.errorActivityLoad,
                   GenericStatus.success => l10n.activityEmpty,
                   _ => l10n.loading,
-                }, style: context.textTheme.bodyMedium)
-              else
+                }, style: context.textTheme.bodyMedium),
+                // A failed card can be tried again in place (doc/05 §9.4).
+                if (state.activityListStatus == GenericStatus.failure)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      key: LatestActivity.retryButtonKey,
+                      onPressed: _load,
+                      child: Text(l10n.refresh),
+                    ),
+                  ),
+              ] else
                 for (final entry in latest) ActivityTile(entry: entry),
             ],
           ),
