@@ -31,6 +31,23 @@ class PeopleService {
     }
   }
 
+  /// [userId]'s name, and whether they are no longer an active member of
+  /// [projectId] (doc/04e C-2d).
+  Future<({String? name, bool former})> person(
+    Session session,
+    int projectId,
+    UuidValue userId,
+  ) async {
+    final active = await ProjectMember.db.findFirstRow(
+      session,
+      where: (t) =>
+          t.projectId.equals(projectId) &
+          t.authUserId.equals(userId) &
+          t.status.equals(MemberStatus.active),
+    );
+    return (name: await name(session, userId), former: active == null);
+  }
+
   /// The owner and the co-funders allowed to approve (`reviewStage`).
   Future<List<UuidValue>> approvers(
     Session session,
@@ -40,6 +57,19 @@ class PeopleService {
     for (final member in await _active(session, projectId, transaction))
       if (member.role == ProjectRole.owner ||
           (member.role == ProjectRole.coFunder && member.canApprove))
+        member.authUserId,
+  ];
+
+  /// The owner and every co-funder, with or without approval rights: the
+  /// people paying, told of news from the site (doc/04e M5-F1).
+  Future<List<UuidValue>> funders(
+    Session session,
+    int projectId, {
+    Transaction? transaction,
+  }) async => [
+    for (final member in await _active(session, projectId, transaction))
+      if (member.role == ProjectRole.owner ||
+          member.role == ProjectRole.coFunder)
         member.authUserId,
   ];
 

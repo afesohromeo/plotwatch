@@ -60,6 +60,15 @@ class MembershipApiProvider {
     }
   }
 
+  /// doc/04e C-2b.
+  Future<List<MemberView>> listFormerMembers(int projectId) async {
+    try {
+      return await _client.membership.listFormerMembers(projectId);
+    } catch (e) {
+      throw ApiErrorHandler.handle(e);
+    }
+  }
+
   /// doc/04b H-4.
   Future<ProjectMember> changeRole(
     int projectId,

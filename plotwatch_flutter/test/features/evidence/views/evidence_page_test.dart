@@ -236,4 +236,21 @@ void main() {
     );
     expect(find.text(l10n.verificationUnverified), findsWidgets);
   });
+
+  // doc/04e C-2d.
+  testWidgets('Given a photo by someone who has left then it says who, as a '
+      'former member', (tester) async {
+    await pumpWith(
+      tester,
+      loaded(
+        evidence: testEvidence(level: VerificationLevel.unverified).copyWith(
+          capturedByName: 'Bob Mbarga',
+          capturedByFormer: true,
+        ),
+      ),
+    );
+
+    expect(find.text(l10n.labelTakenBy), findsOneWidget);
+    expect(find.text(l10n.formerMemberName('Bob Mbarga')), findsOneWidget);
+  });
 }

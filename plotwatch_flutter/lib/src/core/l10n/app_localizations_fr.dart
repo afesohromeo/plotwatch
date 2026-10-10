@@ -1047,11 +1047,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get labelProgress => 'Avancement';
 
   @override
-  String progressPercent(int percent) {
-    return '$percent % approuvé';
-  }
-
-  @override
   String get stagesEmpty =>
       'Aucune étape pour l\'instant. Le propriétaire les planifie.';
 
@@ -1600,16 +1595,6 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String activityMemberRemoved(String actor, String role) {
-    return '$actor a retiré un membre ($role)';
-  }
-
-  @override
-  String activityMemberRoleChanged(String actor, String from, String to) {
-    return '$actor a changé le rôle d\'un membre de $from à $to';
-  }
-
-  @override
   String activityStageChanged(String actor, String name) {
     return '$actor a modifié l\'étape $name';
   }
@@ -1780,4 +1765,76 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return 'Prise $_temp0 après la fin prévue de l\'étape, le $date';
   }
+
+  @override
+  String progressBudgetAndStages(int percent, int approved, int total) {
+    return '$percent % du budget · $approved étapes approuvées sur $total';
+  }
+
+  @override
+  String progressStagesOnly(int approved, int total) {
+    return '$approved étapes approuvées sur $total';
+  }
+
+  @override
+  String notificationUpdatePosted(
+    String actor,
+    String project,
+    String excerpt,
+  ) {
+    return '$actor a publié une mise à jour sur $project : $excerpt';
+  }
+
+  @override
+  String activityMemberRemoved(String actor, String member, String role) {
+    return '$actor a retiré $member ($role)';
+  }
+
+  @override
+  String activityMemberRoleChanged(
+    String actor,
+    String member,
+    String from,
+    String to,
+  ) {
+    return '$actor a changé le rôle de $member de $from à $to';
+  }
+
+  @override
+  String get aMember => 'un membre';
+
+  @override
+  String get projectCompletedBanner =>
+      'Ce projet est terminé. Il ne peut plus être modifié.';
+
+  @override
+  String get projectArchivedBanner =>
+      'Ce projet est archivé. Il ne peut plus être modifié.';
+
+  @override
+  String get formerMembersTitle => 'Anciens membres';
+
+  @override
+  String formerMemberRemovedBy(String joined, String removed, String by) {
+    return 'Arrivé le $joined · retiré le $removed par $by';
+  }
+
+  @override
+  String formerMemberRemoved(String joined, String removed) {
+    return 'Arrivé le $joined · retiré le $removed';
+  }
+
+  @override
+  String formerMemberName(String name) {
+    return '$name (ancien membre)';
+  }
+
+  @override
+  String get labelTakenBy => 'Prise par';
+
+  @override
+  String get labelProposedBy => 'Proposé par';
+
+  @override
+  String get labelPostedBy => 'Publiée par';
 }

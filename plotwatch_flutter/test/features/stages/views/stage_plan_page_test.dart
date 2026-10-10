@@ -59,7 +59,8 @@ void main() {
       find.text(formatMoney(2000000, 'XAF', locale: 'en')),
       findsOneWidget,
     );
-    expect(find.text(l10n.progressPercent(25)), findsOneWidget);
+    // doc/04e M5-F2: neither fixture stage is approved yet.
+    expect(find.text(l10n.progressBudgetAndStages(25, 0, 2)), findsOneWidget);
   });
 
   testWidgets('Given the owner then stages can be added and dragged', (

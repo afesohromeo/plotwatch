@@ -21,12 +21,14 @@ abstract class MemberView
     required this.member,
     this.fullName,
     this.email,
+    this.removedByName,
   });
 
   factory MemberView({
     required _i7o7d07j.ProjectMember member,
     String? fullName,
     String? email,
+    String? removedByName,
   }) = _MemberViewImpl;
 
   factory MemberView.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -36,6 +38,7 @@ abstract class MemberView
       ),
       fullName: jsonSerialization['fullName'] as String?,
       email: jsonSerialization['email'] as String?,
+      removedByName: jsonSerialization['removedByName'] as String?,
     );
   }
 
@@ -45,6 +48,9 @@ abstract class MemberView
 
   String? email;
 
+  /// For a former member: who removed them (doc/04e C-2b).
+  String? removedByName;
+
   /// Returns a shallow copy of this [MemberView]
   /// with some or all fields replaced by the given arguments.
   @_isc.useResult
@@ -52,6 +58,7 @@ abstract class MemberView
     _i7o7d07j.ProjectMember? member,
     String? fullName,
     String? email,
+    String? removedByName,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -60,6 +67,7 @@ abstract class MemberView
       'member': member.toJson(),
       if (fullName != null) 'fullName': fullName,
       if (email != null) 'email': email,
+      if (removedByName != null) 'removedByName': removedByName,
     };
   }
 
@@ -70,6 +78,7 @@ abstract class MemberView
       'member': member.toJsonForProtocol(),
       if (fullName != null) 'fullName': fullName,
       if (email != null) 'email': email,
+      if (removedByName != null) 'removedByName': removedByName,
     };
   }
 
@@ -86,10 +95,12 @@ class _MemberViewImpl extends MemberView {
     required _i7o7d07j.ProjectMember member,
     String? fullName,
     String? email,
+    String? removedByName,
   }) : super._(
          member: member,
          fullName: fullName,
          email: email,
+         removedByName: removedByName,
        );
 
   /// Returns a shallow copy of this [MemberView]
@@ -100,11 +111,15 @@ class _MemberViewImpl extends MemberView {
     _i7o7d07j.ProjectMember? member,
     Object? fullName = _Undefined,
     Object? email = _Undefined,
+    Object? removedByName = _Undefined,
   }) {
     return MemberView(
       member: member ?? this.member.copyWith(),
       fullName: fullName is String? ? fullName : this.fullName,
       email: email is String? ? email : this.email,
+      removedByName: removedByName is String?
+          ? removedByName
+          : this.removedByName,
     );
   }
 }

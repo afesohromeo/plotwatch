@@ -1970,12 +1970,6 @@ abstract class AppLocalizations {
   /// **'Progress'**
   String get labelProgress;
 
-  /// Project progress value
-  ///
-  /// In en, this message translates to:
-  /// **'{percent}% approved'**
-  String progressPercent(int percent);
-
   /// Empty plan, not the owner
   ///
   /// In en, this message translates to:
@@ -2864,18 +2858,6 @@ abstract class AppLocalizations {
   /// **'{actor} joined as {role}'**
   String activityMemberJoined(String actor, String role);
 
-  /// Feed event
-  ///
-  /// In en, this message translates to:
-  /// **'{actor} removed a member ({role})'**
-  String activityMemberRemoved(String actor, String role);
-
-  /// Feed event
-  ///
-  /// In en, this message translates to:
-  /// **'{actor} changed a member\'s role from {from} to {to}'**
-  String activityMemberRoleChanged(String actor, String from, String to);
-
   /// Feed event: one stage added, edited, deleted or moved
   ///
   /// In en, this message translates to:
@@ -3117,6 +3099,101 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Taken {days, plural, =1{1 day} other{{days} days}} after the stage\'s planned end, {date}'**
   String takenAfterPlannedEnd(int days, String date);
+
+  /// Project progress: budget-weighted share and stage count (doc/04e M5-F2)
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% of the budget · {approved} of {total} stages approved'**
+  String progressBudgetAndStages(int percent, int approved, int total);
+
+  /// Project progress when no stage has a budget (doc/04e M5-F2)
+  ///
+  /// In en, this message translates to:
+  /// **'{approved} of {total} stages approved'**
+  String progressStagesOnly(int approved, int total);
+
+  /// Notification to the owner and co-funders (doc/04e M5-F1)
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} posted an update on {project}: {excerpt}'**
+  String notificationUpdatePosted(String actor, String project, String excerpt);
+
+  /// Feed event (doc/04e C-2c)
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} removed {member} ({role})'**
+  String activityMemberRemoved(String actor, String member, String role);
+
+  /// Feed event (doc/04e C-2c)
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} changed {member}\'s role from {from} to {to}'**
+  String activityMemberRoleChanged(
+    String actor,
+    String member,
+    String from,
+    String to,
+  );
+
+  /// Feed: a member whose name an earlier event didn't record
+  ///
+  /// In en, this message translates to:
+  /// **'a member'**
+  String get aMember;
+
+  /// Project page banner (doc/04e C-3)
+  ///
+  /// In en, this message translates to:
+  /// **'This project is completed. It can no longer be changed.'**
+  String get projectCompletedBanner;
+
+  /// Project page banner (doc/04e C-3)
+  ///
+  /// In en, this message translates to:
+  /// **'This project is archived. It can no longer be changed.'**
+  String get projectArchivedBanner;
+
+  /// Members page section (doc/04e C-2b)
+  ///
+  /// In en, this message translates to:
+  /// **'Former members'**
+  String get formerMembersTitle;
+
+  /// Former member row
+  ///
+  /// In en, this message translates to:
+  /// **'Joined {joined} · removed {removed} by {by}'**
+  String formerMemberRemovedBy(String joined, String removed, String by);
+
+  /// Former member row, remover unknown
+  ///
+  /// In en, this message translates to:
+  /// **'Joined {joined} · removed {removed}'**
+  String formerMemberRemoved(String joined, String removed);
+
+  /// A person who has left the project (doc/04e C-2d)
+  ///
+  /// In en, this message translates to:
+  /// **'{name} (former member)'**
+  String formerMemberName(String name);
+
+  /// Evidence page row (doc/04e C-2d)
+  ///
+  /// In en, this message translates to:
+  /// **'Taken by'**
+  String get labelTakenBy;
+
+  /// Site proposal row (doc/04e C-2d)
+  ///
+  /// In en, this message translates to:
+  /// **'Proposed by'**
+  String get labelProposedBy;
+
+  /// Update page row (doc/04e C-2d)
+  ///
+  /// In en, this message translates to:
+  /// **'Posted by'**
+  String get labelPostedBy;
 }
 
 class _AppLocalizationsDelegate

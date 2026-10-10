@@ -29,7 +29,8 @@ abstract class ProjectOverview
     required this.stageCount,
     required this.budgetTotalMinor,
     required this.progressPercent,
-  });
+    int? approvedStageCount,
+  }) : approvedStageCount = approvedStageCount ?? 0;
 
   factory ProjectOverview({
     required _ifiazq2p.Project project,
@@ -40,6 +41,7 @@ abstract class ProjectOverview
     required int stageCount,
     required int budgetTotalMinor,
     required int progressPercent,
+    int? approvedStageCount,
   }) = _ProjectOverviewImpl;
 
   factory ProjectOverview.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -66,6 +68,7 @@ abstract class ProjectOverview
       stageCount: jsonSerialization['stageCount'] as int,
       budgetTotalMinor: jsonSerialization['budgetTotalMinor'] as int,
       progressPercent: jsonSerialization['progressPercent'] as int,
+      approvedStageCount: jsonSerialization['approvedStageCount'] as int?,
     );
   }
 
@@ -90,6 +93,9 @@ abstract class ProjectOverview
   /// 0–100, the budget-weighted share of approved stages (STG-09).
   int progressPercent;
 
+  /// Shown beside the percentage (doc/04e M5-F2).
+  int approvedStageCount;
+
   /// Returns a shallow copy of this [ProjectOverview]
   /// with some or all fields replaced by the given arguments.
   @_isc.useResult
@@ -102,6 +108,7 @@ abstract class ProjectOverview
     int? stageCount,
     int? budgetTotalMinor,
     int? progressPercent,
+    int? approvedStageCount,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -116,6 +123,7 @@ abstract class ProjectOverview
       'stageCount': stageCount,
       'budgetTotalMinor': budgetTotalMinor,
       'progressPercent': progressPercent,
+      'approvedStageCount': approvedStageCount,
     };
   }
 
@@ -132,6 +140,7 @@ abstract class ProjectOverview
       'stageCount': stageCount,
       'budgetTotalMinor': budgetTotalMinor,
       'progressPercent': progressPercent,
+      'approvedStageCount': approvedStageCount,
     };
   }
 
@@ -153,6 +162,7 @@ class _ProjectOverviewImpl extends ProjectOverview {
     required int stageCount,
     required int budgetTotalMinor,
     required int progressPercent,
+    int? approvedStageCount,
   }) : super._(
          project: project,
          site: site,
@@ -162,6 +172,7 @@ class _ProjectOverviewImpl extends ProjectOverview {
          stageCount: stageCount,
          budgetTotalMinor: budgetTotalMinor,
          progressPercent: progressPercent,
+         approvedStageCount: approvedStageCount,
        );
 
   /// Returns a shallow copy of this [ProjectOverview]
@@ -177,6 +188,7 @@ class _ProjectOverviewImpl extends ProjectOverview {
     int? stageCount,
     int? budgetTotalMinor,
     int? progressPercent,
+    int? approvedStageCount,
   }) {
     return ProjectOverview(
       project: project ?? this.project.copyWith(),
@@ -189,6 +201,7 @@ class _ProjectOverviewImpl extends ProjectOverview {
       stageCount: stageCount ?? this.stageCount,
       budgetTotalMinor: budgetTotalMinor ?? this.budgetTotalMinor,
       progressPercent: progressPercent ?? this.progressPercent,
+      approvedStageCount: approvedStageCount ?? this.approvedStageCount,
     );
   }
 }

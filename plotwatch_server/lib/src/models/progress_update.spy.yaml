@@ -6,6 +6,10 @@ fields:
   projectId: int, relation(parent=project, onDelete=Cascade)
   stageId: int?, relation(parent=stage, onDelete=SetNull)
   authorId: UuidValue
+  ### Filled when one update is read (doc/04e C-2d).
+  authorName: String?, !persist
+  ### True when they are no longer a member.
+  authorFormer: bool?, !persist
   ### 1–2,000 characters.
   text: String
   ### 0–999.

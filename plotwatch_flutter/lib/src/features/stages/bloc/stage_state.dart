@@ -101,7 +101,8 @@ sealed class StageState with _$StageState {
     final approver =
         _role == ProjectRole.owner ||
         (_role == ProjectRole.coFunder && (overview?.myCanApprove ?? false));
-    return approver && _status == StageStatus.submitted;
+    final open = !(overview?.project.status.isClosed ?? true);
+    return approver && open && _status == StageStatus.submitted;
   }
 
   /// The latest decision when it asked for changes: shown to the site

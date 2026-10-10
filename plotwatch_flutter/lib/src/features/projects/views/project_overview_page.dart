@@ -20,6 +20,7 @@ class ProjectOverviewPage extends StatefulWidget {
   static const editSiteButtonKey = Key('project.editSite');
   static const stagesCardKey = Key('project.stages');
   static const postUpdateButtonKey = Key('project.postUpdate');
+  static const closedBannerKey = Key('project.closed');
 
   @override
   State<ProjectOverviewPage> createState() => _ProjectOverviewPageState();
@@ -114,7 +115,9 @@ class _ProjectOverviewPageState extends State<ProjectOverviewPage> {
     if (overview.myRole != ProjectRole.owner) return null;
     final nextStatuses = overview.project.status.nextStatuses;
 
+    final closed = overview.project.status.isClosed;
     return [
+      if (!closed)
       IconButton(
         key: ProjectOverviewPage.editButtonKey,
         tooltip: l10n.editAction,
@@ -160,6 +163,32 @@ class _OverviewBody extends StatelessWidget {
       subtitle: project.type.label(l10n),
       onRefresh: onRefresh,
       children: [
+        // Read-only from now on (doc/04e C-3).
+        if (project.status.isClosed) ...[
+          Container(
+            key: ProjectOverviewPage.closedBannerKey,
+            padding: const EdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              color: customColors.muted.withValues(alpha: .12),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.lock_outline_rounded, color: customColors.muted),
+                const Gap.horizontal(width: AppSpacing.sm),
+                Expanded(
+                  child: Text(
+                    project.status == ProjectStatus.archived
+                        ? l10n.projectArchivedBanner
+                        : l10n.projectCompletedBanner,
+                    style: context.textTheme.bodyMedium,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Gap.vertical(height: AppSpacing.md),
+        ],
         Wrap(
           spacing: AppSpacing.sm,
           runSpacing: AppSpacing.xs,
@@ -237,7 +266,7 @@ class _OverviewBody extends StatelessWidget {
     Widget text(String message) =>
         Text(message, style: context.textTheme.bodyMedium);
 
-    return [
+    final details = [
       if (site != null) ...[
         DetailRow(label: l10n.labelPlusCode, value: site.plusCode),
         DetailRow(
@@ -247,6 +276,15 @@ class _OverviewBody extends StatelessWidget {
         if (site.addressText != null)
           DetailRow(label: l10n.labelAddress, value: site.addressText!),
       ],
+    ];
+    if (overview.project.status.isClosed) {
+      return [
+        ...details,
+        if (site == null) text(l10n.siteWaiting),
+      ];
+    }
+    return [
+      ...details,
       if (pending != null)
         ...switch (role) {
           ProjectRole.owner => [
@@ -352,7 +390,13 @@ class _StagesCard extends StatelessWidget {
                     style: context.textTheme.bodyMedium,
                   ),
                   Text(
-                    l10n.progressPercent(overview.progressPercent),
+                    progressLine(
+                      l10n,
+                      percent: overview.progressPercent,
+                      approved: overview.approvedStageCount,
+                      total: overview.stageCount,
+                      budgetTotalMinor: overview.budgetTotalMinor,
+                    ),
                     style: context.textTheme.bodySmall,
                   ),
                 ],

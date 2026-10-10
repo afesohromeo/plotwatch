@@ -21,7 +21,7 @@ class MembershipEndpoint extends Endpoint {
     // Nullable instead of a default: see ProjectEndpoint.list.
     bool? canApprove,
   }) async {
-    final owner = await _permissions.require(
+    final owner = await _permissions.requireOpen(
       session,
       projectId,
       ProjectAction.manageMembers,
@@ -81,6 +81,20 @@ class MembershipEndpoint extends Endpoint {
     return _service.listMembers(session, projectId);
   }
 
+  /// Removed members, most recent first, with who removed them: their
+  /// actions stay in the project's history (doc/04e C-2b).
+  Future<List<MemberView>> listFormerMembers(
+    Session session,
+    int projectId,
+  ) async {
+    await _permissions.require(
+      session,
+      projectId,
+      ProjectAction.viewProject,
+    );
+    return _service.listFormerMembers(session, projectId);
+  }
+
   /// The owner gives a member another role (doc/04b H-4, MEMB-07).
   Future<ProjectMember> changeRole(
     Session session,
@@ -88,7 +102,7 @@ class MembershipEndpoint extends Endpoint {
     int memberId,
     ProjectRole role,
   ) async {
-    final owner = await _permissions.require(
+    final owner = await _permissions.requireOpen(
       session,
       projectId,
       ProjectAction.manageMembers,

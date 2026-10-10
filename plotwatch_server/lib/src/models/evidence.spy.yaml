@@ -9,6 +9,10 @@ fields:
   stageId: int, relation(parent=stage, onDelete=Restrict)
   checklistItemId: int, relation(parent=checklist_item, onDelete=Restrict)
   capturedBy: UuidValue
+  ### Who took it, filled when one capture is read (doc/04e C-2d).
+  capturedByName: String?, !persist
+  ### True when they are no longer a member.
+  capturedByFormer: bool?, !persist
   status: EvidenceStatus
   ### The committed hash (lower case).
   sha256: String

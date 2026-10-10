@@ -139,6 +139,11 @@ class _ValidateSitePageState extends State<ValidateSitePage> {
           child: SizedBox(height: 280, child: map),
         ),
         const Gap.vertical(height: AppSpacing.md),
+        if (proposal.proposedByName case final name?)
+          DetailRow(
+            label: l10n.labelProposedBy,
+            value: personLabel(l10n, name, former: proposal.proposedByFormer),
+          ),
         DetailRow(
           label: l10n.labelAccuracy,
           value: l10n.accuracyMeters(proposal.accuracyM.round()),

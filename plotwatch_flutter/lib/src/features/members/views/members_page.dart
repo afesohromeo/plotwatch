@@ -14,6 +14,7 @@ class MembersPage extends StatefulWidget {
   static const inviteButtonKey = Key('members.invite');
   static const refreshButtonKey = Key('members.refresh');
   static Key removeButtonKey(int memberId) => Key('members.remove.$memberId');
+  static Key formerMemberKey(int memberId) => Key('members.former.$memberId');
   static Key changeRoleButtonKey(int memberId) =>
       Key('members.changeRole.$memberId');
   static Key roleOptionKey(ProjectRole role) =>
@@ -151,7 +152,7 @@ class _MembersPageState extends State<MembersPage> {
                 onPressed: _load,
               ),
             ],
-            showFloatingButton: state.isOwner,
+            showFloatingButton: state.isOwner && !state.isClosed,
             onPressed: _openInviteSheet,
             buttonIcon: Icon(
               Icons.person_add_alt_1_outlined,
@@ -219,6 +220,7 @@ class _MembersList extends StatelessWidget {
                 ? Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      if (!state.isClosed)
                       IconButton(
                         key: MembersPage.changeRoleButtonKey(view.member.id!),
                         tooltip: l10n.changeRoleTitle(view.fullName ?? ''),
@@ -237,6 +239,22 @@ class _MembersList extends StatelessWidget {
                   )
                 : null,
           ),
+        // Removed members stay on record (doc/04e C-2b).
+        if (state.formerMembers.isNotEmpty) ...[
+          const Gap.vertical(height: AppSpacing.md),
+          Text(l10n.formerMembersTitle, style: context.textTheme.titleMedium),
+          const Gap.vertical(height: AppSpacing.sm),
+          for (final view in state.formerMembers)
+            _Row(
+              key: MembersPage.formerMemberKey(view.member.id!),
+              title: view.fullName ?? view.email ?? '',
+              subtitle: _removedLine(l10n, view),
+              chip: ProjectChip(
+                label: view.member.role.label(l10n),
+                color: customColors.muted,
+              ),
+            ),
+        ],
         if (state.isOwner && state.invitations.isNotEmpty) ...[
           const Gap.vertical(height: AppSpacing.md),
           Text(l10n.pendingInvitations, style: context.textTheme.titleMedium),
@@ -274,9 +292,21 @@ class _MembersList extends StatelessWidget {
   }
 }
 
+/// When a former member joined and left, and who removed them.
+String _removedLine(AppLocalizations l10n, MemberView view) {
+  final joined = formatDate(view.member.joinedAt.toLocal());
+  final removedAt = view.member.removedAt;
+  final removed = removedAt == null ? '' : formatDate(removedAt.toLocal());
+  return switch (view.removedByName) {
+    final String by => l10n.formerMemberRemovedBy(joined, removed, by),
+    null => l10n.formerMemberRemoved(joined, removed),
+  };
+}
+
 /// One member or invitation: title, optional subtitle, role chip, action.
 class _Row extends StatelessWidget {
   const _Row({
+    super.key,
     required this.title,
     required this.chip,
     this.subtitle,

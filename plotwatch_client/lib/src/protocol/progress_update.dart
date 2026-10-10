@@ -22,6 +22,8 @@ abstract class ProgressUpdate
     required this.projectId,
     this.stageId,
     required this.authorId,
+    this.authorName,
+    this.authorFormer,
     required this.text,
     this.workersCount,
     this.weather,
@@ -34,6 +36,8 @@ abstract class ProgressUpdate
     required int projectId,
     int? stageId,
     required _isc.UuidValue authorId,
+    String? authorName,
+    bool? authorFormer,
     required String text,
     int? workersCount,
     _ifjsehv5.Weather? weather,
@@ -49,6 +53,10 @@ abstract class ProgressUpdate
       authorId: _isc.UuidValueJsonExtension.fromJson(
         jsonSerialization['authorId'],
       ),
+      authorName: jsonSerialization['authorName'] as String?,
+      authorFormer: jsonSerialization['authorFormer'] == null
+          ? null
+          : _isc.BoolJsonExtension.fromJson(jsonSerialization['authorFormer']),
       text: jsonSerialization['text'] as String,
       workersCount: jsonSerialization['workersCount'] as int?,
       weather: jsonSerialization['weather'] == null
@@ -74,6 +82,12 @@ abstract class ProgressUpdate
 
   _isc.UuidValue authorId;
 
+  /// Filled when one update is read (doc/04e C-2d).
+  String? authorName;
+
+  /// True when they are no longer a member.
+  bool? authorFormer;
+
   /// 1–2,000 characters.
   String text;
 
@@ -95,6 +109,8 @@ abstract class ProgressUpdate
     int? projectId,
     int? stageId,
     _isc.UuidValue? authorId,
+    String? authorName,
+    bool? authorFormer,
     String? text,
     int? workersCount,
     _ifjsehv5.Weather? weather,
@@ -109,6 +125,8 @@ abstract class ProgressUpdate
       'projectId': projectId,
       if (stageId != null) 'stageId': stageId,
       'authorId': authorId.toJson(),
+      if (authorName != null) 'authorName': authorName,
+      if (authorFormer != null) 'authorFormer': authorFormer,
       'text': text,
       if (workersCount != null) 'workersCount': workersCount,
       if (weather != null) 'weather': weather?.toJson(),
@@ -125,6 +143,8 @@ abstract class ProgressUpdate
       'projectId': projectId,
       if (stageId != null) 'stageId': stageId,
       'authorId': authorId.toJson(),
+      if (authorName != null) 'authorName': authorName,
+      if (authorFormer != null) 'authorFormer': authorFormer,
       'text': text,
       if (workersCount != null) 'workersCount': workersCount,
       if (weather != null) 'weather': weather?.toJson(),
@@ -147,6 +167,8 @@ class _ProgressUpdateImpl extends ProgressUpdate {
     required int projectId,
     int? stageId,
     required _isc.UuidValue authorId,
+    String? authorName,
+    bool? authorFormer,
     required String text,
     int? workersCount,
     _ifjsehv5.Weather? weather,
@@ -157,6 +179,8 @@ class _ProgressUpdateImpl extends ProgressUpdate {
          projectId: projectId,
          stageId: stageId,
          authorId: authorId,
+         authorName: authorName,
+         authorFormer: authorFormer,
          text: text,
          workersCount: workersCount,
          weather: weather,
@@ -173,6 +197,8 @@ class _ProgressUpdateImpl extends ProgressUpdate {
     int? projectId,
     Object? stageId = _Undefined,
     _isc.UuidValue? authorId,
+    Object? authorName = _Undefined,
+    Object? authorFormer = _Undefined,
     String? text,
     Object? workersCount = _Undefined,
     Object? weather = _Undefined,
@@ -184,6 +210,8 @@ class _ProgressUpdateImpl extends ProgressUpdate {
       projectId: projectId ?? this.projectId,
       stageId: stageId is int? ? stageId : this.stageId,
       authorId: authorId ?? this.authorId,
+      authorName: authorName is String? ? authorName : this.authorName,
+      authorFormer: authorFormer is bool? ? authorFormer : this.authorFormer,
       text: text ?? this.text,
       workersCount: workersCount is int? ? workersCount : this.workersCount,
       weather: weather is _ifjsehv5.Weather? ? weather : this.weather,

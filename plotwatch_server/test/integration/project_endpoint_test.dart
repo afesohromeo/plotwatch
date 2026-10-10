@@ -318,6 +318,8 @@ void main() {
         (ProjectStatus.active, ProjectStatus.completed),
         (ProjectStatus.paused, ProjectStatus.completed),
         (ProjectStatus.completed, ProjectStatus.archived),
+        // Reopened after a mistake (doc/04e C-4).
+        (ProjectStatus.completed, ProjectStatus.active),
       ];
       for (final (from, to) in allowed) {
         test(
@@ -348,7 +350,7 @@ void main() {
         (ProjectStatus.active, ProjectStatus.draft),
         (ProjectStatus.active, ProjectStatus.archived),
         (ProjectStatus.active, ProjectStatus.active),
-        (ProjectStatus.completed, ProjectStatus.active),
+        // Archived is final (doc/04e C-4).
         (ProjectStatus.archived, ProjectStatus.active),
       ];
       for (final (from, to) in refused) {

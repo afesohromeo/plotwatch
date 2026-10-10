@@ -92,6 +92,46 @@ How it works:
 Changes from the plan:
 - A photo event reads "Ada added a photo: Verified", without the stage name: the server sends the stage's ID only. The update page doesn't show its author either. Both would need a server change; left for later.
 - The project page's latest activity is its own live `FeedBloc` (5 events); the full feed page has another.
-- The site manager's **Post an update** button shows on an active project only (the server refuses otherwise).
+- The site manager's **Post an update** button shows on an active project only. This is the app's choice: the server checks only the role (`postUpdates`), not the project status (corrected 2026-10-10).
 
 Found while testing: `GenericStatus` has a fifth value (`filtering`), so two switches weren't exhaustive (reported by `dart analyze`); and 8 BLoC tests timed out because their teardown awaited `close()` on a mock stream nobody had listened to (a test mistake; the code was right).
+
+---
+
+## M5 fixes after the developer's check (2026-10-10, approved)
+From the developer's questions on 2026-10-10.
+
+| # | Problem | Fix (approved) |
+|---|---------|----------------|
+| M5-F1 (U) | A progress update reaches the feed only; the funders, who are far from the site, aren't told. M5-4 left it out. | New `NotificationType.progressUpdatePosted`: posting an update notifies the **owner and every co-funder** (with or without approval rights); viewers see it in the feed only. Payload: update ID, project name, author name, excerpt. The app's sentence: "Bob posted an update on Maison Douala: …"; tapping opens the update. Server: `PeopleService.funders`, `UpdateService.create` notifies in its transaction. No migration (the type is stored by name). |
+| M5-F2 (P) | "100% approved" with 2 of 4 stages approved: progress is budget-weighted (M3-10), so stages with no budget weigh nothing. Correct, but misleading. | Keep the budget-weighted percentage and always show the stage count beside it: "100% of the budget · 2 of 4 stages approved". With no budget at all, only "2 of 4 stages approved" (the percentage would be the same count). `ProjectOverview` gets `approvedStageCount` (default 0); the plan page counts its own stages. |
+| M5-F3 (N) | Going up from a photo to the project list takes 4 taps of the back arrow. | **Deferred to the design pass**, at the developer's request: breadcrumb trail on project pages (N-1), project tabs Overview · Stages · Activity · Members (N-2), the bell on every page (N-3). |
+
+**Tests first:** server: an update notifies the owner and the co-funders, not the viewer or the author; the overview counts approved stages. App: the update notification's sentence (EN, FR) and source; the progress line with a budget and without.
+
+**You run:** `serverpod generate` (server, client), `flutter gen-l10n`, `dart format .`, `dart analyze`. Claude runs `dart test` and `flutter test`.
+
+## M5 fix C: a closed project is read-only; a removed member's record stays visible (2026-10-10, approved)
+From the developer's question on 2026-10-10: on a completed or archived project, the owner could still edit the project, the site and the members, and the site manager could still propose a location. Only the stage plan (M3-6), captures, starting and submitting were locked.
+
+| # | Decision (approved) |
+|---|---------------------|
+| C-1 | On a **completed or archived** project (closed), the server refuses with `projectNotEditable`: editing the project details; everything on the site (propose, validate, reject, edit); creating an invitation, accepting one, changing a role; posting an update; reviewing a stage. Checked by `PermissionService.requireOpen` (membership, right, then status) in each endpoint. |
+| C-2 | Still allowed on a closed project: viewing everything; the owner's status change; removing a member and cancelling an invitation (taking access away is safe). |
+| C-2a | Removing a member never erases what they did (already true: the row is marked `removed`, photos, events, proposals, updates, reviews and the audit log stay). A server test proves it. |
+| C-2b | The members page gets a **Former members** section (name, role, joined, removed on, by whom), seen by every member. New `membership.listFormerMembers`; "by whom" comes from the `member.remove` audit entry, so earlier removals show it too. `MemberView` gets `removedByName`. No migration. |
+| C-2c | The feed names the person: "Ada removed Bob (Site manager)", "Ada changed Bob's role from Viewer to Co-funder" (`memberName` in the payload; older events say "a member"). |
+| C-2d | **Taken by Bob** on the photo page, **Proposed by** on the site proposal, **Posted by** on the update, with "(former member)" when removed. Non-persisted fields (`!persist`) on `Evidence`, `SiteProposal`, `ProgressUpdate`, filled where one record is read. No migration. |
+| C-3 | The app hides those actions on a closed project and the project page shows a banner: "This project is completed. It can no longer be changed." (or archived). |
+| C-4 | A **completed** project can go back to **active** (a mistake can be undone); archived stays final. |
+
+**Working order, at the developer's request (2026-10-10):** all fixes (M5-F1, M5-F2, C) are implemented with their tests, and the tests run once at the end instead of red-first per change, because the runs are long.
+
+**You run:** `serverpod generate`, `flutter gen-l10n`, `dart run build_runner build --delete-conflicting-outputs`, `dart format .`, `dart analyze` (server and app). Claude runs `dart test` and `flutter test`.
+
+### Fixes M5-F1, M5-F2 and C outcome (2026-10-10)
+Done. `dart test` **376/376** (11 new: the update notification, the approved-stage count, and `closed_project_test`: every refused change on a completed project, removing and cancelling still allowed, reopening a completed project but not an archived one, a removed site manager's photo, proposal, update and events kept with their name, the former-members list with who removed them, the named feed event). `flutter test` **809/809** (17 new). As agreed, the tests ran once at the end rather than red-first per change.
+
+Found while testing:
+- `acceptInvitation` already loaded the project for the "member joined" notification; the new closed check loaded it a second time under the same name (`dart analyze`). The check's copy is now used for both.
+- An M2 test still expected "completed → active" to be refused; C-4 allows it, so the pair moved to the allowed list (archived → active stays refused).

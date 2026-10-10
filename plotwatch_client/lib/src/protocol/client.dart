@@ -520,6 +520,15 @@ class EndpointMembership extends _isc.EndpointRef {
         {'projectId': projectId},
       );
 
+  /// Removed members, most recent first, with who removed them: their
+  /// actions stay in the project's history (doc/04e C-2b).
+  _ida.Future<List<_ifqht5qj.MemberView>> listFormerMembers(int projectId) =>
+      caller.callServerEndpoint<List<_ifqht5qj.MemberView>>(
+        'membership',
+        'listFormerMembers',
+        {'projectId': projectId},
+      );
+
   /// The owner gives a member another role (doc/04b H-4, MEMB-07).
   _ida.Future<_ibpqw7ry.ProjectMember> changeRole(
     int projectId,

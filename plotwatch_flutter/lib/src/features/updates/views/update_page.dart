@@ -54,6 +54,15 @@ class _UpdatePageState extends State<UpdatePage> {
               children: [
                 Text(update.text, style: context.textTheme.bodyLarge),
                 const Gap.vertical(height: AppSpacing.lg),
+                if (update.authorName case final name?)
+                  DetailRow(
+                    label: l10n.labelPostedBy,
+                    value: personLabel(
+                      l10n,
+                      name,
+                      former: update.authorFormer,
+                    ),
+                  ),
                 if (state.stageName case final stage?)
                   DetailRow(label: l10n.labelUpdateStage, value: stage),
                 if (update.workersCount case final workers?)

@@ -27,6 +27,8 @@ abstract class Evidence
     required this.stageId,
     required this.checklistItemId,
     required this.capturedBy,
+    this.capturedByName,
+    this.capturedByFormer,
     required this.status,
     required this.sha256,
     required this.photoPath,
@@ -58,6 +60,8 @@ abstract class Evidence
     required int stageId,
     required int checklistItemId,
     required _isc.UuidValue capturedBy,
+    String? capturedByName,
+    bool? capturedByFormer,
     required _itwc15qq.EvidenceStatus status,
     required String sha256,
     required String photoPath,
@@ -92,6 +96,12 @@ abstract class Evidence
       capturedBy: _isc.UuidValueJsonExtension.fromJson(
         jsonSerialization['capturedBy'],
       ),
+      capturedByName: jsonSerialization['capturedByName'] as String?,
+      capturedByFormer: jsonSerialization['capturedByFormer'] == null
+          ? null
+          : _isc.BoolJsonExtension.fromJson(
+              jsonSerialization['capturedByFormer'],
+            ),
       status: _itwc15qq.EvidenceStatus.fromJson(
         (jsonSerialization['status'] as String),
       ),
@@ -159,6 +169,12 @@ abstract class Evidence
 
   _isc.UuidValue capturedBy;
 
+  /// Who took it, filled when one capture is read (doc/04e C-2d).
+  String? capturedByName;
+
+  /// True when they are no longer a member.
+  bool? capturedByFormer;
+
   _itwc15qq.EvidenceStatus status;
 
   /// The committed hash (lower case).
@@ -218,6 +234,8 @@ abstract class Evidence
     int? stageId,
     int? checklistItemId,
     _isc.UuidValue? capturedBy,
+    String? capturedByName,
+    bool? capturedByFormer,
     _itwc15qq.EvidenceStatus? status,
     String? sha256,
     String? photoPath,
@@ -251,6 +269,8 @@ abstract class Evidence
       'stageId': stageId,
       'checklistItemId': checklistItemId,
       'capturedBy': capturedBy.toJson(),
+      if (capturedByName != null) 'capturedByName': capturedByName,
+      if (capturedByFormer != null) 'capturedByFormer': capturedByFormer,
       'status': status.toJson(),
       'sha256': sha256,
       'photoPath': photoPath,
@@ -287,6 +307,8 @@ abstract class Evidence
       'stageId': stageId,
       'checklistItemId': checklistItemId,
       'capturedBy': capturedBy.toJson(),
+      if (capturedByName != null) 'capturedByName': capturedByName,
+      if (capturedByFormer != null) 'capturedByFormer': capturedByFormer,
       'status': status.toJson(),
       'sha256': sha256,
       'photoPath': photoPath,
@@ -329,6 +351,8 @@ class _EvidenceImpl extends Evidence {
     required int stageId,
     required int checklistItemId,
     required _isc.UuidValue capturedBy,
+    String? capturedByName,
+    bool? capturedByFormer,
     required _itwc15qq.EvidenceStatus status,
     required String sha256,
     required String photoPath,
@@ -358,6 +382,8 @@ class _EvidenceImpl extends Evidence {
          stageId: stageId,
          checklistItemId: checklistItemId,
          capturedBy: capturedBy,
+         capturedByName: capturedByName,
+         capturedByFormer: capturedByFormer,
          status: status,
          sha256: sha256,
          photoPath: photoPath,
@@ -393,6 +419,8 @@ class _EvidenceImpl extends Evidence {
     int? stageId,
     int? checklistItemId,
     _isc.UuidValue? capturedBy,
+    Object? capturedByName = _Undefined,
+    Object? capturedByFormer = _Undefined,
     _itwc15qq.EvidenceStatus? status,
     String? sha256,
     String? photoPath,
@@ -423,6 +451,12 @@ class _EvidenceImpl extends Evidence {
       stageId: stageId ?? this.stageId,
       checklistItemId: checklistItemId ?? this.checklistItemId,
       capturedBy: capturedBy ?? this.capturedBy,
+      capturedByName: capturedByName is String?
+          ? capturedByName
+          : this.capturedByName,
+      capturedByFormer: capturedByFormer is bool?
+          ? capturedByFormer
+          : this.capturedByFormer,
       status: status ?? this.status,
       sha256: sha256 ?? this.sha256,
       photoPath: photoPath ?? this.photoPath,

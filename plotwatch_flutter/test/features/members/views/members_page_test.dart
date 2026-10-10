@@ -233,4 +233,41 @@ void main() {
       () => bloc.add(const MembersEvent.cancelInvitation(invitationId: 5)),
     ).called(1);
   });
+
+  // doc/04e C-2b, C-1.
+  group('Given a removed site manager', () {
+    testWidgets('then they are listed as a former member with who removed '
+        'them', (tester) async {
+      await pumpWith(
+        tester,
+        loaded(ProjectRole.viewer).copyWith(formerMembers: [testFormerMember()]),
+      );
+
+      expect(find.text(l10n.formerMembersTitle), findsOneWidget);
+      expect(
+        find.text(
+          l10n.formerMemberRemovedBy(
+            formatDate(DateTime.utc(2026, 10, 7).toLocal()),
+            formatDate(DateTime.utc(2026, 10, 9).toLocal()),
+            'Ada Lovelace',
+          ),
+        ),
+        findsOneWidget,
+      );
+    });
+  });
+
+  testWidgets('Given a completed project then the owner can remove members '
+      'but not invite or change roles', (tester) async {
+    final closed = loaded(ProjectRole.owner).copyWith(
+      overview: testOverview(
+        project: testProject(status: ProjectStatus.completed),
+      ),
+    );
+    await pumpWith(tester, closed);
+
+    expect(find.byKey(MembersPage.inviteButtonKey), findsNothing);
+    expect(find.byKey(MembersPage.changeRoleButtonKey(2)), findsNothing);
+    expect(find.byKey(MembersPage.removeButtonKey(2)), findsOneWidget);
+  });
 }

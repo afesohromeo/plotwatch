@@ -573,7 +573,8 @@ String toString() {
 /// @nodoc
 mixin _$MembersState {
 
- ProjectOverview? get overview; List<MemberView> get members; List<Invitation> get invitations; GenericStatus get membersStatus; String? get membersErrorMessage; GenericStatus get actionStatus; GenericFlowStep get flowStep; String? get actionErrorMessage;
+ ProjectOverview? get overview; List<MemberView> get members; List<Invitation> get invitations;/// Their actions stay in the history (doc/04e C-2b).
+ List<MemberView> get formerMembers; GenericStatus get membersStatus; String? get membersErrorMessage; GenericStatus get actionStatus; GenericFlowStep get flowStep; String? get actionErrorMessage;
 /// Create a copy of MembersState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -585,20 +586,20 @@ $MembersStateCopyWith<MembersState> get copyWith => _$MembersStateCopyWithImpl<M
 @override
 bool operator ==(Object other) {
   final _this = this as MembersState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MembersState&&(identical(other.overview, _this.overview) || other.overview == _this.overview)&&const DeepCollectionEquality().equals(other.members, _this.members)&&const DeepCollectionEquality().equals(other.invitations, _this.invitations)&&(identical(other.membersStatus, _this.membersStatus) || other.membersStatus == _this.membersStatus)&&(identical(other.membersErrorMessage, _this.membersErrorMessage) || other.membersErrorMessage == _this.membersErrorMessage)&&(identical(other.actionStatus, _this.actionStatus) || other.actionStatus == _this.actionStatus)&&(identical(other.flowStep, _this.flowStep) || other.flowStep == _this.flowStep)&&(identical(other.actionErrorMessage, _this.actionErrorMessage) || other.actionErrorMessage == _this.actionErrorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MembersState&&(identical(other.overview, _this.overview) || other.overview == _this.overview)&&const DeepCollectionEquality().equals(other.members, _this.members)&&const DeepCollectionEquality().equals(other.invitations, _this.invitations)&&const DeepCollectionEquality().equals(other.formerMembers, _this.formerMembers)&&(identical(other.membersStatus, _this.membersStatus) || other.membersStatus == _this.membersStatus)&&(identical(other.membersErrorMessage, _this.membersErrorMessage) || other.membersErrorMessage == _this.membersErrorMessage)&&(identical(other.actionStatus, _this.actionStatus) || other.actionStatus == _this.actionStatus)&&(identical(other.flowStep, _this.flowStep) || other.flowStep == _this.flowStep)&&(identical(other.actionErrorMessage, _this.actionErrorMessage) || other.actionErrorMessage == _this.actionErrorMessage));
 }
 
 
 @override
 int get hashCode {
   final _this = this as MembersState;
-  return Object.hash(runtimeType,_this.overview,const DeepCollectionEquality().hash(_this.members),const DeepCollectionEquality().hash(_this.invitations),_this.membersStatus,_this.membersErrorMessage,_this.actionStatus,_this.flowStep,_this.actionErrorMessage);
+  return Object.hash(runtimeType,_this.overview,const DeepCollectionEquality().hash(_this.members),const DeepCollectionEquality().hash(_this.invitations),const DeepCollectionEquality().hash(_this.formerMembers),_this.membersStatus,_this.membersErrorMessage,_this.actionStatus,_this.flowStep,_this.actionErrorMessage);
 }
 
 @override
 String toString() {
   final _this = this as MembersState;
-  return 'MembersState(overview: ${_this.overview}, members: ${_this.members}, invitations: ${_this.invitations}, membersStatus: ${_this.membersStatus}, membersErrorMessage: ${_this.membersErrorMessage}, actionStatus: ${_this.actionStatus}, flowStep: ${_this.flowStep}, actionErrorMessage: ${_this.actionErrorMessage})';
+  return 'MembersState(overview: ${_this.overview}, members: ${_this.members}, invitations: ${_this.invitations}, formerMembers: ${_this.formerMembers}, membersStatus: ${_this.membersStatus}, membersErrorMessage: ${_this.membersErrorMessage}, actionStatus: ${_this.actionStatus}, flowStep: ${_this.flowStep}, actionErrorMessage: ${_this.actionErrorMessage})';
 }
 
 
@@ -609,7 +610,7 @@ abstract mixin class $MembersStateCopyWith<$Res>  {
   factory $MembersStateCopyWith(MembersState value, $Res Function(MembersState) _then) = _$MembersStateCopyWithImpl;
 @useResult
 $Res call({
- ProjectOverview? overview, List<MemberView> members, List<Invitation> invitations, GenericStatus membersStatus, String? membersErrorMessage, GenericStatus actionStatus, GenericFlowStep flowStep, String? actionErrorMessage
+ ProjectOverview? overview, List<MemberView> members, List<Invitation> invitations, List<MemberView> formerMembers, GenericStatus membersStatus, String? membersErrorMessage, GenericStatus actionStatus, GenericFlowStep flowStep, String? actionErrorMessage
 });
 
 
@@ -626,12 +627,13 @@ class _$MembersStateCopyWithImpl<$Res>
 
 /// Create a copy of MembersState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? overview = freezed,Object? members = null,Object? invitations = null,Object? membersStatus = null,Object? membersErrorMessage = freezed,Object? actionStatus = null,Object? flowStep = null,Object? actionErrorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? overview = freezed,Object? members = null,Object? invitations = null,Object? formerMembers = null,Object? membersStatus = null,Object? membersErrorMessage = freezed,Object? actionStatus = null,Object? flowStep = null,Object? actionErrorMessage = freezed,}) {
   return _then(MembersState(
 overview: freezed == overview ? _self.overview : overview // ignore: cast_nullable_to_non_nullable
 as ProjectOverview?,members: null == members ? _self.members : members // ignore: cast_nullable_to_non_nullable
 as List<MemberView>,invitations: null == invitations ? _self.invitations : invitations // ignore: cast_nullable_to_non_nullable
-as List<Invitation>,membersStatus: null == membersStatus ? _self.membersStatus : membersStatus // ignore: cast_nullable_to_non_nullable
+as List<Invitation>,formerMembers: null == formerMembers ? _self.formerMembers : formerMembers // ignore: cast_nullable_to_non_nullable
+as List<MemberView>,membersStatus: null == membersStatus ? _self.membersStatus : membersStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,membersErrorMessage: freezed == membersErrorMessage ? _self.membersErrorMessage : membersErrorMessage // ignore: cast_nullable_to_non_nullable
 as String?,actionStatus: null == actionStatus ? _self.actionStatus : actionStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,flowStep: null == flowStep ? _self.flowStep : flowStep // ignore: cast_nullable_to_non_nullable
@@ -718,10 +720,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProjectOverview? overview,  List<MemberView> members,  List<Invitation> invitations,  GenericStatus membersStatus,  String? membersErrorMessage,  GenericStatus actionStatus,  GenericFlowStep flowStep,  String? actionErrorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProjectOverview? overview,  List<MemberView> members,  List<Invitation> invitations,  List<MemberView> formerMembers,  GenericStatus membersStatus,  String? membersErrorMessage,  GenericStatus actionStatus,  GenericFlowStep flowStep,  String? actionErrorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MembersState() when $default != null:
-return $default(_that.overview,_that.members,_that.invitations,_that.membersStatus,_that.membersErrorMessage,_that.actionStatus,_that.flowStep,_that.actionErrorMessage);case _:
+return $default(_that.overview,_that.members,_that.invitations,_that.formerMembers,_that.membersStatus,_that.membersErrorMessage,_that.actionStatus,_that.flowStep,_that.actionErrorMessage);case _:
   return orElse();
 
 }
@@ -739,10 +741,10 @@ return $default(_that.overview,_that.members,_that.invitations,_that.membersStat
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProjectOverview? overview,  List<MemberView> members,  List<Invitation> invitations,  GenericStatus membersStatus,  String? membersErrorMessage,  GenericStatus actionStatus,  GenericFlowStep flowStep,  String? actionErrorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProjectOverview? overview,  List<MemberView> members,  List<Invitation> invitations,  List<MemberView> formerMembers,  GenericStatus membersStatus,  String? membersErrorMessage,  GenericStatus actionStatus,  GenericFlowStep flowStep,  String? actionErrorMessage)  $default,) {final _that = this;
 switch (_that) {
 case _MembersState():
-return $default(_that.overview,_that.members,_that.invitations,_that.membersStatus,_that.membersErrorMessage,_that.actionStatus,_that.flowStep,_that.actionErrorMessage);}
+return $default(_that.overview,_that.members,_that.invitations,_that.formerMembers,_that.membersStatus,_that.membersErrorMessage,_that.actionStatus,_that.flowStep,_that.actionErrorMessage);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -756,10 +758,10 @@ return $default(_that.overview,_that.members,_that.invitations,_that.membersStat
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProjectOverview? overview,  List<MemberView> members,  List<Invitation> invitations,  GenericStatus membersStatus,  String? membersErrorMessage,  GenericStatus actionStatus,  GenericFlowStep flowStep,  String? actionErrorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProjectOverview? overview,  List<MemberView> members,  List<Invitation> invitations,  List<MemberView> formerMembers,  GenericStatus membersStatus,  String? membersErrorMessage,  GenericStatus actionStatus,  GenericFlowStep flowStep,  String? actionErrorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _MembersState() when $default != null:
-return $default(_that.overview,_that.members,_that.invitations,_that.membersStatus,_that.membersErrorMessage,_that.actionStatus,_that.flowStep,_that.actionErrorMessage);case _:
+return $default(_that.overview,_that.members,_that.invitations,_that.formerMembers,_that.membersStatus,_that.membersErrorMessage,_that.actionStatus,_that.flowStep,_that.actionErrorMessage);case _:
   return null;
 
 }
@@ -771,7 +773,7 @@ return $default(_that.overview,_that.members,_that.invitations,_that.membersStat
 
 
 class _MembersState extends MembersState {
-  const _MembersState({this.overview,  List<MemberView> members = const [],  List<Invitation> invitations = const [], this.membersStatus = GenericStatus.initial, this.membersErrorMessage, this.actionStatus = GenericStatus.initial, this.flowStep = GenericFlowStep.none, this.actionErrorMessage}): _members = members,_invitations = invitations,super._();
+  const _MembersState({this.overview,  List<MemberView> members = const [],  List<Invitation> invitations = const [],  List<MemberView> formerMembers = const [], this.membersStatus = GenericStatus.initial, this.membersErrorMessage, this.actionStatus = GenericStatus.initial, this.flowStep = GenericFlowStep.none, this.actionErrorMessage}): _members = members,_invitations = invitations,_formerMembers = formerMembers,super._();
   
 
 @override final  ProjectOverview? overview;
@@ -787,6 +789,15 @@ class _MembersState extends MembersState {
   if (_invitations is EqualUnmodifiableListView) return _invitations;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_invitations);
+}
+
+/// Their actions stay in the history (doc/04e C-2b).
+ final  List<MemberView> _formerMembers;
+/// Their actions stay in the history (doc/04e C-2b).
+@override@JsonKey() List<MemberView> get formerMembers {
+  if (_formerMembers is EqualUnmodifiableListView) return _formerMembers;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_formerMembers);
 }
 
 @override@JsonKey() final  GenericStatus membersStatus;
@@ -805,18 +816,18 @@ _$MembersStateCopyWith<_MembersState> get copyWith => __$MembersStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MembersState&&(identical(other.overview, overview) || other.overview == overview)&&const DeepCollectionEquality().equals(other.members, _members)&&const DeepCollectionEquality().equals(other.invitations, _invitations)&&(identical(other.membersStatus, membersStatus) || other.membersStatus == membersStatus)&&(identical(other.membersErrorMessage, membersErrorMessage) || other.membersErrorMessage == membersErrorMessage)&&(identical(other.actionStatus, actionStatus) || other.actionStatus == actionStatus)&&(identical(other.flowStep, flowStep) || other.flowStep == flowStep)&&(identical(other.actionErrorMessage, actionErrorMessage) || other.actionErrorMessage == actionErrorMessage));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MembersState&&(identical(other.overview, overview) || other.overview == overview)&&const DeepCollectionEquality().equals(other.members, _members)&&const DeepCollectionEquality().equals(other.invitations, _invitations)&&const DeepCollectionEquality().equals(other.formerMembers, _formerMembers)&&(identical(other.membersStatus, membersStatus) || other.membersStatus == membersStatus)&&(identical(other.membersErrorMessage, membersErrorMessage) || other.membersErrorMessage == membersErrorMessage)&&(identical(other.actionStatus, actionStatus) || other.actionStatus == actionStatus)&&(identical(other.flowStep, flowStep) || other.flowStep == flowStep)&&(identical(other.actionErrorMessage, actionErrorMessage) || other.actionErrorMessage == actionErrorMessage));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,overview,const DeepCollectionEquality().hash(_members),const DeepCollectionEquality().hash(_invitations),membersStatus,membersErrorMessage,actionStatus,flowStep,actionErrorMessage);
+    return Object.hash(runtimeType,overview,const DeepCollectionEquality().hash(_members),const DeepCollectionEquality().hash(_invitations),const DeepCollectionEquality().hash(_formerMembers),membersStatus,membersErrorMessage,actionStatus,flowStep,actionErrorMessage);
 }
 
 @override
 String toString() {
-    return 'MembersState(overview: $overview, members: $members, invitations: $invitations, membersStatus: $membersStatus, membersErrorMessage: $membersErrorMessage, actionStatus: $actionStatus, flowStep: $flowStep, actionErrorMessage: $actionErrorMessage)';
+    return 'MembersState(overview: $overview, members: $members, invitations: $invitations, formerMembers: $formerMembers, membersStatus: $membersStatus, membersErrorMessage: $membersErrorMessage, actionStatus: $actionStatus, flowStep: $flowStep, actionErrorMessage: $actionErrorMessage)';
 }
 
 
@@ -827,7 +838,7 @@ abstract mixin class _$MembersStateCopyWith<$Res> implements $MembersStateCopyWi
   factory _$MembersStateCopyWith(_MembersState value, $Res Function(_MembersState) _then) = __$MembersStateCopyWithImpl;
 @override @useResult
 $Res call({
- ProjectOverview? overview, List<MemberView> members, List<Invitation> invitations, GenericStatus membersStatus, String? membersErrorMessage, GenericStatus actionStatus, GenericFlowStep flowStep, String? actionErrorMessage
+ ProjectOverview? overview, List<MemberView> members, List<Invitation> invitations, List<MemberView> formerMembers, GenericStatus membersStatus, String? membersErrorMessage, GenericStatus actionStatus, GenericFlowStep flowStep, String? actionErrorMessage
 });
 
 
@@ -844,12 +855,13 @@ class __$MembersStateCopyWithImpl<$Res>
 
 /// Create a copy of MembersState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? overview = freezed,Object? members = null,Object? invitations = null,Object? membersStatus = null,Object? membersErrorMessage = freezed,Object? actionStatus = null,Object? flowStep = null,Object? actionErrorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? overview = freezed,Object? members = null,Object? invitations = null,Object? formerMembers = null,Object? membersStatus = null,Object? membersErrorMessage = freezed,Object? actionStatus = null,Object? flowStep = null,Object? actionErrorMessage = freezed,}) {
   return _then(_MembersState(
 overview: freezed == overview ? _self.overview : overview // ignore: cast_nullable_to_non_nullable
 as ProjectOverview?,members: null == members ? _self._members : members // ignore: cast_nullable_to_non_nullable
 as List<MemberView>,invitations: null == invitations ? _self._invitations : invitations // ignore: cast_nullable_to_non_nullable
-as List<Invitation>,membersStatus: null == membersStatus ? _self.membersStatus : membersStatus // ignore: cast_nullable_to_non_nullable
+as List<Invitation>,formerMembers: null == formerMembers ? _self._formerMembers : formerMembers // ignore: cast_nullable_to_non_nullable
+as List<MemberView>,membersStatus: null == membersStatus ? _self.membersStatus : membersStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,membersErrorMessage: freezed == membersErrorMessage ? _self.membersErrorMessage : membersErrorMessage // ignore: cast_nullable_to_non_nullable
 as String?,actionStatus: null == actionStatus ? _self.actionStatus : actionStatus // ignore: cast_nullable_to_non_nullable
 as GenericStatus,flowStep: null == flowStep ? _self.flowStep : flowStep // ignore: cast_nullable_to_non_nullable

@@ -28,7 +28,7 @@ class SiteEndpoint extends Endpoint {
     required double accuracyM,
     required bool isMocked,
   }) async {
-    final siteManager = await _permissions.require(
+    final siteManager = await _permissions.requireOpen(
       session,
       projectId,
       ProjectAction.proposeSite,
@@ -63,7 +63,7 @@ class SiteEndpoint extends Endpoint {
     required int radiusM,
     String? addressText,
   }) async {
-    final owner = await _permissions.require(
+    final owner = await _permissions.requireOpen(
       session,
       projectId,
       ProjectAction.editProject,
@@ -89,7 +89,7 @@ class SiteEndpoint extends Endpoint {
     required int radiusM,
     String? addressText,
   }) async {
-    final owner = await _permissions.require(
+    final owner = await _permissions.requireOpen(
       session,
       projectId,
       ProjectAction.editProject,
@@ -112,7 +112,7 @@ class SiteEndpoint extends Endpoint {
     int proposalId, {
     String? reason,
   }) async {
-    final owner = await _permissions.require(
+    final owner = await _permissions.requireOpen(
       session,
       projectId,
       ProjectAction.editProject,

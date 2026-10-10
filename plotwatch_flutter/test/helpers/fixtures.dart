@@ -41,6 +41,7 @@ ProjectOverview testOverview({
   int stageCount = 0,
   int budgetTotalMinor = 0,
   int progressPercent = 0,
+  int approvedStageCount = 0,
 }) => ProjectOverview(
   project: project ?? testProject(),
   site: site,
@@ -50,6 +51,7 @@ ProjectOverview testOverview({
   stageCount: stageCount,
   budgetTotalMinor: budgetTotalMinor,
   progressPercent: progressPercent,
+  approvedStageCount: approvedStageCount,
 );
 
 Site testSite({int projectId = 1}) => Site(
@@ -86,6 +88,25 @@ Invitation testInvitation({
   createdBy: UuidValue.fromString('00000000-0000-4000-8000-000000000001'),
   createdAt: DateTime.utc(2026, 10, 7),
 );
+
+/// A removed member (doc/04e C-2b).
+MemberView testFormerMember({int id = 9, String? removedByName = 'Ada Lovelace'}) =>
+    MemberView(
+      member: ProjectMember(
+        id: id,
+        projectId: 1,
+        authUserId: UuidValue.fromString(
+          '00000000-0000-4000-8000-${id.toString().padLeft(12, '0')}',
+        ),
+        role: ProjectRole.siteManager,
+        status: MemberStatus.removed,
+        joinedAt: DateTime.utc(2026, 10, 7),
+        removedAt: DateTime.utc(2026, 10, 9),
+      ),
+      fullName: 'Bob Mbarga',
+      email: 'bob@example.com',
+      removedByName: removedByName,
+    );
 
 MemberView testMember({
   int id = 1,

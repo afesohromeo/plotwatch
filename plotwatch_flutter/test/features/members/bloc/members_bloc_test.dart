@@ -28,7 +28,12 @@ void main() {
   setUp(() {
     projectRepository = MockProjectRepository();
     membershipRepository = MockMembershipRepository();
+    when(
+      () => membershipRepository.fetchFormerMembers(any()),
+    ).thenAnswer((_) async => []);
   });
+
+  final former = testFormerMember();
 
   MembersBloc build() => MembersBloc(
     projectRepository: projectRepository,
@@ -253,4 +258,26 @@ void main() {
       ],
     );
   });
+
+  // doc/04e C-2b.
+  blocTest<MembersBloc, MembersState>(
+    'Given a removed member then they load as a former member',
+    setUp: () {
+      when(
+        () => projectRepository.fetchProject(1),
+      ).thenAnswer((_) async => managerOverview);
+      when(
+        () => membershipRepository.fetchMembers(1),
+      ).thenAnswer((_) async => [owner]);
+      when(
+        () => membershipRepository.fetchFormerMembers(1),
+      ).thenAnswer((_) async => [former]);
+    },
+    build: build,
+    act: (bloc) => bloc.add(const MembersEvent.fetchMembers(projectId: 1)),
+    skip: 1,
+    expect: () => [
+      isA<MembersState>().having((s) => s.formerMembers, 'former', [former]),
+    ],
+  );
 }

@@ -127,7 +127,7 @@ class StageEndpoint extends Endpoint {
     ReviewDecision decision, {
     String? comment,
   }) async {
-    final approver = await _permissions.require(
+    final approver = await _permissions.requireOpen(
       session,
       projectId,
       ProjectAction.reviewStage,

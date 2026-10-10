@@ -12,6 +12,9 @@ void main() {
     '00000000-0000-4000-8000-000000000002',
   );
   final viewerId = UuidValue.fromString('00000000-0000-4000-8000-000000000004');
+  final coFunderId = UuidValue.fromString(
+    '00000000-0000-4000-8000-000000000005',
+  );
 
   withServerpod('Given a project with a site manager', (
     sessionBuilder,
@@ -63,6 +66,8 @@ void main() {
         for (final (userId, role) in [
           (managerId, ProjectRole.siteManager),
           (viewerId, ProjectRole.viewer),
+          // Without approval rights: still a funder (doc/04e M5-F1).
+          (coFunderId, ProjectRole.coFunder),
         ])
           ProjectMember(
             projectId: projectId,
@@ -105,6 +110,31 @@ void main() {
       );
       expect(events.single.targetId, posted.id);
       expect(events.single.payload?['excerpt'], 'Trenches dug');
+    });
+
+    // doc/04e M5-F1: the funders, far from the site, are told.
+    test('when the site manager posts an update then the owner and every '
+        'co-funder are notified, not the viewer or the author', () async {
+      final posted = await endpoints.progressUpdate.create(
+        signedInAs(managerId),
+        projectId,
+        draft(text: 'Trenches dug'),
+      );
+      final session = sessionBuilder.build();
+      final notifications = await AppNotification.db.find(
+        session,
+        where: (t) => t.type.equals(NotificationType.progressUpdatePosted),
+      );
+
+      expect(notifications.map((n) => n.userId).toSet(), {
+        ownerId,
+        coFunderId,
+      });
+      final payload = notifications.first.payload!;
+      expect(payload['updateId'], '${posted.id}');
+      expect(payload['projectName'], 'House in Bafoussam');
+      expect(payload['excerpt'], 'Trenches dug');
+      expect(notifications.first.projectId, projectId);
     });
 
     test('when an update has only text then it is saved', () async {

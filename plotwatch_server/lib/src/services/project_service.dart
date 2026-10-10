@@ -29,7 +29,8 @@ class ProjectService {
   static const _transitions = <ProjectStatus, Set<ProjectStatus>>{
     ProjectStatus.active: {ProjectStatus.paused, ProjectStatus.completed},
     ProjectStatus.paused: {ProjectStatus.active, ProjectStatus.completed},
-    ProjectStatus.completed: {ProjectStatus.archived},
+    // Reopened after a mistake (doc/04e C-4); archived is final.
+    ProjectStatus.completed: {ProjectStatus.archived, ProjectStatus.active},
   };
 
   /// Returns [details] cleaned up (trimmed name, blank description as none),
@@ -313,6 +314,9 @@ class ProjectService {
       stageCount: stages.length,
       budgetTotalMinor: StageService.budgetTotal(stages),
       progressPercent: StageService.progressPercent(stages),
+      approvedStageCount: stages
+          .where((s) => s.status == StageStatus.approved)
+          .length,
     );
   }
 

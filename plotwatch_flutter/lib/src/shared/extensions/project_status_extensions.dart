@@ -11,6 +11,10 @@ extension ProjectStatusX on ProjectStatus {
     ProjectStatus.archived => l10n.projectStatusArchived,
   };
 
+  /// Completed or archived: read-only (doc/04e C-1; the server checks it).
+  bool get isClosed =>
+      this == ProjectStatus.completed || this == ProjectStatus.archived;
+
   /// The statuses the owner can choose next. Mirrors the server's
   /// `ProjectService` transitions (decision M2-4), which stay the rule: a
   /// draft becomes active only when its site is validated.
@@ -24,7 +28,11 @@ extension ProjectStatusX on ProjectStatus {
       ProjectStatus.active,
       ProjectStatus.completed,
     ],
-    ProjectStatus.completed => const [ProjectStatus.archived],
+    // Reopened after a mistake (doc/04e C-4); archived is final.
+    ProjectStatus.completed => const [
+      ProjectStatus.archived,
+      ProjectStatus.active,
+    ],
     ProjectStatus.archived => const [],
   };
 

@@ -159,6 +159,7 @@ void main() {
           stageCount: 10,
           budgetTotalMinor: 1500000,
           progressPercent: 40,
+          approvedStageCount: 3,
         ),
       ),
     );
@@ -169,7 +170,8 @@ void main() {
       find.text(formatMoney(1500000, 'XAF', locale: 'en')),
       findsOneWidget,
     );
-    expect(find.text(l10n.progressPercent(40)), findsOneWidget);
+    // doc/04e M5-F2: the stage count beside the budget share.
+    expect(find.text(l10n.progressBudgetAndStages(40, 3, 10)), findsOneWidget);
   });
 
   // G-7, G-12 and H-2/H-3: which site buttons each role sees in each state.
@@ -327,6 +329,49 @@ void main() {
       await pumpWith(tester, loaded(testOverview(role: ProjectRole.viewer)));
 
       expect(find.byType(LatestActivity), findsOneWidget);
+    });
+  });
+
+  // doc/04e C-3.
+  group('Given a closed project', () {
+    for (final status in [ProjectStatus.completed, ProjectStatus.archived]) {
+      testWidgets('when it is ${status.name} then a banner says it is '
+          'read-only and the owner has no edit or site buttons', (tester) async {
+        await pumpWith(
+          tester,
+          loaded(
+            testOverview(
+              project: testProject(status: status),
+              site: testSite(),
+            ),
+          ),
+        );
+
+        expect(find.byKey(ProjectOverviewPage.closedBannerKey), findsOneWidget);
+        expect(
+          find.text(
+            status == ProjectStatus.archived
+                ? l10n.projectArchivedBanner
+                : l10n.projectCompletedBanner,
+          ),
+          findsOneWidget,
+        );
+        expect(find.byKey(ProjectOverviewPage.editButtonKey), findsNothing);
+        expect(find.byKey(ProjectOverviewPage.localizeButtonKey), findsNothing);
+        expect(find.byKey(ProjectOverviewPage.editSiteButtonKey), findsNothing);
+      });
+    }
+
+    testWidgets('when it is completed then the owner can still change its '
+        'status (reopen or archive)', (tester) async {
+      await pumpWith(
+        tester,
+        loaded(
+          testOverview(project: testProject(status: ProjectStatus.completed)),
+        ),
+      );
+
+      expect(find.byKey(ProjectOverviewPage.statusButtonKey), findsOneWidget);
     });
   });
 }

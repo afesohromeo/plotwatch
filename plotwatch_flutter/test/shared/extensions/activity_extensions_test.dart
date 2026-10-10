@@ -50,6 +50,8 @@ void main() {
             'memberName': 'Bob',
             'role': 'siteManager',
             'comment': 'Retake the corner',
+            'updateId': '4',
+            'excerpt': 'Concrete poured',
           },
         );
         for (final l10n in [en, fr]) {
@@ -151,11 +153,44 @@ void main() {
       expect(source?.pathParameters, {'projectId': '1', 'stageId': '2'});
     });
 
+    // doc/04e M5-F1.
+    test('an update notification opens the update', () {
+      final source = testNotification(
+        type: NotificationType.progressUpdatePosted,
+        payload: const {'updateId': '4', 'excerpt': 'Concrete poured'},
+      ).source;
+
+      expect(source?.name, updateRouteName);
+      expect(source?.pathParameters, {'projectId': '1', 'updateId': '4'});
+    });
+
     test('a member joining opens the members page', () {
       expect(
         testNotification(type: NotificationType.memberJoined).source?.name,
         membersRouteName,
       );
     });
+  });
+
+  // doc/04e C-2c.
+  test('Given a member removed then the sentence names them', () {
+    final entry = testActivity(
+      type: ActivityType.memberRemoved,
+      payload: const {'role': 'siteManager', 'memberName': 'Bob Mbarga'},
+    );
+
+    expect(
+      entry.sentence(en),
+      en.activityMemberRemoved('Ada', 'Bob Mbarga', en.projectRoleSiteManager),
+    );
+  });
+
+  test('Given an older removal without a name then it says "a member"', () {
+    final entry = testActivity(
+      type: ActivityType.memberRemoved,
+      payload: const {'role': 'siteManager'},
+    );
+
+    expect(entry.sentence(en), contains(en.aMember));
   });
 }

@@ -14,6 +14,12 @@ class MembershipRepository {
   Future<List<MemberView>> fetchMembers(int projectId) =>
       _logged('fetching members', () => _apiProvider.listMembers(projectId));
 
+  /// Removed members, with who removed them (doc/04e C-2b).
+  Future<List<MemberView>> fetchFormerMembers(int projectId) => _logged(
+    'fetching former members',
+    () => _apiProvider.listFormerMembers(projectId),
+  );
+
   Future<List<Invitation>> fetchInvitations(int projectId) => _logged(
     'fetching invitations',
     () => _apiProvider.listInvitations(projectId),

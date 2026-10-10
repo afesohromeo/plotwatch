@@ -6,6 +6,7 @@ import 'package:serverpod_auth_idp_server/core.dart';
 import '../generated/protocol.dart';
 import 'activity_service.dart';
 import 'audit_service.dart';
+import 'permission_service.dart';
 import 'notification_service.dart';
 import 'people_service.dart';
 
@@ -167,6 +168,16 @@ class MembershipService {
           transaction: transaction,
         ),
       );
+      // No one joins a completed or archived project (doc/04e C-1).
+      final project = await Project.db.findById(
+        session,
+        invitation.projectId,
+        transaction: transaction,
+      );
+      if (project == null ||
+          PermissionService.closedStatuses.contains(project.status)) {
+        throw AppException(code: AppErrorCode.projectNotEditable);
+      }
       final existing = await ProjectMember.db.findFirstRow(
         session,
         where: (t) =>
@@ -236,11 +247,6 @@ class MembershipService {
         member.projectId,
         transaction: transaction,
       );
-      final project = await Project.db.findById(
-        session,
-        member.projectId,
-        transaction: transaction,
-      );
       if (owner != null) {
         await _notifications.notify(
           session,
@@ -250,7 +256,7 @@ class MembershipService {
           type: NotificationType.memberJoined,
           payload: {
             'role': member.role.name,
-            'projectName': ?project?.name,
+            'projectName': project.name,
             'memberName': ?await _people.name(session, userId),
           },
           transaction: transaction,
@@ -270,6 +276,44 @@ class MembershipService {
     );
     return [
       for (final member in members) await _view(session, member),
+    ];
+  }
+
+  /// Removed members, most recent first. Who removed them comes from the
+  /// `member.remove` audit entry, so earlier removals show it too
+  /// (doc/04e C-2b).
+  Future<List<MemberView>> listFormerMembers(
+    Session session,
+    int projectId,
+  ) async {
+    final members = await ProjectMember.db.find(
+      session,
+      where: (t) =>
+          t.projectId.equals(projectId) & t.status.equals(MemberStatus.removed),
+      orderBy: (t) => t.removedAt.desc(),
+    );
+    if (members.isEmpty) return [];
+    final removals = await AuditLog.db.find(
+      session,
+      where: (t) =>
+          t.projectId.equals(projectId) &
+          t.action.equals('member.remove') &
+          t.entityId.inSet({for (final m in members) m.id!}),
+      orderBy: (t) => t.id,
+    );
+    // The latest removal of each member (one can be removed, rejoin, and be
+    // removed again).
+    final removedBy = <int, UuidValue?>{
+      for (final entry in removals) entry.entityId!: entry.actorId,
+    };
+    return [
+      for (final member in members)
+        (await _view(session, member)).copyWith(
+          removedByName: switch (removedBy[member.id]) {
+            final UuidValue actor => await _people.name(session, actor),
+            null => null,
+          },
+        ),
     ];
   }
 
@@ -319,7 +363,11 @@ class MembershipService {
         type: ActivityType.memberRemoved,
         targetType: 'project_member',
         targetId: member.id,
-        payload: {'role': member.role.name},
+        // Named, so the feed says who (doc/04e C-2c).
+        payload: {
+          'role': member.role.name,
+          'memberName': ?await _people.name(session, member.authUserId),
+        },
         transaction: transaction,
       );
     });
@@ -378,7 +426,11 @@ class MembershipService {
         type: ActivityType.memberRoleChanged,
         targetType: 'project_member',
         targetId: member.id,
-        payload: {'from': member.role.name, 'to': role.name},
+        payload: {
+          'from': member.role.name,
+          'to': role.name,
+          'memberName': ?await _people.name(session, member.authUserId),
+        },
         transaction: transaction,
       );
       return changed;

@@ -753,6 +753,26 @@ class Endpoints extends _is.EndpointDispatch {
                         params['projectId'],
                       ),
         ),
+        'listFormerMembers': _is.MethodConnector(
+          name: 'listFormerMembers',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['membership'] as _it8meaj6.MembershipEndpoint)
+                      .listFormerMembers(
+                        session,
+                        params['projectId'],
+                      ),
+        ),
         'changeRole': _is.MethodConnector(
           name: 'changeRole',
           params: {

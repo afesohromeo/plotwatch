@@ -54,7 +54,8 @@ void main() {
     ProjectStatus.draft: <ProjectStatus>[],
     ProjectStatus.active: [ProjectStatus.paused, ProjectStatus.completed],
     ProjectStatus.paused: [ProjectStatus.active, ProjectStatus.completed],
-    ProjectStatus.completed: [ProjectStatus.archived],
+    // doc/04e C-4.
+    ProjectStatus.completed: [ProjectStatus.archived, ProjectStatus.active],
     ProjectStatus.archived: <ProjectStatus>[],
   };
   for (final MapEntry(key: from, value: targets) in expected.entries) {

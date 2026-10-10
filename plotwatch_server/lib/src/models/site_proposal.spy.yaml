@@ -5,6 +5,10 @@ table: site_proposal
 fields:
   projectId: int, relation(parent=project, onDelete=Cascade)
   proposedBy: UuidValue
+  ### Filled when proposals are listed (doc/04e C-2d).
+  proposedByName: String?, !persist
+  ### True when they are no longer a member.
+  proposedByFormer: bool?, !persist
   lat: double
   lng: double
   ### GPS accuracy of the reading in metres; at most 20 (decision M2-17).

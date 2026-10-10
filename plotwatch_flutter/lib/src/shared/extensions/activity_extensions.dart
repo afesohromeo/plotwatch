@@ -32,12 +32,15 @@ extension ActivityEntryX on ActivityEntry {
         actor,
         role('role'),
       ),
+      // Earlier events don't carry the name (doc/04e C-2c).
       ActivityType.memberRemoved => l10n.activityMemberRemoved(
         actor,
+        payload['memberName'] ?? l10n.aMember,
         role('role'),
       ),
       ActivityType.memberRoleChanged => l10n.activityMemberRoleChanged(
         actor,
+        payload['memberName'] ?? l10n.aMember,
         role('from'),
         role('to'),
       ),
@@ -163,6 +166,11 @@ extension AppNotificationX on AppNotification {
         project,
         _role(payload['role'], l10n),
       ),
+      NotificationType.progressUpdatePosted => l10n.notificationUpdatePosted(
+        payload['actorName'] ?? l10n.someone,
+        project,
+        payload['excerpt'] ?? '',
+      ),
     };
   }
 
@@ -186,6 +194,13 @@ extension AppNotificationX on AppNotification {
         name: membersRouteName,
         pathParameters: {'projectId': '$project'},
       ),
+      NotificationType.progressUpdatePosted => switch (payload?['updateId']) {
+        final String updateId => (
+          name: updateRouteName,
+          pathParameters: {'projectId': '$project', 'updateId': updateId},
+        ),
+        _ => (name: feedRouteName, pathParameters: {'projectId': '$project'}),
+      },
     };
   }
 }

@@ -215,6 +215,11 @@ class _EvidenceBody extends StatelessWidget {
           ),
         ],
         const Gap.vertical(height: AppSpacing.sm),
+        if (evidence.capturedByName case final name?)
+          DetailRow(
+            label: l10n.labelTakenBy,
+            value: personLabel(l10n, name, former: evidence.capturedByFormer),
+          ),
         DetailRow(
           label: l10n.labelTakenAt,
           value: time(evidence.deviceCapturedAt),

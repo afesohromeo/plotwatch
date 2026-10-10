@@ -3,6 +3,8 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 import 'activity_service.dart';
 import 'audit_service.dart';
+import 'notification_service.dart';
+import 'people_service.dart';
 
 /// The site manager's progress updates, without photos for now (UPD-01,
 /// UPD-02; doc/04e M5-9 b). They show live in the feed.
@@ -11,6 +13,8 @@ class UpdateService {
 
   static const _audit = AuditService();
   static const _activity = ActivityService();
+  static const _notifications = NotificationService();
+  static const _people = PeopleService();
 
   static const maxTextLength = 2000;
   static const maxIssuesLength = 1000;
@@ -76,6 +80,9 @@ class UpdateService {
         after: {'text': update.text},
         transaction: transaction,
       );
+      final excerpt = update.text.length > excerptLength
+          ? '${update.text.substring(0, excerptLength)}…'
+          : update.text;
       await _activity.record(
         session,
         projectId: siteManager.projectId,
@@ -84,10 +91,32 @@ class UpdateService {
         targetType: 'progress_update',
         targetId: update.id,
         payload: {
-          'excerpt': update.text.length > excerptLength
-              ? '${update.text.substring(0, excerptLength)}…'
-              : update.text,
+          'excerpt': excerpt,
           'stageId': ?update.stageId?.toString(),
+        },
+        transaction: transaction,
+      );
+      // The funders are far from the site (doc/04e M5-F1).
+      final project = await Project.db.findById(
+        session,
+        siteManager.projectId,
+        transaction: transaction,
+      );
+      await _notifications.notify(
+        session,
+        userIds: await _people.funders(
+          session,
+          siteManager.projectId,
+          transaction: transaction,
+        ),
+        actorId: siteManager.authUserId,
+        projectId: siteManager.projectId,
+        type: NotificationType.progressUpdatePosted,
+        payload: {
+          'updateId': '${update.id}',
+          'projectName': ?project?.name,
+          'actorName': ?await _people.name(session, siteManager.authUserId),
+          'excerpt': excerpt,
         },
         transaction: transaction,
       );
@@ -105,6 +134,11 @@ class UpdateService {
       where: (t) => t.id.equals(updateId) & t.projectId.equals(projectId),
     );
     if (update == null) throw AppException(code: AppErrorCode.updateNotFound);
-    return update;
+    // With who posted it (doc/04e C-2d).
+    final author = await _people.person(session, projectId, update.authorId);
+    return update.copyWith(
+      authorName: author.name,
+      authorFormer: author.former,
+    );
   }
 }

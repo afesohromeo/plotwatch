@@ -270,6 +270,8 @@ void main() {
         expect(approved.stage.status, StageStatus.approved);
         expect(approved.stage.approvedBy, ownerId);
         expect(overview.progressPercent, 100);
+        // doc/04e M5-F2.
+        expect(overview.approvedStageCount, 1);
         expect(
           (await notificationsOf(managerId)).single.type,
           NotificationType.stageApproved,

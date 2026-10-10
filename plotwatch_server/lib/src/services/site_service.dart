@@ -4,6 +4,7 @@ import '../generated/protocol.dart';
 import 'activity_service.dart';
 import 'audit_service.dart';
 import 'geo_service.dart';
+import 'people_service.dart';
 
 /// The site's location (SITE-03, 04, 07; decision M2-15): the site manager
 /// proposes it from GPS on the plot, the owner validates it with a radius or
@@ -13,6 +14,7 @@ class SiteService {
 
   static const _audit = AuditService();
   static const _activity = ActivityService();
+  static const _people = PeopleService();
 
   static const maxAccuracyM = 20.0;
   static const minRadiusM = 10;
@@ -130,12 +132,32 @@ class SiteService {
   }
 
   /// Newest first: the history of the site's location.
-  Future<List<SiteProposal>> listProposals(Session session, int projectId) =>
-      SiteProposal.db.find(
+  /// Newest first, each with who proposed it (doc/04e C-2d).
+  Future<List<SiteProposal>> listProposals(
+    Session session,
+    int projectId,
+  ) async {
+    final proposals = await SiteProposal.db.find(
+      session,
+      where: (t) => t.projectId.equals(projectId),
+      orderBy: (t) => t.id.desc(),
+    );
+    final named = <SiteProposal>[];
+    for (final proposal in proposals) {
+      final author = await _people.person(
         session,
-        where: (t) => t.projectId.equals(projectId),
-        orderBy: (t) => t.id.desc(),
+        projectId,
+        proposal.proposedBy,
       );
+      named.add(
+        proposal.copyWith(
+          proposedByName: author.name,
+          proposedByFormer: author.former,
+        ),
+      );
+    }
+    return named;
+  }
 
   /// Sets or moves the site from a pending proposal. The first validation
   /// makes a draft project active (decision M2-4).

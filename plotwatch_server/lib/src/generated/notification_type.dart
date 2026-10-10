@@ -17,7 +17,8 @@ enum NotificationType implements _is.SerializableModel {
   stageSubmitted,
   stageApproved,
   stageChangesRequested,
-  memberJoined;
+  memberJoined,
+  progressUpdatePosted;
 
   static NotificationType fromJson(String name) {
     switch (name) {
@@ -29,6 +30,8 @@ enum NotificationType implements _is.SerializableModel {
         return NotificationType.stageChangesRequested;
       case 'memberJoined':
         return NotificationType.memberJoined;
+      case 'progressUpdatePosted':
+        return NotificationType.progressUpdatePosted;
       default:
         throw ArgumentError(
           'Value "$name" cannot be converted to "NotificationType"',

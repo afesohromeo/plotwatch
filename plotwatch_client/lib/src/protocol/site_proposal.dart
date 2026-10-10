@@ -21,6 +21,8 @@ abstract class SiteProposal
     this.id,
     required this.projectId,
     required this.proposedBy,
+    this.proposedByName,
+    this.proposedByFormer,
     required this.lat,
     required this.lng,
     required this.accuracyM,
@@ -35,6 +37,8 @@ abstract class SiteProposal
     int? id,
     required int projectId,
     required _isc.UuidValue proposedBy,
+    String? proposedByName,
+    bool? proposedByFormer,
     required double lat,
     required double lng,
     required double accuracyM,
@@ -52,6 +56,12 @@ abstract class SiteProposal
       proposedBy: _isc.UuidValueJsonExtension.fromJson(
         jsonSerialization['proposedBy'],
       ),
+      proposedByName: jsonSerialization['proposedByName'] as String?,
+      proposedByFormer: jsonSerialization['proposedByFormer'] == null
+          ? null
+          : _isc.BoolJsonExtension.fromJson(
+              jsonSerialization['proposedByFormer'],
+            ),
       lat: (jsonSerialization['lat'] as num).toDouble(),
       lng: (jsonSerialization['lng'] as num).toDouble(),
       accuracyM: (jsonSerialization['accuracyM'] as num).toDouble(),
@@ -82,6 +92,12 @@ abstract class SiteProposal
 
   _isc.UuidValue proposedBy;
 
+  /// Filled when proposals are listed (doc/04e C-2d).
+  String? proposedByName;
+
+  /// True when they are no longer a member.
+  bool? proposedByFormer;
+
   double lat;
 
   double lng;
@@ -108,6 +124,8 @@ abstract class SiteProposal
     int? id,
     int? projectId,
     _isc.UuidValue? proposedBy,
+    String? proposedByName,
+    bool? proposedByFormer,
     double? lat,
     double? lng,
     double? accuracyM,
@@ -124,6 +142,8 @@ abstract class SiteProposal
       if (id != null) 'id': id,
       'projectId': projectId,
       'proposedBy': proposedBy.toJson(),
+      if (proposedByName != null) 'proposedByName': proposedByName,
+      if (proposedByFormer != null) 'proposedByFormer': proposedByFormer,
       'lat': lat,
       'lng': lng,
       'accuracyM': accuracyM,
@@ -142,6 +162,8 @@ abstract class SiteProposal
       if (id != null) 'id': id,
       'projectId': projectId,
       'proposedBy': proposedBy.toJson(),
+      if (proposedByName != null) 'proposedByName': proposedByName,
+      if (proposedByFormer != null) 'proposedByFormer': proposedByFormer,
       'lat': lat,
       'lng': lng,
       'accuracyM': accuracyM,
@@ -166,6 +188,8 @@ class _SiteProposalImpl extends SiteProposal {
     int? id,
     required int projectId,
     required _isc.UuidValue proposedBy,
+    String? proposedByName,
+    bool? proposedByFormer,
     required double lat,
     required double lng,
     required double accuracyM,
@@ -178,6 +202,8 @@ class _SiteProposalImpl extends SiteProposal {
          id: id,
          projectId: projectId,
          proposedBy: proposedBy,
+         proposedByName: proposedByName,
+         proposedByFormer: proposedByFormer,
          lat: lat,
          lng: lng,
          accuracyM: accuracyM,
@@ -196,6 +222,8 @@ class _SiteProposalImpl extends SiteProposal {
     Object? id = _Undefined,
     int? projectId,
     _isc.UuidValue? proposedBy,
+    Object? proposedByName = _Undefined,
+    Object? proposedByFormer = _Undefined,
     double? lat,
     double? lng,
     double? accuracyM,
@@ -209,6 +237,12 @@ class _SiteProposalImpl extends SiteProposal {
       id: id is int? ? id : this.id,
       projectId: projectId ?? this.projectId,
       proposedBy: proposedBy ?? this.proposedBy,
+      proposedByName: proposedByName is String?
+          ? proposedByName
+          : this.proposedByName,
+      proposedByFormer: proposedByFormer is bool?
+          ? proposedByFormer
+          : this.proposedByFormer,
       lat: lat ?? this.lat,
       lng: lng ?? this.lng,
       accuracyM: accuracyM ?? this.accuracyM,

@@ -14,3 +14,5 @@ export 'hashing.dart';
 export 'geo.dart';
 export 'upload_url.dart';
 export 'schedule.dart';
+export 'progress.dart';
+export 'person.dart';

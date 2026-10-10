@@ -104,4 +104,36 @@ class PermissionService {
     }
     return member;
   }
+
+  /// A completed or archived project can't change (doc/04e C-1; the stage
+  /// plan since M3-6).
+  static const closedStatuses = {
+    ProjectStatus.completed,
+    ProjectStatus.archived,
+  };
+
+  /// Like [require], and the project must not be closed
+  /// (`projectNotEditable`, doc/04e C-1).
+  Future<ProjectMember> requireOpen(
+    Session session,
+    int projectId,
+    ProjectAction action, {
+    Transaction? transaction,
+  }) async {
+    final member = await require(
+      session,
+      projectId,
+      action,
+      transaction: transaction,
+    );
+    final project = await Project.db.findById(
+      session,
+      projectId,
+      transaction: transaction,
+    );
+    if (project == null || closedStatuses.contains(project.status)) {
+      throw AppException(code: AppErrorCode.projectNotEditable);
+    }
+    return member;
+  }
 }

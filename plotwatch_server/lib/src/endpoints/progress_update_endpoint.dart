@@ -19,7 +19,7 @@ class ProgressUpdateEndpoint extends Endpoint {
     int projectId,
     ProgressUpdateDraft draft,
   ) async {
-    final siteManager = await _permissions.require(
+    final siteManager = await _permissions.requireOpen(
       session,
       projectId,
       ProjectAction.postUpdates,

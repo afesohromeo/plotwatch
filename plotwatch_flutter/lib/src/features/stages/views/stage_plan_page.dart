@@ -149,7 +149,15 @@ class _PlanBody extends StatelessWidget {
         ),
         DetailRow(
           label: l10n.labelProgress,
-          value: l10n.progressPercent(plan.progressPercent),
+          value: progressLine(
+            l10n,
+            percent: plan.progressPercent,
+            approved: plan.stages
+                .where((v) => v.stage.status == StageStatus.approved)
+                .length,
+            total: plan.stages.length,
+            budgetTotalMinor: plan.budgetTotalMinor,
+          ),
         ),
         const Gap.vertical(height: AppSpacing.md),
         if (plan.stages.isEmpty) ..._empty(context, l10n, bloc, isBusy),

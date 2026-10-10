@@ -4,3 +4,5 @@ fields:
   member: ProjectMember
   fullName: String?
   email: String?
+  ### For a former member: who removed them (doc/04e C-2b).
+  removedByName: String?

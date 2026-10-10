@@ -28,6 +28,7 @@ membership:
   - previewInvitation:
   - acceptInvitation:
   - listMembers:
+  - listFormerMembers:
   - changeRole:
   - removeMember:
 notification:

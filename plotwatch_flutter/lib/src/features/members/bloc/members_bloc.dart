@@ -43,12 +43,16 @@ class MembersBloc extends Bloc<MembersEvent, MembersState> {
       final invitations = overview.myRole == ProjectRole.owner
           ? await _membershipRepository.fetchInvitations(event.projectId)
           : <Invitation>[];
+      final formerMembers = await _membershipRepository.fetchFormerMembers(
+        event.projectId,
+      );
       emit(
         state.copyWith(
           membersStatus: GenericStatus.success,
           overview: overview,
           members: members,
           invitations: invitations,
+          formerMembers: formerMembers,
         ),
       );
     } on HttpException400 catch (e) {

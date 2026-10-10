@@ -429,4 +429,22 @@ void main() {
 
     expect(find.text(l10n.stageLate), findsOneWidget);
   });
+
+  // doc/04e C-1.
+  testWidgets('Given a submitted stage of a completed project then the owner '
+      'cannot review it', (tester) async {
+    final submitted = testStageView(id: 2, status: StageStatus.submitted);
+    await pumpWith(
+      tester,
+      loaded(role: ProjectRole.owner).copyWith(
+        view: submitted,
+        overview: testOverview(
+          project: testProject(status: ProjectStatus.completed),
+        ),
+      ),
+    );
+
+    expect(find.byKey(StagePage.approveButtonKey), findsNothing);
+    expect(find.byKey(StagePage.requestChangesButtonKey), findsNothing);
+  });
 }

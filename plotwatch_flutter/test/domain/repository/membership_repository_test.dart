@@ -90,4 +90,14 @@ void main() {
       );
     });
   });
+
+  // doc/04e C-2b.
+  test('Given former members then they are fetched', () async {
+    final former = [testFormerMember()];
+    when(
+      () => apiProvider.listFormerMembers(1),
+    ).thenAnswer((_) async => former);
+
+    expect(await repository.fetchFormerMembers(1), former);
+  });
 }

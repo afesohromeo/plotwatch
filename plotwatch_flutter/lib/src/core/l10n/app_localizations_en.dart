@@ -1018,11 +1018,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labelProgress => 'Progress';
 
   @override
-  String progressPercent(int percent) {
-    return '$percent% approved';
-  }
-
-  @override
   String get stagesEmpty => 'No stages yet. The owner plans them.';
 
   @override
@@ -1562,16 +1557,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String activityMemberRemoved(String actor, String role) {
-    return '$actor removed a member ($role)';
-  }
-
-  @override
-  String activityMemberRoleChanged(String actor, String from, String to) {
-    return '$actor changed a member\'s role from $from to $to';
-  }
-
-  @override
   String activityStageChanged(String actor, String name) {
     return '$actor changed the stage $name';
   }
@@ -1741,4 +1726,76 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return 'Taken $_temp0 after the stage\'s planned end, $date';
   }
+
+  @override
+  String progressBudgetAndStages(int percent, int approved, int total) {
+    return '$percent% of the budget · $approved of $total stages approved';
+  }
+
+  @override
+  String progressStagesOnly(int approved, int total) {
+    return '$approved of $total stages approved';
+  }
+
+  @override
+  String notificationUpdatePosted(
+    String actor,
+    String project,
+    String excerpt,
+  ) {
+    return '$actor posted an update on $project: $excerpt';
+  }
+
+  @override
+  String activityMemberRemoved(String actor, String member, String role) {
+    return '$actor removed $member ($role)';
+  }
+
+  @override
+  String activityMemberRoleChanged(
+    String actor,
+    String member,
+    String from,
+    String to,
+  ) {
+    return '$actor changed $member\'s role from $from to $to';
+  }
+
+  @override
+  String get aMember => 'a member';
+
+  @override
+  String get projectCompletedBanner =>
+      'This project is completed. It can no longer be changed.';
+
+  @override
+  String get projectArchivedBanner =>
+      'This project is archived. It can no longer be changed.';
+
+  @override
+  String get formerMembersTitle => 'Former members';
+
+  @override
+  String formerMemberRemovedBy(String joined, String removed, String by) {
+    return 'Joined $joined · removed $removed by $by';
+  }
+
+  @override
+  String formerMemberRemoved(String joined, String removed) {
+    return 'Joined $joined · removed $removed';
+  }
+
+  @override
+  String formerMemberName(String name) {
+    return '$name (former member)';
+  }
+
+  @override
+  String get labelTakenBy => 'Taken by';
+
+  @override
+  String get labelProposedBy => 'Proposed by';
+
+  @override
+  String get labelPostedBy => 'Posted by';
 }

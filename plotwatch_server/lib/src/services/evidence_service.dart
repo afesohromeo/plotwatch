@@ -7,6 +7,7 @@ import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 import 'activity_service.dart';
 import 'audit_service.dart';
+import 'people_service.dart';
 import 'verification_service.dart';
 
 /// Captures: commit → upload → finalize with the checks, viewing, retract
@@ -18,6 +19,7 @@ class EvidenceService {
 
   static const _audit = AuditService();
   static const _activity = ActivityService();
+  static const _people = PeopleService();
 
   /// Photos are private to the project's members (decision M4-4).
   static const storageId = 'private';
@@ -318,8 +320,22 @@ class EvidenceService {
     ];
   }
 
-  Future<Evidence> get(Session session, int projectId, int evidenceId) async =>
-      _expireIfStuck(session, await _find(session, projectId, evidenceId));
+  /// One capture, with who took it (doc/04e C-2d).
+  Future<Evidence> get(Session session, int projectId, int evidenceId) async {
+    final evidence = await _expireIfStuck(
+      session,
+      await _find(session, projectId, evidenceId),
+    );
+    final author = await _people.person(
+      session,
+      projectId,
+      evidence.capturedBy,
+    );
+    return evidence.copyWith(
+      capturedByName: author.name,
+      capturedByFormer: author.former,
+    );
+  }
 
   /// The photo or its thumbnail, for members only (decision M4-4). A
   /// capture without a thumbnail gives its photo.

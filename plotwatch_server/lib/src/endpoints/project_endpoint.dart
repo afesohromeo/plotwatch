@@ -58,7 +58,7 @@ class ProjectEndpoint extends Endpoint {
     int projectId,
     ProjectDetails details,
   ) async {
-    final member = await _permissions.require(
+    final member = await _permissions.requireOpen(
       session,
       projectId,
       ProjectAction.editProject,

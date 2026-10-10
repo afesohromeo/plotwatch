@@ -14,3 +14,5 @@ fields:
   budgetTotalMinor: int
   ### 0–100, the budget-weighted share of approved stages (STG-09).
   progressPercent: int
+  ### Shown beside the percentage (doc/04e M5-F2).
+  approvedStageCount: int, default=0
