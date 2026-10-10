@@ -7,6 +7,7 @@ Future<bool> showConfirmDialog(
   BuildContext context, {
   required String title,
   required String message,
+  String? confirmLabel,
 }) async {
   final l10n = AppLocalizations.of(context)!;
   final confirmed = await showDialog<bool>(
@@ -25,7 +26,7 @@ Future<bool> showConfirmDialog(
             minimumSize: const Size(0, 44),
           ),
           onPressed: () => Navigator.of(context).pop(true),
-          child: Text(l10n.confirm),
+          child: Text(confirmLabel ?? l10n.confirm),
         ),
       ],
     ),

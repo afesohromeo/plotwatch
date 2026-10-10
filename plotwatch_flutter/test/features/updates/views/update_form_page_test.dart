@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -106,5 +107,18 @@ void main() {
         ),
       ),
     ).called(1);
+  });
+
+  // doc/04e D-1.
+  testWidgets('Given a weather is chosen then its icon stays, without a tick', (
+    tester,
+  ) async {
+    await pumpForm(tester);
+
+    final chip = tester.widget<ChoiceChip>(
+      find.byKey(UpdateFormPage.weatherKey(Weather.sunny)),
+    );
+
+    expect(chip.showCheckmark, isFalse);
   });
 }

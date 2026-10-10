@@ -1445,5 +1445,21 @@
     "labelProposedBy": "Proposed by",
     "@labelProposedBy": {"description":"Site proposal row (doc/04e C-2d)"},
     "labelPostedBy": "Posted by",
-    "@labelPostedBy": {"description":"Update page row (doc/04e C-2d)"}
+    "@labelPostedBy": {"description":"Update page row (doc/04e C-2d)"},
+    "completeProjectTitle": "Complete {name}?",
+    "@completeProjectTitle": {"description":"Confirm completing a project (doc/04e D-2)","placeholders":{"name":{"type":"String"}}},
+    "completeProjectAction": "Complete",
+    "@completeProjectAction": {"description":"Confirm button"},
+    "completeProjectUnfinished": "{count} of {total} stages aren't approved yet. Their photos and history stay, but nothing more can be added, submitted or reviewed.",
+    "@completeProjectUnfinished": {"description":"Complete dialog when stages are unfinished","placeholders":{"count":{"type":"int"},"total":{"type":"int"}}},
+    "completeProjectReopen": "You can reopen the project later.",
+    "@completeProjectReopen": {"description":"Complete dialog"},
+    "archiveProjectTitle": "Archive {name}?",
+    "@archiveProjectTitle": {"description":"Confirm archiving (doc/04e D-3)","placeholders":{"name":{"type":"String"}}},
+    "archiveProjectMessage": "An archived project can never be reopened or changed. Members can still read everything.",
+    "@archiveProjectMessage": {"description":"Archive dialog"},
+    "archiveProjectTypeName": "Type the project name to confirm",
+    "@archiveProjectTypeName": {"description":"Archive dialog field"},
+    "archiveProjectAction": "Archive",
+    "@archiveProjectAction": {"description":"Archive dialog button"}
 }

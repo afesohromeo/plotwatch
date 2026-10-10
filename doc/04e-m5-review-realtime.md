@@ -135,3 +135,13 @@ Done. `dart test` **376/376** (11 new: the update notification, the approved-sta
 Found while testing:
 - `acceptInvitation` already loaded the project for the "member joined" notification; the new closed check loaded it a second time under the same name (`dart analyze`). The check's copy is now used for both.
 - An M2 test still expected "completed → active" to be refused; C-4 allows it, so the pair moved to the allowed list (archived → active stays refused).
+
+## M5 fixes D: status confirmations and the weather chip (2026-10-10, approved)
+| # | Fix (approved) |
+|---|----------------|
+| D-1 | The weather chips of the update form show no check mark over their icon when selected (`showCheckmark: false`); the chip's colour marks the choice. |
+| D-2 | Choosing **Completed** asks first: "Complete {project}?", with "{n} of {total} stages aren't approved yet. Their photos and history stay, but nothing more can be added, submitted or reviewed." when stages are unfinished, and "You can reopen the project later." Completing stays allowed with unfinished stages (projects stop early; started stages can't be deleted). |
+| D-3 | Choosing **Archived** asks the owner to type the project's name (case and outer spaces ignored) before **Archive** is enabled: archiving can't be undone. Pausing and reopening stay one tap. App only; the server rules don't change. |
+
+### Fixes D outcome (2026-10-10)
+Done. `flutter test` **814/814** (5 new: completing with and without unfinished stages, pausing at once, archiving only after the name is typed, the weather chip without a tick). `dart analyze` flagged `BuildContext` used across an async gap in the status change: the dialog is now chosen first and awaited once.

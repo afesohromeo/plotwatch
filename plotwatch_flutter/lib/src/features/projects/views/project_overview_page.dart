@@ -21,6 +21,8 @@ class ProjectOverviewPage extends StatefulWidget {
   static const stagesCardKey = Key('project.stages');
   static const postUpdateButtonKey = Key('project.postUpdate');
   static const closedBannerKey = Key('project.closed');
+  static const archiveNameFieldKey = Key('project.archiveName');
+  static const archiveConfirmKey = Key('project.archiveConfirm');
 
   @override
   State<ProjectOverviewPage> createState() => _ProjectOverviewPageState();
@@ -109,6 +111,41 @@ class _ProjectOverviewPageState extends State<ProjectOverviewPage> {
     );
   }
 
+  /// Completing and archiving ask first (doc/04e D-2, D-3); pausing and
+  /// reopening are easy to undo.
+  Future<void> _changeStatus(
+    ProjectOverview overview,
+    ProjectStatus status,
+    AppLocalizations l10n,
+  ) async {
+    final bloc = context.read<ProjectOverviewBloc>();
+    final name = overview.project.name;
+    // One await, after the context is used.
+    final confirmed = await switch (status) {
+      ProjectStatus.completed => showConfirmDialog(
+        context,
+        title: l10n.completeProjectTitle(name),
+        confirmLabel: l10n.completeProjectAction,
+        message: [
+          if (overview.approvedStageCount < overview.stageCount)
+            l10n.completeProjectUnfinished(
+              overview.stageCount - overview.approvedStageCount,
+              overview.stageCount,
+            ),
+          l10n.completeProjectReopen,
+        ].join('\n\n'),
+      ),
+      ProjectStatus.archived => showDialog<bool>(
+        context: context,
+        builder: (_) => _ArchiveDialog(projectName: name),
+      ).then((archived) => archived ?? false),
+      _ => Future.value(true),
+    };
+    if (confirmed && mounted) {
+      bloc.add(ProjectOverviewEvent.changeStatus(status: status));
+    }
+  }
+
   /// Edit and status change, for the owner only (doc/02 §3.2; the server
   /// enforces it too).
   List<Widget>? _ownerActions(ProjectOverview overview, AppLocalizations l10n) {
@@ -133,15 +170,79 @@ class _ProjectOverviewPageState extends State<ProjectOverviewPage> {
           key: ProjectOverviewPage.statusButtonKey,
           tooltip: l10n.changeStatus,
           icon: Icon(Icons.flag_outlined, color: customColors.primary),
-          onSelected: (status) => context.read<ProjectOverviewBloc>().add(
-            ProjectOverviewEvent.changeStatus(status: status),
-          ),
+          onSelected: (status) => _changeStatus(overview, status, l10n),
           itemBuilder: (context) => [
             for (final status in nextStatuses)
               PopupMenuItem(value: status, child: Text(status.label(l10n))),
           ],
         ),
     ];
+  }
+}
+
+/// Archiving can't be undone: the owner types the project's name first
+/// (doc/04e D-3). Case and outer spaces don't matter.
+class _ArchiveDialog extends StatefulWidget {
+  const _ArchiveDialog({required this.projectName});
+
+  final String projectName;
+
+  @override
+  State<_ArchiveDialog> createState() => _ArchiveDialogState();
+}
+
+class _ArchiveDialogState extends State<_ArchiveDialog> {
+  final _name = TextEditingController();
+
+  @override
+  void dispose() {
+    _name.dispose();
+    super.dispose();
+  }
+
+  bool get _matches =>
+      _name.text.trim().toLowerCase() ==
+      widget.projectName.trim().toLowerCase();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AlertDialog(
+      title: Text(l10n.archiveProjectTitle(widget.projectName)),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.archiveProjectMessage),
+          const Gap.vertical(height: AppSpacing.md),
+          TextField(
+            key: ProjectOverviewPage.archiveNameFieldKey,
+            controller: _name,
+            autofocus: true,
+            decoration: InputDecoration(
+              labelText: l10n.archiveProjectTypeName,
+              hintText: widget.projectName,
+            ),
+            onChanged: (_) => setState(() {}),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton(
+          key: ProjectOverviewPage.archiveConfirmKey,
+          style: FilledButton.styleFrom(
+            backgroundColor: customColors.unverified,
+            minimumSize: const Size(0, 44),
+          ),
+          onPressed: _matches ? () => Navigator.of(context).pop(true) : null,
+          child: Text(l10n.archiveProjectAction),
+        ),
+      ],
+    );
   }
 }
 

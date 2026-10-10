@@ -211,6 +211,8 @@ class _UpdateFormState extends State<_UpdateForm> {
                 ChoiceChip(
                   key: UpdateFormPage.weatherKey(weather),
                   avatar: Icon(weather.icon, size: 18),
+                  // The colour marks the choice; a tick would hide the icon.
+                  showCheckmark: false,
                   label: Text(weather.label(l10n)),
                   selected: _weather == weather,
                   // Tapping the chosen one again clears it (optional).

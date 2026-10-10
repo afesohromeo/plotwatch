@@ -374,4 +374,122 @@ void main() {
       expect(find.byKey(ProjectOverviewPage.statusButtonKey), findsOneWidget);
     });
   });
+
+  // doc/04e D-2, D-3.
+  group('Given the owner changes the status', () {
+    Future<void> choose(WidgetTester tester, ProjectStatus status) async {
+      await tester.tap(find.byKey(ProjectOverviewPage.statusButtonKey));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(status.label(l10n)).last);
+      await tester.pumpAndSettle();
+    }
+
+    final active = testProject(status: ProjectStatus.active);
+
+    testWidgets('when completing with unfinished stages then it warns first '
+        'and completes only once confirmed', (tester) async {
+      await pumpWith(
+        tester,
+        loaded(
+          testOverview(project: active, stageCount: 4, approvedStageCount: 2),
+        ),
+      );
+
+      await choose(tester, ProjectStatus.completed);
+
+      expect(
+        find.textContaining(l10n.completeProjectUnfinished(2, 4)),
+        findsOneWidget,
+      );
+      verifyNever(
+        () => bloc.add(
+          const ProjectOverviewEvent.changeStatus(
+            status: ProjectStatus.completed,
+          ),
+        ),
+      );
+
+      await tester.tap(find.text(l10n.completeProjectAction));
+      await tester.pumpAndSettle();
+      verify(
+        () => bloc.add(
+          const ProjectOverviewEvent.changeStatus(
+            status: ProjectStatus.completed,
+          ),
+        ),
+      ).called(1);
+    });
+
+    testWidgets('when every stage is approved then there is no warning', (
+      tester,
+    ) async {
+      await pumpWith(
+        tester,
+        loaded(
+          testOverview(project: active, stageCount: 2, approvedStageCount: 2),
+        ),
+      );
+
+      await choose(tester, ProjectStatus.completed);
+
+      expect(find.textContaining(l10n.completeProjectReopen), findsOneWidget);
+      expect(
+        find.textContaining(l10n.completeProjectUnfinished(0, 2)),
+        findsNothing,
+      );
+    });
+
+    testWidgets('when pausing then it happens at once', (tester) async {
+      await pumpWith(tester, loaded(testOverview(project: active)));
+
+      await choose(tester, ProjectStatus.paused);
+
+      verify(
+        () => bloc.add(
+          const ProjectOverviewEvent.changeStatus(status: ProjectStatus.paused),
+        ),
+      ).called(1);
+    });
+
+    testWidgets('when archiving then the name must be typed first', (
+      tester,
+    ) async {
+      await pumpWith(
+        tester,
+        loaded(
+          testOverview(project: testProject(status: ProjectStatus.completed)),
+        ),
+      );
+      final name = testProject().name;
+
+      await choose(tester, ProjectStatus.archived);
+      FilledButton archive() => tester.widget<FilledButton>(
+        find.byKey(ProjectOverviewPage.archiveConfirmKey),
+      );
+      expect(archive().onPressed, isNull);
+
+      await tester.enterText(
+        find.byKey(ProjectOverviewPage.archiveNameFieldKey),
+        'something else',
+      );
+      await tester.pump();
+      expect(archive().onPressed, isNull);
+
+      await tester.enterText(
+        find.byKey(ProjectOverviewPage.archiveNameFieldKey),
+        '  ${name.toUpperCase()} ',
+      );
+      await tester.pump();
+      await tester.tap(find.byKey(ProjectOverviewPage.archiveConfirmKey));
+      await tester.pumpAndSettle();
+
+      verify(
+        () => bloc.add(
+          const ProjectOverviewEvent.changeStatus(
+            status: ProjectStatus.archived,
+          ),
+        ),
+      ).called(1);
+    });
+  });
 }

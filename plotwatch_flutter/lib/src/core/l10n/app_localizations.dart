@@ -3194,6 +3194,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Posted by'**
   String get labelPostedBy;
+
+  /// Confirm completing a project (doc/04e D-2)
+  ///
+  /// In en, this message translates to:
+  /// **'Complete {name}?'**
+  String completeProjectTitle(String name);
+
+  /// Confirm button
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get completeProjectAction;
+
+  /// Complete dialog when stages are unfinished
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {total} stages aren\'t approved yet. Their photos and history stay, but nothing more can be added, submitted or reviewed.'**
+  String completeProjectUnfinished(int count, int total);
+
+  /// Complete dialog
+  ///
+  /// In en, this message translates to:
+  /// **'You can reopen the project later.'**
+  String get completeProjectReopen;
+
+  /// Confirm archiving (doc/04e D-3)
+  ///
+  /// In en, this message translates to:
+  /// **'Archive {name}?'**
+  String archiveProjectTitle(String name);
+
+  /// Archive dialog
+  ///
+  /// In en, this message translates to:
+  /// **'An archived project can never be reopened or changed. Members can still read everything.'**
+  String get archiveProjectMessage;
+
+  /// Archive dialog field
+  ///
+  /// In en, this message translates to:
+  /// **'Type the project name to confirm'**
+  String get archiveProjectTypeName;
+
+  /// Archive dialog button
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archiveProjectAction;
 }
 
 class _AppLocalizationsDelegate

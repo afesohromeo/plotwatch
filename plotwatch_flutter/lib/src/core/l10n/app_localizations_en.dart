@@ -1798,4 +1798,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get labelPostedBy => 'Posted by';
+
+  @override
+  String completeProjectTitle(String name) {
+    return 'Complete $name?';
+  }
+
+  @override
+  String get completeProjectAction => 'Complete';
+
+  @override
+  String completeProjectUnfinished(int count, int total) {
+    return '$count of $total stages aren\'t approved yet. Their photos and history stay, but nothing more can be added, submitted or reviewed.';
+  }
+
+  @override
+  String get completeProjectReopen => 'You can reopen the project later.';
+
+  @override
+  String archiveProjectTitle(String name) {
+    return 'Archive $name?';
+  }
+
+  @override
+  String get archiveProjectMessage =>
+      'An archived project can never be reopened or changed. Members can still read everything.';
+
+  @override
+  String get archiveProjectTypeName => 'Type the project name to confirm';
+
+  @override
+  String get archiveProjectAction => 'Archive';
 }

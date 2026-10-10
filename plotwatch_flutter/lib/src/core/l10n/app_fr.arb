@@ -513,5 +513,13 @@
     "formerMemberName": "{name} (ancien membre)",
     "labelTakenBy": "Prise par",
     "labelProposedBy": "Proposé par",
-    "labelPostedBy": "Publiée par"
+    "labelPostedBy": "Publiée par",
+    "completeProjectTitle": "Terminer {name} ?",
+    "completeProjectAction": "Terminer",
+    "completeProjectUnfinished": "{count} étapes sur {total} ne sont pas encore approuvées. Leurs photos et leur historique restent, mais plus rien ne pourra être ajouté, soumis ou validé.",
+    "completeProjectReopen": "Vous pourrez rouvrir le projet plus tard.",
+    "archiveProjectTitle": "Archiver {name} ?",
+    "archiveProjectMessage": "Un projet archivé ne peut plus jamais être rouvert ni modifié. Les membres peuvent toujours tout consulter.",
+    "archiveProjectTypeName": "Saisissez le nom du projet pour confirmer",
+    "archiveProjectAction": "Archiver"
 }

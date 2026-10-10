@@ -1837,4 +1837,37 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get labelPostedBy => 'Publiée par';
+
+  @override
+  String completeProjectTitle(String name) {
+    return 'Terminer $name ?';
+  }
+
+  @override
+  String get completeProjectAction => 'Terminer';
+
+  @override
+  String completeProjectUnfinished(int count, int total) {
+    return '$count étapes sur $total ne sont pas encore approuvées. Leurs photos et leur historique restent, mais plus rien ne pourra être ajouté, soumis ou validé.';
+  }
+
+  @override
+  String get completeProjectReopen =>
+      'Vous pourrez rouvrir le projet plus tard.';
+
+  @override
+  String archiveProjectTitle(String name) {
+    return 'Archiver $name ?';
+  }
+
+  @override
+  String get archiveProjectMessage =>
+      'Un projet archivé ne peut plus jamais être rouvert ni modifié. Les membres peuvent toujours tout consulter.';
+
+  @override
+  String get archiveProjectTypeName =>
+      'Saisissez le nom du projet pour confirmer';
+
+  @override
+  String get archiveProjectAction => 'Archiver';
 }
