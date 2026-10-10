@@ -150,3 +150,16 @@ The developer's review of the first build: about 60/100 against the canvas. The 
 1. Rebuild screen by screen from the canvas's markup (sizes, colours, spacing, type), starting with the shared app bar and the project list: the app bar (title with a subtitle line, the bell, ⋮ for the rest), the labelled "+ New project" button, then Overview, Stages, stage page, photo page, Activity, Members, notifications, and the tablet and web layouts.
 2. Check before handing over: a screenshot test (`tool/screenshots/`, not part of the test suite) renders each page at 390×844, 1024×768 and 1440×900 with the real font and sample data; each image is compared with its mockup and the gaps fixed; the screenshots go on a "built vs design" page of the canvas.
 3. The developer's two changes: the logo and the app name in the primary colour (app bar, sidebar, rail); the bell opens the notifications on top of the current page, so Back returns there.
+
+### 9.4 Review round 2 (2026-10-10, approved)
+1. **Secondary panels on a phone:** a segmented switch shows one panel at a time instead of a long column of cards: Overview *Activity · Site · About*, stage page *Checklist · Photos · History*, photo page *Details · Checks*. Side by side in columns on tablet and web.
+2. **App bar actions:** one action is its own icon button; ⋮ only for two or more. Refresh is pull-down on phones and an icon on the web.
+3. **The progress update page** (and the form to post one) is designed on the canvas first, then built.
+4. **Bug:** after withdrawing a photo, the stage page didn't show it withdrawn until refreshed by hand. Reproduced in a test first, then fixed.
+5. **Sorting, filtering, search** where lists grow:
+   - project list: search by name, status chips (All · Active · Paused · Completed · Archived), sort (latest activity, name, progress), on the server;
+   - Activity: kind chips (All · Photos · Reviews · Updates · Members · Site) and a stage picker, on the server for pages, in the app for live events;
+   - notifications: All / Unread, on the server;
+   - Stages tab: All · Needs you · In progress · Late · Approved, in the app;
+   - a stage's photos: by checklist item and by badge, in the app.
+6. **Also checked on every redrawn screen:** empty, loading and error states, and that each action refreshes what it changed.
