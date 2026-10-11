@@ -55,6 +55,7 @@ class ProjectBreadcrumbBar extends StatelessWidget
           ProjectShell.label(tab, l10n),
           onTap: () => go(switch (tab) {
             ProjectTab.stages => stagesRouteName,
+            ProjectTab.money => moneyRouteName,
             ProjectTab.activity => feedRouteName,
             ProjectTab.overview => projectRouteName,
           }),
@@ -104,5 +105,15 @@ List<StageBrief> projectStagesOf(BuildContext context) {
         const [];
   } on ProviderNotFoundException {
     return const [];
+  }
+}
+
+/// The current project from the project shell: role, rights, currency
+/// (the Money tab, doc/04f M6-10); null outside a project or until loaded.
+ProjectOverview? projectOverviewOf(BuildContext context) {
+  try {
+    return context.select((ProjectOverviewBloc bloc) => bloc.state.overview);
+  } on ProviderNotFoundException {
+    return null;
   }
 }

@@ -3796,6 +3796,510 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Money'**
   String get kindMoney;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get moneyTab;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'{project} · budget {amount}'**
+  String moneySubtitle(String project, String amount);
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Released'**
+  String get moneyReleased;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'of {budget} budgeted · {left} left to release'**
+  String moneyReleasedOf(String budget, String left);
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Spent'**
+  String get moneySpent;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'With a receipt'**
+  String get moneyWithReceipt;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Unaccounted'**
+  String get moneyUnaccounted;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} unaccounted'**
+  String moneyUnaccountedAmount(String amount);
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'{percent} % of what was released has no receipt yet'**
+  String moneyUnaccountedHint(String percent);
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Everything released is backed by receipts.'**
+  String get moneyAllAccounted;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'By stage'**
+  String get moneyByStage;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Not tied to a stage'**
+  String get moneyNotTied;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing released yet · budget {budget}'**
+  String moneyStageNothing(String budget);
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'{released} released · {receipted} with a receipt'**
+  String moneyStageLine(String released, String receipted);
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Releases'**
+  String get filterReleases;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses'**
+  String get filterExpenses;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Record a release'**
+  String get recordReleaseAction;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Record an expense'**
+  String get recordExpenseAction;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'No money recorded yet.'**
+  String get ledgerEmpty;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt'**
+  String get tagReceipt;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'No receipt'**
+  String get tagNoReceipt;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Not confirmed yet'**
+  String get tagNotConfirmed;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get tagConfirmed;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Reversed'**
+  String get tagReversed;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Reversal'**
+  String get tagReversal;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Release'**
+  String get entryRelease;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Expense'**
+  String get entryExpense;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Reversal'**
+  String get entryReversal;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Bank transfer'**
+  String get methodBankTransfer;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile money'**
+  String get methodMobileMoney;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get methodCash;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawn by the site manager'**
+  String get methodWithdrawn;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get methodOther;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Materials'**
+  String get categoryMaterials;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Labour'**
+  String get categoryLabour;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get categoryTransport;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Permits'**
+  String get categoryPermits;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment'**
+  String get categoryEquipment;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get categoryOther;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get labelAmount;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get labelEntryDate;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'How it was sent'**
+  String get labelMethod;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Reference (optional)'**
+  String get labelReferenceOptional;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Note (optional)'**
+  String get labelNoteOptional;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'What for'**
+  String get labelWhatFor;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get labelExpenseDescription;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Shop or person paid (optional)'**
+  String get labelVendorOptional;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Paid to'**
+  String get labelPaidTo;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Reference'**
+  String get labelReference;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get labelNote;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded by'**
+  String get labelRecordedBy;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Received'**
+  String get labelConfirmation;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt'**
+  String get receiptTitle;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo of the receipt'**
+  String get receiptTake;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Retake'**
+  String get receiptRetake;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get receiptRemove;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Counts as spent with a receipt'**
+  String get receiptHint;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Receipts are photographed with the Plotwatch app on the phone.'**
+  String get receiptPhoneOnly;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Take the photo'**
+  String get receiptShutter;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Photo of the receipt'**
+  String get receiptCameraTitle;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Save the release'**
+  String get saveReleaseAction;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Save the expense'**
+  String get saveExpenseAction;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'{project} · the site manager is notified'**
+  String releaseFormSubtitle(String project);
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'{project} · the funders are notified'**
+  String expenseFormSubtitle(String project);
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Release recorded.'**
+  String get releaseSaved;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Expense recorded.'**
+  String get expenseSaved;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm received'**
+  String get confirmReceivedAction;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt confirmed.'**
+  String get releaseConfirmedMessage;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Reverse this entry'**
+  String get reverseAction;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Reverse this entry?'**
+  String get reverseTitle;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'The entry stays in the ledger, cancelled by a new one with the opposite amount. Record the right one afterwards.'**
+  String get reverseMessage;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Why'**
+  String get reverseReasonLabel;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Say why'**
+  String get reverseReasonRequired;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Entry reversed.'**
+  String get entryReversedMessage;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Entries are never edited. A mistake is corrected by reversing the entry, with a reason, and recording it again.'**
+  String get entryNeverEdited;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Reversed: {reason}'**
+  String reversedBanner(String reason);
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Reverses an earlier entry: {reason}'**
+  String reversalOf(String reason);
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Open the original entry'**
+  String get openOriginal;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'The ledger couldn’t be loaded.'**
+  String get errorLedgerLoad;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'The entry couldn’t be saved.'**
+  String get errorLedgerSave;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'The receipt photo couldn’t be sent. Try again.'**
+  String get errorReceiptUpload;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount above zero'**
+  String get validateAmountRequired;
+
+  /// Money tab and ledger (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Say what it was for'**
+  String get validateDescriptionRequired;
+
+  /// Money tab switch on a phone: the entries (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Entries'**
+  String get moneyEntries;
 }
 
 class _AppLocalizationsDelegate

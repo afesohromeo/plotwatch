@@ -215,6 +215,14 @@ class RouteManager {
                               .read<ActivityRepository>(),
                         ),
                       ),
+                      // The Money card (doc/04f M6-11).
+                      BlocProvider(
+                        create: (context) => MoneyBloc(
+                          ledgerRepository: context.read<LedgerRepository>(),
+                          activityRepository: context
+                              .read<ActivityRepository>(),
+                        ),
+                      ),
                     ],
                     child: ProjectOverviewPage(projectId: _projectId(state)!),
                   ),
@@ -281,6 +289,68 @@ class RouteManager {
   /// The pages of one project, under the project page.
   static List<RouteBase> get _projectSubRoutes {
     return [
+      // The Money tab, its forms and its entries (doc/04f). The forms before
+      // `:entryId`, so "release" isn't read as an entry ID.
+      GoRoute(
+        name: moneyRouteName,
+        path: moneyPage,
+        redirect: _requireProjectId,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: BlocProvider(
+            create: (context) => MoneyBloc(
+              ledgerRepository: context.read<LedgerRepository>(),
+              activityRepository: context.read<ActivityRepository>(),
+            ),
+            child: MoneyPage(projectId: _projectId(state)!),
+          ),
+        ),
+        routes: [
+          GoRoute(
+            name: createReleaseRouteName,
+            path: createReleasePage,
+            redirect: _requireProjectId,
+            pageBuilder: (context, state) => NoTransitionPage<void>(
+              key: state.pageKey,
+              child: BlocProvider(
+                create: _ledgerFormBloc,
+                child: ReleaseFormPage(projectId: _projectId(state)!),
+              ),
+            ),
+          ),
+          GoRoute(
+            name: createExpenseRouteName,
+            path: createExpensePage,
+            redirect: _requireProjectId,
+            pageBuilder: (context, state) => NoTransitionPage<void>(
+              key: state.pageKey,
+              child: BlocProvider(
+                create: _ledgerFormBloc,
+                child: ExpenseFormPage(projectId: _projectId(state)!),
+              ),
+            ),
+          ),
+          GoRoute(
+            name: ledgerEntryRouteName,
+            path: ledgerEntryPage,
+            redirect: _requireEntryId,
+            pageBuilder: (context, state) => NoTransitionPage<void>(
+              key: state.pageKey,
+              child: BlocProvider(
+                create: (context) => LedgerEntryBloc(
+                  ledgerRepository: context.read<LedgerRepository>(),
+                  projectRepository: context.read<ProjectRepository>(),
+                  authRepository: context.read<AuthRepository>(),
+                ),
+                child: LedgerEntryPage(
+                  projectId: _projectId(state)!,
+                  entryId: _intParameter(state, 'entryId')!,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
       // The whole activity feed (doc/04e M5-7).
       GoRoute(
         name: feedRouteName,
@@ -569,6 +639,17 @@ class RouteManager {
   static String? _requireUpdateId(BuildContext context, GoRouterState state) =>
       _requireProjectId(context, state) ??
       (_intParameter(state, 'updateId') == null ? homePage : null);
+
+  static String? _requireEntryId(BuildContext context, GoRouterState state) =>
+      _requireProjectId(context, state) ??
+      (_intParameter(state, 'entryId') == null ? homePage : null);
+
+  /// Both ledger forms load the project and its stages (doc/04f).
+  static LedgerFormBloc _ledgerFormBloc(BuildContext context) => LedgerFormBloc(
+    ledgerRepository: context.read<LedgerRepository>(),
+    projectRepository: context.read<ProjectRepository>(),
+    stageRepository: context.read<StageRepository>(),
+  );
 
   /// A malformed stage ID in the URL goes back to the project list.
   static String? _requireStageId(BuildContext context, GoRouterState state) =>

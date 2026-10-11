@@ -370,3 +370,89 @@ ProgressUpdate testUpdate({int id = 4, int? stageId = 2}) => ProgressUpdate(
   issues: 'Cement delivery late.',
   createdAt: DateTime.utc(2026, 10, 9, 16),
 );
+
+// The ledger (doc/04f).
+const testOwnerId = '00000000-0000-4000-8000-000000000001';
+
+LedgerEntry testRelease({
+  int id = 1,
+  int amountMinor = 500000,
+  int? stageId = 2,
+  DateTime? confirmedAt,
+  String recordedBy = testOwnerId,
+  int? reversesId,
+  int? reversedById,
+}) => LedgerEntry(
+  id: id,
+  projectId: 1,
+  stageId: stageId,
+  kind: LedgerEntryKind.release,
+  amountMinor: amountMinor,
+  occurredOn: DateTime.utc(2026, 10, 11),
+  recordedBy: UuidValue.fromString(recordedBy),
+  method: ReleaseMethod.mobileMoney,
+  reference: 'TX-4471',
+  confirmedAt: confirmedAt,
+  reversesId: reversesId,
+  reversedById: reversedById,
+  createdAt: DateTime.utc(2026, 10, 11, 9),
+  recordedByName: 'Ada Lovelace',
+);
+
+LedgerEntry testExpense({
+  int id = 2,
+  int amountMinor = 300000,
+  int? stageId = 2,
+  bool receipt = true,
+  String recordedBy = testManagerId,
+}) => LedgerEntry(
+  id: id,
+  projectId: 1,
+  stageId: stageId,
+  kind: LedgerEntryKind.expense,
+  amountMinor: amountMinor,
+  occurredOn: DateTime.utc(2026, 10, 11),
+  recordedBy: UuidValue.fromString(recordedBy),
+  category: ExpenseCategory.materials,
+  description: '20 bags of cement',
+  vendor: 'Quincaillerie Akwa',
+  receiptPath: receipt ? 'projects/1/receipts/r.jpg' : null,
+  receiptSha256: receipt ? 'a' * 64 : null,
+  createdAt: DateTime.utc(2026, 10, 11, 10),
+  recordedByName: 'Bob Mbarga',
+);
+
+LedgerLine testLedgerLine({
+  int budget = 1000000,
+  int released = 500000,
+  int spent = 350000,
+  int withReceipt = 300000,
+  int? stageId,
+  String? stageName,
+}) => LedgerLine(
+  stageId: stageId,
+  stageName: stageName,
+  budgetMinor: budget,
+  releasedMinor: released,
+  spentMinor: spent,
+  spentWithReceiptMinor: withReceipt,
+  unaccountedMinor: released - withReceipt,
+  remainingMinor: budget - released,
+);
+
+/// AC-5: released 500,000, spent 350,000, 300,000 with a receipt.
+LedgerSummary testLedgerSummary({bool alert = true}) => LedgerSummary(
+  total: testLedgerLine(),
+  stages: [
+    testLedgerLine(
+      budget: 600000,
+      released: 0,
+      spent: 0,
+      withReceipt: 0,
+      stageId: 1,
+      stageName: 'Foundation',
+    ),
+    testLedgerLine(budget: 400000, stageId: 2, stageName: 'Walls'),
+  ],
+  unaccountedAlert: alert,
+);

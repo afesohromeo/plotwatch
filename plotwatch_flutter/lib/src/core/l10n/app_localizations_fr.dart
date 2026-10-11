@@ -2247,4 +2247,281 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get kindMoney => 'Argent';
+
+  @override
+  String get moneyTab => 'Argent';
+
+  @override
+  String moneySubtitle(String project, String amount) {
+    return '$project · budget $amount';
+  }
+
+  @override
+  String get moneyReleased => 'Versé';
+
+  @override
+  String moneyReleasedOf(String budget, String left) {
+    return 'sur $budget prévus · $left restant à verser';
+  }
+
+  @override
+  String get moneySpent => 'Dépensé';
+
+  @override
+  String get moneyWithReceipt => 'Avec un reçu';
+
+  @override
+  String get moneyUnaccounted => 'Non justifié';
+
+  @override
+  String moneyUnaccountedAmount(String amount) {
+    return '$amount non justifiés';
+  }
+
+  @override
+  String moneyUnaccountedHint(String percent) {
+    return '$percent % des versements n’ont pas encore de reçu';
+  }
+
+  @override
+  String get moneyAllAccounted =>
+      'Tout ce qui a été versé est justifié par des reçus.';
+
+  @override
+  String get moneyByStage => 'Par étape';
+
+  @override
+  String get moneyNotTied => 'Sans étape';
+
+  @override
+  String moneyStageNothing(String budget) {
+    return 'Rien de versé · budget $budget';
+  }
+
+  @override
+  String moneyStageLine(String released, String receipted) {
+    return '$released versés · $receipted avec reçu';
+  }
+
+  @override
+  String get filterReleases => 'Versements';
+
+  @override
+  String get filterExpenses => 'Dépenses';
+
+  @override
+  String get recordReleaseAction => 'Enregistrer un versement';
+
+  @override
+  String get recordExpenseAction => 'Enregistrer une dépense';
+
+  @override
+  String get ledgerEmpty => 'Aucun mouvement enregistré.';
+
+  @override
+  String get tagReceipt => 'Reçu';
+
+  @override
+  String get tagNoReceipt => 'Sans reçu';
+
+  @override
+  String get tagNotConfirmed => 'Pas encore confirmé';
+
+  @override
+  String get tagConfirmed => 'Confirmé';
+
+  @override
+  String get tagReversed => 'Annulé';
+
+  @override
+  String get tagReversal => 'Annulation';
+
+  @override
+  String get entryRelease => 'Versement';
+
+  @override
+  String get entryExpense => 'Dépense';
+
+  @override
+  String get entryReversal => 'Annulation';
+
+  @override
+  String get methodBankTransfer => 'Virement';
+
+  @override
+  String get methodMobileMoney => 'Mobile money';
+
+  @override
+  String get methodCash => 'Espèces';
+
+  @override
+  String get methodWithdrawn => 'Retiré par le chef de chantier';
+
+  @override
+  String get methodOther => 'Autre';
+
+  @override
+  String get categoryMaterials => 'Matériaux';
+
+  @override
+  String get categoryLabour => 'Main-d’œuvre';
+
+  @override
+  String get categoryTransport => 'Transport';
+
+  @override
+  String get categoryPermits => 'Permis';
+
+  @override
+  String get categoryEquipment => 'Équipement';
+
+  @override
+  String get categoryOther => 'Autre';
+
+  @override
+  String get labelAmount => 'Montant';
+
+  @override
+  String get labelEntryDate => 'Date';
+
+  @override
+  String get labelMethod => 'Moyen';
+
+  @override
+  String get labelReferenceOptional => 'Référence (facultatif)';
+
+  @override
+  String get labelNoteOptional => 'Note (facultatif)';
+
+  @override
+  String get labelWhatFor => 'Pour quoi';
+
+  @override
+  String get labelExpenseDescription => 'Description';
+
+  @override
+  String get labelVendorOptional => 'Boutique ou personne payée (facultatif)';
+
+  @override
+  String get labelPaidTo => 'Payé à';
+
+  @override
+  String get labelReference => 'Référence';
+
+  @override
+  String get labelNote => 'Note';
+
+  @override
+  String get labelRecordedBy => 'Saisi par';
+
+  @override
+  String get labelConfirmation => 'Reçu';
+
+  @override
+  String get receiptTitle => 'Reçu';
+
+  @override
+  String get receiptTake => 'Photographier le reçu';
+
+  @override
+  String get receiptRetake => 'Reprendre';
+
+  @override
+  String get receiptRemove => 'Retirer';
+
+  @override
+  String get receiptHint => 'Compte comme dépense avec reçu';
+
+  @override
+  String get receiptPhoneOnly =>
+      'Les reçus se photographient avec l’app Plotwatch sur le téléphone.';
+
+  @override
+  String get receiptShutter => 'Prendre la photo';
+
+  @override
+  String get receiptCameraTitle => 'Photo du reçu';
+
+  @override
+  String get saveReleaseAction => 'Enregistrer le versement';
+
+  @override
+  String get saveExpenseAction => 'Enregistrer la dépense';
+
+  @override
+  String releaseFormSubtitle(String project) {
+    return '$project · le chef de chantier est prévenu';
+  }
+
+  @override
+  String expenseFormSubtitle(String project) {
+    return '$project · les financeurs sont prévenus';
+  }
+
+  @override
+  String get releaseSaved => 'Versement enregistré.';
+
+  @override
+  String get expenseSaved => 'Dépense enregistrée.';
+
+  @override
+  String get confirmReceivedAction => 'Confirmer la réception';
+
+  @override
+  String get releaseConfirmedMessage => 'Réception confirmée.';
+
+  @override
+  String get reverseAction => 'Annuler cette écriture';
+
+  @override
+  String get reverseTitle => 'Annuler cette écriture ?';
+
+  @override
+  String get reverseMessage =>
+      'L’écriture reste au registre, annulée par une nouvelle de montant opposé. Saisissez ensuite la bonne.';
+
+  @override
+  String get reverseReasonLabel => 'Pourquoi';
+
+  @override
+  String get reverseReasonRequired => 'Dites pourquoi';
+
+  @override
+  String get entryReversedMessage => 'Écriture annulée.';
+
+  @override
+  String get entryNeverEdited =>
+      'Les écritures ne se modifient jamais. Une erreur se corrige en annulant l’écriture, avec une raison, puis en la saisissant à nouveau.';
+
+  @override
+  String reversedBanner(String reason) {
+    return 'Annulée : $reason';
+  }
+
+  @override
+  String reversalOf(String reason) {
+    return 'Annule une écriture précédente : $reason';
+  }
+
+  @override
+  String get openOriginal => 'Voir l’écriture d’origine';
+
+  @override
+  String get errorLedgerLoad => 'Le registre n’a pas pu être chargé.';
+
+  @override
+  String get errorLedgerSave => 'L’écriture n’a pas pu être enregistrée.';
+
+  @override
+  String get errorReceiptUpload =>
+      'La photo du reçu n’a pas pu être envoyée. Réessayez.';
+
+  @override
+  String get validateAmountRequired => 'Saisissez un montant supérieur à zéro';
+
+  @override
+  String get validateDescriptionRequired => 'Dites à quoi elle a servi';
+
+  @override
+  String get moneyEntries => 'Écritures';
 }

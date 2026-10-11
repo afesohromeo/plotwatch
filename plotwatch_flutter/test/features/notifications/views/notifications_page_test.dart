@@ -191,12 +191,25 @@ void main() {
       whenListen(bloc, states.stream, initialState: const NotificationsState());
       await pumpPage(tester, const NotificationsPage());
       await tester.pump();
+      // The first page loaded, as before anyone taps a chip.
+      states.add(
+        NotificationsState(
+          notifications: [unread],
+          paginatedNotifications: [unread],
+          maxNotifications: true,
+          notificationsListStatus: GenericStatus.success,
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
     }
 
     Future<void> refreshed(WidgetTester tester) async {
       states.add(
         const NotificationsState(notificationsRefreshController: true),
       );
+      await tester.pump();
+      // The list asks for its first page a frame later.
       await tester.pump();
     }
 

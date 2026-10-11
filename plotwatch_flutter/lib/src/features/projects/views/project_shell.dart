@@ -7,7 +7,7 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 /// The destinations inside a project, the same on every width (doc/05 §9
 /// DP-3). Money joins with M6. Members is reached from the Overview tab
 /// (DP-4).
-enum ProjectTab { overview, stages, activity }
+enum ProjectTab { overview, stages, money, activity }
 
 /// How the shell shows the tabs at a given size (doc/05 §9 DP-3, DP-8).
 enum ShellLayout { bottomBar, rail, sidebar }
@@ -62,6 +62,7 @@ class ProjectShell extends StatelessWidget {
     final section = segments.length > 2 ? segments[2] : null;
     return switch (section) {
       stagesPage => ProjectTab.stages,
+      moneyPage => ProjectTab.money,
       feedPage => ProjectTab.activity,
       _ when section == _updatesSection && !isFocused(location) =>
         ProjectTab.activity,
@@ -72,14 +73,20 @@ class ProjectShell extends StatelessWidget {
   static final _updatesSection = createUpdatePage.split('/').first;
 
   /// A page that takes the whole phone screen, without the bottom bar, so
-  /// its own button stays at the bottom: posting an update (doc/05 §9.6).
-  /// Never remembered as a tab's last page.
-  static bool isFocused(String location) =>
-      Uri.parse(location).path.endsWith('/$createUpdatePage');
+  /// its own button stays at the bottom: posting an update (doc/05 §9.6),
+  /// recording a release or an expense (doc/04f). Never remembered as a
+  /// tab's last page.
+  static bool isFocused(String location) {
+    final path = Uri.parse(location).path;
+    return path.endsWith('/$createUpdatePage') ||
+        path.endsWith('/$moneyPage/$createReleasePage') ||
+        path.endsWith('/$moneyPage/$createExpensePage');
+  }
 
   String _rootOf(ProjectTab tab) => switch (tab) {
     ProjectTab.overview => '/projects/$projectId',
     ProjectTab.stages => '/projects/$projectId/$stagesPage',
+    ProjectTab.money => '/projects/$projectId/$moneyPage',
     ProjectTab.activity => '/projects/$projectId/$feedPage',
   };
 
@@ -91,6 +98,7 @@ class ProjectShell extends StatelessWidget {
   static String label(ProjectTab tab, AppLocalizations l10n) => switch (tab) {
     ProjectTab.overview => l10n.overviewTab,
     ProjectTab.stages => l10n.stagesTitle,
+    ProjectTab.money => l10n.moneyTab,
     ProjectTab.activity => l10n.activityTitle,
   };
 
@@ -100,6 +108,8 @@ class ProjectShell extends StatelessWidget {
           selected ? Icons.dashboard_rounded : Icons.dashboard_outlined,
         ProjectTab.stages =>
           selected ? Icons.view_list_rounded : Icons.view_list_outlined,
+        ProjectTab.money =>
+          selected ? Icons.payments_rounded : Icons.payments_outlined,
         ProjectTab.activity => Icons.timeline_rounded,
       };
 
@@ -234,11 +244,15 @@ class _Sidebar extends StatelessWidget {
                   ),
                 ),
                 const Gap.horizontal(width: 10),
-                Text(
-                  l10n.appTitle,
-                  style: context.textTheme.titleLarge?.copyWith(
-                    color: customColors.primary,
-                    fontWeight: FontWeight.w800,
+                Flexible(
+                  child: Text(
+                    l10n.appTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      color: customColors.primary,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ],

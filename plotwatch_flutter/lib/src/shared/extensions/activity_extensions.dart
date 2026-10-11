@@ -154,11 +154,14 @@ extension ActivityEntryX on ActivityEntry {
               }),
       ActivityType.progressUpdatePosted =>
         target == null ? null : route(updateRouteName, {'updateId': '$target'}),
-      // The Money tab comes with doc/04f group D.
+      // The entry, from the Money tab (doc/04f).
       ActivityType.fundReleased ||
       ActivityType.releaseConfirmed ||
       ActivityType.expenseRecorded ||
-      ActivityType.entryReversed => route(projectRouteName),
+      ActivityType.entryReversed =>
+        target == null
+            ? route(moneyRouteName)
+            : route(ledgerEntryRouteName, {'entryId': '$target'}),
     };
   }
 }
@@ -247,14 +250,17 @@ extension AppNotificationX on AppNotification {
         ),
         _ => (name: feedRouteName, pathParameters: {'projectId': '$project'}),
       },
-      // The Money tab comes with doc/04f group D.
+      // The entry, from the Money tab (doc/04f).
       NotificationType.fundReleased ||
       NotificationType.releaseConfirmed ||
       NotificationType.expenseRecorded ||
-      NotificationType.entryReversed => (
-        name: projectRouteName,
-        pathParameters: {'projectId': '$project'},
-      ),
+      NotificationType.entryReversed => switch (payload?['entryId']) {
+        final String entryId => (
+          name: ledgerEntryRouteName,
+          pathParameters: {'projectId': '$project', 'entryId': entryId},
+        ),
+        _ => (name: moneyRouteName, pathParameters: {'projectId': '$project'}),
+      },
     };
   }
 }

@@ -2207,4 +2207,280 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kindMoney => 'Money';
+
+  @override
+  String get moneyTab => 'Money';
+
+  @override
+  String moneySubtitle(String project, String amount) {
+    return '$project · budget $amount';
+  }
+
+  @override
+  String get moneyReleased => 'Released';
+
+  @override
+  String moneyReleasedOf(String budget, String left) {
+    return 'of $budget budgeted · $left left to release';
+  }
+
+  @override
+  String get moneySpent => 'Spent';
+
+  @override
+  String get moneyWithReceipt => 'With a receipt';
+
+  @override
+  String get moneyUnaccounted => 'Unaccounted';
+
+  @override
+  String moneyUnaccountedAmount(String amount) {
+    return '$amount unaccounted';
+  }
+
+  @override
+  String moneyUnaccountedHint(String percent) {
+    return '$percent % of what was released has no receipt yet';
+  }
+
+  @override
+  String get moneyAllAccounted => 'Everything released is backed by receipts.';
+
+  @override
+  String get moneyByStage => 'By stage';
+
+  @override
+  String get moneyNotTied => 'Not tied to a stage';
+
+  @override
+  String moneyStageNothing(String budget) {
+    return 'Nothing released yet · budget $budget';
+  }
+
+  @override
+  String moneyStageLine(String released, String receipted) {
+    return '$released released · $receipted with a receipt';
+  }
+
+  @override
+  String get filterReleases => 'Releases';
+
+  @override
+  String get filterExpenses => 'Expenses';
+
+  @override
+  String get recordReleaseAction => 'Record a release';
+
+  @override
+  String get recordExpenseAction => 'Record an expense';
+
+  @override
+  String get ledgerEmpty => 'No money recorded yet.';
+
+  @override
+  String get tagReceipt => 'Receipt';
+
+  @override
+  String get tagNoReceipt => 'No receipt';
+
+  @override
+  String get tagNotConfirmed => 'Not confirmed yet';
+
+  @override
+  String get tagConfirmed => 'Confirmed';
+
+  @override
+  String get tagReversed => 'Reversed';
+
+  @override
+  String get tagReversal => 'Reversal';
+
+  @override
+  String get entryRelease => 'Release';
+
+  @override
+  String get entryExpense => 'Expense';
+
+  @override
+  String get entryReversal => 'Reversal';
+
+  @override
+  String get methodBankTransfer => 'Bank transfer';
+
+  @override
+  String get methodMobileMoney => 'Mobile money';
+
+  @override
+  String get methodCash => 'Cash';
+
+  @override
+  String get methodWithdrawn => 'Withdrawn by the site manager';
+
+  @override
+  String get methodOther => 'Other';
+
+  @override
+  String get categoryMaterials => 'Materials';
+
+  @override
+  String get categoryLabour => 'Labour';
+
+  @override
+  String get categoryTransport => 'Transport';
+
+  @override
+  String get categoryPermits => 'Permits';
+
+  @override
+  String get categoryEquipment => 'Equipment';
+
+  @override
+  String get categoryOther => 'Other';
+
+  @override
+  String get labelAmount => 'Amount';
+
+  @override
+  String get labelEntryDate => 'Date';
+
+  @override
+  String get labelMethod => 'How it was sent';
+
+  @override
+  String get labelReferenceOptional => 'Reference (optional)';
+
+  @override
+  String get labelNoteOptional => 'Note (optional)';
+
+  @override
+  String get labelWhatFor => 'What for';
+
+  @override
+  String get labelExpenseDescription => 'Description';
+
+  @override
+  String get labelVendorOptional => 'Shop or person paid (optional)';
+
+  @override
+  String get labelPaidTo => 'Paid to';
+
+  @override
+  String get labelReference => 'Reference';
+
+  @override
+  String get labelNote => 'Note';
+
+  @override
+  String get labelRecordedBy => 'Recorded by';
+
+  @override
+  String get labelConfirmation => 'Received';
+
+  @override
+  String get receiptTitle => 'Receipt';
+
+  @override
+  String get receiptTake => 'Take a photo of the receipt';
+
+  @override
+  String get receiptRetake => 'Retake';
+
+  @override
+  String get receiptRemove => 'Remove';
+
+  @override
+  String get receiptHint => 'Counts as spent with a receipt';
+
+  @override
+  String get receiptPhoneOnly =>
+      'Receipts are photographed with the Plotwatch app on the phone.';
+
+  @override
+  String get receiptShutter => 'Take the photo';
+
+  @override
+  String get receiptCameraTitle => 'Photo of the receipt';
+
+  @override
+  String get saveReleaseAction => 'Save the release';
+
+  @override
+  String get saveExpenseAction => 'Save the expense';
+
+  @override
+  String releaseFormSubtitle(String project) {
+    return '$project · the site manager is notified';
+  }
+
+  @override
+  String expenseFormSubtitle(String project) {
+    return '$project · the funders are notified';
+  }
+
+  @override
+  String get releaseSaved => 'Release recorded.';
+
+  @override
+  String get expenseSaved => 'Expense recorded.';
+
+  @override
+  String get confirmReceivedAction => 'Confirm received';
+
+  @override
+  String get releaseConfirmedMessage => 'Receipt confirmed.';
+
+  @override
+  String get reverseAction => 'Reverse this entry';
+
+  @override
+  String get reverseTitle => 'Reverse this entry?';
+
+  @override
+  String get reverseMessage =>
+      'The entry stays in the ledger, cancelled by a new one with the opposite amount. Record the right one afterwards.';
+
+  @override
+  String get reverseReasonLabel => 'Why';
+
+  @override
+  String get reverseReasonRequired => 'Say why';
+
+  @override
+  String get entryReversedMessage => 'Entry reversed.';
+
+  @override
+  String get entryNeverEdited =>
+      'Entries are never edited. A mistake is corrected by reversing the entry, with a reason, and recording it again.';
+
+  @override
+  String reversedBanner(String reason) {
+    return 'Reversed: $reason';
+  }
+
+  @override
+  String reversalOf(String reason) {
+    return 'Reverses an earlier entry: $reason';
+  }
+
+  @override
+  String get openOriginal => 'Open the original entry';
+
+  @override
+  String get errorLedgerLoad => 'The ledger couldn’t be loaded.';
+
+  @override
+  String get errorLedgerSave => 'The entry couldn’t be saved.';
+
+  @override
+  String get errorReceiptUpload =>
+      'The receipt photo couldn’t be sent. Try again.';
+
+  @override
+  String get validateAmountRequired => 'Enter an amount above zero';
+
+  @override
+  String get validateDescriptionRequired => 'Say what it was for';
+
+  @override
+  String get moneyEntries => 'Entries';
 }

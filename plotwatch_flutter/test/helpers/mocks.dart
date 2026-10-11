@@ -64,3 +64,11 @@ class MockFeedBloc extends MockBloc<FeedEvent, FeedState> implements FeedBloc {}
 class MockNotificationsBloc
     extends MockBloc<NotificationsEvent, NotificationsState>
     implements NotificationsBloc {}
+
+// The ledger (doc/04f).
+class MockLedgerApiProvider extends Mock implements LedgerApiProvider {}
+
+class MockLedgerRepository extends Mock implements LedgerRepository {}
+
+class MockMoneyBloc extends MockBloc<MoneyEvent, MoneyState>
+    implements MoneyBloc {}

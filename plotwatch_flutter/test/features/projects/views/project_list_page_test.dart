@@ -98,7 +98,14 @@ void main() {
       expect(find.textContaining(l10n.projectRoleOwner), findsOneWidget);
       expect(find.textContaining(l10n.projectRoleSiteManager), findsOneWidget);
       expect(find.text(l10n.projectStatusDraft), findsOneWidget);
-      expect(find.text(l10n.projectStatusActive), findsOneWidget);
+      // On the card (the status chips say Active too, doc/05 §9.5).
+      expect(
+        find.descendant(
+          of: find.byType(ProjectCard),
+          matching: find.text(l10n.projectStatusActive),
+        ),
+        findsOneWidget,
+      );
     },
   );
 
@@ -142,9 +149,10 @@ void main() {
       states.close();
     });
 
-    Future<void> pumpLive(WidgetTester tester) {
+    /// The page with its first page loaded, as before anyone taps a chip.
+    Future<void> pumpLive(WidgetTester tester) async {
       whenListen(bloc, states.stream, initialState: const ProjectListState());
-      return tester.pumpApp(
+      await tester.pumpApp(
         MultiBlocProvider(
           providers: [
             BlocProvider<ProjectListBloc>.value(value: bloc),
@@ -154,11 +162,16 @@ void main() {
           child: const ProjectListPage(),
         ),
       );
+      states.add(loaded([testSummary(id: 1, name: 'House in Bafoussam')]));
+      await tester.pump();
+      await tester.pump();
     }
 
     /// What the BLoC does on refresh: the list starts again from page 0.
     Future<void> refreshed(WidgetTester tester) async {
       states.add(const ProjectListState(projectsRefreshController: true));
+      await tester.pump();
+      // The list asks for its first page a frame later.
       await tester.pump();
     }
 

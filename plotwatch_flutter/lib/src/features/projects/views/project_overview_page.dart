@@ -419,6 +419,8 @@ class _OverviewBody extends StatelessWidget {
               overview.myRole == ProjectRole.owner && !project.status.isClosed,
           onTap: () => context.goNamed(membersRouteName, pathParameters: path),
         ),
+        // Released, with a receipt, unaccounted (doc/04f M6-11).
+        MoneyCard(projectId: projectId, currencyCode: project.currencyCode),
         if (web)
           _StageTable(
             projectId: projectId,

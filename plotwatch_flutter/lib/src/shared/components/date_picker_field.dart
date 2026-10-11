@@ -11,6 +11,7 @@ class DatePickerField extends StatefulWidget {
     this.radius = 10,
     this.format,
     this.withTime = false,
+    this.lastDate,
   });
 
   final String labelText;
@@ -20,6 +21,10 @@ class DatePickerField extends StatefulWidget {
   final double radius;
   final String? format;
   final bool withTime;
+
+  /// The latest day that can be picked, e.g. today for what already
+  /// happened (doc/04f).
+  final DateTime? lastDate;
 
   @override
   State<DatePickerField> createState() => _DatePickerFieldState();
@@ -70,7 +75,7 @@ class _DatePickerFieldState extends State<DatePickerField> {
       context: context,
       initialDate: initialDate ?? DateTime.now(),
       firstDate: DateTime(1900),
-      lastDate: DateTime(2101),
+      lastDate: widget.lastDate ?? DateTime(2101),
     );
     if (pickedDate == null) return initialDate;
 

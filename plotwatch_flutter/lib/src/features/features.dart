@@ -14,3 +14,4 @@ export 'evidence/evidence.dart';
 export 'feed/feed.dart';
 export 'notifications/notifications.dart';
 export 'updates/updates.dart';
+export 'money/money.dart';

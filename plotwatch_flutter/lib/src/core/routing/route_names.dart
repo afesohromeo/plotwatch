@@ -23,3 +23,9 @@ const String feedRouteName = 'feed';
 const String notificationsRouteName = 'notifications';
 const String createUpdateRouteName = 'new-update';
 const String updateRouteName = 'update';
+
+// The ledger (doc/04f).
+const String moneyRouteName = 'money';
+const String createReleaseRouteName = 'new-release';
+const String createExpenseRouteName = 'new-expense';
+const String ledgerEntryRouteName = 'ledger-entry';

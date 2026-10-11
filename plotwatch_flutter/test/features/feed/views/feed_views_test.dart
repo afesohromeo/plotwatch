@@ -231,10 +231,16 @@ void main() {
         ),
       );
       await tester.pump();
+      // The first page loaded, as before anyone taps a chip.
+      states.add(loaded(events));
+      await tester.pump();
+      await tester.pump();
     }
 
     Future<void> refreshed(WidgetTester tester) async {
       states.add(const FeedState(activityRefreshController: true));
+      await tester.pump();
+      // The list asks for its first page a frame later.
       await tester.pump();
     }
 
@@ -265,6 +271,9 @@ void main() {
     ) async {
       await pumpFeed(tester);
 
+      // The chips row scrolls sideways: the picker is at its end.
+      await tester.ensureVisible(find.byKey(const Key(FeedPage.stagePickerPrefix)));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key(FeedPage.stagePickerPrefix)));
       await tester.pumpAndSettle();
       expect(find.text('Walls'), findsOneWidget);

@@ -30,7 +30,11 @@ class MoneyField extends StatelessWidget {
       ),
       suffixIcon: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-        child: Text(currencyCode, style: context.textTheme.bodyMedium),
+        // The symbol, as amounts are written: FCFA (decision M3-9, 2026-10-11).
+        child: Text(
+          currencySymbol(currencyCode),
+          style: context.textTheme.bodyMedium,
+        ),
       ),
       validator: (value) {
         if (value == null || value.trim().isEmpty) return null;

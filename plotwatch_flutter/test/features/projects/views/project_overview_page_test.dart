@@ -16,6 +16,7 @@ void main() {
   late AppLocalizations l10n;
   late MockProjectOverviewBloc bloc;
   late MockFeedBloc feedBloc;
+  late MockMoneyBloc moneyBloc;
 
   setUpAll(() {
     l10n = setUpTestLocalization();
@@ -25,6 +26,9 @@ void main() {
     bloc = MockProjectOverviewBloc();
     feedBloc = MockFeedBloc();
     when(() => feedBloc.state).thenReturn(const FeedState());
+    // The Money card (doc/04f M6-11).
+    moneyBloc = MockMoneyBloc();
+    when(() => moneyBloc.state).thenReturn(const MoneyState());
   });
 
   Future<void> pumpWith(WidgetTester tester, ProjectOverviewState state) {
@@ -34,6 +38,7 @@ void main() {
         providers: [
           BlocProvider<ProjectOverviewBloc>.value(value: bloc),
           BlocProvider<FeedBloc>.value(value: feedBloc),
+          BlocProvider<MoneyBloc>.value(value: moneyBloc),
         ],
         child: const ProjectOverviewPage(projectId: 1),
       ),

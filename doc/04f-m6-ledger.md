@@ -68,3 +68,8 @@
 - `flutter gen-l10n`
 - `dart format .`
 - `dart analyze`
+
+## Changes after the developer's check (2026-10-12)
+- The labels on the teal summary card (Released, Spent, With a receipt) are light teal, as in the mockup; they had the accent-on-dark colour.
+- **Phone:** under the summary, a switch **Entries · By stage** (the §9.4 pattern), so a long plan doesn't push the entries down. Entries is shown first, with its chips.
+- **Phone and web:** tapping a stage's line shows that stage's entries.

@@ -12,3 +12,4 @@ export 'evidence/evidence_api_provider.dart';
 export 'activity/activity_api_provider.dart';
 export 'notification/notification_api_provider.dart';
 export 'update/update_api_provider.dart';
+export 'ledger/ledger_api_provider.dart';

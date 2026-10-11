@@ -33,7 +33,8 @@ void main() {
   testWidgets('Given the field then it shows the currency', (tester) async {
     await pump(tester, TextEditingController());
 
-    expect(find.text('XAF'), findsOneWidget);
+    // The symbol, as amounts are written (M3-9, 2026-10-11).
+    expect(find.text('FCFA'), findsOneWidget);
   });
 
   testWidgets('Given an amount when the form is checked then it passes', (

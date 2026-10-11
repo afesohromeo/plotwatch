@@ -48,3 +48,10 @@ const String feedPage = 'feed';
 const String notificationsPage = 'notifications';
 const String createUpdatePage = 'updates/new';
 const String updatePage = 'updates/:updateId';
+
+// The ledger (doc/04f): the Money tab, under the project page; the forms
+// and the entries under it.
+const String moneyPage = 'money';
+const String createReleasePage = 'release/new';
+const String createExpensePage = 'expense/new';
+const String ledgerEntryPage = ':entryId';
