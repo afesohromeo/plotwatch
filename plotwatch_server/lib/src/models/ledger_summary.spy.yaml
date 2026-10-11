@@ -1,0 +1,10 @@
+### A project's money at a glance (LED-04, LED-05; doc/04f M6-7, M6-8).
+class: LedgerSummary
+fields:
+  total: LedgerLine
+  ### In plan order.
+  stages: List<LedgerLine>
+  ### The entries tied to no stage, when there are any.
+  unassigned: LedgerLine?
+  ### Unaccounted above 20 % of released (LED-05).
+  unaccountedAlert: bool

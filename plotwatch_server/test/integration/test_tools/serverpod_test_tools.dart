@@ -23,9 +23,16 @@ import 'package:plotwatch_server/src/generated/evidence_commit.dart'
     as _idi5nd8p;
 import 'package:plotwatch_server/src/generated/evidence_commit_result.dart'
     as _iwlw3lnk;
+import 'package:plotwatch_server/src/generated/expense_draft.dart' as _iw3qt1md;
 import 'package:plotwatch_server/src/generated/invitation.dart' as _ikzhqv9e;
 import 'package:plotwatch_server/src/generated/invitation_preview.dart'
     as _iwaf49z0;
+import 'package:plotwatch_server/src/generated/ledger_entry.dart' as _in8cpuy1;
+import 'package:plotwatch_server/src/generated/ledger_entry_kind.dart'
+    as _ity29vjs;
+import 'package:plotwatch_server/src/generated/ledger_page.dart' as _id9r9417;
+import 'package:plotwatch_server/src/generated/ledger_summary.dart'
+    as _ivsqs6la;
 import 'package:plotwatch_server/src/generated/media_variant.dart' as _i70qn4qh;
 import 'package:plotwatch_server/src/generated/member_view.dart' as _ig1yf1bz;
 import 'package:plotwatch_server/src/generated/my_profile.dart' as _ilr78g9s;
@@ -48,6 +55,9 @@ import 'package:plotwatch_server/src/generated/project_status.dart'
     as _ipfaavrx;
 import 'package:plotwatch_server/src/generated/project_summary_page.dart'
     as _it5xgdwy;
+import 'package:plotwatch_server/src/generated/receipt_upload.dart'
+    as _ik9j05al;
+import 'package:plotwatch_server/src/generated/release_draft.dart' as _ienywonl;
 import 'package:plotwatch_server/src/generated/review_decision.dart'
     as _iykfo9bc;
 import 'package:plotwatch_server/src/generated/site.dart' as _iiew30c8;
@@ -202,6 +212,8 @@ class TestEndpoints {
 
   late final _JwtRefreshEndpoint jwtRefresh;
 
+  late final _LedgerEndpoint ledger;
+
   late final _MembershipEndpoint membership;
 
   late final _NotificationEndpoint notification;
@@ -237,6 +249,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     jwtRefresh = _JwtRefreshEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    ledger = _LedgerEndpoint(
       endpoints,
       serializationManager,
     );
@@ -969,6 +985,332 @@ class _JwtRefreshEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<_iacs.AuthSuccess>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _LedgerEndpoint {
+  _LedgerEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<_in8cpuy1.LedgerEntry> recordRelease(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    _ienywonl.ReleaseDraft draft,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'ledger',
+            method: 'recordRelease',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'ledger',
+          methodName: 'recordRelease',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'draft': draft,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_in8cpuy1.LedgerEntry>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_in8cpuy1.LedgerEntry> recordExpense(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    _iw3qt1md.ExpenseDraft draft,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'ledger',
+            method: 'recordExpense',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'ledger',
+          methodName: 'recordExpense',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'draft': draft,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_in8cpuy1.LedgerEntry>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ik9j05al.ReceiptUpload> receiptUpload(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'ledger',
+            method: 'receiptUpload',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'ledger',
+          methodName: 'receiptUpload',
+          parameters: _ist.testObjectToJson({'projectId': projectId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ik9j05al.ReceiptUpload>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_in8cpuy1.LedgerEntry> confirmRelease(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    int entryId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'ledger',
+            method: 'confirmRelease',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'ledger',
+          methodName: 'confirmRelease',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'entryId': entryId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_in8cpuy1.LedgerEntry>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_in8cpuy1.LedgerEntry> reverse(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    int entryId,
+    String reason,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'ledger',
+            method: 'reverse',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'ledger',
+          methodName: 'reverse',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'entryId': entryId,
+            'reason': reason,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_in8cpuy1.LedgerEntry>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_id9r9417.LedgerPage> list(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId, {
+    int? beforeId,
+    int? pageSize,
+    _ity29vjs.LedgerEntryKind? kind,
+    int? stageId,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'ledger',
+            method: 'list',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'ledger',
+          methodName: 'list',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'beforeId': beforeId,
+            'pageSize': pageSize,
+            'kind': kind,
+            'stageId': stageId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_id9r9417.LedgerPage>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_in8cpuy1.LedgerEntry> get(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    int entryId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'ledger',
+            method: 'get',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'ledger',
+          methodName: 'get',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'entryId': entryId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_in8cpuy1.LedgerEntry>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ivsqs6la.LedgerSummary> summary(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'ledger',
+            method: 'summary',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'ledger',
+          methodName: 'summary',
+          parameters: _ist.testObjectToJson({'projectId': projectId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ivsqs6la.LedgerSummary>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_idt.ByteData> receipt(
+    _ist.TestSessionBuilder sessionBuilder,
+    int projectId,
+    int entryId,
+  ) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'ledger',
+            method: 'receipt',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'ledger',
+          methodName: 'receipt',
+          parameters: _ist.testObjectToJson({
+            'projectId': projectId,
+            'entryId': entryId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_idt.ByteData>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

@@ -21,9 +21,15 @@ import 'package:plotwatch_client/src/protocol/evidence_commit.dart'
     as _imtsa3z6;
 import 'package:plotwatch_client/src/protocol/evidence_commit_result.dart'
     as _ildz1yta;
+import 'package:plotwatch_client/src/protocol/expense_draft.dart' as _ivv0e3gy;
 import 'package:plotwatch_client/src/protocol/invitation.dart' as _idw8kw5i;
 import 'package:plotwatch_client/src/protocol/invitation_preview.dart'
     as _idbqcfcc;
+import 'package:plotwatch_client/src/protocol/ledger_entry.dart' as _i4zupn11;
+import 'package:plotwatch_client/src/protocol/ledger_entry_kind.dart'
+    as _iw1e0zf8;
+import 'package:plotwatch_client/src/protocol/ledger_page.dart' as _id2c6vu0;
+import 'package:plotwatch_client/src/protocol/ledger_summary.dart' as _i4rx0bei;
 import 'package:plotwatch_client/src/protocol/media_variant.dart' as _ihqw92ih;
 import 'package:plotwatch_client/src/protocol/member_view.dart' as _ifqht5qj;
 import 'package:plotwatch_client/src/protocol/my_profile.dart' as _iclzzlcy;
@@ -44,6 +50,8 @@ import 'package:plotwatch_client/src/protocol/project_sort.dart' as _i50ipmum;
 import 'package:plotwatch_client/src/protocol/project_status.dart' as _id1x6c7u;
 import 'package:plotwatch_client/src/protocol/project_summary_page.dart'
     as _i5ea8tcf;
+import 'package:plotwatch_client/src/protocol/receipt_upload.dart' as _il3fj2m5;
+import 'package:plotwatch_client/src/protocol/release_draft.dart' as _iq2pv3bc;
 import 'package:plotwatch_client/src/protocol/review_decision.dart'
     as _ilrnd6d6;
 import 'package:plotwatch_client/src/protocol/site.dart' as _iw3fvswq;
@@ -460,6 +468,130 @@ class EndpointJwtRefresh extends _iacc.EndpointRefreshJwtTokens {
         {'refreshToken': refreshToken},
         authenticated: false,
       );
+}
+
+/// A project's ledger (LED-01–04, 06; doc/04f). Thin: sign-in → permission
+/// → validate → one service call (`_standards/14` §4.2). Writing needs an
+/// open project (doc/04e C-1).
+/// {@category Endpoint}
+class EndpointLedger extends _isc.EndpointRef {
+  EndpointLedger(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'ledger';
+
+  /// By an approver: the owner, or a co-funder allowed to approve.
+  _ida.Future<_i4zupn11.LedgerEntry> recordRelease(
+    int projectId,
+    _iq2pv3bc.ReleaseDraft draft,
+  ) => caller.callServerEndpoint<_i4zupn11.LedgerEntry>(
+    'ledger',
+    'recordRelease',
+    {
+      'projectId': projectId,
+      'draft': draft,
+    },
+  );
+
+  /// By the site manager, after uploading the receipt photo if there is one.
+  _ida.Future<_i4zupn11.LedgerEntry> recordExpense(
+    int projectId,
+    _ivv0e3gy.ExpenseDraft draft,
+  ) => caller.callServerEndpoint<_i4zupn11.LedgerEntry>(
+    'ledger',
+    'recordExpense',
+    {
+      'projectId': projectId,
+      'draft': draft,
+    },
+  );
+
+  _ida.Future<_il3fj2m5.ReceiptUpload> receiptUpload(int projectId) =>
+      caller.callServerEndpoint<_il3fj2m5.ReceiptUpload>(
+        'ledger',
+        'receiptUpload',
+        {'projectId': projectId},
+      );
+
+  /// The site manager confirms receiving a release (LED-02).
+  _ida.Future<_i4zupn11.LedgerEntry> confirmRelease(
+    int projectId,
+    int entryId,
+  ) => caller.callServerEndpoint<_i4zupn11.LedgerEntry>(
+    'ledger',
+    'confirmRelease',
+    {
+      'projectId': projectId,
+      'entryId': entryId,
+    },
+  );
+
+  /// Its recorder corrects an entry (LED-06), still allowed to record that
+  /// kind.
+  _ida.Future<_i4zupn11.LedgerEntry> reverse(
+    int projectId,
+    int entryId,
+    String reason,
+  ) => caller.callServerEndpoint<_i4zupn11.LedgerEntry>(
+    'ledger',
+    'reverse',
+    {
+      'projectId': projectId,
+      'entryId': entryId,
+      'reason': reason,
+    },
+  );
+
+  /// Newest first, older than [beforeId], only [kind] and [stageId]'s when
+  /// given. Nullable instead of default values: see `ProjectEndpoint.list`.
+  _ida.Future<_id2c6vu0.LedgerPage> list(
+    int projectId, {
+    int? beforeId,
+    int? pageSize,
+    _iw1e0zf8.LedgerEntryKind? kind,
+    int? stageId,
+  }) => caller.callServerEndpoint<_id2c6vu0.LedgerPage>(
+    'ledger',
+    'list',
+    {
+      'projectId': projectId,
+      'beforeId': beforeId,
+      'pageSize': pageSize,
+      'kind': kind,
+      'stageId': stageId,
+    },
+  );
+
+  _ida.Future<_i4zupn11.LedgerEntry> get(
+    int projectId,
+    int entryId,
+  ) => caller.callServerEndpoint<_i4zupn11.LedgerEntry>(
+    'ledger',
+    'get',
+    {
+      'projectId': projectId,
+      'entryId': entryId,
+    },
+  );
+
+  _ida.Future<_i4rx0bei.LedgerSummary> summary(int projectId) =>
+      caller.callServerEndpoint<_i4rx0bei.LedgerSummary>(
+        'ledger',
+        'summary',
+        {'projectId': projectId},
+      );
+
+  _ida.Future<_idt.ByteData> receipt(
+    int projectId,
+    int entryId,
+  ) => caller.callServerEndpoint<_idt.ByteData>(
+    'ledger',
+    'receipt',
+    {
+      'projectId': projectId,
+      'entryId': entryId,
+    },
+  );
 }
 
 /// Invitations and members (MEMB-01–05, 08). Thin: sign-in → permission →
@@ -1053,6 +1185,7 @@ class Client extends _isc.ServerpodClientShared {
     emailIdp = EndpointEmailIdp(this);
     evidence = EndpointEvidence(this);
     jwtRefresh = EndpointJwtRefresh(this);
+    ledger = EndpointLedger(this);
     membership = EndpointMembership(this);
     notification = EndpointNotification(this);
     profile = EndpointProfile(this);
@@ -1070,6 +1203,8 @@ class Client extends _isc.ServerpodClientShared {
   late final EndpointEvidence evidence;
 
   late final EndpointJwtRefresh jwtRefresh;
+
+  late final EndpointLedger ledger;
 
   late final EndpointMembership membership;
 
@@ -1093,6 +1228,7 @@ class Client extends _isc.ServerpodClientShared {
     'emailIdp': emailIdp,
     'evidence': evidence,
     'jwtRefresh': jwtRefresh,
+    'ledger': ledger,
     'membership': membership,
     'notification': notification,
     'profile': profile,

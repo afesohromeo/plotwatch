@@ -1,0 +1,4 @@
+### A page of a project's ledger, newest first (`_standards/14` §3.3).
+class: LedgerPage
+fields:
+  items: List<LedgerEntry>

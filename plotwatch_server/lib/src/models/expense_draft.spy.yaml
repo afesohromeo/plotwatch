@@ -1,0 +1,13 @@
+### What the site manager enters for an expense (LED-03). The receipt was
+### uploaded first, to [receiptPath] (doc/04f M6-5 a). Immutable.
+class: ExpenseDraft
+immutable: true
+fields:
+  amountMinor: int
+  occurredOn: DateTime
+  category: ExpenseCategory
+  description: String
+  vendor: String?
+  stageId: int?
+  receiptPath: String?
+  receiptSha256: String?

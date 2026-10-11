@@ -13,6 +13,9 @@
 import 'package:plotwatch_server/src/generated/activity_type.dart' as _idpi4lil;
 import 'package:plotwatch_server/src/generated/evidence_commit.dart'
     as _idi5nd8p;
+import 'package:plotwatch_server/src/generated/expense_draft.dart' as _iw3qt1md;
+import 'package:plotwatch_server/src/generated/ledger_entry_kind.dart'
+    as _ity29vjs;
 import 'package:plotwatch_server/src/generated/media_variant.dart' as _i70qn4qh;
 import 'package:plotwatch_server/src/generated/progress_update_draft.dart'
     as _ie8srvsh;
@@ -22,6 +25,7 @@ import 'package:plotwatch_server/src/generated/project_role.dart' as _izsiizob;
 import 'package:plotwatch_server/src/generated/project_sort.dart' as _ickpqaa4;
 import 'package:plotwatch_server/src/generated/project_status.dart'
     as _ipfaavrx;
+import 'package:plotwatch_server/src/generated/release_draft.dart' as _ienywonl;
 import 'package:plotwatch_server/src/generated/review_decision.dart'
     as _iykfo9bc;
 import 'package:plotwatch_server/src/generated/stage_draft.dart' as _ieegu8zj;
@@ -34,6 +38,7 @@ import '../endpoints/activity_endpoint.dart' as _ijhtbkuk;
 import '../endpoints/email_idp_endpoint.dart' as _ilutrrxn;
 import '../endpoints/evidence_endpoint.dart' as _i2cvsm7u;
 import '../endpoints/jwt_refresh_endpoint.dart' as _in48dm4x;
+import '../endpoints/ledger_endpoint.dart' as _icwojbcf;
 import '../endpoints/membership_endpoint.dart' as _it8meaj6;
 import '../endpoints/notification_endpoint.dart' as _ihb11yhk;
 import '../endpoints/profile_endpoint.dart' as _i2cx2pww;
@@ -68,6 +73,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'jwtRefresh',
+          null,
+        ),
+      'ledger': _icwojbcf.LedgerEndpoint()
+        ..initialize(
+          server,
+          'ledger',
           null,
         ),
       'membership': _it8meaj6.MembershipEndpoint()
@@ -622,6 +633,247 @@ class Endpoints extends _is.EndpointDispatch {
                         session,
                         refreshToken: params['refreshToken'],
                       ),
+        ),
+      },
+    );
+    connectors['ledger'] = _is.EndpointConnector(
+      name: 'ledger',
+      endpoint: endpoints['ledger']!,
+      methodConnectors: {
+        'recordRelease': _is.MethodConnector(
+          name: 'recordRelease',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'draft': _is.ParameterDescription(
+              name: 'draft',
+              type: _is.getType<_ienywonl.ReleaseDraft>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['ledger'] as _icwojbcf.LedgerEndpoint)
+                  .recordRelease(
+                    session,
+                    params['projectId'],
+                    params['draft'],
+                  ),
+        ),
+        'recordExpense': _is.MethodConnector(
+          name: 'recordExpense',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'draft': _is.ParameterDescription(
+              name: 'draft',
+              type: _is.getType<_iw3qt1md.ExpenseDraft>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['ledger'] as _icwojbcf.LedgerEndpoint)
+                  .recordExpense(
+                    session,
+                    params['projectId'],
+                    params['draft'],
+                  ),
+        ),
+        'receiptUpload': _is.MethodConnector(
+          name: 'receiptUpload',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['ledger'] as _icwojbcf.LedgerEndpoint)
+                  .receiptUpload(
+                    session,
+                    params['projectId'],
+                  ),
+        ),
+        'confirmRelease': _is.MethodConnector(
+          name: 'confirmRelease',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'entryId': _is.ParameterDescription(
+              name: 'entryId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['ledger'] as _icwojbcf.LedgerEndpoint)
+                  .confirmRelease(
+                    session,
+                    params['projectId'],
+                    params['entryId'],
+                  ),
+        ),
+        'reverse': _is.MethodConnector(
+          name: 'reverse',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'entryId': _is.ParameterDescription(
+              name: 'entryId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'reason': _is.ParameterDescription(
+              name: 'reason',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['ledger'] as _icwojbcf.LedgerEndpoint).reverse(
+                    session,
+                    params['projectId'],
+                    params['entryId'],
+                    params['reason'],
+                  ),
+        ),
+        'list': _is.MethodConnector(
+          name: 'list',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'beforeId': _is.ParameterDescription(
+              name: 'beforeId',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
+            'pageSize': _is.ParameterDescription(
+              name: 'pageSize',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
+            'kind': _is.ParameterDescription(
+              name: 'kind',
+              type: _is.getType<_ity29vjs.LedgerEntryKind?>(),
+              nullable: true,
+            ),
+            'stageId': _is.ParameterDescription(
+              name: 'stageId',
+              type: _is.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['ledger'] as _icwojbcf.LedgerEndpoint).list(
+                session,
+                params['projectId'],
+                beforeId: params['beforeId'],
+                pageSize: params['pageSize'],
+                kind: params['kind'],
+                stageId: params['stageId'],
+              ),
+        ),
+        'get': _is.MethodConnector(
+          name: 'get',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'entryId': _is.ParameterDescription(
+              name: 'entryId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['ledger'] as _icwojbcf.LedgerEndpoint).get(
+                session,
+                params['projectId'],
+                params['entryId'],
+              ),
+        ),
+        'summary': _is.MethodConnector(
+          name: 'summary',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['ledger'] as _icwojbcf.LedgerEndpoint).summary(
+                    session,
+                    params['projectId'],
+                  ),
+        ),
+        'receipt': _is.MethodConnector(
+          name: 'receipt',
+          params: {
+            'projectId': _is.ParameterDescription(
+              name: 'projectId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+            'entryId': _is.ParameterDescription(
+              name: 'entryId',
+              type: _is.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['ledger'] as _icwojbcf.LedgerEndpoint).receipt(
+                    session,
+                    params['projectId'],
+                    params['entryId'],
+                  ),
         ),
       },
     );

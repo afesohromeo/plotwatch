@@ -8,3 +8,8 @@ values:
   - memberJoined
   # A progress update, to the owner and co-funders (doc/04e M5-F1).
   - progressUpdatePosted
+  # The ledger (doc/04f M6-9)
+  - fundReleased
+  - releaseConfirmed
+  - expenseRecorded
+  - entryReversed

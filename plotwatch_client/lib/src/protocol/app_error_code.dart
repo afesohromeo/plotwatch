@@ -73,6 +73,11 @@ enum AppErrorCode implements _isc.SerializableModel {
   notificationNotFound,
   invalidProgressUpdate,
   updateNotFound,
+  invalidLedgerEntry,
+  ledgerEntryNotFound,
+  alreadyReversed,
+  alreadyConfirmed,
+  notEntryAuthor,
   textTooLong,
   authInvalidCredentials,
   authTooManyAttempts,
@@ -192,6 +197,16 @@ enum AppErrorCode implements _isc.SerializableModel {
         return AppErrorCode.invalidProgressUpdate;
       case 'updateNotFound':
         return AppErrorCode.updateNotFound;
+      case 'invalidLedgerEntry':
+        return AppErrorCode.invalidLedgerEntry;
+      case 'ledgerEntryNotFound':
+        return AppErrorCode.ledgerEntryNotFound;
+      case 'alreadyReversed':
+        return AppErrorCode.alreadyReversed;
+      case 'alreadyConfirmed':
+        return AppErrorCode.alreadyConfirmed;
+      case 'notEntryAuthor':
+        return AppErrorCode.notEntryAuthor;
       case 'textTooLong':
         return AppErrorCode.textTooLong;
       case 'authInvalidCredentials':

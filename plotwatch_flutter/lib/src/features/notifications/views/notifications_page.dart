@@ -275,6 +275,11 @@ class _NotificationTile extends StatelessWidget {
                   Icons.person_add_alt_1_outlined,
                 NotificationType.progressUpdatePosted =>
                   Icons.campaign_outlined,
+                NotificationType.fundReleased ||
+                NotificationType.releaseConfirmed => Icons.payments_outlined,
+                NotificationType.expenseRecorded =>
+                  Icons.receipt_long_outlined,
+                NotificationType.entryReversed => Icons.undo_rounded,
               },
               color: switch (notification.type) {
                 NotificationType.stageSubmitted => customColors.accent,

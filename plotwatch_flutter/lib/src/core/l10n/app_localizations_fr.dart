@@ -2174,4 +2174,77 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get reviewShort => 'Examiner';
+
+  @override
+  String get errorInvalidLedgerEntry =>
+      'Vérifiez l’écriture : un montant supérieur à zéro, une date qui n’est pas dans le futur et les informations requises.';
+
+  @override
+  String get errorLedgerEntryNotFound =>
+      'Cette écriture n’existe pas dans ce projet.';
+
+  @override
+  String get errorAlreadyReversed => 'Cette écriture a déjà été annulée.';
+
+  @override
+  String get errorAlreadyConfirmed => 'Ce versement a déjà été confirmé.';
+
+  @override
+  String get errorNotEntryAuthor =>
+      'Seule la personne qui a saisi cette écriture peut l’annuler.';
+
+  @override
+  String activityFundReleased(String actor, String amount) {
+    return '$actor a enregistré un versement de $amount';
+  }
+
+  @override
+  String activityReleaseConfirmed(String actor, String amount) {
+    return '$actor a confirmé avoir reçu $amount';
+  }
+
+  @override
+  String activityExpenseRecorded(String actor, String amount) {
+    return '$actor a enregistré une dépense de $amount';
+  }
+
+  @override
+  String activityEntryReversed(String actor, String amount) {
+    return '$actor a annulé une écriture de $amount';
+  }
+
+  @override
+  String notificationFundReleased(String actor, String amount, String project) {
+    return '$actor a enregistré un versement de $amount pour $project';
+  }
+
+  @override
+  String notificationReleaseConfirmed(
+    String actor,
+    String amount,
+    String project,
+  ) {
+    return '$actor a confirmé avoir reçu $amount ($project)';
+  }
+
+  @override
+  String notificationExpenseRecorded(
+    String actor,
+    String amount,
+    String project,
+  ) {
+    return '$actor a enregistré une dépense de $amount sur $project';
+  }
+
+  @override
+  String notificationEntryReversed(
+    String actor,
+    String amount,
+    String project,
+  ) {
+    return '$actor a annulé une écriture de $amount sur $project';
+  }
+
+  @override
+  String get kindMoney => 'Argent';
 }

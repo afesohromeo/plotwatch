@@ -1,0 +1,11 @@
+### How a fund release reached the site (LED-01, doc/04f M6-2).
+enum: ReleaseMethod
+serialized: byName
+values:
+  - bankTransfer
+  - mobileMoney
+  - cash
+  # Taken from the funder's account by the site manager, as agreed
+  # (doc/04f, approval of 2026-10-11).
+  - withdrawnBySiteManager
+  - other

@@ -1,0 +1,15 @@
+### The money of one stage, of the entries without a stage, or of the whole
+### project (LED-04, doc/04f M6-7).
+class: LedgerLine
+fields:
+  ### None for the project's total and for the entries without a stage.
+  stageId: int?
+  stageName: String?
+  budgetMinor: int
+  releasedMinor: int
+  spentMinor: int
+  spentWithReceiptMinor: int
+  ### Released − spent with receipt.
+  unaccountedMinor: int
+  ### Budget − released.
+  remainingMinor: int

@@ -38,9 +38,16 @@ import 'evidence.dart' as _iptmmm0p;
 import 'evidence_commit.dart' as _it2d46ly;
 import 'evidence_commit_result.dart' as _i6593me7;
 import 'evidence_status.dart' as _itwc15qq;
+import 'expense_category.dart' as _iy8yxm42;
+import 'expense_draft.dart' as _ijjikqyi;
 import 'invitation.dart' as _ix00wubs;
 import 'invitation_preview.dart' as _i8l83u67;
 import 'invitation_status.dart' as _ifbgrtog;
+import 'ledger_entry.dart' as _ivha9tke;
+import 'ledger_entry_kind.dart' as _i2lcu4mb;
+import 'ledger_line.dart' as _ixc57geg;
+import 'ledger_page.dart' as _iu7f220v;
+import 'ledger_summary.dart' as _i07k404l;
 import 'live_signal.dart' as _ipp2ty4v;
 import 'media_variant.dart' as _ibclxgv9;
 import 'member_status.dart' as _iolegqnm;
@@ -61,6 +68,9 @@ import 'project_status.dart' as _iqsxbscs;
 import 'project_summary.dart' as _ivxocntb;
 import 'project_summary_page.dart' as _i4o32k29;
 import 'project_type.dart' as _irluonl0;
+import 'receipt_upload.dart' as _i3tdodt8;
+import 'release_draft.dart' as _i5o2befp;
+import 'release_method.dart' as _izc06igq;
 import 'review_decision.dart' as _idrjy6ic;
 import 'site.dart' as _iz8v5x4v;
 import 'site_proposal.dart' as _ira79kry;
@@ -91,9 +101,16 @@ export 'evidence.dart';
 export 'evidence_commit.dart';
 export 'evidence_commit_result.dart';
 export 'evidence_status.dart';
+export 'expense_category.dart';
+export 'expense_draft.dart';
 export 'invitation.dart';
 export 'invitation_preview.dart';
 export 'invitation_status.dart';
+export 'ledger_entry.dart';
+export 'ledger_entry_kind.dart';
+export 'ledger_line.dart';
+export 'ledger_page.dart';
+export 'ledger_summary.dart';
 export 'live_signal.dart';
 export 'media_variant.dart';
 export 'member_status.dart';
@@ -114,6 +131,9 @@ export 'project_status.dart';
 export 'project_summary.dart';
 export 'project_summary_page.dart';
 export 'project_type.dart';
+export 'receipt_upload.dart';
+export 'release_draft.dart';
+export 'release_method.dart';
 export 'review_decision.dart';
 export 'site.dart';
 export 'site_proposal.dart';
@@ -764,6 +784,184 @@ class Protocol extends _is.DatabaseSerializationManager {
           ],
           type: 'btree',
           isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _isp.TableDefinition(
+      name: 'ledger_entry',
+      dartName: 'LedgerEntry',
+      schema: 'public',
+      module: 'plotwatch',
+      columns: [
+        _isp.ColumnDefinition(
+          name: 'id',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'serial',
+        ),
+        _isp.ColumnDefinition(
+          name: 'projectId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'stageId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'kind',
+          columnType: _isp.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:LedgerEntryKind',
+        ),
+        _isp.ColumnDefinition(
+          name: 'amountMinor',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _isp.ColumnDefinition(
+          name: 'occurredOn',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _isp.ColumnDefinition(
+          name: 'recordedBy',
+          columnType: _isp.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _isp.ColumnDefinition(
+          name: 'method',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'protocol:ReleaseMethod?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'reference',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'confirmedBy',
+          columnType: _isp.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'confirmedAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'category',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'protocol:ExpenseCategory?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'description',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'vendor',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'receiptPath',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'receiptSha256',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'note',
+          columnType: _isp.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'reversesId',
+          columnType: _isp.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _isp.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _isp.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [
+        _isp.ForeignKeyDefinition(
+          constraintName: 'ledger_entry_fk_0',
+          columns: ['projectId'],
+          referenceTable: 'project',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _isp.ForeignKeyAction.noAction,
+          onDelete: _isp.ForeignKeyAction.cascade,
+          matchType: null,
+        ),
+        _isp.ForeignKeyDefinition(
+          constraintName: 'ledger_entry_fk_1',
+          columns: ['stageId'],
+          referenceTable: 'stage',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _isp.ForeignKeyAction.noAction,
+          onDelete: _isp.ForeignKeyAction.setNull,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _isp.IndexDefinition(
+          indexName: 'ledger_entry_project_idx',
+          tableSpace: null,
+          elements: [
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'projectId',
+            ),
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _isp.IndexDefinition(
+          indexName: 'ledger_entry_reverses_idx',
+          tableSpace: null,
+          elements: [
+            _isp.IndexElementDefinition(
+              type: _isp.IndexElementDefinitionType.column,
+              definition: 'reversesId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
           isPrimary: false,
         ),
       ],
@@ -1681,6 +1879,12 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (t == _itwc15qq.EvidenceStatus) {
       return _itwc15qq.EvidenceStatus.fromJson(data) as T;
     }
+    if (t == _iy8yxm42.ExpenseCategory) {
+      return _iy8yxm42.ExpenseCategory.fromJson(data) as T;
+    }
+    if (t == _ijjikqyi.ExpenseDraft) {
+      return _ijjikqyi.ExpenseDraft.fromJson(data) as T;
+    }
     if (t == _ix00wubs.Invitation) {
       return _ix00wubs.Invitation.fromJson(data) as T;
     }
@@ -1689,6 +1893,21 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _ifbgrtog.InvitationStatus) {
       return _ifbgrtog.InvitationStatus.fromJson(data) as T;
+    }
+    if (t == _ivha9tke.LedgerEntry) {
+      return _ivha9tke.LedgerEntry.fromJson(data) as T;
+    }
+    if (t == _i2lcu4mb.LedgerEntryKind) {
+      return _i2lcu4mb.LedgerEntryKind.fromJson(data) as T;
+    }
+    if (t == _ixc57geg.LedgerLine) {
+      return _ixc57geg.LedgerLine.fromJson(data) as T;
+    }
+    if (t == _iu7f220v.LedgerPage) {
+      return _iu7f220v.LedgerPage.fromJson(data) as T;
+    }
+    if (t == _i07k404l.LedgerSummary) {
+      return _i07k404l.LedgerSummary.fromJson(data) as T;
     }
     if (t == _ipp2ty4v.LiveSignal) {
       return _ipp2ty4v.LiveSignal.fromJson(data) as T;
@@ -1749,6 +1968,15 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _irluonl0.ProjectType) {
       return _irluonl0.ProjectType.fromJson(data) as T;
+    }
+    if (t == _i3tdodt8.ReceiptUpload) {
+      return _i3tdodt8.ReceiptUpload.fromJson(data) as T;
+    }
+    if (t == _i5o2befp.ReleaseDraft) {
+      return _i5o2befp.ReleaseDraft.fromJson(data) as T;
+    }
+    if (t == _izc06igq.ReleaseMethod) {
+      return _izc06igq.ReleaseMethod.fromJson(data) as T;
     }
     if (t == _idrjy6ic.ReviewDecision) {
       return _idrjy6ic.ReviewDecision.fromJson(data) as T;
@@ -1849,6 +2077,13 @@ class Protocol extends _is.DatabaseSerializationManager {
       return (data != null ? _itwc15qq.EvidenceStatus.fromJson(data) : null)
           as T;
     }
+    if (t == _is.getType<_iy8yxm42.ExpenseCategory?>()) {
+      return (data != null ? _iy8yxm42.ExpenseCategory.fromJson(data) : null)
+          as T;
+    }
+    if (t == _is.getType<_ijjikqyi.ExpenseDraft?>()) {
+      return (data != null ? _ijjikqyi.ExpenseDraft.fromJson(data) : null) as T;
+    }
     if (t == _is.getType<_ix00wubs.Invitation?>()) {
       return (data != null ? _ix00wubs.Invitation.fromJson(data) : null) as T;
     }
@@ -1858,6 +2093,23 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _is.getType<_ifbgrtog.InvitationStatus?>()) {
       return (data != null ? _ifbgrtog.InvitationStatus.fromJson(data) : null)
+          as T;
+    }
+    if (t == _is.getType<_ivha9tke.LedgerEntry?>()) {
+      return (data != null ? _ivha9tke.LedgerEntry.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_i2lcu4mb.LedgerEntryKind?>()) {
+      return (data != null ? _i2lcu4mb.LedgerEntryKind.fromJson(data) : null)
+          as T;
+    }
+    if (t == _is.getType<_ixc57geg.LedgerLine?>()) {
+      return (data != null ? _ixc57geg.LedgerLine.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_iu7f220v.LedgerPage?>()) {
+      return (data != null ? _iu7f220v.LedgerPage.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_i07k404l.LedgerSummary?>()) {
+      return (data != null ? _i07k404l.LedgerSummary.fromJson(data) : null)
           as T;
     }
     if (t == _is.getType<_ipp2ty4v.LiveSignal?>()) {
@@ -1932,6 +2184,17 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (t == _is.getType<_irluonl0.ProjectType?>()) {
       return (data != null ? _irluonl0.ProjectType.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_i3tdodt8.ReceiptUpload?>()) {
+      return (data != null ? _i3tdodt8.ReceiptUpload.fromJson(data) : null)
+          as T;
+    }
+    if (t == _is.getType<_i5o2befp.ReleaseDraft?>()) {
+      return (data != null ? _i5o2befp.ReleaseDraft.fromJson(data) : null) as T;
+    }
+    if (t == _is.getType<_izc06igq.ReleaseMethod?>()) {
+      return (data != null ? _izc06igq.ReleaseMethod.fromJson(data) : null)
+          as T;
     }
     if (t == _is.getType<_idrjy6ic.ReviewDecision?>()) {
       return (data != null ? _idrjy6ic.ReviewDecision.fromJson(data) : null)
@@ -2025,6 +2288,18 @@ class Protocol extends _is.DatabaseSerializationManager {
                     .map((e) => deserialize<_i92h88x8.VerificationCheck>(e))
                     .toList()
               : null)
+          as T;
+    }
+    if (t == List<_ivha9tke.LedgerEntry>) {
+      return (data as List)
+              .map((e) => deserialize<_ivha9tke.LedgerEntry>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_ixc57geg.LedgerLine>) {
+      return (data as List)
+              .map((e) => deserialize<_ixc57geg.LedgerLine>(e))
+              .toList()
           as T;
     }
     if (t == List<_irt10kca.AppNotification>) {
@@ -2159,9 +2434,16 @@ class Protocol extends _is.DatabaseSerializationManager {
       _it2d46ly.EvidenceCommit => 'EvidenceCommit',
       _i6593me7.EvidenceCommitResult => 'EvidenceCommitResult',
       _itwc15qq.EvidenceStatus => 'EvidenceStatus',
+      _iy8yxm42.ExpenseCategory => 'ExpenseCategory',
+      _ijjikqyi.ExpenseDraft => 'ExpenseDraft',
       _ix00wubs.Invitation => 'Invitation',
       _i8l83u67.InvitationPreview => 'InvitationPreview',
       _ifbgrtog.InvitationStatus => 'InvitationStatus',
+      _ivha9tke.LedgerEntry => 'LedgerEntry',
+      _i2lcu4mb.LedgerEntryKind => 'LedgerEntryKind',
+      _ixc57geg.LedgerLine => 'LedgerLine',
+      _iu7f220v.LedgerPage => 'LedgerPage',
+      _i07k404l.LedgerSummary => 'LedgerSummary',
       _ipp2ty4v.LiveSignal => 'LiveSignal',
       _ibclxgv9.MediaVariant => 'MediaVariant',
       _iolegqnm.MemberStatus => 'MemberStatus',
@@ -2182,6 +2464,9 @@ class Protocol extends _is.DatabaseSerializationManager {
       _ivxocntb.ProjectSummary => 'ProjectSummary',
       _i4o32k29.ProjectSummaryPage => 'ProjectSummaryPage',
       _irluonl0.ProjectType => 'ProjectType',
+      _i3tdodt8.ReceiptUpload => 'ReceiptUpload',
+      _i5o2befp.ReleaseDraft => 'ReleaseDraft',
+      _izc06igq.ReleaseMethod => 'ReleaseMethod',
       _idrjy6ic.ReviewDecision => 'ReviewDecision',
       _iz8v5x4v.Site => 'Site',
       _ira79kry.SiteProposal => 'SiteProposal',
@@ -2239,12 +2524,26 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'EvidenceCommitResult';
       case _itwc15qq.EvidenceStatus():
         return 'EvidenceStatus';
+      case _iy8yxm42.ExpenseCategory():
+        return 'ExpenseCategory';
+      case _ijjikqyi.ExpenseDraft():
+        return 'ExpenseDraft';
       case _ix00wubs.Invitation():
         return 'Invitation';
       case _i8l83u67.InvitationPreview():
         return 'InvitationPreview';
       case _ifbgrtog.InvitationStatus():
         return 'InvitationStatus';
+      case _ivha9tke.LedgerEntry():
+        return 'LedgerEntry';
+      case _i2lcu4mb.LedgerEntryKind():
+        return 'LedgerEntryKind';
+      case _ixc57geg.LedgerLine():
+        return 'LedgerLine';
+      case _iu7f220v.LedgerPage():
+        return 'LedgerPage';
+      case _i07k404l.LedgerSummary():
+        return 'LedgerSummary';
       case _ipp2ty4v.LiveSignal():
         return 'LiveSignal';
       case _ibclxgv9.MediaVariant():
@@ -2285,6 +2584,12 @@ class Protocol extends _is.DatabaseSerializationManager {
         return 'ProjectSummaryPage';
       case _irluonl0.ProjectType():
         return 'ProjectType';
+      case _i3tdodt8.ReceiptUpload():
+        return 'ReceiptUpload';
+      case _i5o2befp.ReleaseDraft():
+        return 'ReleaseDraft';
+      case _izc06igq.ReleaseMethod():
+        return 'ReleaseMethod';
       case _idrjy6ic.ReviewDecision():
         return 'ReviewDecision';
       case _iz8v5x4v.Site():
@@ -2384,6 +2689,12 @@ class Protocol extends _is.DatabaseSerializationManager {
     if (dataClassName == 'EvidenceStatus') {
       return deserialize<_itwc15qq.EvidenceStatus>(data['data']);
     }
+    if (dataClassName == 'ExpenseCategory') {
+      return deserialize<_iy8yxm42.ExpenseCategory>(data['data']);
+    }
+    if (dataClassName == 'ExpenseDraft') {
+      return deserialize<_ijjikqyi.ExpenseDraft>(data['data']);
+    }
     if (dataClassName == 'Invitation') {
       return deserialize<_ix00wubs.Invitation>(data['data']);
     }
@@ -2392,6 +2703,21 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'InvitationStatus') {
       return deserialize<_ifbgrtog.InvitationStatus>(data['data']);
+    }
+    if (dataClassName == 'LedgerEntry') {
+      return deserialize<_ivha9tke.LedgerEntry>(data['data']);
+    }
+    if (dataClassName == 'LedgerEntryKind') {
+      return deserialize<_i2lcu4mb.LedgerEntryKind>(data['data']);
+    }
+    if (dataClassName == 'LedgerLine') {
+      return deserialize<_ixc57geg.LedgerLine>(data['data']);
+    }
+    if (dataClassName == 'LedgerPage') {
+      return deserialize<_iu7f220v.LedgerPage>(data['data']);
+    }
+    if (dataClassName == 'LedgerSummary') {
+      return deserialize<_i07k404l.LedgerSummary>(data['data']);
     }
     if (dataClassName == 'LiveSignal') {
       return deserialize<_ipp2ty4v.LiveSignal>(data['data']);
@@ -2452,6 +2778,15 @@ class Protocol extends _is.DatabaseSerializationManager {
     }
     if (dataClassName == 'ProjectType') {
       return deserialize<_irluonl0.ProjectType>(data['data']);
+    }
+    if (dataClassName == 'ReceiptUpload') {
+      return deserialize<_i3tdodt8.ReceiptUpload>(data['data']);
+    }
+    if (dataClassName == 'ReleaseDraft') {
+      return deserialize<_i5o2befp.ReleaseDraft>(data['data']);
+    }
+    if (dataClassName == 'ReleaseMethod') {
+      return deserialize<_izc06igq.ReleaseMethod>(data['data']);
     }
     if (dataClassName == 'ReviewDecision') {
       return deserialize<_idrjy6ic.ReviewDecision>(data['data']);
@@ -2555,6 +2890,8 @@ class Protocol extends _is.DatabaseSerializationManager {
         return _iptmmm0p.Evidence.t;
       case _ix00wubs.Invitation:
         return _ix00wubs.Invitation.t;
+      case _ivha9tke.LedgerEntry:
+        return _ivha9tke.LedgerEntry.t;
       case _irt10kca.AppNotification:
         return _irt10kca.AppNotification.t;
       case _i4ejzj19.ProgressUpdate:

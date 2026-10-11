@@ -21,6 +21,16 @@ evidence:
   - retract:
 jwtRefresh:
   - refreshAccessToken:
+ledger:
+  - recordRelease:
+  - recordExpense:
+  - receiptUpload:
+  - confirmRelease:
+  - reverse:
+  - list:
+  - get:
+  - summary:
+  - receipt:
 membership:
   - createInvitation:
   - listInvitations:

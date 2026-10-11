@@ -1,0 +1,5 @@
+### Where to upload a receipt photo, and how (doc/04f M6-5 a).
+class: ReceiptUpload
+fields:
+  path: String
+  uploadDescription: String

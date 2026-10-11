@@ -1,0 +1,10 @@
+### What an expense was for (LED-03, doc/04f M6-4).
+enum: ExpenseCategory
+serialized: byName
+values:
+  - materials
+  - labour
+  - transport
+  - permits
+  - equipment
+  - other

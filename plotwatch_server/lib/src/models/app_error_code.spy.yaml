@@ -70,6 +70,12 @@ values:
   - notificationNotFound
   - invalidProgressUpdate
   - updateNotFound
+  # The ledger (doc/04f)
+  - invalidLedgerEntry
+  - ledgerEntryNotFound
+  - alreadyReversed
+  - alreadyConfirmed
+  - notEntryAuthor
   # Free text longer than its limit
   - textTooLong
   # Set by the client from the auth module's exceptions

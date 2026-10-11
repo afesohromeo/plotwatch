@@ -598,5 +598,19 @@
     "updateIssuesHint": "Retards, manques, tout ce que les financeurs doivent savoir",
     "updateTextHint": "Murs, livraisons, la suite…",
     "activityPhotoAdded": "{actor} a ajouté une photo",
-    "reviewShort": "Examiner"
+    "reviewShort": "Examiner",
+    "errorInvalidLedgerEntry": "Vérifiez l’écriture : un montant supérieur à zéro, une date qui n’est pas dans le futur et les informations requises.",
+    "errorLedgerEntryNotFound": "Cette écriture n’existe pas dans ce projet.",
+    "errorAlreadyReversed": "Cette écriture a déjà été annulée.",
+    "errorAlreadyConfirmed": "Ce versement a déjà été confirmé.",
+    "errorNotEntryAuthor": "Seule la personne qui a saisi cette écriture peut l’annuler.",
+    "activityFundReleased": "{actor} a enregistré un versement de {amount}",
+    "activityReleaseConfirmed": "{actor} a confirmé avoir reçu {amount}",
+    "activityExpenseRecorded": "{actor} a enregistré une dépense de {amount}",
+    "activityEntryReversed": "{actor} a annulé une écriture de {amount}",
+    "notificationFundReleased": "{actor} a enregistré un versement de {amount} pour {project}",
+    "notificationReleaseConfirmed": "{actor} a confirmé avoir reçu {amount} ({project})",
+    "notificationExpenseRecorded": "{actor} a enregistré une dépense de {amount} sur {project}",
+    "notificationEntryReversed": "{actor} a annulé une écriture de {amount} sur {project}",
+    "kindMoney": "Argent"
 }

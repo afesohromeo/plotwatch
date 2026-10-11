@@ -73,6 +73,23 @@ extension ActivityEntryX on ActivityEntry {
         actor,
         payload['excerpt'] ?? '',
       ),
+      // The ledger (doc/04f M6-9).
+      ActivityType.fundReleased => l10n.activityFundReleased(
+        actor,
+        _amount(payload),
+      ),
+      ActivityType.releaseConfirmed => l10n.activityReleaseConfirmed(
+        actor,
+        _amount(payload),
+      ),
+      ActivityType.expenseRecorded => l10n.activityExpenseRecorded(
+        actor,
+        _amount(payload),
+      ),
+      ActivityType.entryReversed => l10n.activityEntryReversed(
+        actor,
+        _amount(payload),
+      ),
     };
   }
 
@@ -94,6 +111,10 @@ extension ActivityEntryX on ActivityEntry {
     ActivityType.stageApproved => Icons.check_circle_outline_rounded,
     ActivityType.stageChangesRequested => Icons.replay_rounded,
     ActivityType.progressUpdatePosted => Icons.campaign_outlined,
+    ActivityType.fundReleased ||
+    ActivityType.releaseConfirmed => Icons.payments_outlined,
+    ActivityType.expenseRecorded => Icons.receipt_long_outlined,
+    ActivityType.entryReversed => Icons.undo_rounded,
   };
 
   /// The page the event is about; null when there is nothing to open
@@ -133,6 +154,11 @@ extension ActivityEntryX on ActivityEntry {
               }),
       ActivityType.progressUpdatePosted =>
         target == null ? null : route(updateRouteName, {'updateId': '$target'}),
+      // The Money tab comes with doc/04f group D.
+      ActivityType.fundReleased ||
+      ActivityType.releaseConfirmed ||
+      ActivityType.expenseRecorded ||
+      ActivityType.entryReversed => route(projectRouteName),
     };
   }
 }
@@ -171,6 +197,26 @@ extension AppNotificationX on AppNotification {
         project,
         payload['excerpt'] ?? '',
       ),
+      NotificationType.fundReleased => l10n.notificationFundReleased(
+        payload['actorName'] ?? l10n.someone,
+        _amount(payload),
+        project,
+      ),
+      NotificationType.releaseConfirmed => l10n.notificationReleaseConfirmed(
+        payload['actorName'] ?? l10n.someone,
+        _amount(payload),
+        project,
+      ),
+      NotificationType.expenseRecorded => l10n.notificationExpenseRecorded(
+        payload['actorName'] ?? l10n.someone,
+        _amount(payload),
+        project,
+      ),
+      NotificationType.entryReversed => l10n.notificationEntryReversed(
+        payload['actorName'] ?? l10n.someone,
+        _amount(payload),
+        project,
+      ),
     };
   }
 
@@ -201,8 +247,25 @@ extension AppNotificationX on AppNotification {
         ),
         _ => (name: feedRouteName, pathParameters: {'projectId': '$project'}),
       },
+      // The Money tab comes with doc/04f group D.
+      NotificationType.fundReleased ||
+      NotificationType.releaseConfirmed ||
+      NotificationType.expenseRecorded ||
+      NotificationType.entryReversed => (
+        name: projectRouteName,
+        pathParameters: {'projectId': '$project'},
+      ),
     };
   }
+}
+
+/// A ledger event's amount, as it is written: "500,000 FCFA". A reversal's
+/// is shown without its minus sign: the sentence says it was reversed.
+String _amount(Map<String, String> payload) {
+  final minor = int.tryParse(payload['amountMinor'] ?? '');
+  final code = payload['currencyCode'];
+  if (minor == null || code == null) return '';
+  return formatMoney(minor.abs(), code);
 }
 
 String _role(String? name, AppLocalizations l10n) =>
@@ -227,6 +290,13 @@ enum ActivityKind {
     ActivityType.siteProposed,
     ActivityType.siteProposalRejected,
     ActivityType.siteChanged,
+  }),
+  // The ledger (doc/04f M6-9).
+  money({
+    ActivityType.fundReleased,
+    ActivityType.releaseConfirmed,
+    ActivityType.expenseRecorded,
+    ActivityType.entryReversed,
   });
 
   const ActivityKind(this.types);
@@ -239,5 +309,6 @@ enum ActivityKind {
     ActivityKind.updates => l10n.kindUpdates,
     ActivityKind.members => l10n.kindMembers,
     ActivityKind.site => l10n.kindSite,
+    ActivityKind.money => l10n.kindMoney,
   };
 }

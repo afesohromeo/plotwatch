@@ -1,0 +1,11 @@
+### What a funder enters for a release (LED-01). Immutable: compared by its
+### fields.
+class: ReleaseDraft
+immutable: true
+fields:
+  amountMinor: int
+  occurredOn: DateTime
+  method: ReleaseMethod
+  reference: String?
+  stageId: int?
+  note: String?

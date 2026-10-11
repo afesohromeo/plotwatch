@@ -1,0 +1,6 @@
+### A ledger entry is a release or an expense (doc/04f M6-1).
+enum: LedgerEntryKind
+serialized: byName
+values:
+  - release
+  - expense

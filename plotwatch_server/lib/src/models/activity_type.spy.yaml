@@ -27,3 +27,8 @@ values:
   - stageApproved
   - stageChangesRequested
   - progressUpdatePosted
+  # The ledger (doc/04f M6-9)
+  - fundReleased
+  - releaseConfirmed
+  - expenseRecorded
+  - entryReversed

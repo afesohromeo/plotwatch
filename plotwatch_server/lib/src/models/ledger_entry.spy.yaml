@@ -1,0 +1,45 @@
+### One line of a project's ledger: a fund release recorded by a funder or
+### an expense recorded by the site manager (LED-01, LED-03; doc/04f M6-1).
+### Never updated except to confirm a release; a mistake is corrected by a
+### reversal entry with the negative amount (LED-06).
+class: LedgerEntry
+table: ledger_entry
+fields:
+  projectId: int, relation(parent=project, onDelete=Cascade)
+  stageId: int?, relation(parent=stage, onDelete=SetNull)
+  kind: LedgerEntryKind
+  ### Minor units of the project currency; negative only in a reversal.
+  amountMinor: int
+  ### The day it happened (UTC midnight), not in the future.
+  occurredOn: DateTime
+  recordedBy: UuidValue
+  ### Release: how it was sent, its reference, the site manager's
+  ### confirmation (LED-02).
+  method: ReleaseMethod?
+  reference: String?
+  confirmedBy: UuidValue?
+  confirmedAt: DateTime?
+  ### Expense: what for, from whom, the receipt photo (doc/04f M6-5 a).
+  category: ExpenseCategory?
+  description: String?
+  vendor: String?
+  receiptPath: String?
+  receiptSha256: String?
+  ### A release's note, or a reversal's reason.
+  note: String?
+  ### The entry this one reverses.
+  reversesId: int?
+  createdAt: DateTime
+  ### Filled when entries are read.
+  recordedByName: String?, !persist
+  recordedByFormer: bool?, !persist
+  ### The reversal of this entry, if any.
+  reversedById: int?, !persist
+  reversalReason: String?, !persist
+indexes:
+  ledger_entry_project_idx:
+    fields: projectId, id
+  # An entry is reversed at most once.
+  ledger_entry_reverses_idx:
+    fields: reversesId
+    unique: true

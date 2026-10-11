@@ -2133,4 +2133,78 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reviewShort => 'Review';
+
+  @override
+  String get errorInvalidLedgerEntry =>
+      'Check the entry: an amount above zero, a date not in the future, and the required details.';
+
+  @override
+  String get errorLedgerEntryNotFound =>
+      'This entry doesn’t exist in this project.';
+
+  @override
+  String get errorAlreadyReversed => 'This entry has already been reversed.';
+
+  @override
+  String get errorAlreadyConfirmed =>
+      'This release has already been confirmed.';
+
+  @override
+  String get errorNotEntryAuthor =>
+      'Only the person who recorded this entry can reverse it.';
+
+  @override
+  String activityFundReleased(String actor, String amount) {
+    return '$actor recorded a release of $amount';
+  }
+
+  @override
+  String activityReleaseConfirmed(String actor, String amount) {
+    return '$actor confirmed receiving $amount';
+  }
+
+  @override
+  String activityExpenseRecorded(String actor, String amount) {
+    return '$actor recorded an expense of $amount';
+  }
+
+  @override
+  String activityEntryReversed(String actor, String amount) {
+    return '$actor reversed an entry of $amount';
+  }
+
+  @override
+  String notificationFundReleased(String actor, String amount, String project) {
+    return '$actor recorded a release of $amount for $project';
+  }
+
+  @override
+  String notificationReleaseConfirmed(
+    String actor,
+    String amount,
+    String project,
+  ) {
+    return '$actor confirmed receiving $amount ($project)';
+  }
+
+  @override
+  String notificationExpenseRecorded(
+    String actor,
+    String amount,
+    String project,
+  ) {
+    return '$actor recorded an expense of $amount on $project';
+  }
+
+  @override
+  String notificationEntryReversed(
+    String actor,
+    String amount,
+    String project,
+  ) {
+    return '$actor reversed an entry of $amount on $project';
+  }
+
+  @override
+  String get kindMoney => 'Money';
 }

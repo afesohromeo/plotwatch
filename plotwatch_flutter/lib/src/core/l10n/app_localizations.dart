@@ -3704,6 +3704,98 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Review'**
   String get reviewShort;
+
+  /// Server error code (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Check the entry: an amount above zero, a date not in the future, and the required details.'**
+  String get errorInvalidLedgerEntry;
+
+  /// Server error code (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'This entry doesn’t exist in this project.'**
+  String get errorLedgerEntryNotFound;
+
+  /// Server error code (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'This entry has already been reversed.'**
+  String get errorAlreadyReversed;
+
+  /// Server error code (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'This release has already been confirmed.'**
+  String get errorAlreadyConfirmed;
+
+  /// Server error code (doc/04f)
+  ///
+  /// In en, this message translates to:
+  /// **'Only the person who recorded this entry can reverse it.'**
+  String get errorNotEntryAuthor;
+
+  /// The ledger (doc/04f M6-9)
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} recorded a release of {amount}'**
+  String activityFundReleased(String actor, String amount);
+
+  /// The ledger (doc/04f M6-9)
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} confirmed receiving {amount}'**
+  String activityReleaseConfirmed(String actor, String amount);
+
+  /// The ledger (doc/04f M6-9)
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} recorded an expense of {amount}'**
+  String activityExpenseRecorded(String actor, String amount);
+
+  /// The ledger (doc/04f M6-9)
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} reversed an entry of {amount}'**
+  String activityEntryReversed(String actor, String amount);
+
+  /// The ledger (doc/04f M6-9)
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} recorded a release of {amount} for {project}'**
+  String notificationFundReleased(String actor, String amount, String project);
+
+  /// The ledger (doc/04f M6-9)
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} confirmed receiving {amount} ({project})'**
+  String notificationReleaseConfirmed(
+    String actor,
+    String amount,
+    String project,
+  );
+
+  /// The ledger (doc/04f M6-9)
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} recorded an expense of {amount} on {project}'**
+  String notificationExpenseRecorded(
+    String actor,
+    String amount,
+    String project,
+  );
+
+  /// The ledger (doc/04f M6-9)
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} reversed an entry of {amount} on {project}'**
+  String notificationEntryReversed(String actor, String amount, String project);
+
+  /// Activity kind chip: ledger events (doc/04f M6-9)
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get kindMoney;
 }
 
 class _AppLocalizationsDelegate

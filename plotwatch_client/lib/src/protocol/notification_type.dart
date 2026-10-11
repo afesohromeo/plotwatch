@@ -18,7 +18,11 @@ enum NotificationType implements _isc.SerializableModel {
   stageApproved,
   stageChangesRequested,
   memberJoined,
-  progressUpdatePosted;
+  progressUpdatePosted,
+  fundReleased,
+  releaseConfirmed,
+  expenseRecorded,
+  entryReversed;
 
   static NotificationType fromJson(String name) {
     switch (name) {
@@ -32,6 +36,14 @@ enum NotificationType implements _isc.SerializableModel {
         return NotificationType.memberJoined;
       case 'progressUpdatePosted':
         return NotificationType.progressUpdatePosted;
+      case 'fundReleased':
+        return NotificationType.fundReleased;
+      case 'releaseConfirmed':
+        return NotificationType.releaseConfirmed;
+      case 'expenseRecorded':
+        return NotificationType.expenseRecorded;
+      case 'entryReversed':
+        return NotificationType.entryReversed;
       default:
         throw ArgumentError(
           'Value "$name" cannot be converted to "NotificationType"',
