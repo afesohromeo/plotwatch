@@ -135,7 +135,7 @@ class _ProjectOverviewPageState extends State<ProjectOverviewPage> {
                 refreshText: l10n.refresh,
                 onPressed: _load,
               ),
-              _ => const Center(child: CircularProgressIndicator()),
+              _ => const OverviewSkeleton(),
             },
           );
         },

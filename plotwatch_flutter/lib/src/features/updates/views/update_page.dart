@@ -93,7 +93,7 @@ class _UpdatePageState extends State<UpdatePage> {
               refreshText: l10n.refresh,
               onPressed: _load,
             ),
-            _ => const Center(child: CircularProgressIndicator()),
+            _ => const UpdateSkeleton(),
           },
         );
       },

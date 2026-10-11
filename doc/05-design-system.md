@@ -232,3 +232,17 @@ Mockups on the canvas, page "4 · Progress updates": `U-Update`, `U-Form`, `U-We
 - **Left as is:**
   - The latest photos card hides itself when there are no photos yet (as designed).
   - On a page whose subject no longer exists, the stage and photo pages show the server's message with Retry; only the update page offers the way back (§9.6).
+
+### 9.8 Skeleton loading (2026-10-12, approved)
+- **A page's first load** shows a skeleton of the page instead of a spinner: grey shapes where the content will be, with a soft shimmer.
+- **Components** (`shared/components/skeleton.dart`): `ShimmerSkeleton` and `SkeletonBox`, taken from PlusLocate (no package). They stand still when the phone's "reduce animations" setting is on, and are announced as "Loading". Built on them:
+  - `SkeletonRow`: an icon square and two lines;
+  - `SkeletonCard`: rows in a white card;
+  - `SkeletonHero`: the teal hero's shape.
+- **Pages:** project list, Overview, Stages tab, stage page, photo page, Activity, notifications, members, update page, Money tab and an entry. Each page composes its skeleton from those, matching its real layout.
+- **Lists:** the next page loads under skeleton rows, not a spinner.
+- **Unchanged:**
+  - a page with data keeps showing it while it refreshes;
+  - buttons show that they are busy;
+  - pull-to-refresh keeps its indicator;
+  - forms, dialogs and the camera keep their spinner.

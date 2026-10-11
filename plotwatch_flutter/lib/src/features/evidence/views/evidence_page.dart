@@ -121,7 +121,7 @@ class _EvidencePageState extends State<EvidencePage> {
               isRetracting: state.actionStatus == GenericStatus.loading,
               onRetract: _retract,
             ),
-            _ => const Center(child: CircularProgressIndicator()),
+            _ => const EvidenceSkeleton(),
           };
         },
       ),

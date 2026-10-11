@@ -191,7 +191,7 @@ class _MembersPageState extends State<MembersPage> {
               refreshText: l10n.refresh,
               onPressed: _load,
             ),
-            _ => const Center(child: CircularProgressIndicator()),
+            _ => const MembersSkeleton(),
           },
         );
       },

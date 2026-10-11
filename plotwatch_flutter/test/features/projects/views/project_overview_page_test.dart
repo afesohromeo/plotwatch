@@ -98,7 +98,7 @@ void main() {
       const ProjectOverviewState(overviewStatus: GenericStatus.loading),
     );
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(OverviewSkeleton), findsOneWidget);
   });
 
   testWidgets(

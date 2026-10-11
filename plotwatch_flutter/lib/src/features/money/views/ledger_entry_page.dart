@@ -103,7 +103,7 @@ class _LedgerEntryPageState extends State<LedgerEntryPage> {
               refreshText: l10n.refresh,
               onPressed: _load,
             ),
-            _ => const Center(child: CircularProgressIndicator()),
+            _ => const LedgerEntrySkeleton(),
           },
         );
       },

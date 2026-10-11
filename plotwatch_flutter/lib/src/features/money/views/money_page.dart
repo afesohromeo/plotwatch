@@ -183,7 +183,7 @@ class _MoneyPageState extends State<MoneyPage> {
                 refreshText: l10n.refresh,
                 onPressed: _refresh,
               ),
-              _ => const Center(child: CircularProgressIndicator()),
+              _ => const MoneySkeleton(),
             },
           );
         },
@@ -238,14 +238,13 @@ class _MoneyPageState extends State<MoneyPage> {
           ),
         ),
       ),
-      firstPageProgressIndicatorBuilder: (context) => const Padding(
-        padding: EdgeInsets.all(AppSpacing.lg),
-        child: Center(child: CircularProgressIndicator.adaptive()),
-      ),
-      newPageProgressIndicatorBuilder: (context) => const Padding(
-        padding: EdgeInsets.all(AppSpacing.md),
-        child: Center(child: CircularProgressIndicator.adaptive()),
-      ),
+      firstPageProgressIndicatorBuilder: (context) =>
+          const RowsSkeleton(count: 4, trailing: true),
+      newPageProgressIndicatorBuilder: (context) =>
+    const Padding(
+      padding: EdgeInsets.only(top: AppSpacing.sm),
+      child: RowsSkeleton(count: 2),
+    ),
       firstPageErrorIndicatorBuilder: (context) => ErrorrWidget(
         errorMessage:
             _pagingController.error?.toString() ?? l10n.errorLedgerLoad,

@@ -210,15 +210,12 @@ class _FeedPageState extends State<FeedPage> {
                                 );
                               },
                               firstPageProgressIndicatorBuilder: (context) =>
-                                  LoadingWidget(loadingText: l10n.loading),
+                                  const RowsSkeleton(),
                               newPageProgressIndicatorBuilder: (context) =>
-                                  const Center(
-                                    child: Padding(
-                                      padding: EdgeInsets.all(AppSpacing.md),
-                                      child:
-                                          CircularProgressIndicator.adaptive(),
-                                    ),
-                                  ),
+    const Padding(
+      padding: EdgeInsets.only(top: AppSpacing.sm),
+      child: RowsSkeleton(count: 2),
+    ),
                               firstPageErrorIndicatorBuilder: (context) =>
                                   ErrorrWidget(
                                     errorMessage:

@@ -378,4 +378,39 @@ void main() {
       expect(chosen, [1]);
     });
   });
+
+  // doc/05 §9.8: a skeleton while a page loads.
+  group('Given a skeleton', () {
+    testWidgets('then it is announced as loading', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpApp(
+        Scaffold(body: SkeletonCard.rows(count: 2)),
+      );
+
+      expect(
+        find.bySemanticsLabel(LocalizationService.localization.loading),
+        findsOneWidget,
+      );
+      semantics.dispose();
+    });
+
+    testWidgets('then it stands still when animations are reduced', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(disableAnimations: true),
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const Scaffold(body: MoneySkeleton()),
+          ),
+        ),
+      );
+
+      // Nothing keeps animating: the frame settles.
+      await tester.pumpAndSettle();
+      expect(find.byType(MoneySkeleton), findsOneWidget);
+    });
+  });
 }

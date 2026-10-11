@@ -321,12 +321,11 @@ class _ProjectListPageState extends State<ProjectListPage> {
       ),
     ),
     firstPageProgressIndicatorBuilder: (context) =>
-        LoadingWidget(loadingText: l10n.loading),
-    newPageProgressIndicatorBuilder: (context) => const Center(
-      child: Padding(
-        padding: EdgeInsets.all(AppSpacing.md),
-        child: CircularProgressIndicator.adaptive(),
-      ),
+        const ProjectListSkeleton(),
+    newPageProgressIndicatorBuilder: (context) =>
+    const Padding(
+      padding: EdgeInsets.only(top: AppSpacing.md),
+      child: ProjectListSkeleton(count: 1),
     ),
     firstPageErrorIndicatorBuilder: (context) => ErrorrWidget(
       errorMessage:

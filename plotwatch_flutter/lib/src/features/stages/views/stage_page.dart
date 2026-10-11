@@ -177,7 +177,7 @@ class _StagePageState extends State<StagePage> {
                 refreshText: l10n.refresh,
                 onPressed: _load,
               ),
-              _ => const Center(child: CircularProgressIndicator()),
+              _ => const StageSkeleton(),
             },
           );
         },
