@@ -152,13 +152,13 @@ void main() {
           caption: 'of the budget approved',
           statuses: [StageStatus.approved, StageStatus.notStarted],
           stagesSemanticLabel: '1 of 2 approved',
-          figures: [('Budget', '12.5 M XAF'), ('Stages', '1 of 2')],
+          figures: [('Budget', '12.5 M FCFA'), ('Stages', '1 of 2')],
         ),
       ),
     );
 
     expect(find.text('62%'), findsOneWidget);
-    expect(find.text('12.5 M XAF'), findsOneWidget);
+    expect(find.text('12.5 M FCFA'), findsOneWidget);
     expect(find.text('1 of 2'), findsOneWidget);
   });
 

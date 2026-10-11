@@ -141,7 +141,11 @@ class ActivityTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(entry.sentence(l10n), style: text),
+                    // The badge below says the verdict (canvas P-Activity).
+                    Text(
+                      l10n.activityPhotoAdded(entry.actorName ?? l10n.someone),
+                      style: text,
+                    ),
                     if (level != null) ...[
                       const Gap.vertical(height: 4),
                       VerificationBadge(level: level),

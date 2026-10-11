@@ -68,7 +68,14 @@ class _EvidencePageState extends State<EvidencePage> {
     return ResponsiveScaffoldWrapper(
       props: ScaffoldWrapperProps(
         leading: BackButton(onPressed: _backToStage),
-        title: Text(l10n.evidenceTitle),
+        // The checklist item it was taken for (canvas P-Photo).
+        title: BlocSelector<EvidenceBloc, EvidenceState, String?>(
+          selector: (state) => state.itemLabel,
+          builder: (context, label) => Text(
+            label ?? l10n.evidenceTitle,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         bottom: _EvidenceBreadcrumb(
           projectId: widget.projectId,
           stageId: widget.stageId,

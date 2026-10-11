@@ -77,7 +77,7 @@ class _StagePlanPageState extends State<StagePlanPage> {
                 ),
               ),
               title: Text(l10n.stagesTitle),
-              // "Maison Douala · 12.5 M XAF" (doc/05 §9.3).
+              // "Maison Douala · 12.5 M FCFA" (doc/05 §9.3).
               subtitle: state.overview == null || plan == null
                   ? null
                   : '${state.overview!.project.name} · '

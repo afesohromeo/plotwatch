@@ -44,6 +44,12 @@ class MockStageBloc extends MockBloc<StageEvent, StageState>
 class MockEvidenceBloc extends MockBloc<EvidenceEvent, EvidenceState>
     implements EvidenceBloc {}
 
+class MockUpdateBloc extends MockBloc<UpdateEvent, UpdateState>
+    implements UpdateBloc {}
+
+class MockUpdateFormBloc extends MockBloc<UpdateFormEvent, UpdateFormState>
+    implements UpdateFormBloc {}
+
 class MockMembersBloc extends MockBloc<MembersEvent, MembersState>
     implements MembersBloc {}
 
@@ -111,6 +117,9 @@ Future<void> shot(
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
+  // flutter_test draws elevation as a black outline unless told not to.
+  debugDisableShadows = false;
+  addTearDown(() => debugDisableShadows = true);
   await tester.pumpWidget(
     MaterialApp(
       debugShowCheckedModeBanner: false,

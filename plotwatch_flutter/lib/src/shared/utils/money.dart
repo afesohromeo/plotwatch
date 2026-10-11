@@ -11,9 +11,25 @@ const maxMoneyMinor = 1000000000000000;
 int currencyDigits(String currencyCode) =>
     NumberFormat.currency(locale: 'en', name: currencyCode).decimalDigits ?? 2;
 
-/// [minor] units of [currencyCode] with its symbol, in the app language:
-/// `FCFA 1,500,000`, `1 500 000 FCFA`, `€1,250.50` (decision M3-9).
+/// The symbol of [currencyCode]: `FCFA` for XAF, `€` for EUR.
+String currencySymbol(String currencyCode) =>
+    NumberFormat.simpleCurrency(locale: 'en', name: currencyCode)
+        .currencySymbol;
+
+/// A symbol made of letters (`FCFA`) goes after the amount, and the
+/// digits are grouped with commas in every language: `1,500,000 FCFA`, as
+/// it is written in Cameroon (developer, 2026-10-11).
+bool _lettersSymbol(String currencyCode) =>
+    RegExp(r'^[A-Za-z]+$').hasMatch(currencySymbol(currencyCode));
+
+/// [minor] units of [currencyCode] with its symbol: `1,500,000 FCFA` (in
+/// every language), `€1,250.50`, `1 250,50 €` (decision M3-9, amended
+/// 2026-10-11).
 String formatMoney(int minor, String currencyCode, {String? locale}) {
+  if (_lettersSymbol(currencyCode)) {
+    return '${formatMoneyInput(minor, currencyCode, locale: locale)}'
+        '\u00A0${currencySymbol(currencyCode)}';
+  }
   final format = NumberFormat.simpleCurrency(
     locale: locale ?? _appLocale,
     name: currencyCode,
@@ -29,10 +45,11 @@ String formatMoney(int minor, String currencyCode, {String? locale}) {
       );
 }
 
-/// [minor] units as the owner types them, without the symbol: `1,250.50`.
+/// [minor] units as the owner types them, without the symbol: `1,250.50`;
+/// `1,500,000` for FCFA in every language.
 String formatMoneyInput(int minor, String currencyCode, {String? locale}) =>
     NumberFormat.decimalPatternDigits(
-      locale: locale ?? _appLocale,
+      locale: _lettersSymbol(currencyCode) ? 'en' : locale ?? _appLocale,
       decimalDigits: currencyDigits(currencyCode),
     ).format(_major(minor, currencyCode));
 
@@ -46,9 +63,15 @@ int? parseMoney(String text, String currencyCode, {String? locale}) {
   if (symbols.GROUP_SEP.trim().isNotEmpty) {
     cleaned = cleaned.replaceAll(symbols.GROUP_SEP, '');
   }
+  final digits = currencyDigits(currencyCode);
+  // Without minor units a comma or a dot between groups of three digits
+  // can only group them: "1,500,000" and "1.500.000" are read in every
+  // language; "12.5" is still refused.
+  if (digits == 0 && RegExp(r'^\d{1,3}([,.]\d{3})+$').hasMatch(cleaned)) {
+    cleaned = cleaned.replaceAll(RegExp('[,.]'), '');
+  }
   cleaned = cleaned.replaceAll(symbols.DECIMAL_SEP, '.');
 
-  final digits = currencyDigits(currencyCode);
   final pattern = digits == 0
       ? RegExp(r'^\d+$')
       : RegExp('^\\d+(\\.\\d{1,$digits})?\$');
@@ -72,7 +95,7 @@ num _major(int minor, String currencyCode) {
 
 String get _appLocale => LocalizationService.localization.localeName;
 
-/// A large amount in short, for figures: "12.5 M XAF", "850 k XAF"
+/// A large amount in short, for figures: "12.5 M FCFA", "850 k FCFA"
 /// (doc/05 §9.3). Below ten thousand it is [formatMoney].
 String formatMoneyShort(int minor, String currencyCode, {String? locale}) {
   final major = _major(minor, currencyCode);
@@ -83,10 +106,10 @@ String formatMoneyShort(int minor, String currencyCode, {String? locale}) {
   };
   if (unit.isEmpty) return formatMoney(minor, currencyCode, locale: locale);
   final number = NumberFormat.decimalPatternDigits(
-    locale: locale ?? _appLocale,
+    locale: _lettersSymbol(currencyCode) ? 'en' : locale ?? _appLocale,
     decimalDigits: value.abs() >= 100 ? 0 : 1,
   ).format(value);
   // "12.0" reads as "12".
   final trimmed = number.replaceFirst(RegExp(r'[.,]0$'), '');
-  return '$trimmed\u00A0$unit $currencyCode';
+  return '$trimmed\u00A0$unit ${currencySymbol(currencyCode)}';
 }

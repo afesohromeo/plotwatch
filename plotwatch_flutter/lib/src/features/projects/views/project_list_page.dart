@@ -229,6 +229,7 @@ class _ProjectListPageState extends State<ProjectListPage> {
                                     pagedChildBuilderDelegate: _delegate(
                                       l10n,
                                       newProjectTile: web,
+                                      grid: true,
                                     ),
                                   )
                                 : CustomPaginatedList<ProjectSummary>(
@@ -259,10 +260,15 @@ class _ProjectListPageState extends State<ProjectListPage> {
       Row(
         children: [
           Expanded(
-            child: SearchInputField(
+            child: InputField(
               key: ProjectListPage.searchFieldKey,
-              inputController: _searchController,
-              labelText: l10n.searchProjects,
+              controller: _searchController,
+              hintText: l10n.searchProjects,
+              prefixIcon: Icon(Icons.search_rounded, color: customColors.muted),
+              keyboardType: TextInputType.text,
+              radius: 12,
+              borderRadius: BorderRadius.circular(12),
+              validator: null,
               onChanged: _onSearchChanged,
             ),
           ),
@@ -300,6 +306,7 @@ class _ProjectListPageState extends State<ProjectListPage> {
   PagedChildBuilderDelegate<ProjectSummary> _delegate(
     AppLocalizations l10n, {
     bool newProjectTile = false,
+    bool grid = false,
   }) => PagedChildBuilderDelegate<ProjectSummary>(
     // The web grid ends with "Start a new project".
     noMoreItemsIndicatorBuilder: newProjectTile
@@ -307,6 +314,7 @@ class _ProjectListPageState extends State<ProjectListPage> {
         : null,
     itemBuilder: (context, summary, index) => ProjectCard(
       summary: summary,
+      compactWhenClosed: !grid,
       onTap: () => context.goNamed(
         projectRouteName,
         pathParameters: {'projectId': '${summary.project.id}'},

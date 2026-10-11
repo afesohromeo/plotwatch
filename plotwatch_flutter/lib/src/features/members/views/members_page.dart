@@ -444,7 +444,7 @@ class _MemberRow extends StatelessWidget {
                   Text(
                     line,
                     style: context.textTheme.bodySmall,
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
               ],

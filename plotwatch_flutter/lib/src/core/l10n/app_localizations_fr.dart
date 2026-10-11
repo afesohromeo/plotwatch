@@ -2166,4 +2166,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get updateTextHint => 'Murs, livraisons, la suite…';
+
+  @override
+  String activityPhotoAdded(String actor) {
+    return '$actor a ajouté une photo';
+  }
+
+  @override
+  String get reviewShort => 'Examiner';
 }

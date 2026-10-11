@@ -3692,6 +3692,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Walls, deliveries, what is next…'**
   String get updateTextHint;
+
+  /// Activity tab photo row; the badge below says the verdict
+  ///
+  /// In en, this message translates to:
+  /// **'{actor} added a photo'**
+  String activityPhotoAdded(String actor);
+
+  /// Web overview: the attention card's button (doc/05 §9.3)
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get reviewShort;
 }
 
 class _AppLocalizationsDelegate

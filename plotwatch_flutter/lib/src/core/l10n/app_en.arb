@@ -1611,5 +1611,9 @@
     "updateIssuesHint": "Delays, shortages, anything the funders should know",
     "@updateIssuesHint": {"description":"Progress update page and form (doc/05 §9.6)"},
     "updateTextHint": "Walls, deliveries, what is next…",
-    "@updateTextHint": {"description":"Progress update page and form (doc/05 §9.6)"}
+    "@updateTextHint": {"description":"Progress update page and form (doc/05 §9.6)"},
+    "activityPhotoAdded": "{actor} added a photo",
+    "@activityPhotoAdded": {"description":"Activity tab photo row; the badge below says the verdict","placeholders":{"actor":{"type":"String"}}},
+    "reviewShort": "Review",
+    "@reviewShort": {"description":"Web overview: the attention card's button (doc/05 §9.3)"}
 }

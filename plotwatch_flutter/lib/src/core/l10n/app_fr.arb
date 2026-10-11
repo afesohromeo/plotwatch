@@ -596,5 +596,7 @@
     "moreWorkers": "Un de plus",
     "labelUpdateIssuesOptional": "Problèmes (facultatif)",
     "updateIssuesHint": "Retards, manques, tout ce que les financeurs doivent savoir",
-    "updateTextHint": "Murs, livraisons, la suite…"
+    "updateTextHint": "Murs, livraisons, la suite…",
+    "activityPhotoAdded": "{actor} a ajouté une photo",
+    "reviewShort": "Examiner"
 }

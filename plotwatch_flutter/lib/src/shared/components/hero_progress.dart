@@ -19,7 +19,7 @@ class HeroProgress extends StatelessWidget {
   final List<StageStatus> statuses;
   final String stagesSemanticLabel;
 
-  /// Label and value pairs, e.g. ("Budget", "12.5 M XAF").
+  /// Label and value pairs, e.g. ("Budget", "12.5 M FCFA").
   final List<(String, String)> figures;
 
   @override

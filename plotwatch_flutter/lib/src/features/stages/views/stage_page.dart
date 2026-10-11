@@ -431,7 +431,13 @@ class _StageBody extends StatelessWidget {
                       onPressed: busy
                           ? null
                           : () => _requestChanges(context, bloc),
-                      child: Text(l10n.requestChangesAction),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          l10n.requestChangesAction,
+                          maxLines: 1,
+                        ),
+                      ),
                     ),
                   ),
                   const Gap.horizontal(width: 10),

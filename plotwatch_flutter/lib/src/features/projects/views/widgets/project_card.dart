@@ -5,10 +5,19 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 /// cover, name, type and the user's role, status, the stage bar, the
 /// progress, and what waits for the user.
 class ProjectCard extends StatelessWidget {
-  const ProjectCard({super.key, required this.summary, required this.onTap});
+  const ProjectCard({
+    super.key,
+    required this.summary,
+    required this.onTap,
+    this.compactWhenClosed = true,
+  });
 
   final ProjectSummary summary;
   final VoidCallback onTap;
+
+  /// In the phone list a paused or closed project gets the compact card; in
+  /// the grid every card has its cover (doc/05 §9.3).
+  final bool compactWhenClosed;
 
   static const coverHeight = 128.0;
   static Key attentionKey(int projectId) =>
@@ -37,7 +46,8 @@ class ProjectCard extends StatelessWidget {
     );
 
     // Paused, completed or archived: the design's compact card.
-    if (project.status != ProjectStatus.active &&
+    if (compactWhenClosed &&
+        project.status != ProjectStatus.active &&
         project.status != ProjectStatus.draft) {
       return _CompactCard(
         summary: summary,

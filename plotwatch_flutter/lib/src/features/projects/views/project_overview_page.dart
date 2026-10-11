@@ -21,6 +21,11 @@ class ProjectOverviewPage extends StatefulWidget {
   static const localizeButtonKey = Key('project.localizeSite');
   static const reviewSiteButtonKey = Key('project.reviewSite');
   static const editSiteButtonKey = Key('project.editSite');
+  /// From this width of the page's body, the web layout (canvas
+  /// W-WebProject).
+  static const webFrom = 1100.0;
+  static const coverPhotoKey = Key('project.coverPhoto');
+  static Key stageRowKey(int stageId) => Key('project.stageRow.$stageId');
   static const stagesCardKey = Key('project.stages');
   static const postUpdateButtonKey = Key('project.postUpdate');
   static const closedBannerKey = Key('project.closed');
@@ -303,7 +308,12 @@ class _OverviewBody extends StatelessWidget {
     String date(DateTime? value) =>
         value == null ? l10n.notSet : formatDate(value.toLocal());
 
-    return ContentLayout(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // The web's extras: the latest photo beside the hero, Review on the
+        // attention card, the stages as a table (canvas W-WebProject).
+        final web = constraints.maxWidth >= ProjectOverviewPage.webFrom;
+        return ContentLayout(
       onRefresh: onRefresh,
       main: [
         // Read-only from now on (doc/04e C-3).
@@ -331,7 +341,10 @@ class _OverviewBody extends StatelessWidget {
             ),
           ),
         // The progress at a glance; opens the Stages tab (doc/04c M3-11).
-        InkWell(
+        _HeroRow(
+          web: web,
+          projectId: projectId,
+          hero: InkWell(
           key: ProjectOverviewPage.stagesCardKey,
           borderRadius: BorderRadius.circular(PlotwatchTheme.heroRadius),
           onTap: () => context.goNamed(stagesRouteName, pathParameters: path),
@@ -370,6 +383,7 @@ class _OverviewBody extends StatelessWidget {
             ],
           ),
         ),
+        ),
         // What waits for this user (doc/05 §9 DP-1).
         if (attention case final waiting?)
           AttentionCard(
@@ -380,6 +394,7 @@ class _OverviewBody extends StatelessWidget {
             title: waiting.review
                 ? l10n.attentionReview(waiting.count, waiting.first.name)
                 : l10n.attentionChanges(waiting.count, waiting.first.name),
+            actionLabel: web && waiting.review ? l10n.reviewShort : null,
             onTap: () => waiting.count == 1
                 ? context.goNamed(
                     stageRouteName,
@@ -404,7 +419,14 @@ class _OverviewBody extends StatelessWidget {
               overview.myRole == ProjectRole.owner && !project.status.isClosed,
           onTap: () => context.goNamed(membersRouteName, pathParameters: path),
         ),
-        _LatestPhotos(projectId: projectId),
+        if (web)
+          _StageTable(
+            projectId: projectId,
+            stages: stages,
+            currencyCode: project.currencyCode,
+          )
+        else
+          _LatestPhotos(projectId: projectId),
       ],
       // Activity · Site · About behind a switch on a phone (doc/05 §9.4).
       sideLabels: [l10n.activityTitle, l10n.siteTitle, l10n.aboutShort],
@@ -455,6 +477,8 @@ class _OverviewBody extends StatelessWidget {
         ),
       ],
     );
+      },
+    );
   }
 
   /// What each role sees and can do about the site (doc/04b G-7, G-12, H-2,
@@ -465,10 +489,13 @@ class _OverviewBody extends StatelessWidget {
     final role = overview.myRole;
     final pathParameters = {'projectId': '${overview.project.id}'};
 
+    // Before the site is set, finding it is the call to action; after, the
+    // actions are upkeep (canvas W-WebProject).
     Widget button(Key key, String label, String routeName) => Padding(
       padding: const EdgeInsets.only(top: AppSpacing.sm),
       child: PrimaryButton(
         key: key,
+        withBg: site == null,
         width: double.infinity,
         onPressed: () =>
             context.goNamed(routeName, pathParameters: pathParameters),
@@ -628,6 +655,193 @@ class _MembersCard extends StatelessWidget {
 
 /// The project's latest photos, from its feed; each opens its page
 /// (doc/05 §9, B's photos).
+/// The hero; on the web with the latest photo beside it (canvas
+/// W-WebProject).
+class _HeroRow extends StatelessWidget {
+  const _HeroRow({
+    required this.web,
+    required this.projectId,
+    required this.hero,
+  });
+
+  final bool web;
+  final int projectId;
+  final Widget hero;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!web) return hero;
+    final l10n = AppLocalizations.of(context)!;
+    return BlocBuilder<FeedBloc, FeedState>(
+      buildWhen: (previous, current) => previous.activity != current.activity,
+      builder: (context, state) {
+        final photo = state.activity
+            .map((entry) => entry.event)
+            .where(
+              (event) =>
+                  event.type == ActivityType.evidenceCaptured &&
+                  event.targetId != null &&
+                  event.payload?['stageId'] != null,
+            )
+            .firstOrNull;
+        if (photo == null) return hero;
+        final level = VerificationLevel.values
+            .asNameMap()[photo.payload?['verificationLevel']];
+        final radius = BorderRadius.circular(PlotwatchTheme.heroRadius);
+        return IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(flex: 6, child: hero),
+              const Gap.horizontal(width: 20),
+              Expanded(
+                flex: 5,
+                child: InkWell(
+                  key: ProjectOverviewPage.coverPhotoKey,
+                  borderRadius: radius,
+                  onTap: () => context.goNamed(
+                    evidenceRouteName,
+                    pathParameters: {
+                      'projectId': '$projectId',
+                      'stageId': photo.payload!['stageId']!,
+                      'evidenceId': '${photo.targetId}',
+                    },
+                  ),
+                  child: ClipRRect(
+                    borderRadius: radius,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        EvidenceImage(
+                          projectId: projectId,
+                          evidenceId: photo.targetId!,
+                          variant: MediaVariant.photo,
+                        ),
+                        if (level != null)
+                          Positioned(
+                            top: 12,
+                            right: 12,
+                            child: VerificationBadge(level: level),
+                          ),
+                        Positioned(
+                          left: 12,
+                          bottom: 12,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: customColors.ink.withValues(alpha: .72),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              '${l10n.latestPhoto} · '
+                              '${dayAndTime(photo.createdAt, l10n)}',
+                              style: context.textTheme.labelMedium?.copyWith(
+                                color: customColors.onPrimary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// The stages as a table: number and name, status, budget (canvas
+/// W-WebProject). A row opens its stage.
+class _StageTable extends StatelessWidget {
+  const _StageTable({
+    required this.projectId,
+    required this.stages,
+    required this.currencyCode,
+  });
+
+  final int projectId;
+  final List<StageBrief> stages;
+  final String currencyCode;
+
+  @override
+  Widget build(BuildContext context) {
+    if (stages.isEmpty) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context)!;
+    final head = context.textTheme.labelMedium?.copyWith(
+      color: customColors.muted,
+      fontWeight: FontWeight.w800,
+    );
+    Widget row(List<Widget> cells) => Row(
+      children: [
+        Expanded(child: cells[0]),
+        SizedBox(width: 170, child: cells[1]),
+        SizedBox(width: 130, child: cells[2]),
+      ],
+    );
+    return AppCard(
+      padding: const EdgeInsets.fromLTRB(18, 6, 18, 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: row([
+              Text(l10n.labelUpdateStage, style: head),
+              Text(l10n.labelStatus, style: head),
+              Text(l10n.figureBudget, style: head, textAlign: TextAlign.end),
+            ]),
+          ),
+          for (var i = 0; i < stages.length; i++)
+            InkWell(
+              key: ProjectOverviewPage.stageRowKey(stages[i].id),
+              onTap: () => context.goNamed(
+                stageRouteName,
+                pathParameters: {
+                  'projectId': '$projectId',
+                  'stageId': '${stages[i].id}',
+                },
+              ),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  border: Border(top: BorderSide(color: customColors.lineSoft)),
+                ),
+                child: row([
+                  Text(
+                    '${i + 1} · ${stages[i].name}',
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.titleSmall,
+                  ),
+                  Text(
+                    stages[i].status.label(l10n),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: stages[i].status.color,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    formatMoneyInput(stages[i].budgetMinor, currencyCode),
+                    textAlign: TextAlign.end,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: customColors.ink,
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _LatestPhotos extends StatelessWidget {
   const _LatestPhotos({required this.projectId});
 

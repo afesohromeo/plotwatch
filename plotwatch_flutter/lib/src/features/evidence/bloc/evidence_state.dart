@@ -14,6 +14,9 @@ sealed class EvidenceState with _$EvidenceState {
     /// The capture's stage, for the schedule line (doc/04e M5-10).
     Stage? stage,
 
+    /// The checklist item it was taken for: the page's title (doc/05 §9.3).
+    String? itemLabel,
+
     /// The signed-in user took the photo.
     @Default(false) bool isMine,
     @Default(GenericStatus.initial) GenericStatus loadStatus,

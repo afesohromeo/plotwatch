@@ -359,6 +359,74 @@ void main() {
     );
   });
 
+  // doc/05 §9.6.
+  for (final (name, size) in [('phone', phone), ('desktop', desktop)]) {
+    testWidgets('update $name', (tester) async {
+      final bloc = MockUpdateBloc();
+      when(() => bloc.state).thenReturn(
+        UpdateState(
+          loadStatus: GenericStatus.success,
+          stageName: 'Walls',
+          update: ProgressUpdate(
+            id: 4,
+            projectId: 1,
+            stageId: 3,
+            authorId: UuidValue.fromString(testManagerId),
+            authorName: 'Bob Mbarga',
+            text:
+                'Walls are up on all four sides. The masons finished the last '
+                'course this morning and we started the lintels over the '
+                'windows. Cement delivery came late, we lost half a day.',
+            workersCount: 6,
+            weather: Weather.sunny,
+            issues:
+                'Cement delivery came at 13:00 instead of 08:00. The '
+                "supplier says Monday's delivery is confirmed.",
+            createdAt: now.subtract(const Duration(hours: 1)),
+          ),
+        ),
+      );
+      await shot(
+        tester,
+        'update_$name',
+        size,
+        inShell(
+          '/projects/1/updates/4',
+          BlocProvider<UpdateBloc>.value(
+            value: bloc,
+            child: const UpdatePage(projectId: 1, updateId: 4),
+          ),
+        ),
+      );
+    });
+  }
+
+  testWidgets('update form phone', (tester) async {
+    final bloc = MockUpdateFormBloc();
+    when(() => bloc.state).thenReturn(
+      UpdateFormState(
+        projectId: 1,
+        loadStatus: GenericStatus.success,
+        stages: [
+          testStage(id: 2, name: 'Foundation', status: StageStatus.approved),
+          testStage(id: 3, name: 'Walls', status: StageStatus.inProgress),
+        ],
+      ),
+    );
+    await shot(
+      tester,
+      'update_form_phone',
+      phone,
+      inShell(
+        '/projects/1/updates/new',
+        BlocProvider<UpdateFormBloc>.value(
+          value: bloc,
+          child: const UpdateFormPage(projectId: 1),
+        ),
+      ),
+    );
+  });
+
   testWidgets('notifications phone', (tester) async {
     final bloc = MockNotificationsBloc();
     final items = [

@@ -2125,4 +2125,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateTextHint => 'Walls, deliveries, what is next…';
+
+  @override
+  String activityPhotoAdded(String actor) {
+    return '$actor added a photo';
+  }
+
+  @override
+  String get reviewShort => 'Review';
 }

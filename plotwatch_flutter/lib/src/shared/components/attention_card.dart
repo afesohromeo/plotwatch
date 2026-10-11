@@ -10,12 +10,16 @@ class AttentionCard extends StatelessWidget {
     this.subtitle,
     this.icon = Icons.rate_review_outlined,
     required this.onTap,
+    this.actionLabel,
   });
 
   final String title;
   final String? subtitle;
   final IconData icon;
   final VoidCallback onTap;
+
+  /// A button instead of the chevron, e.g. "Review" on the web.
+  final String? actionLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +44,20 @@ class AttentionCard extends StatelessWidget {
               ],
             ),
           ),
-          Icon(Icons.chevron_right_rounded, color: customColors.muted),
+          if (actionLabel case final label?)
+            FilledButton(
+              onPressed: onTap,
+              style: FilledButton.styleFrom(
+                minimumSize: const Size(0, 44),
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(label),
+            )
+          else
+            Icon(Icons.chevron_right_rounded, color: customColors.muted),
         ],
       ),
     );

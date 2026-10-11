@@ -19,14 +19,17 @@ void main() {
   });
 
   group('Given an amount in minor units when it is shown', () {
-    test('in XAF and English then the symbol is followed by a space', () {
-      expect(formatMoney(1500000, 'XAF', locale: 'en'), 'FCFA 1,500,000');
+    // Developer, 2026-10-11: "1,500,000 FCFA", as written in Cameroon.
+    test('in XAF then it is grouped with commas, FCFA after, in every '
+        'language', () {
+      expect(formatMoney(1500000, 'XAF', locale: 'en'), '1,500,000 FCFA');
+      expect(formatMoney(1500000, 'XAF', locale: 'fr'), '1,500,000 FCFA');
     });
 
-    test('in XAF and French then digits are grouped the French way', () {
+    test('in short then FCFA follows the figure', () {
       expect(
-        formatMoney(1500000, 'XAF', locale: 'fr'),
-        '1${nnbsp}500${nnbsp}000 FCFA',
+        formatMoneyShort(12500000, 'XAF', locale: 'fr'),
+        '12.5 M FCFA',
       );
     });
 
@@ -37,10 +40,7 @@ void main() {
 
     test('for the input field then there is no symbol', () {
       expect(formatMoneyInput(125050, 'EUR', locale: 'en'), '1,250.50');
-      expect(
-        formatMoneyInput(1500000, 'XAF', locale: 'fr'),
-        '1${nnbsp}500${nnbsp}000',
-      );
+      expect(formatMoneyInput(1500000, 'XAF', locale: 'fr'), '1,500,000');
       expect(formatMoneyInput(0, 'XAF', locale: 'en'), '0');
     });
   });
@@ -52,6 +52,8 @@ void main() {
       ('1 500 000', 'XAF', 'fr'): 1500000,
       ('1${nnbsp}500${nnbsp}000', 'XAF', 'fr'): 1500000,
       ('1 500 000', 'XAF', 'fr'): 1500000,
+      // As the field shows it now, in French too.
+      ('1,500,000', 'XAF', 'fr'): 1500000,
       ('1,250.50', 'EUR', 'en'): 125050,
       ('1250.5', 'EUR', 'en'): 125050,
       ('1 250,50', 'EUR', 'fr'): 125050,

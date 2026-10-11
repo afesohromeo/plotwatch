@@ -107,15 +107,18 @@ class FilterChips<T> extends StatelessWidget {
         ),
       ...trailing,
     ];
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          for (var i = 0; i < pills.length; i++) ...[
-            if (i > 0) const Gap.horizontal(width: AppSpacing.sm),
-            pills[i],
+            for (var i = 0; i < pills.length; i++) ...[
+              if (i > 0) const Gap.horizontal(width: AppSpacing.sm),
+              pills[i],
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

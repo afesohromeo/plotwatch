@@ -54,6 +54,10 @@ class EvidenceBloc extends Bloc<EvidenceEvent, EvidenceState> {
           overview: overview,
           evidence: evidence,
           stage: stage.stage,
+          itemLabel: stage.items
+              .where((item) => item.id == evidence.checklistItemId)
+              .firstOrNull
+              ?.label,
           isMine: evidence.capturedBy == _authRepository.currentUserId,
         ),
       );
