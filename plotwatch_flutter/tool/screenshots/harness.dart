@@ -119,7 +119,6 @@ Future<void> shot(
   addTearDown(tester.view.reset);
   // flutter_test draws elevation as a black outline unless told not to.
   debugDisableShadows = false;
-  addTearDown(() => debugDisableShadows = true);
   await tester.pumpWidget(
     MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -140,7 +139,12 @@ Future<void> shot(
   });
   await tester.pump(const Duration(milliseconds: 200));
   await tester.pump(const Duration(milliseconds: 200));
-  await expectLater(find.byKey(_root), matchesGoldenFile('out/$name.png'));
+  try {
+    await expectLater(find.byKey(_root), matchesGoldenFile('out/$name.png'));
+  } finally {
+    // Checked before the tear-downs run.
+    debugDisableShadows = true;
+  }
 }
 
 /// The sample project of the canvas.
