@@ -5,10 +5,16 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 /// finishing registration also store the session. Errors are logged and
 /// rethrown (RULE-012).
 class AuthRepository {
-  AuthRepository({AuthApiProvider? apiProvider})
-    : _apiProvider = apiProvider ?? AuthApiProvider();
+  AuthRepository({
+    AuthApiProvider? apiProvider,
+    ProfileApiProvider? profileApiProvider,
+  }) : _apiProvider = apiProvider ?? AuthApiProvider(),
+       _profileApiProvider = profileApiProvider ?? ProfileApiProvider();
 
   final AuthApiProvider _apiProvider;
+  final ProfileApiProvider _profileApiProvider;
+
+  bool get isGoogleSignInAvailable => _apiProvider.isGoogleSignInAvailable;
 
   bool get isSignedIn => _apiProvider.isSignedIn;
 
@@ -26,6 +32,26 @@ class AuthRepository {
       await _apiProvider.saveSession(authSuccess);
     } catch (e) {
       log('Error signing in: $e');
+      rethrow;
+    }
+  }
+
+  /// Signs in with Google and stores the session; false when the user
+  /// closed Google's window. A new user gets the app's [locale], as with
+  /// the email sign-up; failing that never undoes the sign-in.
+  Future<bool> signInWithGoogle({required String locale}) async {
+    try {
+      final authSuccess = await _apiProvider.signInWithGoogle();
+      if (authSuccess == null) return false;
+      await _apiProvider.saveSession(authSuccess);
+      try {
+        await _profileApiProvider.adoptLocale(locale: locale);
+      } catch (e) {
+        log('Error adopting the language after Google sign-in: $e');
+      }
+      return true;
+    } catch (e) {
+      log('Error signing in with Google: $e');
       rethrow;
     }
   }

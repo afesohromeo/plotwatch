@@ -1,7 +1,9 @@
 // Screenshot harness for the design check (doc/05 §9.3). Not part of the
 // test suite: run with
 //   flutter test --update-goldens tool/screenshots/
-// and look at tool/screenshots/out/*.png.
+// and look at tool/screenshots/out/*.png. In French (doc/04g step 5):
+//   flutter test --update-goldens --dart-define=LOCALE=fr tool/screenshots/
+// writes out/*_fr.png.
 import 'dart:io';
 
 import 'package:bloc_test/bloc_test.dart';
@@ -13,6 +15,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 import '../../test/helpers/helpers.dart';
+
+/// The language of the shots: `--dart-define=LOCALE=fr` for French.
+const shotLocale = String.fromEnvironment('LOCALE', defaultValue: 'en');
 
 const phone = Size(390, 844);
 const tablet = Size(1024, 768);
@@ -123,7 +128,7 @@ Future<void> shot(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: PlotwatchTheme.light(customColors),
-      locale: const Locale('en'),
+      locale: const Locale(shotLocale),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: RepaintBoundary(key: _root, child: page),
@@ -140,7 +145,10 @@ Future<void> shot(
   await tester.pump(const Duration(milliseconds: 200));
   await tester.pump(const Duration(milliseconds: 200));
   try {
-    await expectLater(find.byKey(_root), matchesGoldenFile('out/$name.png'));
+    await expectLater(find.byKey(_root), matchesGoldenFile(
+        shotLocale == 'en' ? 'out/$name.png' : 'out/${name}_$shotLocale.png',
+      ),
+    );
   } finally {
     // Checked before the tear-downs run.
     debugDisableShadows = true;
@@ -233,3 +241,32 @@ final feed = [
     ago: const Duration(days: 1, hours: 2),
   ),
 ];
+
+/// AC-5's numbers (doc/04f), with a few entries.
+final ledgerEntries = [
+  testExpense(id: 4, amountMinor: 50000, receipt: false).copyWith(
+    description: 'Transport of sand and gravel',
+    category: ExpenseCategory.transport,
+  ),
+  testExpense(id: 3),
+  testRelease(id: 1, confirmedAt: DateTime.utc(2026, 10, 11, 12)),
+];
+
+MockMoneyBloc moneyBloc() {
+  final bloc = MockMoneyBloc();
+  final state = MoneyState(
+    projectId: 1,
+    summary: testLedgerSummary(),
+    summaryStatus: GenericStatus.success,
+    entries: ledgerEntries,
+    paginatedEntries: ledgerEntries,
+    maxEntries: true,
+    entriesListStatus: GenericStatus.success,
+  );
+  whenListen(
+    bloc,
+    Stream.value(state),
+    initialState: state.copyWith(entriesListStatus: GenericStatus.initial),
+  );
+  return bloc;
+}

@@ -21,4 +21,36 @@ void main() {
 
     expect(widget.object, {'apiUrl': 'http://localhost:8080/'});
   });
+
+  // doc/04g step 4: the web app needs the Google web client ID, which is not
+  // a secret; it is read from the googleClientSecret password.
+  test('Given a Google client ID then config.json carries it', () {
+    final widget = AppConfigWidget(
+      apiUrl: 'http://localhost:8080/',
+      googleClientId: 'id.apps.googleusercontent.com',
+    );
+
+    expect(widget.object, {
+      'apiUrl': 'http://localhost:8080/',
+      'googleClientId': 'id.apps.googleusercontent.com',
+    });
+  });
+
+  group('Given the googleClientSecret password', () {
+    test('when it is the JSON from Google then the web client ID is read', () {
+      expect(
+        AppConfigRoute.googleClientIdFrom(
+          '{"web": {"client_id": "id.apps.googleusercontent.com", '
+          '"client_secret": "secret"}}',
+        ),
+        'id.apps.googleusercontent.com',
+      );
+    });
+
+    test('when it is missing or not that JSON then there is no ID', () {
+      expect(AppConfigRoute.googleClientIdFrom(null), isNull);
+      expect(AppConfigRoute.googleClientIdFrom('not json'), isNull);
+      expect(AppConfigRoute.googleClientIdFrom('{"installed": {}}'), isNull);
+    });
+  });
 }

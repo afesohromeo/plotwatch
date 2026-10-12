@@ -76,6 +76,8 @@ values:
   - alreadyReversed
   - alreadyConfirmed
   - notEntryAuthor
+  # One account per email (doc/04g, AUTH-04b)
+  - emailUsesGoogle
   # Free text longer than its limit
   - textTooLong
   # Set by the client from the auth module's exceptions

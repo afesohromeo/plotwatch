@@ -87,9 +87,18 @@ class RouteManager {
         path: signInPage,
         pageBuilder: (context, state) => NoTransitionPage<void>(
           key: state.pageKey,
-          child: BlocProvider(
-            create: (context) =>
-                SignInBloc(authRepository: context.read<AuthRepository>()),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) =>
+                    SignInBloc(authRepository: context.read<AuthRepository>()),
+              ),
+              BlocProvider(
+                create: (context) => GoogleSignInBloc(
+                  authRepository: context.read<AuthRepository>(),
+                ),
+              ),
+            ],
             child: const SignInPage(),
           ),
         ),
@@ -99,9 +108,18 @@ class RouteManager {
         path: signUpPage,
         pageBuilder: (context, state) => NoTransitionPage<void>(
           key: state.pageKey,
-          child: BlocProvider(
-            create: (context) =>
-                SignUpBloc(authRepository: context.read<AuthRepository>()),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) =>
+                    SignUpBloc(authRepository: context.read<AuthRepository>()),
+              ),
+              BlocProvider(
+                create: (context) => GoogleSignInBloc(
+                  authRepository: context.read<AuthRepository>(),
+                ),
+              ),
+            ],
             child: const SignUpPage(),
           ),
         ),

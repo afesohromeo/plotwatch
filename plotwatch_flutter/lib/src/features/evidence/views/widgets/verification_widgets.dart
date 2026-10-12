@@ -3,9 +3,13 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 /// A capture's badge: its level with an icon (VER-02, VER-03).
 class VerificationBadge extends StatelessWidget {
-  const VerificationBadge({super.key, required this.level});
+  const VerificationBadge({super.key, required this.level, this.short = false});
 
   final VerificationLevel level;
+
+  /// Under a narrow photo tile: "Partial" instead of "Partially verified",
+  /// which French cuts off (doc/04g step 5).
+  final bool short;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +36,9 @@ class VerificationBadge extends StatelessWidget {
           // Shortened rather than overflowing in a narrow photo tile.
           Flexible(
             child: Text(
-              level.label(l10n),
+              short && level == VerificationLevel.partiallyVerified
+                  ? l10n.badgePartial
+                  : level.label(l10n),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: context.textTheme.labelMedium?.copyWith(color: tone),

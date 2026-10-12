@@ -2,9 +2,9 @@ activity:
   - list:
   - watch:
 emailIdp:
+  - startRegistration:
   - finishRegistrationWithProfile:
   - login:
-  - startRegistration:
   - verifyRegistrationCode:
   - finishRegistration:
   - startPasswordReset:
@@ -19,6 +19,10 @@ evidence:
   - get:
   - media:
   - retract:
+googleIdp:
+  - login:
+  - loginWithCode:
+  - hasAccount:
 jwtRefresh:
   - refreshAccessToken:
 ledger:
@@ -50,6 +54,7 @@ notification:
 profile:
   - getMe:
   - updateMe:
+  - adoptLocale:
 progressUpdate:
   - create:
   - get:

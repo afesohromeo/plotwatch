@@ -186,6 +186,73 @@ void main() {
     },
     rollbackDatabase: RollbackDatabase.disabled,
   );
+
+  // doc/04g step 4: a Google sign-up sends no language, so the app sends its
+  // own, as the email sign-up does (finishRegistrationWithProfile).
+  withServerpod('Given a user who signed up with Google', (
+    sessionBuilder,
+    endpoints,
+  ) {
+    late TestSessionBuilder signedIn;
+
+    setUp(() async {
+      final session = sessionBuilder.build();
+      final authUser = await AuthServices.instance.authUsers.create(session);
+      await AuthServices.instance.userProfiles.createUserProfile(
+        session,
+        authUser.id,
+        UserProfileData(fullName: 'Ada Lovelace', email: 'ada@gmail.com'),
+      );
+      signedIn = sessionBuilder.copyWith(
+        authentication: AuthenticationOverride.authenticationInfo(
+          authUser.id.uuid,
+          {},
+        ),
+      );
+    });
+
+    test('when the app adopts its language then the profile has it, with '
+        'the name from Google', () async {
+      final me = await endpoints.profile.adoptLocale(signedIn, locale: 'fr');
+
+      expect(me.locale, 'fr');
+      expect(me.fullName, 'Ada Lovelace');
+      expect((await endpoints.profile.getMe(signedIn)).locale, 'fr');
+    });
+
+    test('when settings were already saved then adopting keeps them', () async {
+      await endpoints.profile.updateMe(
+        signedIn,
+        fullName: 'Ada Lovelace',
+        countryCode: 'CM',
+        locale: 'en',
+      );
+
+      final me = await endpoints.profile.adoptLocale(signedIn, locale: 'fr');
+
+      expect(me.locale, 'en');
+      expect(me.countryCode, 'CM');
+    });
+
+    test('when the language is not supported then it is refused', () async {
+      await expectLater(
+        endpoints.profile.adoptLocale(signedIn, locale: 'de'),
+        throwsA(_appException(AppErrorCode.invalidLocale)),
+      );
+    });
+
+    test('without signing in then it throws unauthenticated', () async {
+      await expectLater(
+        endpoints.profile.adoptLocale(
+          sessionBuilder.copyWith(
+            authentication: AuthenticationOverride.unauthenticated(),
+          ),
+          locale: 'fr',
+        ),
+        throwsA(isA<ServerpodUnauthenticatedException>()),
+      );
+    });
+  });
 }
 
 Matcher _appException(AppErrorCode code) =>

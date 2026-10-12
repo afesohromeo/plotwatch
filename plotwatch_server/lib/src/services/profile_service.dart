@@ -89,9 +89,37 @@ class ProfileService {
     });
   }
 
+  /// The app's language for a user who has no settings yet: a Google
+  /// sign-up sends none (doc/04g step 4). Saved settings are kept.
+  Future<MyProfile> adoptLocale(
+    Session session,
+    UuidValue authUserId, {
+    required String locale,
+  }) {
+    if (!supportedLocales.contains(locale)) {
+      throw AppException(code: AppErrorCode.invalidLocale);
+    }
+    return session.db.transaction((transaction) async {
+      final settings = await _findOrCreateSettings(
+        session,
+        authUserId,
+        locale: locale,
+        transaction: transaction,
+      );
+      return _toMyProfile(
+        session,
+        authUserId,
+        countryCode: settings.countryCode,
+        locale: settings.locale,
+        transaction: transaction,
+      );
+    });
+  }
+
   Future<UserSettings> _findOrCreateSettings(
     Session session,
     UuidValue authUserId, {
+    String locale = defaultLocale,
     Transaction? transaction,
   }) async {
     final existing = await UserSettings.db.findFirstRow(
@@ -106,7 +134,7 @@ class ProfileService {
       session,
       UserSettings(
         authUserId: authUserId,
-        locale: defaultLocale,
+        locale: locale,
         createdAt: now,
         updatedAt: now,
       ),

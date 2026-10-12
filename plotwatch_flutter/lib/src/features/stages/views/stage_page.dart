@@ -305,7 +305,7 @@ class _StageBody extends StatelessWidget {
         if (stage.plannedStart != null || stage.plannedEnd != null) ...[
           const Gap.vertical(height: 6),
           Text(
-            '${l10n.labelPlannedDates}: '
+            '${l10n.labelColon(l10n.labelPlannedDates)} '
             '${date(stage.plannedStart)} – ${date(stage.plannedEnd)}',
             style: context.textTheme.bodySmall,
           ),
@@ -477,12 +477,13 @@ class _StageBody extends StatelessWidget {
                       onPressed: busy
                           ? null
                           : () => _requestChanges(context, bloc),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          l10n.requestChangesAction,
-                          maxLines: 1,
-                        ),
+                      // Two lines rather than shrunk: French is long
+                      // (doc/04g step 5).
+                      child: Text(
+                        l10n.requestChangesAction,
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
@@ -810,6 +811,7 @@ class _CaptureTile extends StatelessWidget {
             switch (capture.status) {
               EvidenceStatus.finalized => VerificationBadge(
                 level: capture.verificationLevel,
+                short: true,
               ),
               EvidenceStatus.retracted => Text(
                 l10n.captureRetracted,

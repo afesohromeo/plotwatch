@@ -64,6 +64,7 @@ extension AppErrorCodeMessage on AppErrorCode {
     AppErrorCode.alreadyReversed => l10n.errorAlreadyReversed,
     AppErrorCode.alreadyConfirmed => l10n.errorAlreadyConfirmed,
     AppErrorCode.notEntryAuthor => l10n.errorNotEntryAuthor,
+    AppErrorCode.emailUsesGoogle => l10n.errorEmailUsesGoogle,
     AppErrorCode.textTooLong => l10n.errorTextTooLong,
     AppErrorCode.authInvalidCredentials => l10n.errorAuthInvalidCredentials,
     AppErrorCode.authTooManyAttempts => l10n.errorAuthTooManyAttempts,

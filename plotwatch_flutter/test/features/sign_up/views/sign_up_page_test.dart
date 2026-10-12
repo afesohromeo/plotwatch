@@ -25,7 +25,7 @@ void main() {
       () => bloc.state,
     ).thenReturn(SignUpState(step: step, email: 'ada@example.com'));
     return tester.pumpApp(
-      BlocProvider<SignUpBloc>.value(value: bloc, child: const SignUpPage()),
+      BlocProvider<SignUpBloc>.value(value: bloc, child: withGoogleSignIn(const SignUpPage())),
     );
   }
 
@@ -50,6 +50,23 @@ void main() {
     );
   }
 
+  // doc/04g, AUTH-04b: no code is sent to an email already registered.
+  testWidgets('Given the code step then it says why a code may not come, '
+      'and offers to sign in', (tester) async {
+    await pumpAt(tester, SignUpStep.verifyCode);
+
+    expect(find.text(l10n.signUpNoCodeHint), findsOneWidget);
+    expect(find.text(l10n.alreadyHaveAccount), findsOneWidget);
+  });
+
+  testWidgets('Given the details step then the no-code hint is not shown', (
+    tester,
+  ) async {
+    await pumpAt(tester, SignUpStep.details);
+
+    expect(find.byKey(SignUpPage.noCodeHintKey), findsNothing);
+  });
+
   group('Given the password step', () {
     testWidgets('when the bloc shows only the password then only that field is '
         'readable', (tester) async {
@@ -57,7 +74,7 @@ void main() {
         const SignUpState(step: SignUpStep.password, isPasswordVisible: true),
       );
       await tester.pumpApp(
-        BlocProvider<SignUpBloc>.value(value: bloc, child: const SignUpPage()),
+        BlocProvider<SignUpBloc>.value(value: bloc, child: withGoogleSignIn(const SignUpPage())),
       );
 
       expect(isObscured(tester, SignUpPage.passwordFieldKey), isFalse);
@@ -200,7 +217,7 @@ void main() {
         await tester.pumpApp(
           BlocProvider<SignUpBloc>.value(
             value: bloc,
-            child: const SignUpPage(),
+            child: withGoogleSignIn(const SignUpPage()),
           ),
         );
         await tester.pump();
@@ -227,7 +244,7 @@ void main() {
         await tester.pumpApp(
           BlocProvider<SignUpBloc>.value(
             value: bloc,
-            child: const SignUpPage(),
+            child: withGoogleSignIn(const SignUpPage()),
           ),
         );
         await tester.pump();

@@ -21,7 +21,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get validateMobile1 => 'Numéro de téléphone invalide';
 
   @override
-  String get tel => 'Tel';
+  String get tel => 'Tél.';
 
   @override
   String get validateMobile2 => 'Le numéro de téléphone doit commencer par 6.';
@@ -297,7 +297,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les mots de passe ne correspondent pas';
 
   @override
-  String get signInHeading => 'Bon retour';
+  String get signInHeading => 'Content de vous revoir';
 
   @override
   String get showPassword => 'Afficher le mot de passe';
@@ -1768,12 +1768,26 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String progressBudgetAndStages(int percent, int approved, int total) {
-    return '$percent % du budget · $approved étapes approuvées sur $total';
+    String _temp0 = intl.Intl.pluralLogic(
+      approved,
+      locale: localeName,
+      other: '$approved étapes approuvées',
+      one: '1 étape approuvée',
+      zero: 'aucune étape approuvée',
+    );
+    return '$percent % du budget · $_temp0 sur $total';
   }
 
   @override
   String progressStagesOnly(int approved, int total) {
-    return '$approved étapes approuvées sur $total';
+    String _temp0 = intl.Intl.pluralLogic(
+      approved,
+      locale: localeName,
+      other: '$approved étapes approuvées',
+      one: '1 étape approuvée',
+      zero: 'aucune étape approuvée',
+    );
+    return '$_temp0 sur $total';
   }
 
   @override
@@ -1929,7 +1943,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get waitingForYourReview => 'Attend votre validation';
+  String get waitingForYourReview => 'À valider';
 
   @override
   String membersCount(int count) {
@@ -2295,7 +2309,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String moneyStageNothing(String budget) {
-    return 'Rien de versé · budget $budget';
+    return 'Aucun versement · budget $budget';
   }
 
   @override
@@ -2394,7 +2408,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get labelNoteOptional => 'Note (facultatif)';
 
   @override
-  String get labelWhatFor => 'Pour quoi';
+  String get labelWhatFor => 'Catégorie';
 
   @override
   String get labelExpenseDescription => 'Description';
@@ -2415,7 +2429,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get labelRecordedBy => 'Saisi par';
 
   @override
-  String get labelConfirmation => 'Reçu';
+  String get labelConfirmation => 'Réception';
 
   @override
   String get receiptTitle => 'Reçu';
@@ -2561,4 +2575,27 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get laterAction => 'Plus tard';
+
+  @override
+  String get continueWithGoogle => 'Continuer avec Google';
+
+  @override
+  String get orDivider => 'ou';
+
+  @override
+  String get errorGoogleSignIn =>
+      'Connexion avec Google impossible. Réessayez.';
+
+  @override
+  String get errorEmailUsesGoogle =>
+      'Cette adresse est utilisée avec Google. Utilisez Continuer avec Google.';
+
+  @override
+  String get signUpNoCodeHint =>
+      'Pas de code ? Si vous avez déjà un compte avec cette adresse, connectez-vous ou réinitialisez votre mot de passe.';
+
+  @override
+  String labelColon(String label) {
+    return '$label :';
+  }
 }

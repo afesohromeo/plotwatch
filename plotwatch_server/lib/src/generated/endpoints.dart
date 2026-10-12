@@ -37,6 +37,7 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
 import '../endpoints/activity_endpoint.dart' as _ijhtbkuk;
 import '../endpoints/email_idp_endpoint.dart' as _ilutrrxn;
 import '../endpoints/evidence_endpoint.dart' as _i2cvsm7u;
+import '../endpoints/google_idp_endpoint.dart' as _iiimk4ot;
 import '../endpoints/jwt_refresh_endpoint.dart' as _in48dm4x;
 import '../endpoints/ledger_endpoint.dart' as _icwojbcf;
 import '../endpoints/membership_endpoint.dart' as _it8meaj6;
@@ -67,6 +68,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'evidence',
+          null,
+        ),
+      'googleIdp': _iiimk4ot.GoogleIdpEndpoint()
+        ..initialize(
+          server,
+          'googleIdp',
           null,
         ),
       'jwtRefresh': _in48dm4x.JwtRefreshEndpoint()
@@ -204,6 +211,25 @@ class Endpoints extends _is.EndpointDispatch {
       name: 'emailIdp',
       endpoint: endpoints['emailIdp']!,
       methodConnectors: {
+        'startRegistration': _is.MethodConnector(
+          name: 'startRegistration',
+          params: {
+            'email': _is.ParameterDescription(
+              name: 'email',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['emailIdp'] as _ilutrrxn.EmailIdpEndpoint)
+                  .startRegistration(
+                    session,
+                    email: params['email'],
+                  ),
+        ),
         'finishRegistrationWithProfile': _is.MethodConnector(
           name: 'finishRegistrationWithProfile',
           params: {
@@ -264,25 +290,6 @@ class Endpoints extends _is.EndpointDispatch {
                     session,
                     email: params['email'],
                     password: params['password'],
-                  ),
-        ),
-        'startRegistration': _is.MethodConnector(
-          name: 'startRegistration',
-          params: {
-            'email': _is.ParameterDescription(
-              name: 'email',
-              type: _is.getType<String>(),
-              nullable: false,
-            ),
-          },
-          call:
-              (
-                _is.Session session,
-                Map<String, dynamic> params,
-              ) async => (endpoints['emailIdp'] as _ilutrrxn.EmailIdpEndpoint)
-                  .startRegistration(
-                    session,
-                    email: params['email'],
                   ),
         ),
         'verifyRegistrationCode': _is.MethodConnector(
@@ -607,6 +614,78 @@ class Endpoints extends _is.EndpointDispatch {
                     params['evidenceId'],
                     params['reason'],
                   ),
+        ),
+      },
+    );
+    connectors['googleIdp'] = _is.EndpointConnector(
+      name: 'googleIdp',
+      endpoint: endpoints['googleIdp']!,
+      methodConnectors: {
+        'login': _is.MethodConnector(
+          name: 'login',
+          params: {
+            'idToken': _is.ParameterDescription(
+              name: 'idToken',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'accessToken': _is.ParameterDescription(
+              name: 'accessToken',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['googleIdp'] as _iiimk4ot.GoogleIdpEndpoint).login(
+                    session,
+                    idToken: params['idToken'],
+                    accessToken: params['accessToken'],
+                  ),
+        ),
+        'loginWithCode': _is.MethodConnector(
+          name: 'loginWithCode',
+          params: {
+            'code': _is.ParameterDescription(
+              name: 'code',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'codeVerifier': _is.ParameterDescription(
+              name: 'codeVerifier',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'redirectUri': _is.ParameterDescription(
+              name: 'redirectUri',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['googleIdp'] as _iiimk4ot.GoogleIdpEndpoint)
+                  .loginWithCode(
+                    session,
+                    code: params['code'],
+                    codeVerifier: params['codeVerifier'],
+                    redirectUri: params['redirectUri'],
+                  ),
+        ),
+        'hasAccount': _is.MethodConnector(
+          name: 'hasAccount',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['googleIdp'] as _iiimk4ot.GoogleIdpEndpoint)
+                  .hasAccount(session),
         ),
       },
     );
@@ -1243,6 +1322,25 @@ class Endpoints extends _is.EndpointDispatch {
                     session,
                     fullName: params['fullName'],
                     countryCode: params['countryCode'],
+                    locale: params['locale'],
+                  ),
+        ),
+        'adoptLocale': _is.MethodConnector(
+          name: 'adoptLocale',
+          params: {
+            'locale': _is.ParameterDescription(
+              name: 'locale',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['profile'] as _i2cx2pww.ProfileEndpoint)
+                  .adoptLocale(
+                    session,
                     locale: params['locale'],
                   ),
         ),

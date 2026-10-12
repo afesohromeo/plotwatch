@@ -129,6 +129,16 @@ class EndpointEmailIdp extends _iaic.EndpointEmailIdpBase {
   @override
   String get name => 'emailIdp';
 
+  /// One account per email (AUTH-04b, doc/04g): an email that only a Google
+  /// user has is refused, with "use Continue with Google".
+  @override
+  _ida.Future<_isc.UuidValue> startRegistration({required String email}) =>
+      caller.callServerEndpoint<_isc.UuidValue>(
+        'emailIdp',
+        'startRegistration',
+        {'email': email},
+      );
+
   /// Last step of Plotwatch's sign-up (decision M1-4): creates the account
   /// and saves the user's name and language **in the same request**, so no
   /// other request can see the new user half-created (Cloud bug of
@@ -171,24 +181,6 @@ class EndpointEmailIdp extends _iaic.EndpointEmailIdpBase {
       'password': password,
     },
   );
-
-  /// Starts the registration for a new user account with an email-based login
-  /// associated to it.
-  ///
-  /// Upon successful completion of this method, an email will have been
-  /// sent to [email] with a verification link, which the user must open to
-  /// complete the registration.
-  ///
-  /// Always returns a account request ID, which can be used to complete the
-  /// registration. If the email is already registered, the returned ID will not
-  /// be valid.
-  @override
-  _ida.Future<_isc.UuidValue> startRegistration({required String email}) =>
-      caller.callServerEndpoint<_isc.UuidValue>(
-        'emailIdp',
-        'startRegistration',
-        {'email': email},
-      );
 
   /// Verifies an account request code and returns a token
   /// that can be used to complete the account creation.
@@ -425,6 +417,57 @@ class EndpointEvidence extends _isc.EndpointRef {
       'evidenceId': evidenceId,
       'reason': reason,
     },
+  );
+}
+
+/// By extending [GoogleIdpBaseEndpoint], the Google identity provider
+/// endpoints are made available on the server (AUTH-04, doc/04g step 4).
+///
+/// One account per email (AUTH-04b): before the module's login, a first
+/// Google sign-in with the verified email of a password account is linked
+/// to that user, instead of creating a second one.
+/// {@category Endpoint}
+class EndpointGoogleIdp extends _iaic.EndpointGoogleIdpBase {
+  EndpointGoogleIdp(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'googleIdp';
+
+  @override
+  _ida.Future<_iacc.AuthSuccess> login({
+    required String idToken,
+    required String? accessToken,
+  }) => caller.callServerEndpoint<_iacc.AuthSuccess>(
+    'googleIdp',
+    'login',
+    {
+      'idToken': idToken,
+      'accessToken': accessToken,
+    },
+  );
+
+  /// The web flow: the code is exchanged for tokens first, then the same
+  /// login as on phones.
+  @override
+  _ida.Future<_iacc.AuthSuccess> loginWithCode({
+    required String code,
+    required String codeVerifier,
+    required String redirectUri,
+  }) => caller.callServerEndpoint<_iacc.AuthSuccess>(
+    'googleIdp',
+    'loginWithCode',
+    {
+      'code': code,
+      'codeVerifier': codeVerifier,
+      'redirectUri': redirectUri,
+    },
+  );
+
+  @override
+  _ida.Future<bool> hasAccount() => caller.callServerEndpoint<bool>(
+    'googleIdp',
+    'hasAccount',
+    {},
   );
 }
 
@@ -784,6 +827,15 @@ class EndpointProfile extends _isc.EndpointRef {
       'locale': locale,
     },
   );
+
+  /// After a Google sign-in: the app's language, unless settings exist
+  /// (doc/04g step 4).
+  _ida.Future<_iclzzlcy.MyProfile> adoptLocale({required String locale}) =>
+      caller.callServerEndpoint<_iclzzlcy.MyProfile>(
+        'profile',
+        'adoptLocale',
+        {'locale': locale},
+      );
 }
 
 /// The site manager's progress updates (UPD-01, UPD-02; doc/04e M5-9 b).
@@ -1184,6 +1236,7 @@ class Client extends _isc.ServerpodClientShared {
     activity = EndpointActivity(this);
     emailIdp = EndpointEmailIdp(this);
     evidence = EndpointEvidence(this);
+    googleIdp = EndpointGoogleIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
     ledger = EndpointLedger(this);
     membership = EndpointMembership(this);
@@ -1201,6 +1254,8 @@ class Client extends _isc.ServerpodClientShared {
   late final EndpointEmailIdp emailIdp;
 
   late final EndpointEvidence evidence;
+
+  late final EndpointGoogleIdp googleIdp;
 
   late final EndpointJwtRefresh jwtRefresh;
 
@@ -1227,6 +1282,7 @@ class Client extends _isc.ServerpodClientShared {
     'activity': activity,
     'emailIdp': emailIdp,
     'evidence': evidence,
+    'googleIdp': googleIdp,
     'jwtRefresh': jwtRefresh,
     'ledger': ledger,
     'membership': membership,

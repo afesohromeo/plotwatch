@@ -78,6 +78,7 @@ enum AppErrorCode implements _is.SerializableModel {
   alreadyReversed,
   alreadyConfirmed,
   notEntryAuthor,
+  emailUsesGoogle,
   textTooLong,
   authInvalidCredentials,
   authTooManyAttempts,
@@ -207,6 +208,8 @@ enum AppErrorCode implements _is.SerializableModel {
         return AppErrorCode.alreadyConfirmed;
       case 'notEntryAuthor':
         return AppErrorCode.notEntryAuthor;
+      case 'emailUsesGoogle':
+        return AppErrorCode.emailUsesGoogle;
       case 'textTooLong':
         return AppErrorCode.textTooLong;
       case 'authInvalidCredentials':

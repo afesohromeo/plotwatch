@@ -15,6 +15,7 @@ class SignUpPage extends StatefulWidget {
   static const accountEmailFieldKey = Key('signUp.accountEmail');
   static const passwordFieldKey = Key('signUp.password');
   static const confirmPasswordFieldKey = Key('signUp.confirmPassword');
+  static const noCodeHintKey = Key('signUp.noCodeHint');
   static const submitButtonKey = Key('signUp.submit');
   static const passwordVisibilityButtonKey = Key('signUp.passwordVisibility');
   static const confirmPasswordVisibilityButtonKey = Key(
@@ -144,6 +145,27 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                   child: Text(l10n.resendCode),
                 ),
+              // Serverpod sends no code to an email already registered, and
+              // says nothing, so nobody can find out which emails have
+              // accounts (doc/04g, AUTH-04b).
+              if (state.step == SignUpStep.verifyCode) ...[
+                Text(
+                  l10n.signUpNoCodeHint,
+                  key: SignUpPage.noCodeHintKey,
+                  textAlign: TextAlign.center,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: customColors.muted,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => context.goNamed(signInRouteName),
+                  child: Text(l10n.alreadyHaveAccount),
+                ),
+              ],
+              if (state.step == SignUpStep.details) ...[
+                const GoogleSignInButton(),
+                const Gap.vertical(height: AppSpacing.sm),
+              ],
               if (state.step == SignUpStep.details)
                 TextButton(
                   onPressed: () => context.goNamed(signInRouteName),

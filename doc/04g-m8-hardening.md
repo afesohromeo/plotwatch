@@ -15,9 +15,55 @@
    - every screen added since M5 (Money, filters, the update page and form, skeletons, error codes) checked in French;
    - long French text that overflows (chips, buttons, the teal card) fixed;
    - the main screens rendered in French with the screenshot harness.
+   - **Outcome (2026-10-12):**
+     - The ARB check found every key translated, no placeholder mismatch and no English left.
+     - The screenshot harness takes `--dart-define=LOCALE=fr` and writes `out/*_fr.png`. It now also covers Money, both money forms, a ledger entry, first-run, sign-in and sign-up's code step: 28 screens, none overflowing.
+     - **Layout fixes:**
+       - "Request changes" wraps to two lines instead of shrinking;
+       - the badge under a narrow photo says "Partiel";
+       - label colons come from `labelColon` ("Dates prévues : …").
+     - **French fixes:**
+       - a real plural for approved stages ("1 étape approuvée");
+       - "À valider";
+       - "Catégorie";
+       - "Réception";
+       - "Content de vous revoir";
+       - "Aucun versement";
+       - "Tél.";
+       - "Saisi par" separated by "·".
 6. **Privacy policy (NFR-PRV-02):**
    - a short page in EN and FR, reachable from Profile and the welcome page;
    - served by the server at `/privacy`, so it can be linked from the store listing and the submission.
+   - **Detailed plan (approved 2026-10-12), with account deletion:**
+     - **The page:**
+       - `plotwatch_flutter/web/privacy.html`, a static page of the web app (like `auth.html`), so it works on :8083, :8082 and Cloud;
+       - the server also answers `/privacy` with it;
+       - English, then French (`#fr`);
+       - it covers what is collected and why, who sees it (only the project's members), where it is stored (Serverpod Cloud), how long it is kept, Google sign-in, deletion, and a contact email.
+     - **Links:**
+       - Profile › Privacy policy, and a "Privacy" link on the welcome page;
+       - opened in the browser with `url_launcher`;
+       - the French app opens `#fr`.
+     - **Account deletion.** Google Play (and Apple) require an in-app way, plus a web route for people without the app; the web route is the privacy page's contact. The rule is to delete the person, not the shared history:
+
+       | Data | On deletion |
+       |---|---|
+       | Sign-in (email/password, Google), profile, name, email, settings, notifications | Deleted. Deleting the auth user cascades to Serverpod's tables |
+       | Memberships | Marked removed in every project, as when a member is removed |
+       | Projects where they are the only active member | Deleted with everything in them, including their stored files (photos, thumbnails, receipts) |
+       | Projects they own with other active members, not completed or archived | **Blocked:** "Complete or archive these projects first", with their names. There is no ownership transfer |
+       | Photos, ledger entries, updates and reviews in shared projects | Kept. With no profile left, they show as "A former member" (the `someone` text) |
+
+     - **Server:** an `AccountEndpoint` (login required) with:
+       - `deletionBlockers()`, the names of the blocking projects;
+       - `deleteMe()`, which checks the blockers again and deletes in one transaction. Files are deleted after the commit.
+     - **App:** Profile › Delete account:
+       - a dialog lists the blockers, or explains what is deleted and kept;
+       - the person types their email to confirm;
+       - on success the app signs out locally.
+     - **Tests:**
+       - server: a solo project is deleted; a shared active project blocks; an archived shared project is kept and the membership marked removed; the sign-in rows are gone; shared records stay;
+       - app: the dialog, the blockers, the typed confirmation.
 7. **Demo data:**
    - a seed script (`plotwatch_server/bin/seed.dart`) that creates a believable project (Maison Douala) with members, stages, verified photos, an update, releases and expenses with receipts;
    - run once by the developer against Cloud;
@@ -64,4 +110,38 @@ From Serverpod's Google provider guide (checked 2026-10-12).
 - iOS `Info.plist`: `GIDClientID`, `GIDServerClientID` and the reversed client ID URL scheme. Prepared without a Mac (as in M2 G2); untested on iOS.
 - Tests: the button shows, and a sign-in error shows its message.
 
-**Note:** in development, Google on the web only works with the app served by the server (`localhost:8082`), not with `flutter run -d chrome`.
+**Note:** on the web, Google works on `flutter run` (:8083), the server-served build (:8082) and Cloud, through `web/auth.html` (see "As built").
+
+### One account per email (AUTH-04b, approved 2026-10-12)
+**Found by the developer on the emulator:** a first Google sign-in with the email of an existing password account created a **second user**. Serverpod's Google provider finds users by Google's account ID only, never by email, and leaves linking to the app.
+
+**Decision: attach.** The developer chose this over refusing, after comparing the two.
+- **Google sign-in with a verified email that a password account already has:** the Google login is linked to that user. The same person gets the same projects, and the password keeps working.
+  - Done in `GoogleIdpEndpoint`, before the module's login, with the module's own `linkGoogleAuthentication`.
+  - The web code is exchanged for tokens first, with the module's `exchangeCodeForToken`.
+  - **Never** when Google says the email is not verified: that person then gets their own user, as before.
+- **Email sign-up with an email a Google user already has:** refused at the first step with `AppErrorCode.emailUsesGoogle`, shown as "This email is used with Google. Use Continue with Google." Adding a password to a Google account is on the roadmap.
+- **Code page:** "No code? If you already have an account with this email, sign in or reset your password." Serverpod sends no code to an email that is already registered, so nobody can find out which emails have accounts. That protection is kept.
+- **Server tests:**
+  - a Google email that a password account has gives that same user;
+  - a new Google email gives a new user;
+  - an unverified Google email is never linked;
+  - a returning Google user gets the same user;
+  - email sign-up with a Google user's email is refused.
+- **App tests:** the refusal and the code-page text.
+- **The developer's duplicate in the dev database:** deleted with a one-off SQL script, run by the developer (not in the repository).
+
+**As built (2026-10-12):**
+- **The web callback is `web/auth.html`, not the server route.** `flutter run` (:8083) doesn't serve server routes, so the callback is a static page of the app. It works the same on :8083, :8082 and Cloud. Redirect URIs to register: `http://localhost:8083/auth.html`, `http://localhost:8082/auth.html` and `https://<web app>/auth.html`.
+- **No migration:** the Google account table has been in our first migration (20261004170947501) since the auth module was set up.
+- **Google is on only where `googleClientSecret` is set.** The test server and a fresh deploy start without it, and the app hides the button when `config.json` has no `googleClientId`.
+- **`config.json`:**
+  - the server reads the public web client ID from the secret JSON (`web.client_id`) and serves it to the web app;
+  - the bundled copy carries it for phones.
+- **Not the package's controller.** `GoogleAuthController` is a ChangeNotifier tied to a widget, which `_standards` doesn't allow in views. The same flow goes through the package's services instead:
+  - `AuthApiProvider.signInWithGoogle`: the web PKCE redirect, or the Google account sheet on phones;
+  - `AuthRepository` saves the session;
+  - `GoogleSignInBloc` and `GoogleSignInButton` are shared by the sign-in page and the first step of sign-up.
+  - Closing Google's window is not an error.
+- **The language of a new Google user:** `profile.adoptLocale` saves the app's language unless settings already exist. That matches the email sign-up. Google gives the name; the country stays optional, as for email users.
+- **iOS `Info.plist`:** contains `GIDClientID` (the iOS client), `GIDServerClientID` (the web client) and the reversed iOS client ID as a URL scheme. Prepared without a Mac; untested on iOS.

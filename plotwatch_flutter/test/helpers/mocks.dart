@@ -1,4 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart'
@@ -72,3 +74,16 @@ class MockLedgerRepository extends Mock implements LedgerRepository {}
 
 class MockMoneyBloc extends MockBloc<MoneyEvent, MoneyState>
     implements MoneyBloc {}
+
+class MockGoogleSignInBloc extends MockBloc<GoogleSignInEvent, GoogleSignInState>
+    implements GoogleSignInBloc {}
+
+/// The auth pages hold the Google button (doc/04g step 4): a Google bloc,
+/// not configured unless [bloc] says otherwise.
+Widget withGoogleSignIn(Widget child, {GoogleSignInBloc? bloc}) {
+  final google = bloc ?? MockGoogleSignInBloc();
+  if (bloc == null) {
+    when(() => google.state).thenReturn(const GoogleSignInState());
+  }
+  return BlocProvider<GoogleSignInBloc>.value(value: google, child: child);
+}

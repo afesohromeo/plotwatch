@@ -4,6 +4,21 @@
 	<dict>
 		<key>GMSApiKey</key>
 		<string>$(MAPS_API_KEY)</string>
+		<key>GIDClientID</key>
+		<string>645242611838-9gnmf6kkv4stmji3nvuphc48un6gku7p.apps.googleusercontent.com</string>
+		<key>GIDServerClientID</key>
+		<string>645242611838-8igo6h3lgq9p429p44ce8f9a8fm3e96l.apps.googleusercontent.com</string>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.645242611838-9gnmf6kkv4stmji3nvuphc48un6gku7p</string>
+				</array>
+			</dict>
+		</array>
 		<key>NSCameraUsageDescription</key>
 		<string>Plotwatch uses the camera to take the site photos that prove where and when the work was done.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>

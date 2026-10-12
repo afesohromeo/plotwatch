@@ -1831,5 +1831,17 @@
     "releaseOfferAny": "Record a release now?",
     "@releaseOfferAny": {"description":"M8 (doc/04g steps 2 and 3)"},
     "laterAction": "Later",
-    "@laterAction": {"description":"M8 (doc/04g steps 2 and 3)"}
+    "@laterAction": {"description":"M8 (doc/04g steps 2 and 3)"},
+    "continueWithGoogle": "Continue with Google",
+    "@continueWithGoogle": {"description":"Google sign-in (doc/04g step 4)"},
+    "orDivider": "or",
+    "@orDivider": {"description":"Google sign-in (doc/04g step 4)"},
+    "errorGoogleSignIn": "Could not sign in with Google. Try again.",
+    "@errorGoogleSignIn": {"description":"Google sign-in (doc/04g step 4)"},
+    "errorEmailUsesGoogle": "This email is used with Google. Use Continue with Google.",
+    "@errorEmailUsesGoogle": {"description":"One account per email (doc/04g, AUTH-04b)"},
+    "signUpNoCodeHint": "No code? If you already have an account with this email, sign in or reset your password.",
+    "@signUpNoCodeHint": {"description":"One account per email (doc/04g, AUTH-04b)"},
+    "labelColon": "{label}:",
+    "@labelColon": {"description":"A label before its value; French puts a space before the colon (doc/04g step 5)","placeholders":{"label":{"type":"String"}}}
 }

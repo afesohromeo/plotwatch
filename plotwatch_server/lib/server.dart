@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:serverpod_auth_idp_server/core.dart';
 import 'package:serverpod_auth_idp_server/providers/email.dart';
+import 'package:serverpod_auth_idp_server/providers/google.dart';
 import 'package:serverpod_cloud_storage/serverpod_cloud_storage.dart';
 
 import 'src/cache_busting.dart';
@@ -13,6 +14,10 @@ void run(List<String> args) async {
   // Initialize Serverpod. The generated Serverpod class is already connected
   // with your project's generated code.
   final pod = Serverpod(args);
+
+  // Google sign-in (AUTH-04, doc/04g step 4) is on where its secret is set,
+  // so a server without it (tests, a fresh deploy) still starts.
+  final googleClientSecret = pod.getPassword('googleClientSecret');
 
   // Initialize authentication services for the server.
   // Token managers will be used to validate and issue authentication keys,
@@ -32,6 +37,7 @@ void run(List<String> args) async {
       ServerpodCloudEmailIdpConfig(
         appDisplayName: 'Plotwatch',
       ),
+      if (googleClientSecret != null) GoogleIdpConfigFromPasswords(),
     ],
   );
 
@@ -49,6 +55,7 @@ void run(List<String> args) async {
     AppConfigRoute(
       apiConfig: pod.config.apiServer,
       mapsApiKey: pod.getPassword('googleMapsWebKey'),
+      googleClientSecret: googleClientSecret,
     ),
     '/assets/assets/config.json',
   );

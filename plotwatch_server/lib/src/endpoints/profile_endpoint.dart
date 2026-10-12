@@ -34,4 +34,13 @@ class ProfileEndpoint extends Endpoint {
       locale: locale,
     );
   }
+
+  /// After a Google sign-in: the app's language, unless settings exist
+  /// (doc/04g step 4).
+  Future<MyProfile> adoptLocale(Session session, {required String locale}) =>
+      _service.adoptLocale(
+        session,
+        session.authenticated!.authUserId,
+        locale: locale,
+      );
 }

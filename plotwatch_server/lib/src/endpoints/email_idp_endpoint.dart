@@ -1,6 +1,8 @@
 import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/providers/email.dart';
 
+import '../generated/protocol.dart';
+import '../services/account_link_service.dart';
 import '../services/profile_service.dart';
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
@@ -8,6 +10,20 @@ import '../services/profile_service.dart';
 /// on the client.
 class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
   static const _profileService = ProfileService();
+  static const _links = AccountLinkService();
+
+  /// One account per email (AUTH-04b, doc/04g): an email that only a Google
+  /// user has is refused, with "use Continue with Google".
+  @override
+  Future<UuidValue> startRegistration(
+    Session session, {
+    required String email,
+  }) async {
+    if (await _links.isGoogleOnlyEmail(session, email)) {
+      throw AppException(code: AppErrorCode.emailUsesGoogle);
+    }
+    return super.startRegistration(session, email: email);
+  }
 
   /// Last step of Plotwatch's sign-up (decision M1-4): creates the account
   /// and saves the user's name and language **in the same request**, so no

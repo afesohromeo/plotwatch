@@ -69,7 +69,7 @@ class _MoneyCardState extends State<MoneyCard> {
                           ? l10n.moneyUnaccountedAmount(
                               formatMoney(total.unaccountedMinor, code),
                             )
-                          : '${l10n.moneyWithReceipt}: '
+                          : '${l10n.labelColon(l10n.moneyWithReceipt)} '
                                 '${formatMoney(total.spentWithReceiptMinor, code)}',
                       style: context.textTheme.bodySmall?.copyWith(
                         color: alert ? customColors.accent : null,

@@ -116,6 +116,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                 ),
               ),
+              const GoogleSignInButton(),
               const Gap.vertical(height: AppSpacing.sm),
               TextButton(
                 onPressed: () => context.goNamed(passwordResetRouteName),

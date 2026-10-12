@@ -148,7 +148,7 @@ class _EntryBody extends StatelessWidget {
       (l10n.labelEntryDate, formatDate(entryDay(entry))),
       (
         l10n.labelRecordedBy,
-        '${entry.recordedByName ?? l10n.someone}, '
+        '${entry.recordedByName ?? l10n.someone} · '
             '${dayAndTime(entry.createdAt, l10n)}',
       ),
       if (entry.isRelease && !entry.isReversal)

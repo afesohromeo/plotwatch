@@ -2520,4 +2520,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get laterAction => 'Later';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get orDivider => 'or';
+
+  @override
+  String get errorGoogleSignIn => 'Could not sign in with Google. Try again.';
+
+  @override
+  String get errorEmailUsesGoogle =>
+      'This email is used with Google. Use Continue with Google.';
+
+  @override
+  String get signUpNoCodeHint =>
+      'No code? If you already have an account with this email, sign in or reset your password.';
+
+  @override
+  String labelColon(String label) {
+    return '$label:';
+  }
 }

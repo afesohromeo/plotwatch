@@ -11,7 +11,7 @@ import 'harness.dart';
 
 void main() {
   setUpAll(() async {
-    setUpTestLocalization();
+    setUpTestLocalization(const Locale(shotLocale));
     await loadFonts();
   });
 
@@ -98,6 +98,7 @@ void main() {
         ...signedIn(),
         BlocProvider<ProjectOverviewBloc>.value(value: page),
         BlocProvider<EvidenceMediaBloc>.value(value: mediaFor([9, 8])),
+        BlocProvider<MoneyBloc>.value(value: moneyBloc()),
       ],
       child: ProjectShell(
         projectId: 1,

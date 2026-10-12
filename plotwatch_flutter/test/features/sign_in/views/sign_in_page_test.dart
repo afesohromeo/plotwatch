@@ -25,7 +25,7 @@ void main() {
   });
 
   Future<void> pumpPage(WidgetTester tester) => tester.pumpApp(
-    BlocProvider<SignInBloc>.value(value: bloc, child: const SignInPage()),
+    BlocProvider<SignInBloc>.value(value: bloc, child: withGoogleSignIn(const SignInPage())),
   );
 
   testWidgets(

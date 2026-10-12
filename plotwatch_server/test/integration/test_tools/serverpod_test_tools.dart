@@ -210,6 +210,8 @@ class TestEndpoints {
 
   late final _EvidenceEndpoint evidence;
 
+  late final _GoogleIdpEndpoint googleIdp;
+
   late final _JwtRefreshEndpoint jwtRefresh;
 
   late final _LedgerEndpoint ledger;
@@ -245,6 +247,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     evidence = _EvidenceEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    googleIdp = _GoogleIdpEndpoint(
       endpoints,
       serializationManager,
     );
@@ -386,6 +392,37 @@ class _EmailIdpEndpoint {
 
   final _is.SerializationManager _serializationManager;
 
+  _ida.Future<_is.UuidValue> startRegistration(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String email,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'emailIdp',
+            method: 'startRegistration',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'emailIdp',
+          methodName: 'startRegistration',
+          parameters: _ist.testObjectToJson({'email': email}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_is.UuidValue>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
   _ida.Future<_iacs.AuthSuccess> finishRegistrationWithProfile(
     _ist.TestSessionBuilder sessionBuilder, {
     required String registrationToken,
@@ -453,37 +490,6 @@ class _EmailIdpEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<_iacs.AuthSuccess>);
-        return _localReturnValue;
-      } finally {
-        await _localUniqueSession.close();
-      }
-    });
-  }
-
-  _ida.Future<_is.UuidValue> startRegistration(
-    _ist.TestSessionBuilder sessionBuilder, {
-    required String email,
-  }) async {
-    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
-      var _localUniqueSession =
-          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
-            endpoint: 'emailIdp',
-            method: 'startRegistration',
-          );
-      try {
-        var _localCallContext = await _endpointDispatch.getMethodCallContext(
-          createSessionCallback: (_) => _localUniqueSession,
-          endpointPath: 'emailIdp',
-          methodName: 'startRegistration',
-          parameters: _ist.testObjectToJson({'email': email}),
-          serializationManager: _serializationManager,
-        );
-        var _localReturnValue =
-            await (_localCallContext.method.call(
-                  _localUniqueSession,
-                  _localCallContext.arguments,
-                )
-                as _ida.Future<_is.UuidValue>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -943,6 +949,117 @@ class _EvidenceEndpoint {
                   _localCallContext.arguments,
                 )
                 as _ida.Future<_icm5mt5e.Evidence>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _GoogleIdpEndpoint {
+  _GoogleIdpEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<_iacs.AuthSuccess> login(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String idToken,
+    required String? accessToken,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'googleIdp',
+            method: 'login',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'googleIdp',
+          methodName: 'login',
+          parameters: _ist.testObjectToJson({
+            'idToken': idToken,
+            'accessToken': accessToken,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_iacs.AuthSuccess>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_iacs.AuthSuccess> loginWithCode(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String code,
+    required String codeVerifier,
+    required String redirectUri,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'googleIdp',
+            method: 'loginWithCode',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'googleIdp',
+          methodName: 'loginWithCode',
+          parameters: _ist.testObjectToJson({
+            'code': code,
+            'codeVerifier': codeVerifier,
+            'redirectUri': redirectUri,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_iacs.AuthSuccess>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<bool> hasAccount(_ist.TestSessionBuilder sessionBuilder) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'googleIdp',
+            method: 'hasAccount',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'googleIdp',
+          methodName: 'hasAccount',
+          parameters: _ist.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<bool>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1859,6 +1976,37 @@ class _ProfileEndpoint {
             'countryCode': countryCode,
             'locale': locale,
           }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ilr78g9s.MyProfile>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _ida.Future<_ilr78g9s.MyProfile> adoptLocale(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String locale,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'profile',
+            method: 'adoptLocale',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'profile',
+          methodName: 'adoptLocale',
+          parameters: _ist.testObjectToJson({'locale': locale}),
           serializationManager: _serializationManager,
         );
         var _localReturnValue =

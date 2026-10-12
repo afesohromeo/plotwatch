@@ -27,4 +27,13 @@ class ProfileApiProvider {
       throw ApiErrorHandler.handle(e);
     }
   }
+
+  /// The app's language for a new Google user (doc/04g step 4).
+  Future<MyProfile> adoptLocale({required String locale}) async {
+    try {
+      return await _client.profile.adoptLocale(locale: locale);
+    } catch (e) {
+      throw ApiErrorHandler.handle(e);
+    }
+  }
 }

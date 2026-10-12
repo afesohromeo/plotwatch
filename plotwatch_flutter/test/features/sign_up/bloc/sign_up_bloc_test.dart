@@ -81,6 +81,29 @@ void main() {
         ),
       ],
     );
+
+    // doc/04g, AUTH-04b: one account per email.
+    blocTest<SignUpBloc, SignUpState>(
+      'when the email is used with Google then it says to continue with '
+      'Google, and stays on the details step',
+      setUp: () => when(
+        () => authRepository.startRegistration(email: any(named: 'email')),
+      ).thenThrow(const HttpException400(code: AppErrorCode.emailUsesGoogle)),
+      build: build,
+      act: (bloc) => bloc.add(
+        const SignUpEvent.detailsSubmitted(
+          fullName: 'Ada Lovelace',
+          email: 'ada@gmail.com',
+        ),
+      ),
+      skip: 1,
+      expect: () => [
+        SignUpState(
+          signUpStatus: GenericStatus.failure,
+          signUpErrorMessage: l10n.errorEmailUsesGoogle,
+        ),
+      ],
+    );
   });
 
   group('Given the code step', () {

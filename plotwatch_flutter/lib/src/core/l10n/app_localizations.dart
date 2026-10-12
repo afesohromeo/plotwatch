@@ -4360,6 +4360,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Later'**
   String get laterAction;
+
+  /// Google sign-in (doc/04g step 4)
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// Google sign-in (doc/04g step 4)
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get orDivider;
+
+  /// Google sign-in (doc/04g step 4)
+  ///
+  /// In en, this message translates to:
+  /// **'Could not sign in with Google. Try again.'**
+  String get errorGoogleSignIn;
+
+  /// One account per email (doc/04g, AUTH-04b)
+  ///
+  /// In en, this message translates to:
+  /// **'This email is used with Google. Use Continue with Google.'**
+  String get errorEmailUsesGoogle;
+
+  /// One account per email (doc/04g, AUTH-04b)
+  ///
+  /// In en, this message translates to:
+  /// **'No code? If you already have an account with this email, sign in or reset your password.'**
+  String get signUpNoCodeHint;
+
+  /// A label before its value; French puts a space before the colon (doc/04g step 5)
+  ///
+  /// In en, this message translates to:
+  /// **'{label}:'**
+  String labelColon(String label);
 }
 
 class _AppLocalizationsDelegate

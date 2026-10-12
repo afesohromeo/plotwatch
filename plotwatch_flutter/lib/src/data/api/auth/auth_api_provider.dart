@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
@@ -93,6 +95,46 @@ class AuthApiProvider {
         finishPasswordResetToken: finishPasswordResetToken,
         newPassword: newPassword,
       );
+    } catch (e) {
+      throw ApiErrorHandler.handle(e);
+    }
+  }
+
+  bool get isGoogleSignInAvailable => ApiProvider().isGoogleSignInAvailable;
+
+  /// Google sign-in (AUTH-04, doc/04g step 4), through the auth package's
+  /// Google services: the PKCE redirect on the web, the Google account
+  /// sheet on phones. Null when the user closes it.
+  Future<AuthSuccess?> signInWithGoogle() async {
+    const scopes = GoogleAuthController.defaultScopes;
+    try {
+      if (kIsWeb) {
+        final result = await GoogleWebSignInService.instance.signIn(
+          scopes: scopes,
+        );
+        return await _client.googleIdp.loginWithCode(
+          code: result.code,
+          codeVerifier: result.codeVerifier,
+          redirectUri: result.redirectUri,
+        );
+      }
+      final account = await GoogleSignIn.instance.authenticate(
+        scopeHint: scopes,
+      );
+      final authorization =
+          await account.authorizationClient.authorizationForScopes(scopes) ??
+          await account.authorizationClient.authorizeScopes(scopes);
+      final idToken = account.authentication.idToken;
+      if (idToken == null) throw StateError('Google gave no ID token');
+      return await _client.googleIdp.login(
+        idToken: idToken,
+        accessToken: authorization.accessToken,
+      );
+    } on GoogleSignInException catch (e) {
+      if (e.code == GoogleSignInExceptionCode.canceled) return null;
+      throw ApiErrorHandler.handle(e);
+    } on OAuth2PkceUserCancelledException {
+      return null;
     } catch (e) {
       throw ApiErrorHandler.handle(e);
     }

@@ -1,3 +1,4 @@
 {
-    "apiUrl": "http://localhost:8080"
+    "apiUrl": "http://localhost:8080",
+    "googleClientId": "645242611838-8igo6h3lgq9p429p44ce8f9a8fm3e96l.apps.googleusercontent.com"
 }
