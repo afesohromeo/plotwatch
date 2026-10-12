@@ -45,6 +45,7 @@ abstract class LedgerEntry
     this.recordedByFormer,
     this.reversedById,
     this.reversalReason,
+    this.afterApproval,
   });
 
   factory LedgerEntry({
@@ -71,6 +72,7 @@ abstract class LedgerEntry
     bool? recordedByFormer,
     int? reversedById,
     String? reversalReason,
+    bool? afterApproval,
   }) = _LedgerEntryImpl;
 
   factory LedgerEntry.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -126,6 +128,9 @@ abstract class LedgerEntry
             ),
       reversedById: jsonSerialization['reversedById'] as int?,
       reversalReason: jsonSerialization['reversalReason'] as String?,
+      afterApproval: jsonSerialization['afterApproval'] == null
+          ? null
+          : _isc.BoolJsonExtension.fromJson(jsonSerialization['afterApproval']),
     );
   }
 
@@ -187,6 +192,10 @@ abstract class LedgerEntry
 
   String? reversalReason;
 
+  /// An expense recorded after its stage was approved: shown to the
+  /// funders (developer, 2026-10-12).
+  bool? afterApproval;
+
   /// Returns a shallow copy of this [LedgerEntry]
   /// with some or all fields replaced by the given arguments.
   @_isc.useResult
@@ -214,6 +223,7 @@ abstract class LedgerEntry
     bool? recordedByFormer,
     int? reversedById,
     String? reversalReason,
+    bool? afterApproval,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -242,6 +252,7 @@ abstract class LedgerEntry
       if (recordedByFormer != null) 'recordedByFormer': recordedByFormer,
       if (reversedById != null) 'reversedById': reversedById,
       if (reversalReason != null) 'reversalReason': reversalReason,
+      if (afterApproval != null) 'afterApproval': afterApproval,
     };
   }
 
@@ -272,6 +283,7 @@ abstract class LedgerEntry
       if (recordedByFormer != null) 'recordedByFormer': recordedByFormer,
       if (reversedById != null) 'reversedById': reversedById,
       if (reversalReason != null) 'reversalReason': reversalReason,
+      if (afterApproval != null) 'afterApproval': afterApproval,
     };
   }
 
@@ -308,6 +320,7 @@ class _LedgerEntryImpl extends LedgerEntry {
     bool? recordedByFormer,
     int? reversedById,
     String? reversalReason,
+    bool? afterApproval,
   }) : super._(
          id: id,
          projectId: projectId,
@@ -332,6 +345,7 @@ class _LedgerEntryImpl extends LedgerEntry {
          recordedByFormer: recordedByFormer,
          reversedById: reversedById,
          reversalReason: reversalReason,
+         afterApproval: afterApproval,
        );
 
   /// Returns a shallow copy of this [LedgerEntry]
@@ -362,6 +376,7 @@ class _LedgerEntryImpl extends LedgerEntry {
     Object? recordedByFormer = _Undefined,
     Object? reversedById = _Undefined,
     Object? reversalReason = _Undefined,
+    Object? afterApproval = _Undefined,
   }) {
     return LedgerEntry(
       id: id is int? ? id : this.id,
@@ -399,6 +414,9 @@ class _LedgerEntryImpl extends LedgerEntry {
       reversalReason: reversalReason is String?
           ? reversalReason
           : this.reversalReason,
+      afterApproval: afterApproval is bool?
+          ? afterApproval
+          : this.afterApproval,
     );
   }
 }

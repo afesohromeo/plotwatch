@@ -11,6 +11,7 @@ class CustomPaginatedGridList<T> extends StatelessWidget {
     this.wrap = false,
     this.physics,
     this.showNoMoreItemsIndicatorAsGridChild = false,
+    this.padding,
   });
   final PagingController<int, T> pagingController;
   final PagedChildBuilderDelegate<T> pagedChildBuilderDelegate;
@@ -20,9 +21,13 @@ class CustomPaginatedGridList<T> extends StatelessWidget {
   final ScrollPhysics? physics;
   final bool showNoMoreItemsIndicatorAsGridChild;
 
+  /// Room around the items, e.g. below the last one for a floating button.
+  final EdgeInsetsGeometry? padding;
+
   @override
   Widget build(BuildContext context) {
     return PagedGridView<int, T>(
+      padding: padding,
       physics: physics,
       shrinkWrap: wrap,
       pagingController: pagingController,

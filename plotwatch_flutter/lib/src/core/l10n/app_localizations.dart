@@ -4300,6 +4300,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Entries'**
   String get moneyEntries;
+
+  /// Expenses on an approved stage (developer, 2026-10-12)
+  ///
+  /// In en, this message translates to:
+  /// **'After approval'**
+  String get tagAfterApproval;
+
+  /// Expenses on an approved stage (developer, 2026-10-12)
+  ///
+  /// In en, this message translates to:
+  /// **'{stage} was approved on {date}. This expense will still count for it.'**
+  String stageApprovedWarning(String stage, String date);
+
+  /// Expenses on an approved stage (developer, 2026-10-12)
+  ///
+  /// In en, this message translates to:
+  /// **'{stage} is already approved. This expense will still count for it.'**
+  String stageApprovedWarningUndated(String stage);
+
+  /// Expenses on an approved stage (developer, 2026-10-12)
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded after its stage was approved.'**
+  String get afterApprovalNote;
 }
 
 class _AppLocalizationsDelegate

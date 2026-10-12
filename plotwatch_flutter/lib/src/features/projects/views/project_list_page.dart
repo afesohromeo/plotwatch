@@ -219,6 +219,11 @@ class _ProjectListPageState extends State<ProjectListPage> {
                                 ? CustomPaginatedGridList<ProjectSummary>(
                                     pagingController: _pagingController,
                                     showNoMoreItemsIndicatorAsGridChild: web,
+                                    // Clear of the floating button (phone,
+                                    // tablet).
+                                    padding: EdgeInsets.only(
+                                      bottom: web ? 0 : 88,
+                                    ),
                                     gridDelegate:
                                         const SliverGridDelegateWithMaxCrossAxisExtent(
                                           maxCrossAxisExtent: 420,
@@ -234,6 +239,8 @@ class _ProjectListPageState extends State<ProjectListPage> {
                                   )
                                 : CustomPaginatedList<ProjectSummary>(
                                     pagingController: _pagingController,
+                                    // Clear of the floating button.
+                                    padding: const EdgeInsets.only(bottom: 88),
                                     seperator: const Gap.vertical(
                                       height: AppSpacing.md,
                                     ),

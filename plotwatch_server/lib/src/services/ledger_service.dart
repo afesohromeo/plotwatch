@@ -625,12 +625,27 @@ class LedgerService {
       where: (t) => t.reversesId.inSet({for (final e in entries) e.id!}),
     );
     final reversalOf = {for (final r in reversals) r.reversesId!: r};
+    final stageIds = {for (final e in entries) ?e.stageId};
+    final approvedAt = stageIds.isEmpty
+        ? const <int, DateTime>{}
+        : {
+            for (final stage in await Stage.db.find(
+              session,
+              where: (t) =>
+                  t.id.inSet(stageIds) & t.projectId.equals(projectId),
+            ))
+              if (stage.approvedAt case final at?) stage.id!: at,
+          };
     return [
       for (final e in entries)
         e.copyWith(
           recordedByName: names[e.recordedBy],
           reversedById: reversalOf[e.id]?.id,
           reversalReason: reversalOf[e.id]?.note,
+          afterApproval:
+              e.kind == LedgerEntryKind.expense &&
+              e.reversesId == null &&
+              (approvedAt[e.stageId]?.isBefore(e.createdAt) ?? false),
         ),
     ];
   }

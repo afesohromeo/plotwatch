@@ -696,5 +696,9 @@
     "errorReceiptUpload": "La photo du reçu n’a pas pu être envoyée. Réessayez.",
     "validateAmountRequired": "Saisissez un montant supérieur à zéro",
     "validateDescriptionRequired": "Dites à quoi elle a servi",
-    "moneyEntries": "Écritures"
+    "moneyEntries": "Écritures",
+    "tagAfterApproval": "Après validation",
+    "stageApprovedWarning": "{stage} a été validée le {date}. Cette dépense comptera quand même pour elle.",
+    "stageApprovedWarningUndated": "{stage} est déjà validée. Cette dépense comptera quand même pour elle.",
+    "afterApprovalNote": "Saisie après la validation de son étape."
 }

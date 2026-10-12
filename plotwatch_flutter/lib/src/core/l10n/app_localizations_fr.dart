@@ -2524,4 +2524,20 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get moneyEntries => 'Écritures';
+
+  @override
+  String get tagAfterApproval => 'Après validation';
+
+  @override
+  String stageApprovedWarning(String stage, String date) {
+    return '$stage a été validée le $date. Cette dépense comptera quand même pour elle.';
+  }
+
+  @override
+  String stageApprovedWarningUndated(String stage) {
+    return '$stage est déjà validée. Cette dépense comptera quand même pour elle.';
+  }
+
+  @override
+  String get afterApprovalNote => 'Saisie après la validation de son étape.';
 }

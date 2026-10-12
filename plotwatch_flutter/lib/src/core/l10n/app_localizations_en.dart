@@ -2483,4 +2483,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get moneyEntries => 'Entries';
+
+  @override
+  String get tagAfterApproval => 'After approval';
+
+  @override
+  String stageApprovedWarning(String stage, String date) {
+    return '$stage was approved on $date. This expense will still count for it.';
+  }
+
+  @override
+  String stageApprovedWarningUndated(String stage) {
+    return '$stage is already approved. This expense will still count for it.';
+  }
+
+  @override
+  String get afterApprovalNote => 'Recorded after its stage was approved.';
 }

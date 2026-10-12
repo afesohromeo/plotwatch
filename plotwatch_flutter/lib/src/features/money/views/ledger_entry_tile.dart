@@ -65,6 +65,15 @@ class LedgerEntryTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: context.textTheme.bodySmall,
                 ),
+                // Spent on a finished stage: the funders see it at once.
+                if (entry.afterApproval ?? false) ...[
+                  const Gap.vertical(height: 4),
+                  LedgerTag(
+                    label: l10n.tagAfterApproval,
+                    color: customColors.partial,
+                    background: customColors.partialSoft,
+                  ),
+                ],
               ],
             ),
           ),

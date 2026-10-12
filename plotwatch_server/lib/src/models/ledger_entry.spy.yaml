@@ -36,6 +36,9 @@ fields:
   ### The reversal of this entry, if any.
   reversedById: int?, !persist
   reversalReason: String?, !persist
+  ### An expense recorded after its stage was approved: shown to the
+  ### funders (developer, 2026-10-12).
+  afterApproval: bool?, !persist
 indexes:
   ledger_entry_project_idx:
     fields: projectId, id

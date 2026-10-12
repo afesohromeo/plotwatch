@@ -10,6 +10,7 @@ class CustomPaginatedList<T> extends StatelessWidget {
     this.wrap = false,
     this.seperator = const SizedBox.shrink(),
     this.physics,
+    this.padding,
   });
   final PagingController<int, T> pagingController;
   final PagedChildBuilderDelegate<T> pagedChildBuilderDelegate;
@@ -19,10 +20,14 @@ class CustomPaginatedList<T> extends StatelessWidget {
 
   final ScrollPhysics? physics;
 
+  /// Room around the items, e.g. below the last one for a floating button.
+  final EdgeInsetsGeometry? padding;
+
   @override
   Widget build(BuildContext context) {
     return PagedListView<int, T>.separated(
       physics: physics,
+      padding: padding,
       shrinkWrap: wrap,
       pagingController: pagingController,
       builderDelegate: pagedChildBuilderDelegate,

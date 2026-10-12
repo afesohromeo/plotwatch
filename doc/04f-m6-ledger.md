@@ -73,3 +73,7 @@
 - The labels on the teal summary card (Released, Spent, With a receipt) are light teal, as in the mockup; they had the accent-on-dark colour.
 - **Phone:** under the summary, a switch **Entries · By stage** (the §9.4 pattern), so a long plan doesn't push the entries down. Entries is shown first, with its chips.
 - **Phone and web:** tapping a stage's line shows that stage's entries.
+- **Expenses on an approved stage (2026-10-12, developer):** allowed, made visible:
+  - both forms list each stage with its status;
+  - the expense form warns "Walls was approved on 8 Oct. This expense will still count for it.";
+  - the server marks an expense recorded after its stage's approval (`afterApproval`, not stored), shown as an **After approval** tag in the Money list and a line on the entry page.

@@ -332,6 +332,36 @@ void main() {
       expect(notifications.first.payload?['amountMinor'], '500000');
     });
 
+    test('when an expense comes after its stage was approved then it is '
+        'marked, before it is not', () async {
+      final before = await endpoints.ledger.recordExpense(
+        manager,
+        projectId,
+        expense(1000, stageId: wallsId),
+      );
+      final session = sessionBuilder.build();
+      final stage = await Stage.db.findById(session, wallsId);
+      await Stage.db.updateRow(
+        session,
+        stage!.copyWith(
+          status: StageStatus.approved,
+          approvedAt: DateTime.now().toUtc(),
+        ),
+      );
+      final after = await endpoints.ledger.recordExpense(
+        manager,
+        projectId,
+        expense(2000, stageId: wallsId),
+      );
+
+      final items = {
+        for (final e in (await endpoints.ledger.list(owner, projectId)).items)
+          e.id: e,
+      };
+      expect(items[after.id]?.afterApproval, isTrue);
+      expect(items[before.id]?.afterApproval, isFalse);
+    });
+
     test('when the project is completed then nothing more is recorded',
         () async {
       final session = sessionBuilder.build();

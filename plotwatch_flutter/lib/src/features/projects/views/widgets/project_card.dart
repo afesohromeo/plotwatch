@@ -57,21 +57,22 @@ class ProjectCard extends StatelessWidget {
       );
     }
 
-    return AppCard(
-      onTap: onTap,
-      padding: EdgeInsets.zero,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (cover != null)
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(PlotwatchTheme.cardRadius),
-              ),
-              child: SizedBox(
-                height: coverHeight,
-                child: Stack(
+    // In the grid every cell has the same height: the cover takes what the
+    // content leaves, so no card ends with empty white (developer,
+    // 2026-10-12).
+    final fill = !compactWhenClosed;
+    Widget coverArea(Widget child) => ClipRRect(
+      borderRadius: const BorderRadius.vertical(
+        top: Radius.circular(PlotwatchTheme.cardRadius),
+      ),
+      child: fill
+          ? child
+          : SizedBox(height: coverHeight, child: child),
+    );
+    final coverImage = cover == null
+        ? null
+        : coverArea(
+            Stack(
                   fit: StackFit.expand,
                   children: [
                     EvidenceImage(
@@ -92,8 +93,19 @@ class ProjectCard extends StatelessWidget {
                       ),
                   ],
                 ),
-              ),
-            ),
+          );
+
+    return AppCard(
+      onTap: onTap,
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: fill ? MainAxisSize.max : MainAxisSize.min,
+        children: [
+          if (fill)
+            Expanded(child: coverImage ?? coverArea(const NoPhotoYet()))
+          else
+            ?coverImage,
           Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
             child: Column(
@@ -227,15 +239,23 @@ class _CompactCard extends StatelessWidget {
               borderRadius: const BorderRadius.horizontal(
                 left: Radius.circular(PlotwatchTheme.cardRadius),
               ),
+              // Positioned: the photo fills the height the text sets,
+              // never the other way round (developer, 2026-10-12).
               child: SizedBox(
                 width: 104,
-                child: cover == null
-                    ? ColoredBox(color: customColors.lineSoft)
-                    : EvidenceImage(
-                        projectId: project.id!,
-                        evidenceId: cover,
-                        variant: MediaVariant.thumbnail,
-                      ),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: cover == null
+                          ? const NoPhotoYet(iconSize: 28)
+                          : EvidenceImage(
+                              projectId: project.id!,
+                              evidenceId: cover,
+                              variant: MediaVariant.thumbnail,
+                            ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Expanded(
@@ -333,6 +353,28 @@ class _ProgressRow extends StatelessWidget {
         ),
         count,
       ],
+    );
+  }
+}
+
+/// Where a project's photo goes before it has one: the brand's soft tint
+/// with a house, so it reads as a placeholder and not as the page.
+class NoPhotoYet extends StatelessWidget {
+  const NoPhotoYet({super.key, this.iconSize = 36});
+
+  final double iconSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: customColors.primarySoft,
+      child: Center(
+        child: Icon(
+          Icons.home_work_outlined,
+          size: iconSize,
+          color: customColors.primary.withValues(alpha: .55),
+        ),
+      ),
     );
   }
 }

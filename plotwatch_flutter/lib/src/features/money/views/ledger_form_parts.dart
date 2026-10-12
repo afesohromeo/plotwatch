@@ -241,6 +241,7 @@ class LedgerAmountSection extends StatelessWidget {
     required this.stages,
     required this.stageId,
     required this.onStage,
+    this.warnApproved = false,
   });
 
   final TextEditingController amount;
@@ -252,6 +253,11 @@ class LedgerAmountSection extends StatelessWidget {
   final int? stageId;
   final ValueChanged<int?> onStage;
 
+  /// Says so when the chosen stage is already approved: the expense still
+  /// counts for it (developer, 2026-10-12).
+  final bool warnApproved;
+
+  static const approvedWarningKey = Key('ledgerForm.approvedWarning');
   static const amountFieldKey = Key('ledgerForm.amount');
   static const dateFieldKey = Key('ledgerForm.date');
   static const stageFieldKey = Key('ledgerForm.stage');
@@ -300,11 +306,46 @@ class LedgerAmountSection extends StatelessWidget {
               for (final stage in stages)
                 DropdownMenuItem(
                   value: stage.id,
-                  child: Text(stage.name, overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    '${stage.name} · ${stage.status.label(l10n)}',
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
             ],
             onChanged: onStage,
           ),
+          if (warnApproved)
+            if (stages.where((s) => s.id == stageId).firstOrNull
+                case final stage?
+                when stage.status == StageStatus.approved)
+              Padding(
+                key: approvedWarningKey,
+                padding: const EdgeInsets.only(top: 8, left: 4),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.info_outline_rounded,
+                      size: 18,
+                      color: customColors.partial,
+                    ),
+                    const Gap.horizontal(width: 6),
+                    Expanded(
+                      child: Text(
+                        stage.approvedAt == null
+                            ? l10n.stageApprovedWarningUndated(stage.name)
+                            : l10n.stageApprovedWarning(
+                                stage.name,
+                                formatDate(stage.approvedAt!.toLocal()),
+                              ),
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: customColors.ink,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
         ],
       ),
     );

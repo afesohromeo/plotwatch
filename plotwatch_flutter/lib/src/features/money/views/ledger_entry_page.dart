@@ -193,6 +193,11 @@ class _EntryBody extends StatelessWidget {
             ],
           ),
         ),
+        if (entry.afterApproval ?? false)
+          _Banner(
+            text: l10n.afterApprovalNote,
+            icon: Icons.info_outline_rounded,
+          ),
         // A reversed entry says why; a reversal opens what it corrects.
         if (entry.isReversed)
           _Banner(text: l10n.reversedBanner(entry.reversalReason ?? '')),
@@ -357,9 +362,10 @@ class _Receipt extends StatelessWidget {
 }
 
 class _Banner extends StatelessWidget {
-  const _Banner({required this.text});
+  const _Banner({required this.text, this.icon = Icons.undo_rounded});
 
   final String text;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -371,7 +377,7 @@ class _Banner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.undo_rounded, color: customColors.muted),
+          Icon(icon, color: customColors.muted),
           const Gap.horizontal(width: AppSpacing.sm),
           Expanded(child: Text(text, style: context.textTheme.bodyMedium)),
         ],

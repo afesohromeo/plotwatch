@@ -134,6 +134,7 @@ class _ExpenseFormPageState extends State<ExpenseFormPage> {
             stages: state.stages,
             stageId: _stageId,
             onStage: (id) => setState(() => _stageId = id),
+            warnApproved: true,
           ),
           AppCard(
             child: Form(

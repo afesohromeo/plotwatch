@@ -1811,5 +1811,13 @@
     "validateDescriptionRequired": "Say what it was for",
     "@validateDescriptionRequired": {"description":"Money tab and ledger (doc/04f)"},
     "moneyEntries": "Entries",
-    "@moneyEntries": {"description":"Money tab switch on a phone: the entries (doc/04f)"}
+    "@moneyEntries": {"description":"Money tab switch on a phone: the entries (doc/04f)"},
+    "tagAfterApproval": "After approval",
+    "@tagAfterApproval": {"description":"Expenses on an approved stage (developer, 2026-10-12)"},
+    "stageApprovedWarning": "{stage} was approved on {date}. This expense will still count for it.",
+    "@stageApprovedWarning": {"description":"Expenses on an approved stage (developer, 2026-10-12)","placeholders":{"stage":{"type":"String"},"date":{"type":"String"}}},
+    "stageApprovedWarningUndated": "{stage} is already approved. This expense will still count for it.",
+    "@stageApprovedWarningUndated": {"description":"Expenses on an approved stage (developer, 2026-10-12)","placeholders":{"stage":{"type":"String"}}},
+    "afterApprovalNote": "Recorded after its stage was approved.",
+    "@afterApprovalNote": {"description":"Expenses on an approved stage (developer, 2026-10-12)"}
 }
