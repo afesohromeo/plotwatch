@@ -6,9 +6,17 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 /// day, stage, how it was sent, reference and note. The site manager is
 /// notified and confirms receiving it.
 class ReleaseFormPage extends StatefulWidget {
-  const ReleaseFormPage({super.key, required this.projectId});
+  const ReleaseFormPage({
+    super.key,
+    required this.projectId,
+    this.initialStageId,
+  });
 
   final int projectId;
+
+  /// The stage chosen in advance, e.g. the next one after an approval
+  /// (REV-06).
+  final int? initialStageId;
 
   static const saveButtonKey = Key('releaseForm.save');
   static const referenceFieldKey = Key('releaseForm.reference');
@@ -102,7 +110,7 @@ class _ReleaseFormPageState extends State<ReleaseFormPage> {
       sections: (state) {
         if (!_stagePicked) {
           _stagePicked = true;
-          _stageId = _currentStage(state.stages);
+          _stageId = widget.initialStageId ?? _currentStage(state.stages);
         }
         return [
           LedgerAmountSection(

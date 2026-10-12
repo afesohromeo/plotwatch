@@ -1819,5 +1819,17 @@
     "stageApprovedWarningUndated": "{stage} is already approved. This expense will still count for it.",
     "@stageApprovedWarningUndated": {"description":"Expenses on an approved stage (developer, 2026-10-12)","placeholders":{"stage":{"type":"String"}}},
     "afterApprovalNote": "Recorded after its stage was approved.",
-    "@afterApprovalNote": {"description":"Expenses on an approved stage (developer, 2026-10-12)"}
+    "@afterApprovalNote": {"description":"Expenses on an approved stage (developer, 2026-10-12)"},
+    "firstRunTitle": "Watch your build from afar",
+    "@firstRunTitle": {"description":"M8 (doc/04g steps 2 and 3)"},
+    "firstRunText": "Start a project you fund, with its stages and budget, or join one with the code you received.",
+    "@firstRunText": {"description":"M8 (doc/04g steps 2 and 3)"},
+    "firstRunCreate": "Create a project",
+    "@firstRunCreate": {"description":"M8 (doc/04g steps 2 and 3)"},
+    "releaseOfferNext": "Record the release for {stage} now?",
+    "@releaseOfferNext": {"description":"M8 (doc/04g steps 2 and 3)","placeholders":{"stage":{"type":"String"}}},
+    "releaseOfferAny": "Record a release now?",
+    "@releaseOfferAny": {"description":"M8 (doc/04g steps 2 and 3)"},
+    "laterAction": "Later",
+    "@laterAction": {"description":"M8 (doc/04g steps 2 and 3)"}
 }

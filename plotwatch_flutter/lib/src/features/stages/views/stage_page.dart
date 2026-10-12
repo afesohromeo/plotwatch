@@ -32,6 +32,8 @@ class StagePage extends StatefulWidget {
   static const reviewCommentFieldKey = Key('stage.reviewComment');
   static Key captureButtonKey(int itemId) => Key('stage.capture.$itemId');
   static Key captureTileKey(int evidenceId) => Key('stage.photo.$evidenceId');
+  static const releaseOfferKey = Key('stage.releaseOffer');
+  static const releaseLaterKey = Key('stage.releaseLater');
   static Key photoKey(int evidenceId) => Key('stage.grid.$evidenceId');
 
   /// The photos' badge chips (doc/05 §9.5): `stage.photos.badge.<index>`
@@ -81,6 +83,47 @@ class _StagePageState extends State<StagePage> {
     if (confirmed) bloc.add(const StageEvent.deleteRequested());
   }
 
+  /// After an approval, the approver may record the release that usually
+  /// follows, for the next stage not approved yet (REV-06, doc/04g step 3).
+  Future<void> _offerRelease(BuildContext context, StageState state) async {
+    final l10n = AppLocalizations.of(context)!;
+    final stages = state.overview?.stages ?? const <StageBrief>[];
+    final at = stages.indexWhere((s) => s.id == widget.stageId);
+    final next = at < 0
+        ? null
+        : stages
+              .skip(at + 1)
+              .where((s) => s.status != StageStatus.approved)
+              .firstOrNull;
+    final record = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.stageApprovedDone),
+        content: Text(
+          next == null ? l10n.releaseOfferAny : l10n.releaseOfferNext(next.name),
+        ),
+        actions: [
+          TextButton(
+            key: StagePage.releaseLaterKey,
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.laterAction),
+          ),
+          FilledButton(
+            key: StagePage.releaseOfferKey,
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.recordReleaseAction),
+          ),
+        ],
+      ),
+    );
+    if (record != true || !context.mounted) return;
+    context.goNamed(
+      createReleaseRouteName,
+      pathParameters: {'projectId': '${widget.projectId}'},
+      queryParameters: {if (next != null) 'stageId': '${next.id}'},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -98,6 +141,9 @@ class _StagePageState extends State<StagePage> {
           if (state.actionStatus == GenericStatus.success) {
             if (state.flowStep == GenericFlowStep.deletingItem) {
               _backToPlan();
+            } else if (state.action == StageAction.approve) {
+              reset();
+              _offerRelease(context, state);
             } else {
               DialogUtils.handleSuccess(
                 context,

@@ -314,7 +314,13 @@ class RouteManager {
               key: state.pageKey,
               child: BlocProvider(
                 create: _ledgerFormBloc,
-                child: ReleaseFormPage(projectId: _projectId(state)!),
+                child: ReleaseFormPage(
+                  projectId: _projectId(state)!,
+                  // After an approval, the next stage (REV-06).
+                  initialStageId: int.tryParse(
+                    state.uri.queryParameters['stageId'] ?? '',
+                  ),
+                ),
               ),
             ),
           ),

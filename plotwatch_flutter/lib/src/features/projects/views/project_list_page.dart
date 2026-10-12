@@ -20,6 +20,8 @@ class ProjectListPage extends StatefulWidget {
   static const accountButtonKey = Key('projects.account');
   static const newProjectTileKey = Key('projects.newTile');
   static const searchFieldKey = Key('projects.search');
+  static const welcomeCreateKey = Key('projects.welcome.create');
+  static const welcomeJoinKey = Key('projects.welcome.join');
 
   /// The status chips are keyed `projects.status.<index>`.
   static const statusChipsPrefix = 'projects.status';
@@ -353,8 +355,78 @@ class _ProjectListPageState extends State<ProjectListPage> {
             actionText: l10n.clearFilters,
             onPressed: _clearFilters,
           )
-        : EmptyWidget(emptyText: l10n.projectsEmpty, onPressed: _refresh),
+        : const _FirstRun(),
   );
+}
+
+/// A new user's list (doc/04g step 2): what Plotwatch is for, and the two
+/// ways in.
+class _FirstRun extends StatelessWidget {
+  const _FirstRun();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconTile(
+                icon: Icons.home_work_outlined,
+                size: 64,
+                color: customColors.primary,
+                background: customColors.primarySoft,
+              ),
+              const Gap.vertical(height: AppSpacing.md),
+              Text(
+                l10n.firstRunTitle,
+                textAlign: TextAlign.center,
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const Gap.vertical(height: AppSpacing.sm),
+              Text(
+                l10n.firstRunText,
+                textAlign: TextAlign.center,
+                style: context.textTheme.bodyMedium,
+              ),
+              const Gap.vertical(height: AppSpacing.lg),
+              FilledButton.icon(
+                key: ProjectListPage.welcomeCreateKey,
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(52),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () => context.goNamed(createProjectRouteName),
+                icon: const Icon(Icons.add_rounded),
+                label: Text(l10n.firstRunCreate),
+              ),
+              const Gap.vertical(height: AppSpacing.sm),
+              OutlinedButton.icon(
+                key: ProjectListPage.welcomeJoinKey,
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(52),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () => context.goNamed(joinRouteName),
+                icon: const Icon(Icons.vpn_key_outlined),
+                label: Text(l10n.joinWithCode),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 /// The logo and the name, in the primary colour (developer, 2026-10-10).

@@ -2540,4 +2540,25 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get afterApprovalNote => 'Saisie après la validation de son étape.';
+
+  @override
+  String get firstRunTitle => 'Suivez votre chantier à distance';
+
+  @override
+  String get firstRunText =>
+      'Créez un projet que vous financez, avec ses étapes et son budget, ou rejoignez-en un avec le code reçu.';
+
+  @override
+  String get firstRunCreate => 'Créer un projet';
+
+  @override
+  String releaseOfferNext(String stage) {
+    return 'Enregistrer maintenant le versement pour $stage ?';
+  }
+
+  @override
+  String get releaseOfferAny => 'Enregistrer un versement maintenant ?';
+
+  @override
+  String get laterAction => 'Plus tard';
 }

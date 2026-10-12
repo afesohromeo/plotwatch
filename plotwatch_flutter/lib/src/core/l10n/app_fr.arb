@@ -700,5 +700,11 @@
     "tagAfterApproval": "Après validation",
     "stageApprovedWarning": "{stage} a été validée le {date}. Cette dépense comptera quand même pour elle.",
     "stageApprovedWarningUndated": "{stage} est déjà validée. Cette dépense comptera quand même pour elle.",
-    "afterApprovalNote": "Saisie après la validation de son étape."
+    "afterApprovalNote": "Saisie après la validation de son étape.",
+    "firstRunTitle": "Suivez votre chantier à distance",
+    "firstRunText": "Créez un projet que vous financez, avec ses étapes et son budget, ou rejoignez-en un avec le code reçu.",
+    "firstRunCreate": "Créer un projet",
+    "releaseOfferNext": "Enregistrer maintenant le versement pour {stage} ?",
+    "releaseOfferAny": "Enregistrer un versement maintenant ?",
+    "laterAction": "Plus tard"
 }

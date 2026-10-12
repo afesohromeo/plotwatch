@@ -2499,4 +2499,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get afterApprovalNote => 'Recorded after its stage was approved.';
+
+  @override
+  String get firstRunTitle => 'Watch your build from afar';
+
+  @override
+  String get firstRunText =>
+      'Start a project you fund, with its stages and budget, or join one with the code you received.';
+
+  @override
+  String get firstRunCreate => 'Create a project';
+
+  @override
+  String releaseOfferNext(String stage) {
+    return 'Record the release for $stage now?';
+  }
+
+  @override
+  String get releaseOfferAny => 'Record a release now?';
+
+  @override
+  String get laterAction => 'Later';
 }

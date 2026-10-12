@@ -382,6 +382,38 @@ void main() {
       ).called(1);
     });
 
+    // REV-06 (doc/04g step 3).
+    testWidgets('when an approval succeeds then a release is offered for '
+        'the next stage', (tester) async {
+      final before = loaded().copyWith(
+        view: submitted,
+        overview: testOverview(
+          stages: [
+            StageBrief(id: 2, name: 'Foundation', status: StageStatus.approved),
+            StageBrief(id: 3, name: 'Roof', status: StageStatus.notStarted),
+          ],
+        ),
+      );
+      whenListen(
+        bloc,
+        Stream.value(
+          before.copyWith(
+            action: StageAction.approve,
+            actionStatus: GenericStatus.success,
+          ),
+        ),
+        initialState: before,
+      );
+      await pumpWith(tester, before);
+      await tester.pumpAndSettle();
+
+      expect(find.text(l10n.releaseOfferNext('Roof')), findsOneWidget);
+      expect(find.byKey(StagePage.releaseOfferKey), findsOneWidget);
+      await tester.tap(find.byKey(StagePage.releaseLaterKey));
+      await tester.pumpAndSettle();
+      expect(find.byKey(StagePage.releaseOfferKey), findsNothing);
+    });
+
     testWidgets('when a viewer looks at a submitted stage then there is '
         'nothing to decide', (tester) async {
       await pumpWith(

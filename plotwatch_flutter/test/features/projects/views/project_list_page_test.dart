@@ -115,7 +115,10 @@ void main() {
     await pumpPage(tester, [loaded(const [])]);
     await tester.pump();
 
-    expect(find.text(l10n.projectsEmpty), findsOneWidget);
+    // A welcome with the two ways in (doc/04g step 2).
+    expect(find.text(l10n.firstRunTitle), findsOneWidget);
+    expect(find.byKey(ProjectListPage.welcomeCreateKey), findsOneWidget);
+    expect(find.byKey(ProjectListPage.welcomeJoinKey), findsOneWidget);
   });
 
   testWidgets('Given the list fails to load then it shows the error', (
@@ -261,7 +264,7 @@ void main() {
       await tester.pump();
 
       expect(find.text(l10n.noMatches), findsOneWidget);
-      expect(find.text(l10n.projectsEmpty), findsNothing);
+      expect(find.text(l10n.firstRunTitle), findsNothing);
 
       clearInteractions(bloc);
       await tester.tap(find.text(l10n.clearFilters));

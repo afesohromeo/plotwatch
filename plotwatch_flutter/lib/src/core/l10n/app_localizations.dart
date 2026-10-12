@@ -4324,6 +4324,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recorded after its stage was approved.'**
   String get afterApprovalNote;
+
+  /// M8 (doc/04g steps 2 and 3)
+  ///
+  /// In en, this message translates to:
+  /// **'Watch your build from afar'**
+  String get firstRunTitle;
+
+  /// M8 (doc/04g steps 2 and 3)
+  ///
+  /// In en, this message translates to:
+  /// **'Start a project you fund, with its stages and budget, or join one with the code you received.'**
+  String get firstRunText;
+
+  /// M8 (doc/04g steps 2 and 3)
+  ///
+  /// In en, this message translates to:
+  /// **'Create a project'**
+  String get firstRunCreate;
+
+  /// M8 (doc/04g steps 2 and 3)
+  ///
+  /// In en, this message translates to:
+  /// **'Record the release for {stage} now?'**
+  String releaseOfferNext(String stage);
+
+  /// M8 (doc/04g steps 2 and 3)
+  ///
+  /// In en, this message translates to:
+  /// **'Record a release now?'**
+  String get releaseOfferAny;
+
+  /// M8 (doc/04g steps 2 and 3)
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get laterAction;
 }
 
 class _AppLocalizationsDelegate
