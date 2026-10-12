@@ -101,12 +101,21 @@ void main() {
     expect(find.byKey(MembersPage.inviteButtonKey), findsOneWidget);
   });
 
+  /// A member's remove and change-role actions are behind its ⋮ (doc/05
+  /// §9.3).
+  Future<void> openMemberMenu(WidgetTester tester, int memberId) async {
+    await tester.tap(find.byKey(MembersPage.memberMenuKey(memberId)));
+    await tester.pumpAndSettle();
+  }
+
   testWidgets('Given the owner then only other members can be removed', (
     tester,
   ) async {
     await pumpWith(tester, loaded(ProjectRole.owner));
 
-    expect(find.byKey(MembersPage.removeButtonKey(1)), findsNothing);
+    // The owner's own row has no menu.
+    expect(find.byKey(MembersPage.memberMenuKey(1)), findsNothing);
+    await openMemberMenu(tester, 2);
     expect(find.byKey(MembersPage.removeButtonKey(2)), findsOneWidget);
   });
 
@@ -128,7 +137,8 @@ void main() {
     (tester) async {
       await pumpWith(tester, loaded(ProjectRole.owner));
 
-      expect(find.byKey(MembersPage.changeRoleButtonKey(1)), findsNothing);
+      expect(find.byKey(MembersPage.memberMenuKey(1)), findsNothing);
+      await openMemberMenu(tester, 2);
       expect(find.byKey(MembersPage.changeRoleButtonKey(2)), findsOneWidget);
     },
   );
@@ -145,6 +155,7 @@ void main() {
       'it is sent', (tester) async {
     await pumpWith(tester, loaded(ProjectRole.owner));
 
+    await openMemberMenu(tester, 2);
     await tester.tap(find.byKey(MembersPage.changeRoleButtonKey(2)));
     await tester.pumpAndSettle();
     expect(
@@ -165,6 +176,7 @@ void main() {
       'nothing is sent', (tester) async {
     await pumpWith(tester, loaded(ProjectRole.owner));
 
+    await openMemberMenu(tester, 2);
     await tester.tap(find.byKey(MembersPage.changeRoleButtonKey(2)));
     await tester.pumpAndSettle();
     await tester.tap(
@@ -189,6 +201,7 @@ void main() {
       'sent', (tester) async {
     await pumpWith(tester, loaded(ProjectRole.owner));
 
+    await openMemberMenu(tester, 2);
     await tester.tap(find.byKey(MembersPage.removeButtonKey(2)));
     await tester.pumpAndSettle();
     await tester.tap(find.text(l10n.confirm));
@@ -269,6 +282,7 @@ void main() {
     await pumpWith(tester, closed);
 
     expect(find.byKey(MembersPage.inviteButtonKey), findsNothing);
+    await openMemberMenu(tester, 2);
     expect(find.byKey(MembersPage.changeRoleButtonKey(2)), findsNothing);
     expect(find.byKey(MembersPage.removeButtonKey(2)), findsOneWidget);
   });

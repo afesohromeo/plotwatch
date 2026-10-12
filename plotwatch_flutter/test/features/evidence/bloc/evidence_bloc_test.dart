@@ -53,6 +53,8 @@ void main() {
     overview: managerOverview,
     evidence: evidence,
     stage: stageView.stage,
+    // The page title: the checklist item it was taken for (doc/05 §9.3).
+    itemLabel: 'Wide shot',
     isMine: true,
     loadStatus: GenericStatus.success,
   );

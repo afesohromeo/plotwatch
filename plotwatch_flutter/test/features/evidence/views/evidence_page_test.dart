@@ -31,7 +31,12 @@ void main() {
     when(() => media.state).thenReturn(const EvidenceMediaState());
   });
 
+  /// Wide: the details and the checks side by side, not behind the
+  /// phone's switch (doc/05 §9.4).
   Future<void> pumpWith(WidgetTester tester, EvidenceState state) {
+    tester.view.physicalSize = const Size(1200, 2000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     when(() => bloc.state).thenReturn(state);
     return tester.pumpApp(
       BlocProvider<EvidenceMediaBloc>.value(
@@ -75,6 +80,9 @@ void main() {
     await pumpWith(tester, loaded());
 
     expect(find.text(l10n.verificationUnverified), findsOneWidget);
+    // On the web the checks open from "See the 8 checks" (doc/05 §9.3).
+    await tester.tap(find.byKey(const Key('evidence.checks')));
+    await tester.pumpAndSettle();
     expect(find.text(l10n.checkInsideSiteFailed(137, 58)), findsOneWidget);
     expect(find.text('Pixel 7 · Android 15'), findsOneWidget);
     expect(find.text(l10n.verificationNotice), findsOneWidget);

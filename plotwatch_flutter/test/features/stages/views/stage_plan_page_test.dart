@@ -53,10 +53,12 @@ void main() {
       'progress are shown', (tester) async {
     await pumpWith(tester, loaded());
 
-    expect(find.text('Foundation'), findsOneWidget);
-    expect(find.text('Walls'), findsOneWidget);
+    // "1 · Foundation": each stage with its number (doc/05 §9.3).
+    expect(find.textContaining('Foundation'), findsOneWidget);
+    expect(find.textContaining('Walls'), findsOneWidget);
     expect(
-      find.text(formatMoney(2000000, 'XAF', locale: 'en')),
+      // In the subtitle, in short (doc/05 §9.3).
+      find.textContaining(formatMoneyShort(2000000, 'XAF', locale: 'en')),
       findsOneWidget,
     );
     // doc/04e M5-F2: neither fixture stage is approved yet.
@@ -82,7 +84,7 @@ void main() {
     ) async {
       await pumpWith(tester, loaded(role: role));
 
-      expect(find.text('Foundation'), findsOneWidget);
+      expect(find.textContaining('Foundation'), findsOneWidget);
       expect(find.byKey(StagePlanPage.addStageButtonKey), findsNothing);
       expect(find.byKey(StagePlanPage.dragHandleKey(1)), findsNothing);
     });
@@ -118,9 +120,17 @@ void main() {
         testStageView(id: i, name: 'Stage $i', orderIndex: i - 1),
     ];
     await pumpWith(tester, loaded(plan: testStagePlan(stages: stages)));
-    final page = find.byType(Scrollable).first;
+    // The page, not the chips row that scrolls sideways (doc/05 §9.5).
+    final page = find
+        .byWidgetPredicate(
+          (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+        )
+        .first;
     final handle = find.byKey(StagePlanPage.dragHandleKey(20));
     await tester.scrollUntilVisible(handle, 300, scrollable: page);
+    // Built is not on screen: the redrawn tiles are taller (doc/05 §9.3).
+    await tester.ensureVisible(handle);
+    await tester.pumpAndSettle();
     final position = tester.state<ScrollableState>(page).position;
     expect(position.pixels, greaterThan(0));
 
@@ -130,7 +140,8 @@ void main() {
     await tester.pump();
     // Hold the stage at the top edge: the page scrolls up under it.
     await gesture.moveTo(Offset(start.dx, 20));
-    for (var i = 0; i < 100 && position.pixels > 0; i++) {
+    // The redrawn tiles are taller: allow the edge scrolling its time.
+    for (var i = 0; i < 400 && position.pixels > 0; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
     expect(position.pixels, 0);
@@ -223,7 +234,21 @@ void main() {
       ),
     );
 
-    expect(find.text(l10n.stageLate), findsOneWidget);
+    // On the overdue tile only (the filter chips say Late too, doc/05 §9.5).
+    expect(
+      find.descendant(
+        of: find.byKey(StagePlanPage.stageTileKey(1)),
+        matching: find.text(l10n.stageLate),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(StagePlanPage.stageTileKey(2)),
+        matching: find.text(l10n.stageLate),
+      ),
+      findsNothing,
+    );
   });
 
   // doc/05 §9 DP-9: the stage that waits for the owner stands out.

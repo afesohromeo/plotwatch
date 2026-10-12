@@ -31,7 +31,11 @@ void main() {
     when(() => moneyBloc.state).thenReturn(const MoneyState());
   });
 
+  /// At 1000 px: both columns show (doc/05 §9.4), without the web extras.
   Future<void> pumpWith(WidgetTester tester, ProjectOverviewState state) {
+    tester.view.physicalSize = const Size(1000, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     when(() => bloc.state).thenReturn(state);
     return tester.pumpApp(
       MultiBlocProvider(
@@ -43,6 +47,14 @@ void main() {
         child: const ProjectOverviewPage(projectId: 1),
       ),
     );
+  }
+
+  /// The app bar's actions are behind ⋮ from two (doc/05 §9.4).
+  Future<void> openMenu(WidgetTester tester) async {
+    final menu = find.byKey(AppBarMenu.buttonKey);
+    if (menu.evaluate().isEmpty) return;
+    await tester.tap(menu);
+    await tester.pumpAndSettle();
   }
 
   ProjectOverviewState loaded(ProjectOverview overview) => ProjectOverviewState(
@@ -65,8 +77,9 @@ void main() {
   ) async {
     await pumpWith(tester, loaded(testOverview(role: ProjectRole.viewer)));
 
+    await openMenu(tester);
     await tester.tap(find.byKey(ProjectOverviewPage.refreshButtonKey));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     verify(
       () => bloc.add(const ProjectOverviewEvent.fetchProject(projectId: 1)),
@@ -114,8 +127,12 @@ void main() {
       expect(find.text('House in Bafoussam'), findsWidgets);
       expect(find.text(l10n.projectStatusActive), findsOneWidget);
       expect(find.text(l10n.projectRoleOwner), findsOneWidget);
+      await openMenu(tester);
       expect(find.byKey(ProjectOverviewPage.editButtonKey), findsOneWidget);
-      expect(find.byKey(ProjectOverviewPage.statusButtonKey), findsOneWidget);
+      expect(
+        find.byKey(ProjectOverviewPage.statusItemKey(ProjectStatus.paused)),
+        findsOneWidget,
+      );
     },
   );
 
@@ -124,8 +141,12 @@ void main() {
   ) async {
     await pumpWith(tester, loaded(testOverview(role: ProjectRole.siteManager)));
 
+    await openMenu(tester);
     expect(find.byKey(ProjectOverviewPage.editButtonKey), findsNothing);
-    expect(find.byKey(ProjectOverviewPage.statusButtonKey), findsNothing);
+    expect(
+      find.byKey(ProjectOverviewPage.statusItemKey(ProjectStatus.paused)),
+      findsNothing,
+    );
   });
 
   testWidgets(
@@ -133,7 +154,13 @@ void main() {
     (tester) async {
       await pumpWith(tester, loaded(testOverview()));
 
-      expect(find.byKey(ProjectOverviewPage.statusButtonKey), findsNothing);
+      await openMenu(tester);
+      for (final status in ProjectStatus.values) {
+        expect(
+          find.byKey(ProjectOverviewPage.statusItemKey(status)),
+          findsNothing,
+        );
+      }
     },
   );
 
@@ -170,13 +197,12 @@ void main() {
     );
 
     expect(find.byKey(ProjectOverviewPage.stagesCardKey), findsOneWidget);
-    expect(find.text(l10n.stageCount(10)), findsOneWidget);
+    expect(find.text('40%'), findsOneWidget);
     expect(
-      find.text(formatMoney(1500000, 'XAF', locale: 'en')),
+      find.text(formatMoneyShort(1500000, 'XAF', locale: 'en')),
       findsOneWidget,
     );
-    // doc/04e M5-F2: the stage count beside the budget share.
-    expect(find.text(l10n.progressBudgetAndStages(40, 3, 10)), findsOneWidget);
+    expect(find.text(l10n.stagesOfTotal(3, 10)), findsOneWidget);
   });
 
   // G-7, G-12 and H-2/H-3: which site buttons each role sees in each state.
@@ -288,9 +314,10 @@ void main() {
       loaded(testOverview(project: testProject(status: ProjectStatus.active))),
     );
 
-    await tester.tap(find.byKey(ProjectOverviewPage.statusButtonKey));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(l10n.projectStatusPaused).last);
+    await openMenu(tester);
+    await tester.tap(
+      find.byKey(ProjectOverviewPage.statusItemKey(ProjectStatus.paused)),
+    );
     await tester.pump();
 
     verify(
@@ -363,8 +390,10 @@ void main() {
           ),
           findsOneWidget,
         );
-        expect(find.byKey(ProjectOverviewPage.editButtonKey), findsNothing);
         expect(find.byKey(ProjectOverviewPage.localizeButtonKey), findsNothing);
+        expect(find.byKey(ProjectOverviewPage.editSiteButtonKey), findsNothing);
+        await openMenu(tester);
+        expect(find.byKey(ProjectOverviewPage.editButtonKey), findsNothing);
         expect(find.byKey(ProjectOverviewPage.editSiteButtonKey), findsNothing);
       });
     }
@@ -378,16 +407,19 @@ void main() {
         ),
       );
 
-      expect(find.byKey(ProjectOverviewPage.statusButtonKey), findsOneWidget);
+      await openMenu(tester);
+      expect(
+        find.byKey(ProjectOverviewPage.statusItemKey(ProjectStatus.active)),
+        findsOneWidget,
+      );
     });
   });
 
   // doc/04e D-2, D-3.
   group('Given the owner changes the status', () {
     Future<void> choose(WidgetTester tester, ProjectStatus status) async {
-      await tester.tap(find.byKey(ProjectOverviewPage.statusButtonKey));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(status.label(l10n)).last);
+      await openMenu(tester);
+      await tester.tap(find.byKey(ProjectOverviewPage.statusItemKey(status)));
       await tester.pumpAndSettle();
     }
 

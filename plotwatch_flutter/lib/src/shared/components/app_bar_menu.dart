@@ -80,12 +80,18 @@ class AppBarMenu extends StatelessWidget {
                   ),
                   const Gap.horizontal(width: AppSpacing.sm),
                 ],
-                Text(
-                  items[i].label,
-                  style: context.textTheme.bodyLarge?.copyWith(
-                    color: items[i].destructive
-                        ? customColors.unverified
-                        : customColors.ink,
+                // A long label (in French too) wraps instead of overflowing
+                // the menu.
+                Flexible(
+                  child: Text(
+                    items[i].label,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      color: items[i].destructive
+                          ? customColors.unverified
+                          : customColors.ink,
+                    ),
                   ),
                 ),
               ],

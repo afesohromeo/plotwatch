@@ -37,6 +37,11 @@ void main() {
     StageState state, {
     bool isWeb = false,
   }) {
+    // Wide: the photos and the history are in the side column, not behind
+    // the phone's switch (doc/05 §9.4).
+    tester.view.physicalSize = const Size(1200, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     when(() => bloc.state).thenReturn(state);
     return tester.pumpApp(
       BlocProvider<EvidenceMediaBloc>.value(
@@ -47,6 +52,14 @@ void main() {
         ),
       ),
     );
+  }
+
+  /// The app bar's actions are behind ⋮ from two (doc/05 §9.4).
+  Future<void> openMenu(WidgetTester tester) async {
+    final menu = find.byKey(AppBarMenu.buttonKey);
+    if (menu.evaluate().isEmpty) return;
+    await tester.tap(menu);
+    await tester.pumpAndSettle();
   }
 
   StageState loaded({
@@ -78,20 +91,21 @@ void main() {
 
     expect(find.text('Foundation'), findsWidgets);
     expect(
-      find.text(formatMoney(1500000, 'XAF', locale: 'en')),
+      find.text(formatMoneyShort(1500000, 'XAF', locale: 'en')),
       findsOneWidget,
     );
     expect(find.text(l10n.stageStatusNotStarted), findsOneWidget);
     expect(find.text('Wide shot'), findsOneWidget);
     expect(find.text('Detail'), findsOneWidget);
-    expect(find.text(l10n.checklistOptional), findsOneWidget);
-    expect(find.text(l10n.itemsCovered(0, 2)), findsOneWidget);
+    expect(find.textContaining(l10n.checklistOptional), findsOneWidget);
+    expect(find.textContaining(l10n.stagesOfTotal(0, 2)), findsOneWidget);
   });
 
   testWidgets('Given the owner and a stage not started then it can be '
       'edited and deleted, not started', (tester) async {
     await pumpWith(tester, loaded());
 
+    await openMenu(tester);
     expect(find.byKey(StagePage.editButtonKey), findsOneWidget);
     expect(find.byKey(StagePage.deleteButtonKey), findsOneWidget);
     expect(find.byKey(StagePage.startButtonKey), findsNothing);
@@ -102,6 +116,7 @@ void main() {
   ) async {
     await pumpWith(tester, loaded(status: StageStatus.submitted));
 
+    await openMenu(tester);
     expect(find.byKey(StagePage.editButtonKey), findsNothing);
     expect(find.byKey(StagePage.deleteButtonKey), findsNothing);
   });
@@ -111,6 +126,7 @@ void main() {
   ) async {
     await pumpWith(tester, loaded());
 
+    await openMenu(tester);
     await tester.tap(find.byKey(StagePage.deleteButtonKey));
     await tester.pumpAndSettle();
     await tester.tap(find.text(l10n.confirm));
@@ -202,7 +218,8 @@ void main() {
       );
 
       expect(find.byKey(StagePage.captureTileKey(9)), findsOneWidget);
-      expect(find.text(l10n.verificationVerified), findsOneWidget);
+      // On the item and on the large photo.
+      expect(find.text(l10n.verificationVerified), findsWidgets);
     });
 
     // M4-F3: nothing is uploading once the phone has left the capture.
@@ -427,7 +444,7 @@ void main() {
       ),
     );
 
-    expect(find.text(l10n.stageLate), findsOneWidget);
+    expect(find.textContaining(l10n.stageLate), findsOneWidget);
   });
 
   // doc/04e C-1.
@@ -481,13 +498,21 @@ void main() {
     ];
 
     Future<void> chooseBadge(WidgetTester tester, int index) async {
-      await tester.tap(
-        find.byKey(FilterChips.chipKey(StagePage.photoBadgeChipsPrefix, index)),
+      final chip = find.byKey(
+        FilterChips.chipKey(StagePage.photoBadgeChipsPrefix, index),
       );
+      await tester.ensureVisible(chip);
+      await tester.pumpAndSettle();
+      await tester.tap(chip);
       await tester.pump();
     }
 
     Future<void> chooseItem(WidgetTester tester, int index) async {
+      // The badge row scrolls sideways: the picker is at its end.
+      await tester.ensureVisible(
+        find.byKey(const Key(StagePage.photoItemPickerPrefix)),
+      );
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key(StagePage.photoItemPickerPrefix)));
       await tester.pumpAndSettle();
       await tester.tap(
