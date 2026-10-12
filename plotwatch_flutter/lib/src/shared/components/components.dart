@@ -44,3 +44,4 @@ export 'sort_button.dart';
 export 'badge_dot.dart';
 export 'skeleton.dart';
 export 'page_skeletons.dart';
+export 'ignore_intrinsic_height.dart';

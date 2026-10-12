@@ -40,6 +40,8 @@
        - the server also answers `/privacy` with it;
        - English, then French (`#fr`);
        - it covers what is collected and why, who sees it (only the project's members), where it is stored (Serverpod Cloud), how long it is kept, Google sign-in, deletion, and a contact email.
+       - Laid out like PlusLocate's `PRIVACY.md`: a developer line, "In short", what the app does not do, Google's policy link, and the under-13 wording.
+       - Contact: **`afesoh.apps@gmail.com`**, the developer's existing apps address, also used for PlusLocate and on Play (decided 2026-10-13).
      - **Links:**
        - Profile › Privacy policy, and a "Privacy" link on the welcome page;
        - opened in the browser with `url_launcher`;
@@ -73,7 +75,7 @@
 10. **Merge `dev` into `main`**, with the developer's approval, once green.
 11. **Only if early:** hash chain (VER-05).
 
-Set aside, documented in the README as the roadmap: evidence requests, fund requests, comments, the inactivity reminder, photos on updates, proof files for releases, the public verification page, the offline queue.
+Set aside, documented in the README as the roadmap: evidence requests, fund requests, comments, the inactivity reminder, photos on updates, proof files for releases, the public verification page, the offline queue, ownership transfer (so an owner can leave an open shared project; decided 2026-10-13).
 
 ## Google sign-in (AUTH-04)
 From Serverpod's Google provider guide (checked 2026-10-12).

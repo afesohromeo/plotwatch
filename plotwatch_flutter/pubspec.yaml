@@ -29,6 +29,8 @@ dependencies:
   serverpod_auth_idp_client: 4.0.3
   # Google sign-in on phones (doc/04g step 4); the version the auth package uses
   google_sign_in: ^7.2.0
+  # Opens the privacy policy in the browser (doc/04g step 6)
+  url_launcher: ^6.3.1
 
   # From flutter_bloc_kit
   cupertino_icons: ^1.0.6

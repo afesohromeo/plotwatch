@@ -2777,7 +2777,7 @@ abstract class AppLocalizations {
   /// Feed and notifications: an actor whose name is unknown
   ///
   /// In en, this message translates to:
-  /// **'Someone'**
+  /// **'A former member'**
   String get someone;
 
   /// Feed page title
@@ -4396,6 +4396,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{label}:'**
   String labelColon(String label);
+
+  /// Privacy and account deletion (doc/04g step 6)
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get privacyPolicy;
+
+  /// Privacy and account deletion (doc/04g step 6)
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get deleteAccount;
+
+  /// Privacy and account deletion (doc/04g step 6)
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your account?'**
+  String get deleteAccountTitle;
+
+  /// Privacy and account deletion (doc/04g step 6)
+  ///
+  /// In en, this message translates to:
+  /// **'Your sign-in, name, email, settings and notifications are deleted, and so are the projects where you are the only member. In shared projects, your photos, entries and updates stay for the others, shown as a former member. This can\'t be undone.'**
+  String get deleteAccountExplain;
+
+  /// Privacy and account deletion (doc/04g step 6)
+  ///
+  /// In en, this message translates to:
+  /// **'Type {email} to confirm'**
+  String deleteAccountTypeEmail(String email);
+
+  /// Privacy and account deletion (doc/04g step 6)
+  ///
+  /// In en, this message translates to:
+  /// **'Delete my account'**
+  String get deleteAccountConfirm;
+
+  /// Privacy and account deletion (doc/04g step 6)
+  ///
+  /// In en, this message translates to:
+  /// **'Complete or archive these projects first'**
+  String get deleteAccountBlockedTitle;
+
+  /// Privacy and account deletion (doc/04g step 6)
+  ///
+  /// In en, this message translates to:
+  /// **'Other members still work in them, and they need their owner.'**
+  String get deleteAccountBlockedText;
+
+  /// Privacy and account deletion (doc/04g step 6)
+  ///
+  /// In en, this message translates to:
+  /// **'Complete or archive the projects you share with others first.'**
+  String get errorAccountOwnsSharedProjects;
+
+  /// Privacy and account deletion (doc/04g step 6)
+  ///
+  /// In en, this message translates to:
+  /// **'Could not delete the account. Try again.'**
+  String get errorDeleteAccount;
 }
 
 class _AppLocalizationsDelegate

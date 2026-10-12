@@ -15,6 +15,8 @@ class ProfilePage extends StatefulWidget {
   static const languageSelectorKey = Key('profile.language');
   static const saveButtonKey = Key('profile.save');
   static const signOutButtonKey = Key('profile.signOut');
+  static const privacyLinkKey = Key('profile.privacy');
+  static const deleteAccountButtonKey = Key('profile.deleteAccount');
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -189,6 +191,26 @@ class _ProfilePageState extends State<ProfilePage> {
                   const AuthenticationEvent.signOutRequested(),
                 ),
                 child: Text(l10n.signOut),
+              ),
+              const Gap.vertical(height: AppSpacing.sm),
+              TextButton(
+                key: ProfilePage.privacyLinkKey,
+                onPressed: () => openPrivacyPolicy(languageCode),
+                child: Text(l10n.privacyPolicy),
+              ),
+              // Google Play's account deletion policy (doc/04g step 6).
+              TextButton(
+                key: ProfilePage.deleteAccountButtonKey,
+                style: TextButton.styleFrom(
+                  foregroundColor: customColors.error,
+                ),
+                onPressed: state.profile?.email == null
+                    ? null
+                    : () => showDeleteAccountDialog(
+                        context,
+                        state.profile!.email!,
+                      ),
+                child: Text(l10n.deleteAccount),
               ),
             ],
           );

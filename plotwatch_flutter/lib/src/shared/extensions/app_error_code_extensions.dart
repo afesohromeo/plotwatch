@@ -65,6 +65,8 @@ extension AppErrorCodeMessage on AppErrorCode {
     AppErrorCode.alreadyConfirmed => l10n.errorAlreadyConfirmed,
     AppErrorCode.notEntryAuthor => l10n.errorNotEntryAuthor,
     AppErrorCode.emailUsesGoogle => l10n.errorEmailUsesGoogle,
+    AppErrorCode.accountOwnsSharedProjects =>
+        l10n.errorAccountOwnsSharedProjects,
     AppErrorCode.textTooLong => l10n.errorTextTooLong,
     AppErrorCode.authInvalidCredentials => l10n.errorAuthInvalidCredentials,
     AppErrorCode.authTooManyAttempts => l10n.errorAuthTooManyAttempts,

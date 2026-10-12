@@ -2346,6 +2346,9 @@ class Protocol extends _is.DatabaseSerializationManager {
               .toList()
           as T;
     }
+    if (t == List<String>) {
+      return (data as List).map((e) => deserialize<String>(e)).toList() as T;
+    }
     if (t == List<_idpi4lil.ActivityType>) {
       return (data as List)
               .map((e) => deserialize<_idpi4lil.ActivityType>(e))

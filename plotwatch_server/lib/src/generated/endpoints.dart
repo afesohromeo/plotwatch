@@ -34,6 +34,7 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _iais;
+import '../endpoints/account_endpoint.dart' as _iaho7ul5;
 import '../endpoints/activity_endpoint.dart' as _ijhtbkuk;
 import '../endpoints/email_idp_endpoint.dart' as _ilutrrxn;
 import '../endpoints/evidence_endpoint.dart' as _i2cvsm7u;
@@ -52,6 +53,12 @@ class Endpoints extends _is.EndpointDispatch {
   @override
   void initializeEndpoints(_is.Server server) {
     var endpoints = <String, _is.Endpoint>{
+      'account': _iaho7ul5.AccountEndpoint()
+        ..initialize(
+          server,
+          'account',
+          null,
+        ),
       'activity': _ijhtbkuk.ActivityEndpoint()
         ..initialize(
           server,
@@ -131,6 +138,32 @@ class Endpoints extends _is.EndpointDispatch {
           null,
         ),
     };
+    connectors['account'] = _is.EndpointConnector(
+      name: 'account',
+      endpoint: endpoints['account']!,
+      methodConnectors: {
+        'deletionBlockers': _is.MethodConnector(
+          name: 'deletionBlockers',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['account'] as _iaho7ul5.AccountEndpoint)
+                  .deletionBlockers(session),
+        ),
+        'deleteMe': _is.MethodConnector(
+          name: 'deleteMe',
+          params: {},
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['account'] as _iaho7ul5.AccountEndpoint)
+                  .deleteMe(session),
+        ),
+      },
+    );
     connectors['activity'] = _is.EndpointConnector(
       name: 'activity',
       endpoint: endpoints['activity']!,

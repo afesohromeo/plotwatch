@@ -68,6 +68,32 @@ import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
 import 'package:serverpod_client/serverpod_client.dart' as _isc;
 import 'protocol.dart' as _il2as5qe;
 
+/// The signed-in user's account (doc/04g step 6).
+/// Thin: sign-in → one service call (`_standards/14` §4.2).
+/// {@category Endpoint}
+class EndpointAccount extends _isc.EndpointRef {
+  EndpointAccount(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'account';
+
+  /// The names of the projects that must be completed or archived before
+  /// the account can be deleted.
+  _ida.Future<List<String>> deletionBlockers() =>
+      caller.callServerEndpoint<List<String>>(
+        'account',
+        'deletionBlockers',
+        {},
+      );
+
+  /// Deletes the account: the person, not the shared history.
+  _ida.Future<void> deleteMe() => caller.callServerEndpoint<void>(
+    'account',
+    'deleteMe',
+    {},
+  );
+}
+
 /// A project's activity feed: pages and a live stream with catch-up
 /// (FEED-01–03, 05; doc/04e M5-5, M5-7). Thin: sign-in → permission → one
 /// service call (`_standards/14` §4.2).
@@ -1233,6 +1259,7 @@ class Client extends _isc.ServerpodClientShared {
              disconnectStreamsOnLostInternetConnection,
          httpClientOverride: httpClientOverride,
        ) {
+    account = EndpointAccount(this);
     activity = EndpointActivity(this);
     emailIdp = EndpointEmailIdp(this);
     evidence = EndpointEvidence(this);
@@ -1248,6 +1275,8 @@ class Client extends _isc.ServerpodClientShared {
     stage = EndpointStage(this);
     modules = Modules(this);
   }
+
+  late final EndpointAccount account;
 
   late final EndpointActivity activity;
 
@@ -1279,6 +1308,7 @@ class Client extends _isc.ServerpodClientShared {
 
   @override
   Map<String, _isc.EndpointRef> get endpointRefLookup => {
+    'account': account,
     'activity': activity,
     'emailIdp': emailIdp,
     'evidence': evidence,

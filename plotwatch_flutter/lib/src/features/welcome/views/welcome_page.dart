@@ -9,6 +9,7 @@ class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 
   static const logoKey = Key('welcome.logo');
+  static const privacyLinkKey = Key('welcome.privacy');
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +62,14 @@ class WelcomePage extends StatelessWidget {
                   width: double.infinity,
                   onPressed: () => context.goNamed(signUpRouteName),
                   child: Text(l10n.createAccount),
+                ),
+                const Gap.vertical(height: AppSpacing.sm),
+                TextButton(
+                  key: privacyLinkKey,
+                  onPressed: () => openPrivacyPolicy(
+                    Localizations.localeOf(context).languageCode,
+                  ),
+                  child: Text(l10n.privacyPolicy),
                 ),
               ],
             ),

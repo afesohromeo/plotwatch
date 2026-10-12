@@ -8,11 +8,14 @@ class AuthRepository {
   AuthRepository({
     AuthApiProvider? apiProvider,
     ProfileApiProvider? profileApiProvider,
+    AccountApiProvider? accountApiProvider,
   }) : _apiProvider = apiProvider ?? AuthApiProvider(),
-       _profileApiProvider = profileApiProvider ?? ProfileApiProvider();
+       _profileApiProvider = profileApiProvider ?? ProfileApiProvider(),
+       _accountApiProvider = accountApiProvider ?? AccountApiProvider();
 
   final AuthApiProvider _apiProvider;
   final ProfileApiProvider _profileApiProvider;
+  final AccountApiProvider _accountApiProvider;
 
   bool get isGoogleSignInAvailable => _apiProvider.isGoogleSignInAvailable;
 
@@ -52,6 +55,28 @@ class AuthRepository {
       return true;
     } catch (e) {
       log('Error signing in with Google: $e');
+      rethrow;
+    }
+  }
+
+  /// The projects to complete or archive before deleting the account.
+  Future<List<String>> deletionBlockers() async {
+    try {
+      return await _accountApiProvider.deletionBlockers();
+    } catch (e) {
+      log('Error checking account deletion: $e');
+      rethrow;
+    }
+  }
+
+  /// Deletes the account (doc/04g step 6), then forgets the session here:
+  /// the router goes back to the welcome page.
+  Future<void> deleteAccount() async {
+    try {
+      await _accountApiProvider.deleteMe();
+      await _apiProvider.clearLocalSession();
+    } catch (e) {
+      log('Error deleting the account: $e');
       rethrow;
     }
   }

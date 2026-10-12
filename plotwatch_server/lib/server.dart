@@ -73,6 +73,13 @@ void run(List<String> args) async {
   // Checks if the flutter web app has been built and serves it if it has.
   final appDir = Directory(Uri(path: 'web/app').toFilePath());
   if (appDir.existsSync()) {
+    // The privacy policy at a short address for the stores and the
+    // submission (doc/04g step 6). The page is part of the web app, so an
+    // older build may not have it yet.
+    final privacy = File(Uri(path: 'web/app/privacy.html').toFilePath());
+    if (privacy.existsSync()) {
+      pod.webServer.addRoute(StaticRoute.file(privacy), '/privacy');
+    }
     // Serve the flutter web app under /.
     pod.webServer.addRoute(
       FlutterRoute(

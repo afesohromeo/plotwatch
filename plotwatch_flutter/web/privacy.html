@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!-- Plotwatch privacy policy (doc/04g step 6, NFR-PRV-02). A static page of
+     the web app, like auth.html, so it is served on :8083, :8082 and Cloud;
+     the server also answers /privacy with it. English, then French (#fr). -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plotwatch Privacy Policy</title>
+  <style>
+    :root {
+      --ink: #14211d; --muted: #55635e; --line: #dfe5e2;
+      --brand: #0f5c4d; --bg: #f3f5f4; --card: #ffffff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ink: #e7eeeb; --muted: #a7b4af; --line: #2b3633;
+        --brand: #6fc7b2; --bg: #111816; --card: #18211e;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+    nav { display: flex; gap: 12px; margin-bottom: 24px; }
+    nav a, a { color: var(--brand); }
+    article {
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: 16px; padding: 24px; margin-bottom: 32px;
+    }
+    h1 { font-size: 28px; line-height: 1.25; margin: 0 0 4px; }
+    h2 { font-size: 19px; margin: 28px 0 8px; }
+    .date { color: var(--muted); margin: 0 0 16px; }
+    table { width: 100%; border-collapse: collapse; font-size: 15px; }
+    th, td {
+      text-align: left; vertical-align: top; padding: 8px;
+      border-top: 1px solid var(--line);
+    }
+    ul { padding-left: 20px; }
+  </style>
+</head>
+<body>
+<main>
+  <nav><a href="#en">English</a><a href="#fr">Français</a></nav>
+
+  <article id="en" lang="en">
+    <h1>Plotwatch Privacy Policy</h1>
+    <p class="date">Effective 13 October 2026 · Developer: Afesoh Romeo · Contact: <a href="mailto:afesoh.apps@gmail.com">afesoh.apps@gmail.com</a></p>
+    <p>Plotwatch lets people fund construction they can't supervise in person,
+      through verified photo evidence, stage approvals and a shared ledger.
+      This page explains what we collect, why, who sees it, and how to delete it.</p>
+    <p><strong>In short:</strong> project data is seen only by that project's
+      members. Plotwatch shows no ads and doesn't sell your data. Photos carry
+      their GPS position and time, because that is what proves the work was done.
+      You can delete your account in the app.</p>
+
+    <h2>What we collect</h2>
+    <ul>
+      <li><strong>Your account:</strong> your name and email. With email
+        sign-in, your password, stored only as a secure hash. With Google
+        sign-in, the name, email and profile picture Google shares.</li>
+      <li><strong>Your settings:</strong> your country (optional) and language.</li>
+      <li><strong>What you enter in a project:</strong> the project's details,
+        stages and budgets, members and invitations, progress updates, ledger
+        entries (releases and expenses) and receipt photos.</li>
+      <li><strong>Site photos:</strong> the photo, its GPS position, accuracy,
+        altitude and time, whether the location was simulated, your phone's
+        model and system version, the app version, and a fingerprint (SHA-256)
+        of the photo. These details are what make a photo verifiable.</li>
+      <li><strong>The site's location:</strong> the GPS position proposed for
+        the construction site.</li>
+      <li><strong>Notifications</strong> sent to you inside the app.</li>
+      <li><strong>Server logs:</strong> technical records of requests and
+        errors, used to run and fix the service.</li>
+    </ul>
+    <p>We use your location only when you capture a site photo or propose the
+      site. We don't show ads, sell data or use tracking or analytics tools.</p>
+
+    <h2>What Plotwatch does not do</h2>
+    <ul>
+      <li>No advertising and no advertising identifiers.</li>
+      <li>No selling or renting of your information.</li>
+      <li>No tracking of your location in the background.</li>
+      <li>No analytics or tracking tools.</li>
+    </ul>
+
+    <h2>Who can see it</h2>
+    <p>Project data is visible only to that project's members, according to
+      their role (owner, co-funder, site manager, viewer). Your name and email
+      are shown to the members of the projects you belong to.</p>
+
+    <h2>Who processes it for us</h2>
+    <ul>
+      <li><strong>Serverpod Cloud</strong> hosts the server, the database and
+        the stored files.</li>
+      <li><strong>Google</strong>, if you choose Google sign-in, and for the
+        maps that show a site's location.</li>
+    </ul>
+    <p>Google's privacy policy:
+      <a href="https://policies.google.com/privacy">policies.google.com/privacy</a>.</p>
+
+    <h2>How long we keep it</h2>
+    <p>As long as your account and your projects exist. Copies in backups
+      disappear as backups are replaced.</p>
+
+    <h2>Deleting your account</h2>
+    <p>In the app: <strong>Profile › Delete account</strong>. Without the app,
+      email us at the address below and we'll delete it for you.</p>
+    <table>
+      <tr><th>Data</th><th>When you delete your account</th></tr>
+      <tr><td>Sign-in, name, email, settings, notifications</td><td>Deleted</td></tr>
+      <tr><td>Projects where you are the only member</td><td>Deleted, with their photos and receipts</td></tr>
+      <tr><td>Projects you own and share with others</td><td>Must be completed or archived first, because the others still rely on them</td></tr>
+      <tr><td>Your photos, ledger entries and updates in shared projects</td><td>Kept for the other members, shown as "A former member": they are the project's shared record</td></tr>
+    </table>
+
+    <h2>Children</h2>
+    <p>Plotwatch is meant for adults who fund or manage construction. It is not
+      directed at children under 13 and does not knowingly collect information
+      from them.</p>
+
+    <h2>Changes</h2>
+    <p>If this policy changes, we update this page and its date.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this policy or your data: <a href="mailto:afesoh.apps@gmail.com">afesoh.apps@gmail.com</a></p>
+  </article>
+
+  <article id="fr" lang="fr">
+    <h1>Politique de confidentialité de Plotwatch</h1>
+    <p class="date">En vigueur le 13 octobre 2026 · Développeur : Afesoh Romeo · Contact : <a href="mailto:afesoh.apps@gmail.com">afesoh.apps@gmail.com</a></p>
+    <p>Plotwatch permet de financer un chantier qu'on ne peut pas surveiller sur
+      place, grâce à des photos vérifiées, la validation des étapes et un
+      registre partagé. Cette page explique ce que nous collectons, pourquoi,
+      qui le voit et comment le supprimer.</p>
+    <p><strong>En bref :</strong> les données d'un projet ne sont vues que par
+      ses membres. Plotwatch n'affiche pas de publicité et ne vend pas vos
+      données. Les photos portent leur position GPS et leur heure, car c'est ce
+      qui prouve que le travail a été fait. Vous pouvez supprimer votre compte
+      dans l'app.</p>
+
+    <h2>Ce que nous collectons</h2>
+    <ul>
+      <li><strong>Votre compte :</strong> votre nom et votre e-mail. Avec la
+        connexion par e-mail, votre mot de passe, conservé uniquement sous forme
+        chiffrée (hachage). Avec Google, le nom, l'e-mail et la photo de profil
+        que Google partage.</li>
+      <li><strong>Vos réglages :</strong> votre pays (facultatif) et votre langue.</li>
+      <li><strong>Ce que vous saisissez dans un projet :</strong> les détails du
+        projet, ses étapes et budgets, les membres et invitations, les mises à
+        jour, les écritures (versements et dépenses) et les photos de reçus.</li>
+      <li><strong>Les photos du chantier :</strong> la photo, sa position GPS,
+        sa précision, son altitude et son heure, si la position était simulée,
+        le modèle et la version système du téléphone, la version de l'app et
+        une empreinte (SHA-256) de la photo. Ce sont ces détails qui rendent une
+        photo vérifiable.</li>
+      <li><strong>La position du chantier :</strong> la position GPS proposée
+        pour le chantier.</li>
+      <li><strong>Les notifications</strong> que vous recevez dans l'app.</li>
+      <li><strong>Les journaux du serveur :</strong> des traces techniques des
+        requêtes et des erreurs, pour faire fonctionner et réparer le service.</li>
+    </ul>
+    <p>Nous n'utilisons votre position que lorsque vous prenez une photo du
+      chantier ou proposez le chantier. Pas de publicité, pas de vente de
+      données, pas d'outils de suivi ou de statistiques.</p>
+
+    <h2>Ce que Plotwatch ne fait pas</h2>
+    <ul>
+      <li>Pas de publicité ni d'identifiant publicitaire.</li>
+      <li>Pas de vente ni de location de vos informations.</li>
+      <li>Pas de suivi de votre position en arrière-plan.</li>
+      <li>Pas d'outils de statistiques ou de suivi.</li>
+    </ul>
+
+    <h2>Qui peut les voir</h2>
+    <p>Les données d'un projet ne sont visibles que par ses membres, selon leur
+      rôle (propriétaire, co-financeur, chef de chantier, observateur). Votre
+      nom et votre e-mail sont visibles par les membres de vos projets.</p>
+
+    <h2>Qui les traite pour nous</h2>
+    <ul>
+      <li><strong>Serverpod Cloud</strong> héberge le serveur, la base de
+        données et les fichiers.</li>
+      <li><strong>Google</strong>, si vous choisissez la connexion avec Google,
+        et pour les cartes qui montrent la position d'un chantier.</li>
+    </ul>
+    <p>Politique de confidentialité de Google :
+      <a href="https://policies.google.com/privacy">policies.google.com/privacy</a>.</p>
+
+    <h2>Combien de temps nous les gardons</h2>
+    <p>Tant que votre compte et vos projets existent. Les copies dans les
+      sauvegardes disparaissent au fil de leur remplacement.</p>
+
+    <h2>Supprimer votre compte</h2>
+    <p>Dans l'app : <strong>Profil › Supprimer le compte</strong>. Sans l'app,
+      écrivez-nous à l'adresse ci-dessous et nous le supprimerons pour vous.</p>
+    <table>
+      <tr><th>Données</th><th>Quand vous supprimez votre compte</th></tr>
+      <tr><td>Connexion, nom, e-mail, réglages, notifications</td><td>Supprimés</td></tr>
+      <tr><td>Projets dont vous êtes le seul membre</td><td>Supprimés, avec leurs photos et reçus</td></tr>
+      <tr><td>Projets dont vous êtes propriétaire et que vous partagez</td><td>À terminer ou archiver d'abord, car les autres en dépendent</td></tr>
+      <tr><td>Vos photos, écritures et mises à jour dans les projets partagés</td><td>Gardées pour les autres membres, au nom d'« Un ancien membre » : elles forment l'historique commun du projet</td></tr>
+    </table>
+
+    <h2>Enfants</h2>
+    <p>Plotwatch s'adresse aux adultes qui financent ou gèrent un chantier. Il
+      ne s'adresse pas aux enfants de moins de 13 ans et ne collecte pas
+      sciemment d'informations les concernant.</p>
+
+    <h2>Modifications</h2>
+    <p>Si cette politique change, nous mettons à jour cette page et sa date.</p>
+
+    <h2>Contact</h2>
+    <p>Questions sur cette politique ou vos données : <a href="mailto:afesoh.apps@gmail.com">afesoh.apps@gmail.com</a></p>
+  </article>
+</main>
+</body>
+</html>

@@ -296,7 +296,12 @@ class RouteManager {
             path: profilePage,
             pageBuilder: (context, state) => NoTransitionPage<void>(
               key: state.pageKey,
-              child: const ProfilePage(),
+              child: BlocProvider(
+                create: (context) => AccountDeletionBloc(
+                  authRepository: context.read<AuthRepository>(),
+                ),
+                child: const ProfilePage(),
+              ),
             ),
           ),
         ],

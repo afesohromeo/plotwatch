@@ -1539,7 +1539,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get validateReviewCommentRequired => 'Indiquez ce qui doit changer';
 
   @override
-  String get someone => 'Quelqu\'un';
+  String get someone => 'Un ancien membre';
 
   @override
   String get activityTitle => 'Activité';
@@ -2598,4 +2598,41 @@ class AppLocalizationsFr extends AppLocalizations {
   String labelColon(String label) {
     return '$label :';
   }
+
+  @override
+  String get privacyPolicy => 'Politique de confidentialité';
+
+  @override
+  String get deleteAccount => 'Supprimer le compte';
+
+  @override
+  String get deleteAccountTitle => 'Supprimer votre compte ?';
+
+  @override
+  String get deleteAccountExplain =>
+      'Votre connexion, votre nom, votre e-mail, vos réglages et vos notifications sont supprimés, ainsi que les projets dont vous êtes le seul membre. Dans les projets partagés, vos photos, écritures et mises à jour restent pour les autres, au nom d\'un ancien membre. C\'est définitif.';
+
+  @override
+  String deleteAccountTypeEmail(String email) {
+    return 'Tapez $email pour confirmer';
+  }
+
+  @override
+  String get deleteAccountConfirm => 'Supprimer mon compte';
+
+  @override
+  String get deleteAccountBlockedTitle =>
+      'Terminez ou archivez d\'abord ces projets';
+
+  @override
+  String get deleteAccountBlockedText =>
+      'D\'autres membres y travaillent encore, et ils ont besoin de leur propriétaire.';
+
+  @override
+  String get errorAccountOwnsSharedProjects =>
+      'Terminez ou archivez d\'abord les projets que vous partagez avec d\'autres.';
+
+  @override
+  String get errorDeleteAccount =>
+      'Impossible de supprimer le compte. Réessayez.';
 }

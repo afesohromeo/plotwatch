@@ -1501,7 +1501,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get validateReviewCommentRequired => 'Say what needs to change';
 
   @override
-  String get someone => 'Someone';
+  String get someone => 'A former member';
 
   @override
   String get activityTitle => 'Activity';
@@ -2542,4 +2542,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String labelColon(String label) {
     return '$label:';
   }
+
+  @override
+  String get privacyPolicy => 'Privacy policy';
+
+  @override
+  String get deleteAccount => 'Delete account';
+
+  @override
+  String get deleteAccountTitle => 'Delete your account?';
+
+  @override
+  String get deleteAccountExplain =>
+      'Your sign-in, name, email, settings and notifications are deleted, and so are the projects where you are the only member. In shared projects, your photos, entries and updates stay for the others, shown as a former member. This can\'t be undone.';
+
+  @override
+  String deleteAccountTypeEmail(String email) {
+    return 'Type $email to confirm';
+  }
+
+  @override
+  String get deleteAccountConfirm => 'Delete my account';
+
+  @override
+  String get deleteAccountBlockedTitle =>
+      'Complete or archive these projects first';
+
+  @override
+  String get deleteAccountBlockedText =>
+      'Other members still work in them, and they need their owner.';
+
+  @override
+  String get errorAccountOwnsSharedProjects =>
+      'Complete or archive the projects you share with others first.';
+
+  @override
+  String get errorDeleteAccount => 'Could not delete the account. Try again.';
 }

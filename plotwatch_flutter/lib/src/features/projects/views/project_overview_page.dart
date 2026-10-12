@@ -698,7 +698,11 @@ class _HeroRow extends StatelessWidget {
               const Gap.horizontal(width: 20),
               Expanded(
                 flex: 5,
-                child: InkWell(
+                // The hero sets the height; the photo fills it, cropped. A
+                // portrait photo would otherwise make the row as tall as the
+                // photo.
+                child: IgnoreIntrinsicHeight(
+                  child: InkWell(
                   key: ProjectOverviewPage.coverPhotoKey,
                   borderRadius: radius,
                   onTap: () => context.goNamed(
@@ -749,6 +753,7 @@ class _HeroRow extends StatelessWidget {
                       ],
                     ),
                   ),
+                ),
                 ),
               ),
             ],

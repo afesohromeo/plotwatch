@@ -8,6 +8,7 @@ export 'dialog_helper.dart';
 export 'dialog_utils.dart';
 export 'file_downloader.dart';
 export 'invitation_link.dart';
+export 'privacy_link.dart';
 export 'money.dart';
 export 'stage_templates.dart';
 export 'hashing.dart';

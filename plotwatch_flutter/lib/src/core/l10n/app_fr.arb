@@ -446,7 +446,7 @@
     "reviewChangesRequested": "Modifications demandées",
     "reviewCommentLabel": "Que faut-il changer ?",
     "validateReviewCommentRequired": "Indiquez ce qui doit changer",
-    "someone": "Quelqu'un",
+    "someone": "Un ancien membre",
     "activityTitle": "Activité",
     "latestActivityTitle": "Activité récente",
     "activityEmpty": "Rien ne s'est encore passé.",
@@ -712,5 +712,15 @@
     "errorGoogleSignIn": "Connexion avec Google impossible. Réessayez.",
     "errorEmailUsesGoogle": "Cette adresse est utilisée avec Google. Utilisez Continuer avec Google.",
     "signUpNoCodeHint": "Pas de code ? Si vous avez déjà un compte avec cette adresse, connectez-vous ou réinitialisez votre mot de passe.",
-    "labelColon": "{label} :"
+    "labelColon": "{label} :",
+    "privacyPolicy": "Politique de confidentialité",
+    "deleteAccount": "Supprimer le compte",
+    "deleteAccountTitle": "Supprimer votre compte ?",
+    "deleteAccountExplain": "Votre connexion, votre nom, votre e-mail, vos réglages et vos notifications sont supprimés, ainsi que les projets dont vous êtes le seul membre. Dans les projets partagés, vos photos, écritures et mises à jour restent pour les autres, au nom d'un ancien membre. C'est définitif.",
+    "deleteAccountTypeEmail": "Tapez {email} pour confirmer",
+    "deleteAccountConfirm": "Supprimer mon compte",
+    "deleteAccountBlockedTitle": "Terminez ou archivez d'abord ces projets",
+    "deleteAccountBlockedText": "D'autres membres y travaillent encore, et ils ont besoin de leur propriétaire.",
+    "errorAccountOwnsSharedProjects": "Terminez ou archivez d'abord les projets que vous partagez avec d'autres.",
+    "errorDeleteAccount": "Impossible de supprimer le compte. Réessayez."
 }

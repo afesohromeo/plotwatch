@@ -684,6 +684,9 @@ class Protocol extends _isc.SerializationManager {
               .toList()
           as T;
     }
+    if (t == List<String>) {
+      return (data as List).map((e) => deserialize<String>(e)).toList() as T;
+    }
     if (t == List<_ip4wlfh9.ActivityType>) {
       return (data as List)
               .map((e) => deserialize<_ip4wlfh9.ActivityType>(e))

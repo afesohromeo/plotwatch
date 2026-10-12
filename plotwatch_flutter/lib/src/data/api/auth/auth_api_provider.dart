@@ -149,6 +149,16 @@ class AuthApiProvider {
     }
   }
 
+  /// Forgets the session on this device only: after the account is deleted,
+  /// the server has nothing left to sign out of (doc/04g step 6).
+  Future<void> clearLocalSession() async {
+    try {
+      await _client.auth.updateSignedInUser(null);
+    } catch (e) {
+      throw ApiErrorHandler.handle(e);
+    }
+  }
+
   Future<void> signOut() async {
     try {
       await _client.auth.signOutDevice();

@@ -78,6 +78,8 @@ values:
   - notEntryAuthor
   # One account per email (doc/04g, AUTH-04b)
   - emailUsesGoogle
+  # Account deletion (doc/04g step 6)
+  - accountOwnsSharedProjects
   # Free text longer than its limit
   - textTooLong
   # Set by the client from the auth module's exceptions
