@@ -48,8 +48,11 @@ void main() {
 
       test('when the demo is seeded twice then it tells its story once, '
           'and the three accounts can sign in', () async {
-        expect(await seed().run(session, password: password), isTrue);
-        expect(await seed().run(session, password: password), isFalse);
+        expect(await seed().run(session, password: password), DemoSeedOutcome.created);
+        expect(
+          await seed().run(session, password: password),
+          DemoSeedOutcome.alreadyThere,
+        );
 
         final projects = await Project.db.find(
           session,
@@ -189,7 +192,7 @@ void main() {
         expect(await demoProjects(session), isEmpty);
 
         final seed = DemoSeed(photo: (_) => photo, receipt: (_) => receipt);
-        expect(await seed.run(session, password: password), isTrue);
+        expect(await seed.run(session, password: password), DemoSeedOutcome.created);
         expect(await demoProjects(session), hasLength(1));
       });
     },
@@ -202,7 +205,7 @@ void main() {
       test('when the server starts then it is replaced by the full story', () async {
         final session = sessionBuilder.build();
         final seed = DemoSeed(photo: (_) => photo, receipt: (_) => receipt);
-        expect(await seed.run(session, password: password), isTrue);
+        expect(await seed.run(session, password: password), DemoSeedOutcome.created);
         final first = (await demoProjects(session)).single;
         // What Cloud had: the project, without the story's last step.
         await Invitation.db.deleteWhere(
@@ -210,7 +213,7 @@ void main() {
           where: (t) => t.projectId.equals(first.id!),
         );
 
-        expect(await seed.run(session, password: password), isTrue);
+        expect(await seed.run(session, password: password), DemoSeedOutcome.created);
 
         final projects = await demoProjects(session);
         expect(projects, hasLength(1));
@@ -232,7 +235,10 @@ void main() {
           seed().run(sessionBuilder.build(), password: password),
         ]);
 
-        expect(results.where((created) => created), hasLength(1));
+        expect(
+          results.where((outcome) => outcome == DemoSeedOutcome.created),
+          hasLength(1),
+        );
         expect(await demoProjects(sessionBuilder.build()), hasLength(1));
       });
     },

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:serverpod_auth_idp_server/core.dart';
 import 'package:serverpod_auth_idp_server/providers/email.dart';
@@ -8,7 +7,7 @@ import 'package:serverpod_cloud_storage/serverpod_cloud_storage.dart';
 
 import 'src/cache_busting.dart';
 import 'src/generated/serverpod.dart';
-import 'src/seed/demo_seed.dart';
+import 'src/future_calls/demo_seed_future_call.dart';
 import 'src/web/routes/app_config_route.dart';
 
 /// The starting point of the Serverpod server.
@@ -132,43 +131,18 @@ void run(List<String> args) async {
   // Start the server.
   await pod.start();
 
-  // The judges' demo project (doc/04g step 7), once, when the developer sets
-  // the demoSeed password to true; the accounts use demoPassword.
+  // The judges' demo project (doc/04g step 7), when the developer sets the
+  // demoSeed password to true. Scheduled, not run here: during a Cloud
+  // rollout the first server is stopped seconds after it starts. Two minutes
+  // later the rollout is over; one server claims the call.
   if (pod.getPassword('demoSeed') == 'true') {
-    await _seedDemo(pod, pod.getPassword('demoPassword'));
-  }
-}
-
-Future<void> _seedDemo(Serverpod pod, String? password) async {
-  final session = await pod.createSession();
-  try {
-    if (password == null || password.length < 8) {
-      session.log(
-        'Demo seed skipped: demoPassword must have 8 characters or more.',
-        level: LogLevel.warning,
-      );
-      return;
-    }
-    Uint8List file(String folder, String name) =>
-        File(Uri(path: 'web/seed/$folder/$name').toFilePath()).readAsBytesSync();
-    final created = await DemoSeed(
-      photo: (name) => file('photos', name),
-      receipt: (name) => file('receipts', name),
-    ).run(session, password: password);
-    session.log(
-      created
-          ? 'Demo project "${DemoSeed.projectName}" created.'
-          : 'Demo project already there; nothing seeded.',
-    );
-  } catch (e, stackTrace) {
-    // A failed seed never stops the server.
-    session.log(
-      'Demo seed failed',
-      level: LogLevel.error,
-      exception: e,
-      stackTrace: stackTrace,
-    );
-  } finally {
-    await session.close();
+    await pod.futureCalls.cancel(DemoSeedFutureCall.identifier);
+    await pod.futureCalls
+        .callWithDelay(
+          const Duration(minutes: 2),
+          identifier: DemoSeedFutureCall.identifier,
+        )
+        .demoSeed
+        .seed();
   }
 }

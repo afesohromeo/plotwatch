@@ -111,6 +111,11 @@
        - The ledger: released 47.5 M FCFA (one release of 15 M waiting for confirmation), spent 20.65 M, 14.1 M of it with a receipt. The unaccounted alert shows.
        - Files: the photos are in `web/seed/photos/`; `web/seed/receipts/` holds three receipts drawn with `tool/screenshots/receipts_test.dart` (made-up shops).
        - The seed runs after `pod.start()` when `demoSeed` is `true`. A failure is logged, never fatal.
+       - **Cloud fixes (2026-10-13):**
+         - The first deploy failed: `seed/` isn't in the server image (only `config`, `web` and `migrations` are). The files moved to `web/seed/`, which isn't served publicly.
+         - The second deploy failed: a rollout's first server was stopped mid-seed.
+         - Now startup only **schedules** a future call (`DemoSeedFutureCall`) two minutes later, claimed by one server.
+         - The seed reads every file first, deletes a half-made project when it fails, replaces an incomplete one (no viewer invitation, its last step) and holds a database advisory lock.
 8. **Screenshot check** of the new screens (Money tab, forms, entry, skeletons, first-run), and of French.
    - **Outcome (2026-10-13):** done with the French pass and the later renders (delete dialog, badges on photos). On photos, the verification badge is now a white pill (`onPhoto`): a light tint was unreadable.
 9. **Developer's checklist** (written 2026-10-13: [`06-developer-checklist.md`](06-developer-checklist.md); README rewritten for the judges): every acceptance criterion by hand on Android and web; the release APK and web build; the final Cloud deploy.

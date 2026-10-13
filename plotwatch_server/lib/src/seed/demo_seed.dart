@@ -16,6 +16,18 @@ import '../endpoints/stage_endpoint.dart';
 import '../generated/protocol.dart';
 import '../services/account_service.dart';
 
+/// What a seed run did.
+enum DemoSeedOutcome {
+  /// The demo project was created (or an incomplete one replaced).
+  created,
+
+  /// The complete demo project was already there.
+  alreadyThere,
+
+  /// Another server is seeding it right now.
+  busy,
+}
+
 /// A demo person: their sign-in, name and settings.
 typedef DemoPerson = ({
   String email,
@@ -91,17 +103,17 @@ class DemoSeed {
   /// Any number, the same for every server: only one seeds at a time.
   static const _lockKey = 74100251;
 
-  /// Creates the demo accounts and project; false when it is already there,
-  /// or another server is seeding it right now (Cloud starts two during a
-  /// rollout).
-  Future<bool> run(Session session, {required String password}) =>
+  /// Creates the demo accounts and project, unless it is already there or
+  /// another server is seeding it right now.
+  Future<DemoSeedOutcome> run(Session session, {required String password}) =>
       _withLock(session, () => _run(session, password: password));
 
   /// Runs [body] while this server holds a database lock, kept by a
-  /// transaction left open meanwhile; false when another server holds it.
-  Future<bool> _withLock(
+  /// transaction left open meanwhile; [DemoSeedOutcome.busy] when another
+  /// server holds it.
+  Future<DemoSeedOutcome> _withLock(
     Session session,
-    Future<bool> Function() body,
+    Future<DemoSeedOutcome> Function() body,
   ) async {
     final held = Completer<bool>();
     final release = Completer<void>();
@@ -122,7 +134,7 @@ class DemoSeed {
       ),
     );
     try {
-      if (!await held.future) return false;
+      if (!await held.future) return DemoSeedOutcome.busy;
       return await body();
     } finally {
       if (!release.isCompleted) release.complete();
@@ -130,7 +142,10 @@ class DemoSeed {
     }
   }
 
-  Future<bool> _run(Session session, {required String password}) async {
+  Future<DemoSeedOutcome> _run(
+    Session session, {
+    required String password,
+  }) async {
     // Every file first: a missing one stops the seed before it writes.
     for (final file in photoFiles) {
       photo(file);
@@ -142,7 +157,9 @@ class DemoSeed {
     final ownerId = await _account(session, owner, password);
     final existing = await _find(session, ownerId);
     if (existing != null) {
-      if (await _complete(session, existing.id!)) return false;
+      if (await _complete(session, existing.id!)) {
+        return DemoSeedOutcome.alreadyThere;
+      }
       // A seed that stopped halfway, before it cleaned up after itself.
       await const AccountService().deleteProject(session, existing.id!);
     }
@@ -575,7 +592,7 @@ class DemoSeed {
     } finally {
       session.updateAuthenticated(null);
     }
-    return true;
+    return DemoSeedOutcome.created;
   }
 
   /// The six stages of a 5-storey building, with what each must show.

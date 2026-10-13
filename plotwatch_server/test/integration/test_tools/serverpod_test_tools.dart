@@ -24,6 +24,7 @@ import 'package:plotwatch_server/src/generated/evidence_commit.dart'
 import 'package:plotwatch_server/src/generated/evidence_commit_result.dart'
     as _iwlw3lnk;
 import 'package:plotwatch_server/src/generated/expense_draft.dart' as _iw3qt1md;
+import 'package:plotwatch_server/src/generated/future_calls.dart' as _inznrgls;
 import 'package:plotwatch_server/src/generated/invitation.dart' as _ikzhqv9e;
 import 'package:plotwatch_server/src/generated/invitation_preview.dart'
     as _iwaf49z0;
@@ -204,6 +205,8 @@ void withServerpod(
 }
 
 class TestEndpoints {
+  late final futureCalls = _FutureCalls();
+
   late final _AccountEndpoint account;
 
   late final _ActivityEndpoint activity;
@@ -297,6 +300,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
   }
+}
+
+class _FutureCalls {
+  late final demoSeed = _DemoSeedFutureCall();
 }
 
 class _AccountEndpoint {
@@ -2989,5 +2996,20 @@ class _StageEndpoint {
         await _localUniqueSession.close();
       }
     });
+  }
+}
+
+class _DemoSeedFutureCall {
+  Future<void> seed(_ist.TestSessionBuilder sessionBuilder) async {
+    var _localUniqueSession =
+        (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild();
+    try {
+      await _inznrgls.DemoSeedSeedFutureCall().invoke(
+        _localUniqueSession,
+        null,
+      );
+    } finally {
+      await _localUniqueSession.close();
+    }
   }
 }

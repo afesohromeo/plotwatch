@@ -14,6 +14,7 @@ import 'package:plotwatch_server/src/generated/activity_type.dart' as _idpi4lil;
 import 'package:plotwatch_server/src/generated/evidence_commit.dart'
     as _idi5nd8p;
 import 'package:plotwatch_server/src/generated/expense_draft.dart' as _iw3qt1md;
+import 'package:plotwatch_server/src/generated/future_calls.dart' as _inznrgls;
 import 'package:plotwatch_server/src/generated/ledger_entry_kind.dart'
     as _ity29vjs;
 import 'package:plotwatch_server/src/generated/media_variant.dart' as _i70qn4qh;
@@ -48,6 +49,7 @@ import '../endpoints/progress_update_endpoint.dart' as _i95o6e4v;
 import '../endpoints/project_endpoint.dart' as _iemg8ri2;
 import '../endpoints/site_endpoint.dart' as _iisfmjap;
 import '../endpoints/stage_endpoint.dart' as _id8pc9av;
+export 'future_calls.dart' show ServerpodFutureCallsGetter;
 
 class Endpoints extends _is.EndpointDispatch {
   @override
@@ -2052,5 +2054,10 @@ class Endpoints extends _is.EndpointDispatch {
       ..initializeEndpoints(server);
     modules['serverpod_auth_core'] = _iacs.Endpoints()
       ..initializeEndpoints(server);
+  }
+
+  @override
+  _is.FutureCallDispatch? get futureCalls {
+    return _inznrgls.FutureCalls();
   }
 }
