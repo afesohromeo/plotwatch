@@ -57,7 +57,13 @@ cut them to the voice. The times are where each line starts.
 
 ### A generated voice instead of your own (optional)
 **Google AI Studio's text-to-speech** (Gemini):
-1. Open https://aistudio.google.com › **Generate speech**.
+1. Open https://aistudio.google.com. Either:
+   - the left menu › **Generate media** › **Speech** (the menu names change);
+   - or a new prompt with a model whose name contains **TTS** (for example
+     "Gemini 3.1 Flash TTS Preview"), chosen in the model selector at the top.
+
+   If neither is offered: record your own voice, or use ElevenLabs (free tier).
+   Both are disclosed the same way.
 2. Choose a voice: a calm, warm one, the same for every clip.
 3. For the style, write: *"Read in a calm, warm, confident tone, like a
    short product film. Natural pace, small pauses between sentences."*
