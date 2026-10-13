@@ -47,7 +47,7 @@ cut them to the voice. The times are where each line starts.
 | 0:00 | Card `01_problem.png` | Building something you can't be there for every day? A house, a family building, a community project. You need to know what's really done on site, stage by stage, and where the money goes. |
 | 0:12 | Card `02_title.png` | Plotwatch lets you oversee it from anywhere, with evidence you can trust. |
 | 0:16 | **Scene 1: the project** (Chrome) | Brice is overseeing a five-storey residence in Yaoundé. Plotwatch shows him the build stage by stage, and what needs him now. |
-| 0:30 | **Scene 2: a verified photo** (Chrome) | Every photo is taken in the app, right on the site. Plotwatch then checks where and when it was taken, and that it hasn't been changed since. When everything matches, it's marked Verified. |
+| 0:30 | **Scene 2: a verified photo** (Chrome) | Every photo is taken in the app, right on the site. Plotwatch checks it was really taken on the plot, and when. If it was, the photo is marked Verified. |
 | 0:48 | **Scene 3: a partly verified photo** (Chrome) | When something doesn't match, Plotwatch says so. This photo is only partly verified: the phone couldn't tell its location precisely enough. |
 | 0:58 | **Scene 4: the review** (Chrome) | When the site manager submits a stage, Brice is notified at once. He approves it, or sends it back with a comment. |
 | 1:10 | **Scene 5: on site** (Android) | On site, Joseph uses the Android app: the checklist, the camera, updates from the site, and payments to confirm. |

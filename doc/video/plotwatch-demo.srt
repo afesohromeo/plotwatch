@@ -34,13 +34,13 @@ right on the site.
 
 8
 00:00:35,000 --> 00:00:43,000
-Plotwatch then checks where and when it was taken,
-and that it hasn't been changed since.
+Plotwatch checks it was really taken on the plot,
+and when.
 
 9
 00:00:43,000 --> 00:00:48,000
-When everything matches,
-it's marked Verified.
+If it was,
+the photo is marked Verified.
 
 10
 00:00:48,000 --> 00:00:52,000
