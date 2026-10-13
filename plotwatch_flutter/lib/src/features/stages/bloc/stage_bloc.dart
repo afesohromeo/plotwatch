@@ -43,19 +43,31 @@ class StageBloc extends Bloc<StageEvent, StageState> {
       ),
     );
     try {
-      final overview = await _projectRepository.fetchProject(event.projectId);
-      final view = await _stageRepository.fetchStage(
+      // Together, not one after another: each call costs a round trip
+      // (doc/04g step 10b). The first error passes through unchanged.
+      final overviewCall = _projectRepository.fetchProject(event.projectId);
+      final viewCall = _stageRepository.fetchStage(
         event.projectId,
         event.stageId,
       );
-      final evidence = await _evidenceRepository.fetchStageEvidence(
+      final evidenceCall = _evidenceRepository.fetchStageEvidence(
         event.projectId,
         event.stageId,
       );
-      final reviews = await _stageRepository.fetchReviews(
+      final reviewsCall = _stageRepository.fetchReviews(
         event.projectId,
         event.stageId,
       );
+      await Future.wait<Object?>([
+        overviewCall,
+        viewCall,
+        evidenceCall,
+        reviewsCall,
+      ], eagerError: true);
+      final overview = await overviewCall;
+      final view = await viewCall;
+      final evidence = await evidenceCall;
+      final reviews = await reviewsCall;
       emit(
         state.copyWith(
           loadStatus: GenericStatus.success,

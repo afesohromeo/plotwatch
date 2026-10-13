@@ -36,8 +36,13 @@ class StagePlanBloc extends Bloc<StagePlanEvent, StagePlanState> {
       ),
     );
     try {
-      final overview = await _projectRepository.fetchProject(event.projectId);
-      final plan = await _stageRepository.fetchPlan(event.projectId);
+      // Together, not one after another: each call costs a round trip
+      // (doc/04g step 10b). The first error passes through unchanged.
+      final overviewCall = _projectRepository.fetchProject(event.projectId);
+      final planCall = _stageRepository.fetchPlan(event.projectId);
+      await Future.wait<Object?>([overviewCall, planCall], eagerError: true);
+      final overview = await overviewCall;
+      final plan = await planCall;
       emit(
         state.copyWith(
           loadStatus: GenericStatus.success,

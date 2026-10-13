@@ -120,6 +120,10 @@
    - **Outcome (2026-10-13):** done with the French pass and the later renders (delete dialog, badges on photos). On photos, the verification badge is now a white pill (`onPhoto`): a light tint was unreadable.
 9. **Developer's checklist** (written 2026-10-13: [`06-developer-checklist.md`](06-developer-checklist.md); README rewritten for the judges): every acceptance criterion by hand on Android and web; the release APK and web build; the final Cloud deploy.
 10. **Merge `dev` into `main`**, with the developer's approval, once green.
+10b. **Speed on Cloud (approved 2026-10-13, after the developer saw 3–4 s skeletons and photos 5–10 s late).** Measured from the developer's computer: one API call takes 0.65–0.75 s.
+   - **Parallel loading:** pages wait for their calls one after another (the stage page has 4, so about 3 s). Independent calls now run together (`Future.wait`): stage, photo, Overview, stage plan, members and update pages.
+   - **A display size for photos:** the large views fetched the original (about 1 MB, plus base64). A new `MediaVariant.display`: 1280 px, JPEG quality 80, made once by the server on the first request and stored next to the photo (`display.jpg`). Existing photos get it too. The original stays for verification. Server tests: made once and then reused, smaller than the original.
+   - The distance to the servers is not something the app can change.
 11. **Only if early:** hash chain (VER-05).
 
 Set aside, documented in the README as the roadmap: evidence requests, fund requests, comments, the inactivity reminder, photos on updates, proof files for releases, the public verification page, the offline queue, ownership transfer (so an owner can leave an open shared project; decided 2026-10-13).

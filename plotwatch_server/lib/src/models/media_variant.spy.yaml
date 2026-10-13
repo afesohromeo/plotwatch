@@ -4,3 +4,5 @@ serialized: byName
 values:
   - photo
   - thumbnail
+  # A size for the large views: 1280 px, made on first use (doc/04g 10b)
+  - display

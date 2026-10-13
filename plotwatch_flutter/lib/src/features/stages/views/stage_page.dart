@@ -990,7 +990,7 @@ class _StagePhotosState extends State<_StagePhotos> {
               EvidenceImage(
                 projectId: widget.projectId,
                 evidenceId: capture.id!,
-                variant: large ? MediaVariant.photo : MediaVariant.thumbnail,
+                variant: large ? MediaVariant.display : MediaVariant.thumbnail,
               ),
               if (large)
                 Positioned(

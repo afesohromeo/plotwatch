@@ -320,7 +320,7 @@ class _EvidenceBody extends StatelessWidget {
           child: EvidenceImage(
             projectId: evidence.projectId,
             evidenceId: evidence.id!,
-            variant: MediaVariant.photo,
+            variant: MediaVariant.display,
             width: double.infinity,
             height: height,
             fit: BoxFit.contain,

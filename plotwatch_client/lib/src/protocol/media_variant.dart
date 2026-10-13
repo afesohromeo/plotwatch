@@ -15,7 +15,8 @@ import 'package:serverpod_client/serverpod_client.dart' as _isc;
 /// Which file of a capture to fetch (doc/04d M4-4, M4-5).
 enum MediaVariant implements _isc.SerializableModel {
   photo,
-  thumbnail;
+  thumbnail,
+  display;
 
   static MediaVariant fromJson(String name) {
     switch (name) {
@@ -23,6 +24,8 @@ enum MediaVariant implements _isc.SerializableModel {
         return MediaVariant.photo;
       case 'thumbnail':
         return MediaVariant.thumbnail;
+      case 'display':
+        return MediaVariant.display;
       default:
         throw ArgumentError(
           'Value "$name" cannot be converted to "MediaVariant"',

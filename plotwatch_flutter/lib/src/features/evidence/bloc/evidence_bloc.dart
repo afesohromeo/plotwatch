@@ -38,16 +38,26 @@ class EvidenceBloc extends Bloc<EvidenceEvent, EvidenceState> {
       ),
     );
     try {
-      final overview = await _projectRepository.fetchProject(event.projectId);
-      final evidence = await _evidenceRepository.fetchEvidence(
+      // Together, not one after another: each call costs a round trip
+      // (doc/04g step 10b). The first error passes through unchanged.
+      final overviewCall = _projectRepository.fetchProject(event.projectId);
+      final evidenceCall = _evidenceRepository.fetchEvidence(
         event.projectId,
         event.evidenceId,
       );
       // For its planned end (STG-10, doc/04e M5-10).
-      final stage = await _stageRepository.fetchStage(
+      final stageCall = _stageRepository.fetchStage(
         event.projectId,
         event.stageId,
       );
+      await Future.wait<Object?>([
+        overviewCall,
+        evidenceCall,
+        stageCall,
+      ], eagerError: true);
+      final overview = await overviewCall;
+      final evidence = await evidenceCall;
+      final stage = await stageCall;
       emit(
         state.copyWith(
           loadStatus: GenericStatus.success,

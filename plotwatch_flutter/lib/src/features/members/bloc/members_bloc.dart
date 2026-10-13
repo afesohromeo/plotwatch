@@ -38,14 +38,25 @@ class MembersBloc extends Bloc<MembersEvent, MembersState> {
       ),
     );
     try {
-      final overview = await _projectRepository.fetchProject(event.projectId);
-      final members = await _membershipRepository.fetchMembers(event.projectId);
+      // Together, not one after another: each call costs a round trip
+      // (doc/04g step 10b). The first error passes through unchanged.
+      final overviewCall = _projectRepository.fetchProject(event.projectId);
+      final membersCall = _membershipRepository.fetchMembers(event.projectId);
+      final formerCall = _membershipRepository.fetchFormerMembers(
+        event.projectId,
+      );
+      await Future.wait<Object?>([
+        overviewCall,
+        membersCall,
+        formerCall,
+      ], eagerError: true);
+      final overview = await overviewCall;
+      final members = await membersCall;
+      final formerMembers = await formerCall;
+      // Only the owner sees them, which the project tells.
       final invitations = overview.myRole == ProjectRole.owner
           ? await _membershipRepository.fetchInvitations(event.projectId)
           : <Invitation>[];
-      final formerMembers = await _membershipRepository.fetchFormerMembers(
-        event.projectId,
-      );
       emit(
         state.copyWith(
           membersStatus: GenericStatus.success,

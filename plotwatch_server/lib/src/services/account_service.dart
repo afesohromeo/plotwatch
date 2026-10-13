@@ -2,6 +2,7 @@ import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 
 import '../generated/protocol.dart';
+import 'evidence_service.dart';
 
 /// Account deletion (doc/04g step 6, Google Play's account deletion policy):
 /// the person is deleted, not the shared history.
@@ -149,6 +150,8 @@ class AccountService {
       for (final capture in evidence) ...[
         capture.photoPath,
         ?capture.thumbPath,
+        // Made on first view; deleting a missing one is only logged.
+        EvidenceService.displayPath(projectId, capture.id!),
       ],
       for (final entry in receipts) ?entry.receiptPath,
     ];

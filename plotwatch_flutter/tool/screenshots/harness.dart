@@ -88,7 +88,7 @@ MockEvidenceMediaBloc mediaFor(List<int> ids) {
       EvidenceMediaState.keyFor(id, MediaVariant.thumbnail): i.isEven
           ? photoA
           : photoB,
-      EvidenceMediaState.keyFor(id, MediaVariant.photo): i.isEven
+      EvidenceMediaState.keyFor(id, MediaVariant.display): i.isEven
           ? photoA
           : photoB,
     },

@@ -721,7 +721,7 @@ class _HeroRow extends StatelessWidget {
                         EvidenceImage(
                           projectId: projectId,
                           evidenceId: photo.targetId!,
-                          variant: MediaVariant.photo,
+                          variant: MediaVariant.display,
                         ),
                         if (level != null)
                           Positioned(

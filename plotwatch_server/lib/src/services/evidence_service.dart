@@ -29,6 +29,10 @@ class EvidenceService {
   static const maxDeviceTextLength = 100;
   static const thumbnailWidth = 400;
 
+  /// The large views' size (doc/04g step 10b): enough for a full screen,
+  /// a fraction of a phone photo's weight.
+  static const displayWidth = 1280;
+
   /// A capture still committed after this is shown as failed (M4-12).
   static const uploadFailedAfter = Duration(hours: 24);
 
@@ -46,6 +50,9 @@ class EvidenceService {
 
   static String thumbPath(int projectId, int evidenceId) =>
       'projects/$projectId/evidence/$evidenceId/thumb.jpg';
+
+  static String displayPath(int projectId, int evidenceId) =>
+      'projects/$projectId/evidence/$evidenceId/display.jpg';
 
   /// Returns [commit] cleaned up (lower-case hash, trimmed texts, blank
   /// caption as none), or throws [AppException].
@@ -350,10 +357,37 @@ class EvidenceService {
         evidence.status != EvidenceStatus.retracted) {
       throw AppException(code: AppErrorCode.evidenceNotFound);
     }
-    final path = variant == MediaVariant.thumbnail
-        ? evidence.thumbPath ?? evidence.photoPath
-        : evidence.photoPath;
+    final path = switch (variant) {
+      MediaVariant.thumbnail => evidence.thumbPath ?? evidence.photoPath,
+      MediaVariant.display => await _display(session, evidence),
+      MediaVariant.photo => evidence.photoPath,
+    };
     return session.storage.retrieveFile(storageId: storageId, path: path);
+  }
+
+  /// The display size's path, made from the photo the first time it is
+  /// asked for: existing photos get one too. The photo itself when it
+  /// can't be decoded.
+  Future<String> _display(Session session, Evidence evidence) async {
+    final path = displayPath(evidence.projectId, evidence.id!);
+    if (await session.storage.fileExists(storageId: storageId, path: path)) {
+      return path;
+    }
+    final original = await session.storage.retrieveFile(
+      storageId: storageId,
+      path: evidence.photoPath,
+    );
+    final decoded = img.decodeImage(Uint8List.sublistView(original));
+    if (decoded == null) return evidence.photoPath;
+    final resized = decoded.width > displayWidth
+        ? img.copyResize(decoded, width: displayWidth)
+        : decoded;
+    await session.storage.storeFile(
+      storageId: storageId,
+      path: path,
+      byteData: ByteData.sublistView(img.encodeJpg(resized, quality: 80)),
+    );
+    return path;
   }
 
   /// The author withdraws a capture with a reason; it stays visible and

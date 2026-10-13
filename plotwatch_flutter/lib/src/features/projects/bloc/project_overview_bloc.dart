@@ -39,12 +39,15 @@ class ProjectOverviewBloc
       ),
     );
     try {
+      // Together, not one after another (doc/04g step 10b); the members
+      // call never fails, so nothing is left unhandled.
+      final membersCall = _members(event.projectId);
       final overview = await _projectRepository.fetchProject(event.projectId);
       emit(
         state.copyWith(
           overviewStatus: GenericStatus.success,
           overview: overview,
-          members: await _members(event.projectId),
+          members: await membersCall,
         ),
       );
     } on HttpException400 catch (e) {

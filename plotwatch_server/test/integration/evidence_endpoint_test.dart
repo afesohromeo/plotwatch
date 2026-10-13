@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:image/image.dart' as img;
 import 'package:plotwatch_server/src/generated/protocol.dart';
+import 'package:plotwatch_server/src/services/evidence_service.dart';
 import 'package:serverpod/serverpod.dart';
 import 'package:test/test.dart';
 
@@ -219,6 +220,50 @@ void main() {
           expect(decoded.width, 400);
         },
       );
+
+      // doc/04g step 10b: the large views fetched the ~1 MB original.
+      test('then a large photo is shown at a display size of 1280 px, made '
+          'once and then reused', () async {
+        final large = Uint8List.fromList(
+          img.encodeJpg(img.Image(width: 2400, height: 1800), quality: 95),
+        );
+        final evidence = await capture(bytes: large);
+        Future<Uint8List> display() async => _bytes(
+          await endpoints.evidence.media(
+            signedInAs(viewerId),
+            projectId,
+            evidence.id!,
+            MediaVariant.display,
+          ),
+        );
+
+        final first = await display();
+        final second = await display();
+
+        expect(img.decodeJpg(first)!.width, 1280);
+        expect(first.length, lessThan(large.length));
+        expect(second, first);
+        expect(
+          await sessionBuilder.build().storage.fileExists(
+            storageId: 'private',
+            path: EvidenceService.displayPath(projectId, evidence.id!),
+          ),
+          isTrue,
+        );
+      });
+
+      test('then a photo narrower than the display size is not enlarged', () async {
+        final evidence = await capture();
+
+        final display = await endpoints.evidence.media(
+          signedInAs(viewerId),
+          projectId,
+          evidence.id!,
+          MediaVariant.display,
+        );
+
+        expect(img.decodeJpg(_bytes(display))!.width, 640);
+      });
 
       test('then the first capture starts the stage', () async {
         await capture();
