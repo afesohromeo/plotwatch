@@ -238,6 +238,8 @@ These were proposed during brainstorming and are **not yet approved**:
 - [ ] Joined the Serverpod Discord
 
 ### 9.1 Demo video outline (< 2:00, draft)
+> **Replaced 2026-10-13** by [`07-demo-video.md`](07-demo-video.md): the script, the shot list, the cards and subtitles in `video/`. The spot check below was cut, and the site now comes from GPS.
+
 | Time | Scene |
 |------|-------|
 | 0:00–0:15 | **The problem:** "You send money home to build a house. You get photos on WhatsApp. Are they real?" One headline from the research. |

@@ -1,0 +1,103 @@
+1
+00:00:00,000 --> 00:00:04,500
+You live abroad, and you're building
+a house back home.
+
+2
+00:00:04,500 --> 00:00:08,500
+Every month you send money,
+and you get photos on your phone.
+
+3
+00:00:08,500 --> 00:00:12,000
+Were they taken on your plot?
+This week?
+
+4
+00:00:12,000 --> 00:00:16,000
+Plotwatch replaces trust with evidence.
+
+5
+00:00:16,000 --> 00:00:21,500
+Ada, the funder, creates a project from a template,
+with its stages and budget,
+
+6
+00:00:21,500 --> 00:00:26,500
+and invites her site manager.
+
+7
+00:00:26,500 --> 00:00:30,000
+Joseph joins with the code.
+
+8
+00:00:30,000 --> 00:00:36,000
+On the plot, Joseph localizes the site
+with his phone's GPS.
+
+9
+00:00:36,000 --> 00:00:42,000
+Ada checks it on the map
+and sets the boundary.
+
+10
+00:00:42,000 --> 00:00:46,500
+Now Joseph photographs the work,
+only through the app's camera, never the gallery.
+
+11
+00:00:46,500 --> 00:00:51,000
+Seconds later it appears on Ada's screen,
+live, and it's verified.
+
+12
+00:00:51,000 --> 00:00:58,000
+The server checked the position against the boundary,
+the time against its own clock, and the photo's fingerprint.
+
+13
+00:00:58,000 --> 00:01:05,000
+A photo taken eighty metres away?
+Unverified, and Plotwatch says exactly why.
+
+14
+00:01:05,000 --> 00:01:11,000
+When every required photo is in,
+Joseph submits the stage.
+
+15
+00:01:11,000 --> 00:01:18,000
+Ada is notified at once,
+reviews the evidence and approves.
+
+16
+00:01:18,000 --> 00:01:25,000
+Plotwatch offers to record the next payment.
+
+17
+00:01:25,000 --> 00:01:32,000
+Every payment and expense lands in a shared ledger,
+with receipt photos.
+
+18
+00:01:32,000 --> 00:01:37,000
+Entries are never edited, only reversed.
+
+19
+00:01:37,000 --> 00:01:45,000
+And Plotwatch flags money
+that isn't backed by receipts yet.
+
+20
+00:01:45,000 --> 00:01:51,500
+Plotwatch is built with Flutter and Serverpod:
+live streams, scheduled tasks,
+
+21
+00:01:51,500 --> 00:01:55,000
+verified uploads and authentication,
+on Serverpod Cloud.
+
+22
+00:01:55,000 --> 00:01:58,000
+Try it at plotwatch.serverpod.space.
