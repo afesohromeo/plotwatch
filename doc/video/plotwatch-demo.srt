@@ -29,26 +29,27 @@ and what needs him now.
 
 7
 00:00:30,000 --> 00:00:35,000
-Every photo is taken with the app's camera,
-on the plot.
+Every photo is taken in the app,
+right on the site.
 
 8
-00:00:35,000 --> 00:00:42,000
-The server checks it: inside the site boundary,
-accurate GPS, its own clock,
+00:00:35,000 --> 00:00:43,000
+Plotwatch then checks where and when it was taken,
+and that it hasn't been changed since.
 
 9
-00:00:42,000 --> 00:00:48,000
-and the photo's fingerprint. Verified.
+00:00:43,000 --> 00:00:48,000
+When everything matches,
+it's marked Verified.
 
 10
 00:00:48,000 --> 00:00:52,000
-When a check fails, Plotwatch says so.
+When something doesn't match, Plotwatch says so.
 
 11
 00:00:52,000 --> 00:00:58,000
-This one is only partly verified:
-the GPS fix was weak.
+This photo is only partly verified: the phone
+couldn't tell its location precisely enough.
 
 12
 00:00:58,000 --> 00:01:04,000
