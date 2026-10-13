@@ -51,7 +51,7 @@ cut them to the voice. The times are where each line starts.
 | 0:48 | **Scene 3: a partly verified photo** (Chrome) | When something doesn't match, Plotwatch says so. This photo is only partly verified: the phone couldn't tell its location precisely enough. |
 | 0:58 | **Scene 4: the review** (Chrome) | When the site manager submits a stage, Brice is notified at once. He approves it, or sends it back with a comment. |
 | 1:10 | **Scene 5: on site** (Android) | The site manager works from his phone. He follows each stage's checklist, takes the photos, posts news from the site, and confirms when the money for the work reaches him. |
-| 1:24 | **Scene 6: the money** (Chrome) | Every payment and expense goes into a shared ledger, with receipt photos. Entries are never edited, only reversed. And Plotwatch flags thirty-three million francs not yet backed by a receipt. |
+| 1:24 | **Scene 6: the money** (Chrome) | Every payment sent to the site, and every expense paid from it, is recorded with its receipt, and nothing can be changed afterwards. Plotwatch also shows how much of the money sent has no receipt yet: here, thirty-three million francs. |
 | 1:45 | Card `03_built_with.png` | Plotwatch is built with Flutter and Serverpod: live streams, scheduled tasks, verified uploads and authentication, on Serverpod Cloud. Try it at plotwatch dot serverpod dot space. |
 | 1:58 | End | |
 

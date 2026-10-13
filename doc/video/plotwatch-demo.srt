@@ -73,17 +73,17 @@ when the money for the work reaches him.
 
 16
 00:01:24,000 --> 00:01:31,000
-Every payment and expense goes into
-a shared ledger, with receipt photos.
+Every payment sent to the site, and every expense
+paid from it, is recorded with its receipt,
 
 17
 00:01:31,000 --> 00:01:36,000
-Entries are never edited, only reversed.
+and nothing can be changed afterwards.
 
 18
 00:01:36,000 --> 00:01:45,000
-And Plotwatch flags thirty-three million francs
-not yet backed by a receipt.
+Plotwatch also shows how much of the money sent
+has no receipt yet: here, thirty-three million francs.
 
 19
 00:01:45,000 --> 00:01:51,500
