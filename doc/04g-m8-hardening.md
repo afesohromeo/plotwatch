@@ -112,7 +112,8 @@
        - Files: the photos are in `seed/photos/`; `seed/receipts/` holds three receipts drawn with `tool/screenshots/receipts_test.dart` (made-up shops).
        - The seed runs after `pod.start()` when `demoSeed` is `true`. A failure is logged, never fatal.
 8. **Screenshot check** of the new screens (Money tab, forms, entry, skeletons, first-run), and of French.
-9. **Developer's checklist:** every acceptance criterion by hand on Android and web; the release APK and web build; the final Cloud deploy.
+   - **Outcome (2026-10-13):** done with the French pass and the later renders (delete dialog, badges on photos). On photos, the verification badge is now a white pill (`onPhoto`): a light tint was unreadable.
+9. **Developer's checklist** (written 2026-10-13: [`06-developer-checklist.md`](06-developer-checklist.md); README rewritten for the judges): every acceptance criterion by hand on Android and web; the release APK and web build; the final Cloud deploy.
 10. **Merge `dev` into `main`**, with the developer's approval, once green.
 11. **Only if early:** hash chain (VER-05).
 

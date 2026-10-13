@@ -3,13 +3,22 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 
 /// A capture's badge: its level with an icon (VER-02, VER-03).
 class VerificationBadge extends StatelessWidget {
-  const VerificationBadge({super.key, required this.level, this.short = false});
+  const VerificationBadge({
+    super.key,
+    required this.level,
+    this.short = false,
+    this.onPhoto = false,
+  });
 
   final VerificationLevel level;
 
   /// Under a narrow photo tile: "Partial" instead of "Partially verified",
   /// which French cuts off (doc/04g step 5).
   final bool short;
+
+  /// Drawn over a photo: a light tint vanishes into the image, so the pill
+  /// is near-solid white with a soft shadow (developer, 2026-10-13).
+  final bool onPhoto;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +34,19 @@ class VerificationBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: tone.withValues(alpha: .1),
+        color: onPhoto
+            ? customColors.surfaceWhite.withValues(alpha: .94)
+            : tone.withValues(alpha: .1),
         borderRadius: BorderRadius.circular(999),
+        boxShadow: onPhoto
+            ? const [
+                BoxShadow(
+                  color: Color(0x33000000),
+                  blurRadius: 6,
+                  offset: Offset(0, 1),
+                ),
+              ]
+            : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

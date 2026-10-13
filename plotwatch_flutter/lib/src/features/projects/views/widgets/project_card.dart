@@ -89,7 +89,10 @@ class ProjectCard extends StatelessWidget {
                       Positioned(
                         top: 10,
                         right: 10,
-                        child: VerificationBadge(level: level),
+                        child: VerificationBadge(
+                          level: level,
+                          onPhoto: true,
+                        ),
                       ),
                   ],
                 ),

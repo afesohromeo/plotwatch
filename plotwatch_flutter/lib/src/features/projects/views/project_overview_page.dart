@@ -727,7 +727,10 @@ class _HeroRow extends StatelessWidget {
                           Positioned(
                             top: 12,
                             right: 12,
-                            child: VerificationBadge(level: level),
+                            child: VerificationBadge(
+                              level: level,
+                              onPhoto: true,
+                            ),
                           ),
                         Positioned(
                           left: 12,

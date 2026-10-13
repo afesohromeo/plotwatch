@@ -996,7 +996,10 @@ class _StagePhotosState extends State<_StagePhotos> {
                 Positioned(
                   left: 8,
                   bottom: 8,
-                  child: VerificationBadge(level: capture.verificationLevel),
+                  child: VerificationBadge(
+                    level: capture.verificationLevel,
+                    onPhoto: true,
+                  ),
                 ),
               if (last)
                 ColoredBox(
