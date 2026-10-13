@@ -2,7 +2,7 @@
 // than taken from the web: made-up shops, no real tax or company numbers.
 // Run with
 //   flutter test --update-goldens tool/screenshots/receipts_test.dart
-// and they are written to plotwatch_server/seed/receipts/.
+// and they are written to plotwatch_server/web/seed/receipts/.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -97,7 +97,7 @@ void main() {
       await expectLater(
         find.byKey(root),
         matchesGoldenFile(
-          '../../../plotwatch_server/seed/receipts/${receipt.file}',
+          '../../../plotwatch_server/web/seed/receipts/${receipt.file}',
         ),
       );
     });

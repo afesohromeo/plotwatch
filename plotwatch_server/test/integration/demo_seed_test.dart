@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:image/image.dart' as img;
 import 'package:plotwatch_server/src/generated/protocol.dart';
 import 'package:plotwatch_server/src/seed/demo_seed.dart';
+import 'package:serverpod/serverpod.dart';
 import 'package:serverpod_auth_idp_server/core.dart';
 import 'package:serverpod_auth_idp_server/providers/email.dart';
 import 'package:test/test.dart';
@@ -123,6 +125,115 @@ void main() {
           );
           expect(success.authUserId, isNotNull);
         }
+      });
+    },
+    rollbackDatabase: RollbackDatabase.disabled,
+  );
+
+  // On Cloud the photos were missing and the half-made project stayed
+  // behind; the next start skipped it (developer, 2026-10-13).
+  Future<List<Project>> demoProjects(Session session) => Project.db.find(
+    session,
+    where: (t) => t.name.equals(DemoSeed.projectName),
+  );
+
+  withServerpod(
+    'Given a file missing on the server',
+    (sessionBuilder, endpoints) {
+      test('when the demo is seeded then it stops before writing anything', () async {
+        final session = sessionBuilder.build();
+        final seed = DemoSeed(
+          photo: (name) => name == 'ground_floor_3.jpg'
+              ? throw const FileSystemException('missing')
+              : photo,
+          receipt: (_) => receipt,
+        );
+
+        await expectLater(
+          seed.run(session, password: password),
+          throwsA(isA<FileSystemException>()),
+        );
+        expect(await demoProjects(session), isEmpty);
+        expect(
+          await EmailAccount.db.count(
+            session,
+            where: (t) => t.email.equals(DemoSeed.owner.email),
+          ),
+          0,
+        );
+      });
+    },
+    rollbackDatabase: RollbackDatabase.disabled,
+  );
+
+  withServerpod(
+    'Given a seed that fails halfway',
+    (sessionBuilder, endpoints) {
+      test('when it fails then no half-made project stays, and the next start '
+          'seeds it all', () async {
+        final session = sessionBuilder.build();
+        var reads = 0;
+        // The first reads are the up-front check; it fails at the third
+        // photo of the story.
+        final failing = DemoSeed(
+          photo: (_) => ++reads > DemoSeed.photoFiles.length + 3
+              ? throw StateError('disk error')
+              : photo,
+          receipt: (_) => receipt,
+        );
+
+        await expectLater(
+          failing.run(session, password: password),
+          throwsA(isA<StateError>()),
+        );
+        expect(await demoProjects(session), isEmpty);
+
+        final seed = DemoSeed(photo: (_) => photo, receipt: (_) => receipt);
+        expect(await seed.run(session, password: password), isTrue);
+        expect(await demoProjects(session), hasLength(1));
+      });
+    },
+    rollbackDatabase: RollbackDatabase.disabled,
+  );
+
+  withServerpod(
+    'Given an incomplete demo project left by an older seed',
+    (sessionBuilder, endpoints) {
+      test('when the server starts then it is replaced by the full story', () async {
+        final session = sessionBuilder.build();
+        final seed = DemoSeed(photo: (_) => photo, receipt: (_) => receipt);
+        expect(await seed.run(session, password: password), isTrue);
+        final first = (await demoProjects(session)).single;
+        // What Cloud had: the project, without the story's last step.
+        await Invitation.db.deleteWhere(
+          session,
+          where: (t) => t.projectId.equals(first.id!),
+        );
+
+        expect(await seed.run(session, password: password), isTrue);
+
+        final projects = await demoProjects(session);
+        expect(projects, hasLength(1));
+        expect(projects.single.id, isNot(first.id));
+      });
+    },
+    rollbackDatabase: RollbackDatabase.disabled,
+  );
+
+  withServerpod(
+    'Given two servers starting together, as during a Cloud rollout',
+    (sessionBuilder, endpoints) {
+      test('when both seed then only one tells the story', () async {
+        DemoSeed seed() =>
+            DemoSeed(photo: (_) => photo, receipt: (_) => receipt);
+
+        final results = await Future.wait([
+          seed().run(sessionBuilder.build(), password: password),
+          seed().run(sessionBuilder.build(), password: password),
+        ]);
+
+        expect(results.where((created) => created), hasLength(1));
+        expect(await demoProjects(sessionBuilder.build()), hasLength(1));
       });
     },
     rollbackDatabase: RollbackDatabase.disabled,

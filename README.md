@@ -102,10 +102,10 @@ French) explains what is collected and how to delete an account. Source:
 [`plotwatch_flutter/web/privacy.html`](plotwatch_flutter/web/privacy.html).
 
 ## Credits
-- **Demo site photos:** generated with Google Gemini from [`plotwatch_server/seed/PROMPTS.md`](plotwatch_server/seed/PROMPTS.md).
+- **Demo site photos:** generated with Google Gemini from [`plotwatch_server/web/seed/PROMPTS.md`](plotwatch_server/web/seed/PROMPTS.md).
 - **Demo receipts:** drawn with Flutter.
 - **Demo people:** fictional.
-- **Details:** [`plotwatch_server/seed/CREDITS.md`](plotwatch_server/seed/CREDITS.md).
+- **Details:** [`plotwatch_server/web/seed/CREDITS.md`](plotwatch_server/web/seed/CREDITS.md).
 
 ## Licence
 Copyright © 2026 Afesoh Romeo. All rights reserved. No licence is granted to

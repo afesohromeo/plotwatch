@@ -150,7 +150,7 @@ Future<void> _seedDemo(Serverpod pod, String? password) async {
       return;
     }
     Uint8List file(String folder, String name) =>
-        File(Uri(path: 'seed/$folder/$name').toFilePath()).readAsBytesSync();
+        File(Uri(path: 'web/seed/$folder/$name').toFilePath()).readAsBytesSync();
     final created = await DemoSeed(
       photo: (name) => file('photos', name),
       receipt: (name) => file('receipts', name),

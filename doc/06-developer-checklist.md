@@ -11,7 +11,7 @@ Passwords on Serverpod Cloud (never in the repository):
 - [ ] `googleClientSecret`: the Web client's JSON from Google Cloud.
   ```powershell
   cd C:\New_folder\plotwatch\plotwatch_server
-  serverpod cloud password set googleClientSecret --from-file <path to the client secret JSON>
+  scloud password set googleClientSecret --from-file <path to the client secret JSON>
   ```
 - [ ] `googleMapsWebKey` is still set (web maps).
 - [ ] `demoPassword`: the judges' demo password, 8 characters or more. Write it in the submission notes.
@@ -29,12 +29,11 @@ Passwords on Serverpod Cloud (never in the repository):
   cd C:\New_folder\plotwatch\plotwatch_server; dart format .; dart analyze
   cd ..\plotwatch_flutter; dart format lib test tool; flutter analyze
   ```
-- [ ] Web build into the server, then deploy:
+- [ ] Deploy. `scloud.yaml` runs `serverpod generate` and `serverpod run flutter_build` first, which builds the web app into `web/app`. On Windows, `flutter build web --output` does not work, which is why the script copies with `xcopy`.
   ```powershell
-  cd C:\New_folder\plotwatch\plotwatch_flutter
-  flutter build web --base-href / --output ..\plotwatch_server\web\app
-  cd ..\plotwatch_server; serverpod cloud deploy   # or the deploy command you used before
+  cd C:\New_folder\plotwatch\plotwatch_server; scloud deploy
   ```
+  To refresh the local :8082 web app without deploying: `serverpod run flutter_build`.
 - [ ] Server log after the deploy: `Demo project "Afesoh Residence" created.`
 - [ ] Release APK pointing at Cloud:
   ```powershell

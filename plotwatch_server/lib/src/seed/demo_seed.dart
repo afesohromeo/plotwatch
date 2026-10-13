@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
@@ -13,6 +14,7 @@ import '../endpoints/project_endpoint.dart';
 import '../endpoints/site_endpoint.dart';
 import '../endpoints/stage_endpoint.dart';
 import '../generated/protocol.dart';
+import '../services/account_service.dart';
 
 /// A demo person: their sign-in, name and settings.
 typedef DemoPerson = ({
@@ -69,11 +71,81 @@ class DemoSeed {
 
   static const _storageId = 'private';
 
-  /// Creates the demo accounts and project; false when the project already
-  /// exists (the seed runs at most once).
-  Future<bool> run(Session session, {required String password}) async {
+  /// The files the story uses (`web/seed/photos/` and `web/seed/receipts/`).
+  static const photoFiles = [
+    'site_preparation_1.jpg',
+    'site_preparation_2.jpg',
+    'foundation_1.jpg',
+    'foundation_2.jpg',
+    'foundation_3.jpg',
+    'ground_floor_1.jpg',
+    'ground_floor_2.jpg',
+    'ground_floor_3.jpg',
+  ];
+  static const receiptFiles = [
+    'receipt_excavator.png',
+    'receipt_cement.png',
+    'receipt_rebar.png',
+  ];
+
+  /// Any number, the same for every server: only one seeds at a time.
+  static const _lockKey = 74100251;
+
+  /// Creates the demo accounts and project; false when it is already there,
+  /// or another server is seeding it right now (Cloud starts two during a
+  /// rollout).
+  Future<bool> run(Session session, {required String password}) =>
+      _withLock(session, () => _run(session, password: password));
+
+  /// Runs [body] while this server holds a database lock, kept by a
+  /// transaction left open meanwhile; false when another server holds it.
+  Future<bool> _withLock(
+    Session session,
+    Future<bool> Function() body,
+  ) async {
+    final held = Completer<bool>();
+    final release = Completer<void>();
+    final lock = session.db.transaction((transaction) async {
+      final rows = await session.db.unsafeQuery(
+        'SELECT pg_try_advisory_xact_lock($_lockKey)',
+        transaction: transaction,
+      );
+      held.complete(rows.isNotEmpty && rows.first.first == true);
+      await release.future;
+    });
+    unawaited(
+      lock.then<void>(
+        (_) {},
+        onError: (Object e, StackTrace s) {
+          if (!held.isCompleted) held.completeError(e, s);
+        },
+      ),
+    );
+    try {
+      if (!await held.future) return false;
+      return await body();
+    } finally {
+      if (!release.isCompleted) release.complete();
+      await lock.catchError((_) {});
+    }
+  }
+
+  Future<bool> _run(Session session, {required String password}) async {
+    // Every file first: a missing one stops the seed before it writes.
+    for (final file in photoFiles) {
+      photo(file);
+    }
+    for (final file in receiptFiles) {
+      receipt(file);
+    }
+
     final ownerId = await _account(session, owner, password);
-    if (await _exists(session, ownerId)) return false;
+    final existing = await _find(session, ownerId);
+    if (existing != null) {
+      if (await _complete(session, existing.id!)) return false;
+      // A seed that stopped halfway, before it cleaned up after itself.
+      await const AccountService().deleteProject(session, existing.id!);
+    }
     final managerId = await _account(session, manager, password);
     final coFunderId = await _account(session, coFunder, password);
 
@@ -82,6 +154,7 @@ class DemoSeed {
     );
 
     late int projectId;
+    var made = false;
     Future<void> step(
       int daysAgo,
       int hour,
@@ -107,6 +180,7 @@ class DemoSeed {
     int stageId(int index) => plan[index].stage.id!;
     int itemId(int stage, int item) => plan[stage].items[item].id!;
 
+    try {
     // --- Six weeks ago: the plan, the people, the site.
     as(ownerId);
     final created = await projects.create(
@@ -124,6 +198,7 @@ class DemoSeed {
       stages: _plan(),
     );
     projectId = created.project.id!;
+    made = true;
     await _backdate(
       session,
       projectId,
@@ -492,8 +567,14 @@ class DemoSeed {
       as(ownerId);
       await membership.createInvitation(session, projectId, ProjectRole.viewer);
     });
-
-    session.updateAuthenticated(null);
+    } catch (_) {
+      // Never leave a half-made demo: the next start would skip it.
+      session.updateAuthenticated(null);
+      if (made) await const AccountService().deleteProject(session, projectId);
+      rethrow;
+    } finally {
+      session.updateAuthenticated(null);
+    }
     return true;
   }
 
@@ -665,8 +746,8 @@ class DemoSeed {
     return user.id;
   }
 
-  /// Whether the owner already has the demo project.
-  Future<bool> _exists(Session session, UuidValue ownerId) async {
+  /// The owner's demo project, if there is one.
+  Future<Project?> _find(Session session, UuidValue ownerId) async {
     final owned = await ProjectMember.db.find(
       session,
       where: (t) =>
@@ -674,10 +755,19 @@ class DemoSeed {
     );
     for (final membership in owned) {
       final project = await Project.db.findById(session, membership.projectId);
-      if (project?.name == projectName) return true;
+      if (project?.name == projectName) return project;
     }
-    return false;
+    return null;
   }
+
+  /// Whether the story reached its last step: the viewer's invitation.
+  Future<bool> _complete(Session session, int projectId) async =>
+      await Invitation.db.count(
+        session,
+        where: (t) =>
+            t.projectId.equals(projectId) & t.role.equals(ProjectRole.viewer),
+      ) >
+      0;
 
   /// [daysAgo] at [hour] o'clock in Yaoundé (UTC+1).
   DateTime _at(int daysAgo, int hour) {

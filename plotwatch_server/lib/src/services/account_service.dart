@@ -89,8 +89,26 @@ class AccountService {
       );
     });
 
-    // After the commit: a file left behind is only storage, never a dangling
-    // record.
+    await _deleteFiles(session, files);
+    // Open streams of this user close.
+    await session.messages.authenticationRevoked(
+      userId.uuid,
+      RevokedAuthenticationUser(),
+    );
+  }
+
+  /// Deletes a whole project with its stored files; also used by the demo
+  /// seed to remove a half-made demo project (doc/04g step 7).
+  Future<void> deleteProject(Session session, int projectId) async {
+    final files = await session.db.transaction(
+      (transaction) => _deleteProject(session, projectId, transaction),
+    );
+    await _deleteFiles(session, files);
+  }
+
+  /// After the commit: a file left behind is only storage, never a dangling
+  /// record.
+  Future<void> _deleteFiles(Session session, List<String> files) async {
     for (final path in files) {
       try {
         await session.storage.deleteFile(storageId: _storageId, path: path);
@@ -98,11 +116,6 @@ class AccountService {
         session.log('Could not delete $path: $e', level: LogLevel.warning);
       }
     }
-    // Open streams of this user close.
-    await session.messages.authenticationRevoked(
-      userId.uuid,
-      RevokedAuthenticationUser(),
-    );
   }
 
   /// Deletes a project and returns its stored files (photos, thumbnails,
