@@ -18,86 +18,82 @@ This week?
 Plotwatch replaces trust with evidence.
 
 5
-00:00:16,000 --> 00:00:21,500
-Ada, the funder, creates a project from a template,
-with its stages and budget,
+00:00:16,000 --> 00:00:22,000
+Brice lives in Canada. He's funding
+a five-storey residence in Yaoundé.
 
 6
-00:00:21,500 --> 00:00:26,500
-and invites her site manager.
+00:00:22,000 --> 00:00:30,000
+Plotwatch shows him the build stage by stage,
+and what needs him now.
 
 7
-00:00:26,500 --> 00:00:30,000
-Joseph joins with the code.
+00:00:30,000 --> 00:00:35,000
+Every photo is taken with the app's camera,
+on the plot.
 
 8
-00:00:30,000 --> 00:00:36,000
-On the plot, Joseph localizes the site
-with his phone's GPS.
+00:00:35,000 --> 00:00:42,000
+The server checks it: inside the site boundary,
+accurate GPS, its own clock,
 
 9
-00:00:36,000 --> 00:00:42,000
-Ada checks it on the map
-and sets the boundary.
+00:00:42,000 --> 00:00:48,000
+and the photo's fingerprint. Verified.
 
 10
-00:00:42,000 --> 00:00:46,500
-Now Joseph photographs the work,
-only through the app's camera, never the gallery.
+00:00:48,000 --> 00:00:52,000
+When a check fails, Plotwatch says so.
 
 11
-00:00:46,500 --> 00:00:51,000
-Seconds later it appears on Ada's screen,
-live, and it's verified.
+00:00:52,000 --> 00:00:58,000
+This one is only partly verified:
+the GPS fix was weak.
 
 12
-00:00:51,000 --> 00:00:58,000
-The server checked the position against the boundary,
-the time against its own clock, and the photo's fingerprint.
+00:00:58,000 --> 00:01:04,000
+When the site manager submits a stage,
+Brice is notified at once.
 
 13
-00:00:58,000 --> 00:01:05,000
-A photo taken eighty metres away?
-Unverified, and Plotwatch says exactly why.
+00:01:04,000 --> 00:01:10,000
+He approves it,
+or sends it back with a comment.
 
 14
-00:01:05,000 --> 00:01:11,000
-When every required photo is in,
-Joseph submits the stage.
+00:01:10,000 --> 00:01:17,000
+On site, Joseph uses the Android app:
+the checklist, the camera,
 
 15
-00:01:11,000 --> 00:01:18,000
-Ada is notified at once,
-reviews the evidence and approves.
+00:01:17,000 --> 00:01:24,000
+updates from the site,
+and payments to confirm.
 
 16
-00:01:18,000 --> 00:01:25,000
-Plotwatch offers to record the next payment.
+00:01:24,000 --> 00:01:31,000
+Every payment and expense goes into
+a shared ledger, with receipt photos.
 
 17
-00:01:25,000 --> 00:01:32,000
-Every payment and expense lands in a shared ledger,
-with receipt photos.
-
-18
-00:01:32,000 --> 00:01:37,000
+00:01:31,000 --> 00:01:36,000
 Entries are never edited, only reversed.
 
-19
-00:01:37,000 --> 00:01:45,000
-And Plotwatch flags money
-that isn't backed by receipts yet.
+18
+00:01:36,000 --> 00:01:45,000
+And Plotwatch flags thirty-three million francs
+not yet backed by a receipt.
 
-20
+19
 00:01:45,000 --> 00:01:51,500
 Plotwatch is built with Flutter and Serverpod:
 live streams, scheduled tasks,
 
-21
+20
 00:01:51,500 --> 00:01:55,000
 verified uploads and authentication,
 on Serverpod Cloud.
 
-22
+21
 00:01:55,000 --> 00:01:58,000
 Try it at plotwatch.serverpod.space.

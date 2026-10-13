@@ -1,10 +1,13 @@
 # Demo video: script and shot list
 
 For the developer, who records it. The rules: **under 2:00**, public on
-YouTube or Vimeo, the app on its target devices (an Android phone and the
-web), English, no copyrighted music and no third-party trademarks. This
-replaces the draft outline in `03-mvp-scope.md` §9.1: the spot check was cut,
-and the site comes from GPS, not a Plus Code.
+YouTube or Vimeo, the app on its target devices (the web and Android),
+English, no copyrighted music and no third-party trademarks. This replaces
+the draft outline in `03-mvp-scope.md` §9.1.
+
+**A tour of the demo project "Afesoh Residence"** (decided 2026-10-13).
+Nothing is changed during the recording: you look and tap, but never
+approve, confirm or post, so the judges find the same demo afterwards.
 
 Ready-made files in [`video/`](video/):
 - `01_problem.png`, `02_title.png`, `03_built_with.png`: the cards, 1920×1080;
@@ -12,96 +15,119 @@ Ready-made files in [`video/`](video/):
 
 ---
 
-## Before recording
-- **Two accounts** on https://plotwatch.serverpod.space, made by email
-  sign-up rather than Google, so no Google logo appears on screen:
-  - **Ada** (the funder) on the computer, in a browser;
-  - **Joseph** (the site manager) on the Android phone, with the release APK.
-- **Ada creates a new project**, "Ndoumbe House", from a template, with a
-  budget, **before** recording scene 2's takes, so you can record it calmly.
-  Or record it as it happens; scene 2 is short.
-- **Go outdoors** for scenes 3 and 4, with good GPS (sky in view) and the
-  phone's location on. Pick a spot you can walk about 80 m away from.
-- **Phone:** turn on Do Not Disturb, set the battery to 100 % or hide the
-  status bar, and use the app in English.
-- **Browser:** a clean window (no bookmarks bar or other tabs), zoomed to
-  about 110 %.
-- **Recorders:**
-  - the phone's built-in screen recorder, or `scrcpy` on the computer;
-  - OBS or the Windows Snipping Tool's recorder for the browser;
-  - both at 1080p.
-- **No music.** Your own voice only.
+## What you need
+- **Chrome on your computer**, signed in at https://plotwatch.serverpod.space
+  as the funder, **`funder@demo.plotwatch.app`** (Brice).
+- **Android**, the emulator or a real phone, signed in as the site manager,
+  **`manager@demo.plotwatch.app`** (Joseph). With the emulator, point the app
+  at Cloud: run it with `--dart-define=SERVER_URL=https://plotwatch.api.serverpod.space/`,
+  or install the release APK.
+- **A screen recorder:**
+  - for Chrome: OBS, or the Windows Snipping Tool's **Record** button
+    (Windows 11), set to the browser window;
+  - for Android: the same recorder on the emulator window, or the phone's
+    built-in screen recorder.
+- **A quiet room** for the voice-over, and **no music**.
 
-## The script (about 230 words, 1:58)
-Read at a calm pace. The times are where each line starts.
+**Before recording:**
+- **Chrome:**
+  - one clean window, no bookmarks bar (Ctrl+Shift+B), no other tabs;
+  - zoom about 110 %;
+  - the app in English;
+  - a window size of about 1600×900 looks good on video.
+- **Android:** Do Not Disturb on, the app in English.
+- **Do a first pass without recording**, so you know where everything is.
+
+## The script (about 220 words, 1:58)
+Record the voice-over first, reading calmly. Then record the pictures and
+cut them to the voice. The times are where each line starts.
 
 | Time | Picture | Voice-over |
 |---|---|---|
 | 0:00 | Card `01_problem.png` | You live abroad, and you're building a house back home. Every month you send money, and you get photos on your phone. Were they taken on your plot? This week? |
 | 0:12 | Card `02_title.png` | Plotwatch replaces trust with evidence. |
-| 0:16 | **Scene 1: setup** (web, then phone) | Ada, the funder, creates a project from a template, with its stages and budget, and invites her site manager. Joseph joins with the code. |
-| 0:30 | **Scene 2: the site** (phone, then web) | On the plot, Joseph localizes the site with his phone's GPS. Ada checks it on the map and sets the boundary. |
-| 0:42 | **Scene 3: verified capture** (phone and web side by side) | Now Joseph photographs the work, only through the app's camera, never the gallery. Seconds later it appears on Ada's screen, live, and it's verified. The server checked the position against the boundary, the time against its own clock, and the photo's fingerprint. |
-| 0:58 | **Scene 4: unverified** (phone, then web) | A photo taken eighty metres away? Unverified, and Plotwatch says exactly why. |
-| 1:05 | **Scene 5: review** (phone, then web) | When every required photo is in, Joseph submits the stage. Ada is notified at once, reviews the evidence and approves. Plotwatch offers to record the next payment. |
-| 1:25 | **Scene 6: money** (web, the demo project) | Every payment and expense lands in a shared ledger, with receipt photos. Entries are never edited, only reversed. And Plotwatch flags money that isn't backed by receipts yet. |
+| 0:16 | **Scene 1: the project** (Chrome) | Brice lives in Canada. He's funding a five-storey residence in Yaoundé. Plotwatch shows him the build stage by stage, and what needs him now. |
+| 0:30 | **Scene 2: a verified photo** (Chrome) | Every photo is taken with the app's camera, on the plot. The server checks it: inside the site boundary, accurate GPS, its own clock, and the photo's fingerprint. Verified. |
+| 0:48 | **Scene 3: a partly verified photo** (Chrome) | When a check fails, Plotwatch says so. This one is only partly verified: the GPS fix was weak. |
+| 0:58 | **Scene 4: the review** (Chrome) | When the site manager submits a stage, Brice is notified at once. He approves it, or sends it back with a comment. |
+| 1:10 | **Scene 5: on site** (Android) | On site, Joseph uses the Android app: the checklist, the camera, updates from the site, and payments to confirm. |
+| 1:24 | **Scene 6: the money** (Chrome) | Every payment and expense goes into a shared ledger, with receipt photos. Entries are never edited, only reversed. And Plotwatch flags thirty-three million francs not yet backed by a receipt. |
 | 1:45 | Card `03_built_with.png` | Plotwatch is built with Flutter and Serverpod: live streams, scheduled tasks, verified uploads and authentication, on Serverpod Cloud. Try it at plotwatch dot serverpod dot space. |
 | 1:58 | End | |
 
+### A generated voice instead of your own (optional)
+**Google AI Studio's text-to-speech** (Gemini):
+1. Open https://aistudio.google.com › **Generate speech**.
+2. Choose a voice: a calm, warm one, the same for every clip.
+3. For the style, write: *"Read in a calm, warm, confident tone, like a
+   short product film. Natural pace, small pauses between sentences."*
+4. Paste **one row of the script at a time** (one clip per row above), then
+   generate and download each clip (`01.wav`, `02.wav`, …).
+5. In the editor, put each clip at its row's time, then fit the pictures to
+   the clips.
+
+**This must be disclosed:** the submission's description lists it with the
+other AI tools (Claude Code, Gemini for the demo photos, Gemini for the
+voice).
+
 ## The shot list
-Record each scene as one or two short takes; you'll trim them in the editor.
+Record each scene as one short take, moving slowly. Let each screen rest
+1–2 seconds before the next tap; you'll trim in the editor.
 
-### Scene 1: setup (0:16–0:30, 14 s)
-1. **Web, as Ada:** Projects › **New project**: the name "Ndoumbe House",
-   New house, FCFA, then **Start from “Single-storey house”**; show the stages
-   with their budgets; **Create project**.
-2. **Web:** project › **Invite** › Site manager › the code appears (show it).
-3. **Phone, as Joseph:** **Join with a code** › type the code › **Join the project**. The
-   project opens.
+### Scene 1: the project (Chrome, 0:16–0:30, 14 s)
+1. Start on **Projects**: the Afesoh Residence card, with its latest photo
+   and progress.
+2. Click the card. The **Overview**:
+   - the green progress card;
+   - "Ground floor… is waiting for your review";
+   - the money card;
+   - the latest photo.
+3. Scroll slowly down to **Latest activity**.
 
-### Scene 2: the site (0:30–0:42, 12 s)
-1. **Phone, on the plot:** the project › **Localize the site**; wait until the
-   accuracy is below 20 m, then confirm.
-2. **Web:** Ada sees the proposal on the map › set the radius (30–50 m) ›
-   **Validate**. The project becomes Active.
+### Scene 2: a verified photo (Chrome, 0:30–0:48, 18 s)
+1. **Stages** in the left menu: the six stages, two approved.
+2. Click **1 · Site preparation**: its checklist with photos.
+3. Click a photo: the full photo with **Verified**.
+4. Scroll to the **checks**: inside the site, the accuracy, the time, the hash.
 
-### Scene 3: verified capture (0:42–0:58, 16 s): the key moment
-Record **both screens at the same time**; you'll put them side by side.
-1. **Web:** Ada keeps the project's Overview or Activity open.
-2. **Phone:** Stages › the first stage › a checklist item › **Take a photo** ›
-   **Use this photo** › it uploads.
-3. **Web:** the photo **appears by itself** with **Verified**. Ada taps it:
-   the checks list (inside the site, accurate GPS, server time, hash).
+### Scene 3: a partly verified photo (Chrome, 0:48–0:58, 10 s)
+1. **Stages › 3 · Ground floor: columns and slab.**
+2. Click the photo marked **Partial** (slab reinforcement).
+3. Show the failed check: "Accurate to only 45 m (allowed: 30 m)".
 
-### Scene 4: unverified (0:58–1:05, 7 s)
-1. **Walk about 80 m away.** Phone: capture another item.
-2. **Web:** it arrives **Unverified**; tap it to show "Taken 82 m from the
-   site centre; allowed: 58 m" (the radius plus the GPS accuracy).
+### Scene 4: the review (Chrome, 0:58–1:10, 12 s)
+1. Back to **3 · Ground floor**: the **Waiting for your review** badge, and
+   the **Request changes** and **Approve** buttons at the bottom.
+   **Don't click them.**
+2. Click the **bell**: the notification "Joseph Mvondo submitted…".
+3. Close it, then **Activity** in the left menu: the feed over the past six
+   weeks.
 
-### Scene 5: review (1:05–1:25, 20 s)
-Before this scene, cover the stage's required items, inside the boundary.
-1. **Phone:** the stage › **Submit for review**.
-2. **Web:** the **bell** shows the notification at once › open it › the
-   stage with its photos › **Approve**.
-3. **Web:** the **Record a release** offer appears › **Record a release** ›
-   the form opens with the next stage chosen (you can cancel here).
+### Scene 5: on site (Android, 1:10–1:24, 14 s)
+Signed in as Joseph, the site manager.
+1. Projects › **Afesoh Residence**: the Overview on the phone.
+2. **Stages** tab › **4 · Upper floors**: its checklist, with a
+   **Take a photo** button per item. **Don't take one.**
+3. Back › the **Money** tab › the release of 15,000,000 FCFA marked **Not
+   confirmed yet** › open it: the **Confirm received** button. **Don't
+   tap it.**
 
-### Scene 6: money (1:25–1:45, 20 s), the demo project
-1. **Web:** sign in as `funder@demo.plotwatch.app` (cut the sign-in out) ›
-   Afesoh Residence › **Money**.
-2. Show the summary: released, spent, with a receipt, and the **unaccounted
-   alert**.
-3. Tap the cement expense › the **receipt photo**.
-4. Back › **By stage**, then back to **Entries**.
+### Scene 6: the money (Chrome, 1:24–1:45, 21 s)
+1. **Money** in the left menu: released 47.5 M, spent, with a receipt, and
+   the orange **unaccounted** card.
+2. Click the expense **Cement, 700 bags**: the entry and its **receipt
+   photo**.
+3. Back › the **By stage** panel: the money per stage.
 
 ## Putting it together
 - **Editor:** CapCut (desktop) or DaVinci Resolve, both free. Timeline at
   1920×1080.
-- **Cards:** place them at 0:00, 0:12 and 1:45, for the times above.
-- **Side by side:** in scene 3, put the phone on the left (scaled to the
-  height) and the browser on the right.
-- **Voice-over:** record it as one track, in a quiet room, with the phone's
-  microphone close. Then cut the pictures to the voice.
+- **Order:**
+  1. the voice-over track first;
+  2. the cards at 0:00, 0:12 and 1:45;
+  3. the scenes, cut to the voice.
+- **Phone scene:** put the phone recording in the middle, on the green
+  background of `02_title.png` or a plain colour, scaled to the height.
 - **Subtitles:** upload `plotwatch-demo.srt` to YouTube (Subtitles › Upload
   file › With timing). If your cut's timing differs, adjust it in YouTube's
   editor.
