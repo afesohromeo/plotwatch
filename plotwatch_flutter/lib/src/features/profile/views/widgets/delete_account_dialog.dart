@@ -16,6 +16,10 @@ Future<void> showDeleteAccountDialog(BuildContext context, String email) {
   );
 }
 
+/// Material 3's widest dialog; the developer preferred it to 440 px on the
+/// web (2026-10-13).
+const _dialogWidth = BoxConstraints(minWidth: 280, maxWidth: 560);
+
 class DeleteAccountDialog extends StatefulWidget {
   const DeleteAccountDialog({super.key, required this.email});
 
@@ -60,6 +64,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
         if (state.checkStatus == GenericStatus.initial ||
             state.checkStatus == GenericStatus.loading) {
           return const AlertDialog(
+            constraints: _dialogWidth,
             content: SizedBox(
               height: 80,
               child: Center(child: CircularProgressIndicator()),
@@ -68,6 +73,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
         }
         if (state.checkStatus == GenericStatus.failure) {
           return AlertDialog(
+            constraints: _dialogWidth,
             title: Text(l10n.deleteAccountTitle),
             content: Text(state.errorMessage ?? l10n.errorDeleteAccount),
             actions: [close],
@@ -75,6 +81,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
         }
         if (state.blockers.isNotEmpty) {
           return AlertDialog(
+            constraints: _dialogWidth,
             title: Text(l10n.deleteAccountBlockedTitle),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -86,11 +93,18 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                   Text('• $name', style: context.textTheme.titleSmall),
               ],
             ),
-            actions: [close],
+            // Nothing to cancel here: the person just reads and closes.
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(l10n.ok),
+              ),
+            ],
           );
         }
         final deleting = state.deleteStatus == GenericStatus.loading;
         return AlertDialog(
+          constraints: _dialogWidth,
           title: Text(l10n.deleteAccountTitle),
           content: SingleChildScrollView(
             child: Column(

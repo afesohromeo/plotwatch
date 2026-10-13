@@ -43,3 +43,6 @@ key.properties
 
 # Design check screenshots (doc/05 §9.3)
 plotwatch_flutter/tool/screenshots/out/
+
+# The developer's working copies of the demo photos; the seed uses plotwatch_server/seed/photos/
+/demo images/

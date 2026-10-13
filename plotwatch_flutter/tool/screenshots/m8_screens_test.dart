@@ -24,6 +24,10 @@ class MockSignInBloc extends MockBloc<SignInEvent, SignInState>
 class MockSignUpBloc extends MockBloc<SignUpEvent, SignUpState>
     implements SignUpBloc {}
 
+class MockAccountDeletionBloc
+    extends MockBloc<AccountDeletionEvent, AccountDeletionState>
+    implements AccountDeletionBloc {}
+
 void main() {
   setUpAll(() async {
     setUpTestLocalization(const Locale(shotLocale));
@@ -225,4 +229,37 @@ void main() {
       ),
     );
   });
+
+  // --- Delete account, on a wide screen (doc/04g step 6).
+  for (final (name, state) in [
+    (
+      'confirm',
+      const AccountDeletionState(checkStatus: GenericStatus.success),
+    ),
+    (
+      'blocked',
+      const AccountDeletionState(
+        checkStatus: GenericStatus.success,
+        blockers: ['Maison Douala', 'Duplex Bafoussam'],
+      ),
+    ),
+  ]) {
+    testWidgets('delete account $name desktop', (tester) async {
+      final bloc = MockAccountDeletionBloc();
+      when(() => bloc.state).thenReturn(state);
+      await shot(
+        tester,
+        'delete_account_${name}_desktop',
+        desktop,
+        Scaffold(
+          body: BlocProvider<AccountDeletionBloc>.value(
+            value: bloc,
+            child: const Center(
+              child: DeleteAccountDialog(email: 'ada.lovelace@example.com'),
+            ),
+          ),
+        ),
+      );
+    });
+  }
 }
