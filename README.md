@@ -1,11 +1,11 @@
 # Plotwatch
 
-**Fund a building you can't watch being built.**
+**Oversee your construction project from anywhere.**
 
-Many people pay for a house, a family building or a community project far
-from where they live: a nurse in Montreal building in Yaoundé, a family
-abroad funding a village school. They send money in stages and have to trust
-whatever the site tells them. Plotwatch replaces trust with evidence.
+A house, a family building, a community project: whoever pays for a build
+can't be on site every day. They need to know what has really been done,
+stage by stage, and where the money went. Plotwatch lets them oversee the
+project as it moves forward, with evidence they can trust.
 
 - **Verified site photos:**
   - taken only with the in-app camera (never the gallery);

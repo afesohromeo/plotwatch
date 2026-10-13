@@ -16,18 +16,18 @@ void main() {
     '01_problem': const _Card(
       dark: true,
       children: [
-        _Line('You live abroad.', size: 64),
-        _Line("You're building a house back home.", size: 64),
-        SizedBox(height: 48),
+        _Line("Building something you can't", size: 64),
+        _Line('be there for every day?', size: 64),
+        SizedBox(height: 40),
         _Line(
-          'Every month you send money, and get photos on your phone.',
+          'A house, a family building, a community project.',
           size: 40,
           muted: true,
         ),
-        SizedBox(height: 24),
+        SizedBox(height: 28),
         _Line(
-          'Were they taken on your plot? This week?',
-          size: 48,
+          "What's really done on site? Where does the money go?",
+          size: 46,
           accent: true,
         ),
       ],
@@ -39,7 +39,7 @@ void main() {
         _Line('Plotwatch', size: 120, weight: FontWeight.w800),
         SizedBox(height: 16),
         _Line(
-          "Fund a building you can't watch being built.",
+          'Oversee your construction project from anywhere.',
           size: 48,
           muted: true,
         ),

@@ -44,9 +44,9 @@ cut them to the voice. The times are where each line starts.
 
 | Time | Picture | Voice-over |
 |---|---|---|
-| 0:00 | Card `01_problem.png` | You live abroad, and you're building a house back home. Every month you send money, and you get photos on your phone. Were they taken on your plot? This week? |
-| 0:12 | Card `02_title.png` | Plotwatch replaces trust with evidence. |
-| 0:16 | **Scene 1: the project** (Chrome) | Brice lives in Canada. He's funding a five-storey residence in Yaoundé. Plotwatch shows him the build stage by stage, and what needs him now. |
+| 0:00 | Card `01_problem.png` | Building something you can't be there for every day? A house, a family building, a community project. You need to know what's really done on site, stage by stage, and where the money goes. |
+| 0:12 | Card `02_title.png` | Plotwatch lets you oversee it from anywhere, with evidence you can trust. |
+| 0:16 | **Scene 1: the project** (Chrome) | Brice is overseeing a five-storey residence in Yaoundé. Plotwatch shows him the build stage by stage, and what needs him now. |
 | 0:30 | **Scene 2: a verified photo** (Chrome) | Every photo is taken with the app's camera, on the plot. The server checks it: inside the site boundary, accurate GPS, its own clock, and the photo's fingerprint. Verified. |
 | 0:48 | **Scene 3: a partly verified photo** (Chrome) | When a check fails, Plotwatch says so. This one is only partly verified: the GPS fix was weak. |
 | 0:58 | **Scene 4: the review** (Chrome) | When the site manager submits a stage, Brice is notified at once. He approves it, or sends it back with a comment. |
@@ -138,6 +138,6 @@ Signed in as Joseph, the site manager.
   file › With timing). If your cut's timing differs, adjust it in YouTube's
   editor.
 - **Export:** 1080p, MP4. **Check the length: under 2:00.**
-- **YouTube:** title "Plotwatch: fund a building you can't watch being
-  built". Set it to **Public** (Unlisted only if the rules accept it). In
+- **YouTube:** title "Plotwatch: oversee your construction project from
+  anywhere". Set it to **Public** (Unlisted only if the rules accept it). In
   the description, the live URL and the repository.
