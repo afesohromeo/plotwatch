@@ -114,7 +114,9 @@ Signed in as Joseph, the site manager.
 1. Projects › **Afesoh Residence**: the Overview on the phone.
 2. **Stages** tab › **4 · Upper floors**: its checklist, with a
    **Take a photo** button per item. **Don't take one.**
-3. Back › the **Money** tab › the release of 15,000,000 FCFA marked **Not
+3. Back to the Overview › **Post an update**: the form with the weather,
+   the workers and any problems. **Don't post it**: close it.
+4. The **Money** tab › the release of 15,000,000 FCFA marked **Not
    confirmed yet** › open it: the **Confirm received** button. **Don't
    tap it.**
 
