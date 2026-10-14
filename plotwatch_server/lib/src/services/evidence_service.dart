@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
-import 'package:image/image.dart' as img;
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
 import 'activity_service.dart';
 import 'audit_service.dart';
 import 'people_service.dart';
+import 'photo_sizes.dart';
 import 'verification_service.dart';
 
 /// Captures: commit → upload → finalize with the checks, viewing, retract
@@ -239,7 +239,23 @@ class EvidenceService {
       data.lengthInBytes,
     );
     final storedHash = sha256.convert(bytes).toString();
-    final thumb = await _storeThumbnail(session, evidence, bytes);
+    // Both sizes from one decoding, on another isolate; the display size
+    // now too, so the first view is fast (doc/04g step 10b).
+    final sizes = await PhotoSizes.both(
+      bytes,
+      thumbnailWidth: thumbnailWidth,
+      displayWidth: displayWidth,
+    );
+    String? thumb;
+    if (sizes != null) {
+      thumb = thumbPath(evidence.projectId, evidence.id!);
+      await _store(session, thumb, sizes.thumbnail);
+      await _store(
+        session,
+        displayPath(evidence.projectId, evidence.id!),
+        sizes.display,
+      );
+    }
     final site = (await Site.db.findFirstRow(
       session,
       where: (t) => t.projectId.equals(evidence.projectId),
@@ -377,18 +393,22 @@ class EvidenceService {
       storageId: storageId,
       path: evidence.photoPath,
     );
-    final decoded = img.decodeImage(Uint8List.sublistView(original));
-    if (decoded == null) return evidence.photoPath;
-    final resized = decoded.width > displayWidth
-        ? img.copyResize(decoded, width: displayWidth)
-        : decoded;
-    await session.storage.storeFile(
-      storageId: storageId,
-      path: path,
-      byteData: ByteData.sublistView(img.encodeJpg(resized, quality: 80)),
+    final display = await PhotoSizes.one(
+      Uint8List.sublistView(original),
+      width: displayWidth,
+      quality: 80,
     );
+    if (display == null) return evidence.photoPath;
+    await _store(session, path, display);
     return path;
   }
+
+  Future<void> _store(Session session, String path, Uint8List bytes) =>
+      session.storage.storeFile(
+        storageId: storageId,
+        path: path,
+        byteData: ByteData.sublistView(bytes),
+      );
 
   /// The author withdraws a capture with a reason; it stays visible and
   /// stops covering its item (CAP-09, decision M4-11).
@@ -452,27 +472,6 @@ class EvidenceService {
           preventOverwrite: true,
         ),
       );
-
-  /// A 400 px wide JPEG of the photo, or none if it can't be decoded
-  /// (decision M4-5).
-  Future<String?> _storeThumbnail(
-    Session session,
-    Evidence evidence,
-    Uint8List bytes,
-  ) async {
-    final decoded = img.decodeImage(bytes);
-    if (decoded == null) return null;
-    final resized = decoded.width > thumbnailWidth
-        ? img.copyResize(decoded, width: thumbnailWidth)
-        : decoded;
-    final path = thumbPath(evidence.projectId, evidence.id!);
-    await session.storage.storeFile(
-      storageId: storageId,
-      path: path,
-      byteData: ByteData.sublistView(img.encodeJpg(resized, quality: 75)),
-    );
-    return path;
-  }
 
   /// `not_started → in_progress` with the first capture (STG-06, M4-9).
   Future<void> _startStage(

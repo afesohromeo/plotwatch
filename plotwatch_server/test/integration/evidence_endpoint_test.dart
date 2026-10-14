@@ -252,6 +252,19 @@ void main() {
         );
       });
 
+      test('then the display size is made when the photo is taken, so the '
+          'first view is fast', () async {
+        final evidence = await capture();
+
+        expect(
+          await sessionBuilder.build().storage.fileExists(
+            storageId: 'private',
+            path: EvidenceService.displayPath(projectId, evidence.id!),
+          ),
+          isTrue,
+        );
+      });
+
       test('then a photo narrower than the display size is not enlarged', () async {
         final evidence = await capture();
 

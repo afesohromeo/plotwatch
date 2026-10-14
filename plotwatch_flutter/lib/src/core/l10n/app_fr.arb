@@ -722,5 +722,9 @@
     "deleteAccountBlockedTitle": "Terminez ou archivez d'abord ces projets",
     "deleteAccountBlockedText": "D'autres membres y travaillent encore, et ils ont besoin de leur propriétaire.",
     "errorAccountOwnsSharedProjects": "Terminez ou archivez d'abord les projets que vous partagez avec d'autres.",
-    "errorDeleteAccount": "Impossible de supprimer le compte. Réessayez."
+    "errorDeleteAccount": "Impossible de supprimer le compte. Réessayez.",
+    "moneyLeft": "Reste",
+    "moneySpentNoReceipt": "{amount} dépensés sans reçu",
+    "moneyStageReleasedSpent": "{released} versés · {spent} dépensés",
+    "moneyStageLeft": "{amount} restants"
 }

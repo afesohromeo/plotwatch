@@ -15,68 +15,30 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EvidenceMediaEvent {
 
- int get projectId; int get evidenceId; MediaVariant get variant;
-/// Create a copy of EvidenceMediaEvent
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$EvidenceMediaEventCopyWith<EvidenceMediaEvent> get copyWith => _$EvidenceMediaEventCopyWithImpl<EvidenceMediaEvent>(this as EvidenceMediaEvent, _$identity);
+
 
 
 
 @override
 bool operator ==(Object other) {
-  final _this = this as EvidenceMediaEvent;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EvidenceMediaEvent&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&(identical(other.evidenceId, _this.evidenceId) || other.evidenceId == _this.evidenceId)&&(identical(other.variant, _this.variant) || other.variant == _this.variant));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is EvidenceMediaEvent);
 }
 
 
 @override
-int get hashCode {
-  final _this = this as EvidenceMediaEvent;
-  return Object.hash(runtimeType,_this.projectId,_this.evidenceId,_this.variant);
-}
+int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  final _this = this as EvidenceMediaEvent;
-  return 'EvidenceMediaEvent(projectId: ${_this.projectId}, evidenceId: ${_this.evidenceId}, variant: ${_this.variant})';
+    return 'EvidenceMediaEvent()';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $EvidenceMediaEventCopyWith<$Res>  {
-  factory $EvidenceMediaEventCopyWith(EvidenceMediaEvent value, $Res Function(EvidenceMediaEvent) _then) = _$EvidenceMediaEventCopyWithImpl;
-@useResult
-$Res call({
- int projectId, int evidenceId, MediaVariant variant
-});
-
-
-
-
-}
-/// @nodoc
-class _$EvidenceMediaEventCopyWithImpl<$Res>
-    implements $EvidenceMediaEventCopyWith<$Res> {
-  _$EvidenceMediaEventCopyWithImpl(this._self, this._then);
-
-  final EvidenceMediaEvent _self;
-  final $Res Function(EvidenceMediaEvent) _then;
-
-/// Create a copy of EvidenceMediaEvent
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? projectId = null,Object? evidenceId = null,Object? variant = null,}) {
-  return _then(EvidenceMediaEvent.requested(
-projectId: null == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
-as int,evidenceId: null == evidenceId ? _self.evidenceId : evidenceId // ignore: cast_nullable_to_non_nullable
-as int,variant: null == variant ? _self.variant : variant // ignore: cast_nullable_to_non_nullable
-as MediaVariant,
-  ));
-}
-
+class $EvidenceMediaEventCopyWith<$Res>  {
+$EvidenceMediaEventCopyWith(EvidenceMediaEvent _, $Res Function(EvidenceMediaEvent) __);
 }
 
 
@@ -94,11 +56,12 @@ extension EvidenceMediaEventPatterns on EvidenceMediaEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Requested value)?  requested,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Requested value)?  requested,TResult Function( _Cleared value)?  cleared,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Requested() when requested != null:
-return requested(_that);case _:
+return requested(_that);case _Cleared() when cleared != null:
+return cleared(_that);case _:
   return orElse();
 
 }
@@ -116,11 +79,12 @@ return requested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Requested value)  requested,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Requested value)  requested,required TResult Function( _Cleared value)  cleared,}){
 final _that = this;
 switch (_that) {
 case _Requested():
-return requested(_that);}
+return requested(_that);case _Cleared():
+return cleared(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -134,11 +98,12 @@ return requested(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Requested value)?  requested,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Requested value)?  requested,TResult? Function( _Cleared value)?  cleared,}){
 final _that = this;
 switch (_that) {
 case _Requested() when requested != null:
-return requested(_that);case _:
+return requested(_that);case _Cleared() when cleared != null:
+return cleared(_that);case _:
   return null;
 
 }
@@ -155,10 +120,11 @@ return requested(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int projectId,  int evidenceId,  MediaVariant variant)?  requested,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int projectId,  int evidenceId,  MediaVariant variant)?  requested,TResult Function()?  cleared,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Requested() when requested != null:
-return requested(_that.projectId,_that.evidenceId,_that.variant);case _:
+return requested(_that.projectId,_that.evidenceId,_that.variant);case _Cleared() when cleared != null:
+return cleared();case _:
   return orElse();
 
 }
@@ -176,10 +142,11 @@ return requested(_that.projectId,_that.evidenceId,_that.variant);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int projectId,  int evidenceId,  MediaVariant variant)  requested,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int projectId,  int evidenceId,  MediaVariant variant)  requested,required TResult Function()  cleared,}) {final _that = this;
 switch (_that) {
 case _Requested():
-return requested(_that.projectId,_that.evidenceId,_that.variant);}
+return requested(_that.projectId,_that.evidenceId,_that.variant);case _Cleared():
+return cleared();}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -193,10 +160,11 @@ return requested(_that.projectId,_that.evidenceId,_that.variant);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int projectId,  int evidenceId,  MediaVariant variant)?  requested,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int projectId,  int evidenceId,  MediaVariant variant)?  requested,TResult? Function()?  cleared,}) {final _that = this;
 switch (_that) {
 case _Requested() when requested != null:
-return requested(_that.projectId,_that.evidenceId,_that.variant);case _:
+return requested(_that.projectId,_that.evidenceId,_that.variant);case _Cleared() when cleared != null:
+return cleared();case _:
   return null;
 
 }
@@ -211,13 +179,13 @@ class _Requested implements EvidenceMediaEvent {
   const _Requested({required this.projectId, required this.evidenceId, required this.variant});
   
 
-@override final  int projectId;
-@override final  int evidenceId;
-@override final  MediaVariant variant;
+ final  int projectId;
+ final  int evidenceId;
+ final  MediaVariant variant;
 
 /// Create a copy of EvidenceMediaEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
+@JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 _$RequestedCopyWith<_Requested> get copyWith => __$RequestedCopyWithImpl<_Requested>(this, _$identity);
 
@@ -245,7 +213,7 @@ String toString() {
 /// @nodoc
 abstract mixin class _$RequestedCopyWith<$Res> implements $EvidenceMediaEventCopyWith<$Res> {
   factory _$RequestedCopyWith(_Requested value, $Res Function(_Requested) _then) = __$RequestedCopyWithImpl;
-@override @useResult
+@useResult
 $Res call({
  int projectId, int evidenceId, MediaVariant variant
 });
@@ -264,7 +232,7 @@ class __$RequestedCopyWithImpl<$Res>
 
 /// Create a copy of EvidenceMediaEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? projectId = null,Object? evidenceId = null,Object? variant = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? projectId = null,Object? evidenceId = null,Object? variant = null,}) {
   return _then(_Requested(
 projectId: null == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as int,evidenceId: null == evidenceId ? _self.evidenceId : evidenceId // ignore: cast_nullable_to_non_nullable
@@ -275,6 +243,38 @@ as MediaVariant,
 
 
 }
+
+/// @nodoc
+
+
+class _Cleared implements EvidenceMediaEvent {
+  const _Cleared();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Cleared);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+    return 'EvidenceMediaEvent.cleared()';
+}
+
+
+}
+
+
+
 
 /// @nodoc
 mixin _$EvidenceMediaState {

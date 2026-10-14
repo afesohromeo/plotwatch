@@ -82,8 +82,8 @@ and nothing can be changed afterwards.
 
 18
 00:01:36,000 --> 00:01:45,000
-Plotwatch also shows how much of the money sent
-has no receipt yet: here, thirty-three million francs.
+Plotwatch shows how much was released for the project,
+what has been spent and what is left.
 
 19
 00:01:45,000 --> 00:01:51,500

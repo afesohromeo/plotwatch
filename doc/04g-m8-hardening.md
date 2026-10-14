@@ -124,6 +124,16 @@
    - **Parallel loading:** pages wait for their calls one after another (the stage page has 4, so about 3 s). Independent calls now run together (`Future.wait`): stage, photo, Overview, stage plan, members and update pages.
    - **A display size for photos:** the large views fetched the original (about 1 MB, plus base64). A new `MediaVariant.display`: 1280 px, JPEG quality 80, made once by the server on the first request and stored next to the photo (`display.jpg`). Existing photos get it too. The original stays for verification. Server tests: made once and then reused, smaller than the original.
    - The distance to the servers is not something the app can change.
+   - **Measured on 2026-10-14:** every call took 11–16 s, a bare round trip 2.9 s, and one call returned 504. The server was **blocked**: the display size was made on first view by decoding and encoding the JPEG on the server's only isolate. Fixed:
+     - all image work runs on another isolate (`PhotoSizes`, `Isolate.run`);
+     - the display size is made at capture, together with the thumbnail;
+     - the app keeps one photo cache for the session, emptied at sign-out.
+10c. **Money tab, as the developer asked (2026-10-14):**
+   - The fourth figure is **Left**: released minus spent. "Spent without a receipt" (spent minus spent with a receipt) is a line under it. This replaces the "unaccounted" amount of LED-05, which mixed money not yet spent with money spent without proof. AC-5's example now reads: released 500,000, spent 350,000, with a receipt 300,000, left 150,000, 50,000 without a receipt. The server still computes `unaccountedMinor`.
+   - By stage: "X released · Y spent", and what is left on the right.
+   - Amounts stay on one line (`OneLineAmount`, shrunk to fit).
+   - On the web, the lists leave room for the Record a release button.
+   - **Bug:** the summary listed stages in the database's order, so the first stage could come last. `stagesByProject` now sorts by plan order. It is used by the summary and the project cards' stage bars.
 11. **Only if early:** hash chain (VER-05).
 
 Set aside, documented in the README as the roadmap: evidence requests, fund requests, comments, the inactivity reminder, photos on updates, proof files for releases, the public verification page, the offline queue, ownership transfer (so an owner can leave an open shared project; decided 2026-10-13).

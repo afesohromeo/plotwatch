@@ -265,6 +265,32 @@ void main() {
       expect(summary.total.spentMinor, 0);
     });
 
+    // The developer (2026-10-14): the money by stage put the first stage
+    // last, in the database's own order.
+    test('when the plan was reordered then the summary lists the stages in '
+        'plan order, not in the order they were created', () async {
+      final roof = await endpoints.stage.create(
+        owner,
+        projectId,
+        StageDraft(
+          name: 'Roof',
+          budgetMinor: 500000,
+          items: [ChecklistItemDraft(label: 'Shot', isRequired: true)],
+        ),
+      );
+      await endpoints.stage.reorder(owner, projectId, [
+        roof.stage.id!,
+        wallsId,
+      ]);
+
+      final summary = await endpoints.ledger.summary(owner, projectId);
+
+      expect([for (final line in summary.stages) line.stageName], [
+        'Roof',
+        'Walls',
+      ]);
+    });
+
     test('when the list is filtered then only that kind and stage come, '
         'page by page', () async {
       final a = await endpoints.ledger.recordRelease(

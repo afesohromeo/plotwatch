@@ -44,6 +44,12 @@ class Application extends StatelessWidget {
               return bloc;
             },
           ),
+          // Photos and thumbnails, kept for the session (doc/04g 10b).
+          BlocProvider(
+            create: (context) => EvidenceMediaBloc(
+              evidenceRepository: context.read<EvidenceRepository>(),
+            ),
+          ),
           // The bell's unread count, live while signed in (doc/04e M5-4).
           BlocProvider(
             create: (context) {
@@ -72,6 +78,9 @@ class Application extends StatelessWidget {
               case AuthenticationStatus.unauthenticated:
                 profileBloc.add(const ProfileEvent.reset());
                 notificationsBloc.add(const NotificationsEvent.stopped());
+                context.read<EvidenceMediaBloc>().add(
+                  const EvidenceMediaEvent.cleared(),
+                );
               case AuthenticationStatus.unknown:
                 break;
             }

@@ -2578,4 +2578,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorDeleteAccount => 'Could not delete the account. Try again.';
+
+  @override
+  String get moneyLeft => 'Left';
+
+  @override
+  String moneySpentNoReceipt(String amount) {
+    return '$amount spent without a receipt';
+  }
+
+  @override
+  String moneyStageReleasedSpent(String released, String spent) {
+    return '$released released · $spent spent';
+  }
+
+  @override
+  String moneyStageLeft(String amount) {
+    return '$amount left';
+  }
 }

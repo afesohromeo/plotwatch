@@ -51,7 +51,7 @@ cut them to the voice. The times are where each line starts.
 | 0:48 | **Scene 3: a partly verified photo** (Chrome) | When something doesn't match, Plotwatch says so. This photo is only partly verified: the phone couldn't tell its location precisely enough. |
 | 0:58 | **Scene 4: the review** (Chrome) | When the site manager submits a stage, Brice is notified at once. He approves it, or sends it back with a comment. |
 | 1:10 | **Scene 5: on site** (Android) | The site manager works from his phone. He follows each stage's checklist, takes the photos, posts news from the site, and confirms when the money for the work reaches him. |
-| 1:24 | **Scene 6: the money** (Chrome) | Every payment sent to the site, and every expense paid from it, is recorded with its receipt, and nothing can be changed afterwards. Plotwatch also shows how much of the money sent has no receipt yet: here, thirty-three million francs. |
+| 1:24 | **Scene 6: the money** (Chrome) | Every payment sent to the site, and every expense paid from it, is recorded with its receipt, and nothing can be changed afterwards. Plotwatch shows how much was released for the project, what has been spent and what is left. |
 | 1:45 | Card `03_built_with.png` | Plotwatch is built with Flutter and Serverpod: live streams, scheduled tasks, verified uploads and authentication, on Serverpod Cloud. Try it at plotwatch dot serverpod dot space. |
 | 1:58 | End | |
 
@@ -121,8 +121,9 @@ Signed in as Joseph, the site manager.
    tap it.**
 
 ### Scene 6: the money (Chrome, 1:24–1:45, 21 s)
-1. **Money** in the left menu: released 47.5 M, spent, with a receipt, and
-   the orange **unaccounted** card.
+1. **Money** in the left menu: the four cards, **released** 47.5 M,
+   **spent**, **with a receipt**, and **left** 26.85 M, with "spent without a
+   receipt" under it.
 2. Click the expense **Cement, 700 bags**: the entry and its **receipt
    photo**.
 3. Back › the **By stage** panel: the money per stage.

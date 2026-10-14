@@ -171,6 +171,10 @@ class StageService {
     final stages = await Stage.db.find(
       session,
       where: (t) => t.projectId.inSet(projectIds),
+      // In plan order: the database's own order changes as rows are
+      // updated (developer, 2026-10-14: the money by stage put the first
+      // stage last).
+      orderBy: (t) => t.orderIndex,
     );
     final byProject = <int, List<Stage>>{};
     for (final stage in stages) {

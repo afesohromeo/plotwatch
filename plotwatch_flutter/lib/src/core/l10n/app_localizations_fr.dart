@@ -2635,4 +2635,22 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get errorDeleteAccount =>
       'Impossible de supprimer le compte. Réessayez.';
+
+  @override
+  String get moneyLeft => 'Reste';
+
+  @override
+  String moneySpentNoReceipt(String amount) {
+    return '$amount dépensés sans reçu';
+  }
+
+  @override
+  String moneyStageReleasedSpent(String released, String spent) {
+    return '$released versés · $spent dépensés';
+  }
+
+  @override
+  String moneyStageLeft(String amount) {
+    return '$amount restants';
+  }
 }

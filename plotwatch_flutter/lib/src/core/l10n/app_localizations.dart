@@ -4456,6 +4456,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not delete the account. Try again.'**
   String get errorDeleteAccount;
+
+  /// Money tab, what is left (developer, 2026-10-14)
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get moneyLeft;
+
+  /// Money tab, what is left (developer, 2026-10-14)
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} spent without a receipt'**
+  String moneySpentNoReceipt(String amount);
+
+  /// Money tab, what is left (developer, 2026-10-14)
+  ///
+  /// In en, this message translates to:
+  /// **'{released} released · {spent} spent'**
+  String moneyStageReleasedSpent(String released, String spent);
+
+  /// Money tab, what is left (developer, 2026-10-14)
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} left'**
+  String moneyStageLeft(String amount);
 }
 
 class _AppLocalizationsDelegate

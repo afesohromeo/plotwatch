@@ -16,6 +16,7 @@ class MoneyPage extends StatefulWidget {
   static const recordButtonKey = Key('money.record');
   static const refreshButtonKey = Key('money.refresh');
   static const alertKey = Key('money.alert');
+  static const leftKey = Key('money.left');
 
   /// The phone's switch: Entries (`segment.0`) · By stage (`segment.1`).
   static Key panelKey(int index) => SegmentedSwitch.segmentKey(index);
@@ -283,9 +284,9 @@ class _MoneyPageState extends State<MoneyPage> {
             _Figures(summary: summary, code: code)
           else ...[
             _Hero(summary: summary, code: code),
-            if (summary.unaccountedAlert) ...[
+            if (summary.total.releasedMinor > 0) ...[
               const Gap.vertical(height: 12),
-              _Alert(summary: summary, code: code),
+              _Left(summary: summary, code: code),
             ],
           ],
         ];
@@ -325,6 +326,9 @@ class _MoneyPageState extends State<MoneyPage> {
                                 child: PagedListView<int, LedgerEntry>(
                                   pagingController: _pagingController,
                                   builderDelegate: delegate,
+                                  // Room for the record button below the
+                                  // last entry.
+                                  padding: const EdgeInsets.only(bottom: 88),
                                 ),
                               ),
                             ),
@@ -334,7 +338,10 @@ class _MoneyPageState extends State<MoneyPage> {
                       const Gap.horizontal(width: 20),
                       Expanded(
                         flex: 5,
-                        child: SingleChildScrollView(child: byStage),
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.only(bottom: 88),
+                          child: byStage,
+                        ),
                       ),
                     ],
                   ),
@@ -420,7 +427,7 @@ class _Hero extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(l10n.moneyReleased, style: soft),
-          Text(
+          OneLineAmount(
             formatMoney(total.releasedMinor, code),
             style: context.textTheme.headlineSmall?.copyWith(
               color: customColors.onPrimary,
@@ -474,9 +481,11 @@ class _Hero extends StatelessWidget {
   }
 }
 
-/// Unaccounted above 20 % of released, in terracotta (LED-05).
-class _Alert extends StatelessWidget {
-  const _Alert({required this.summary, required this.code});
+/// What is left of the money released (released minus spent), and what was
+/// spent without a receipt (developer, 2026-10-14; replaces the unaccounted
+/// alert of LED-05).
+class _Left extends StatelessWidget {
+  const _Left({required this.summary, required this.code});
 
   final LedgerSummary summary;
   final String code;
@@ -485,22 +494,21 @@ class _Alert extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final total = summary.total;
-    final percent = total.releasedMinor == 0
-        ? 0
-        : (total.unaccountedMinor * 100 / total.releasedMinor).round();
+    final left = total.releasedMinor - total.spentMinor;
+    final noReceipt = total.spentMinor - total.spentWithReceiptMinor;
     return Container(
-      key: MoneyPage.alertKey,
+      key: MoneyPage.leftKey,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: customColors.accentSoft,
+        color: customColors.primarySoft,
         borderRadius: BorderRadius.circular(PlotwatchTheme.cardRadius),
       ),
       child: Row(
         children: [
           IconTile(
-            icon: Icons.warning_amber_rounded,
+            icon: Icons.account_balance_wallet_outlined,
             size: 36,
-            color: customColors.accent,
+            color: customColors.primary,
             background: customColors.surfaceWhite,
           ),
           const Gap.horizontal(width: 12),
@@ -508,21 +516,23 @@ class _Alert extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  l10n.moneyUnaccountedAmount(
-                    formatMoney(total.unaccountedMinor, code),
-                  ),
-                  style: context.textTheme.titleSmall?.copyWith(
-                    color: customColors.accent,
-                    fontSize: 15,
-                  ),
-                ),
-                Text(
-                  l10n.moneyUnaccountedHint('$percent'),
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: customColors.ink,
+                Text(l10n.moneyLeft, style: context.textTheme.bodySmall),
+                OneLineAmount(
+                  formatMoney(left, code),
+                  style: context.textTheme.titleMedium?.copyWith(
+                    color: left < 0 ? customColors.accent : customColors.primary,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
+                if (noReceipt > 0)
+                  Text(
+                    l10n.moneySpentNoReceipt(formatMoney(noReceipt, code)),
+                    key: MoneyPage.alertKey,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: customColors.accent,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
               ],
             ),
           ),
@@ -532,8 +542,8 @@ class _Alert extends StatelessWidget {
   }
 }
 
-/// The web's four figure cards, the last one the unaccounted amount
-/// (canvas M-WebMoney).
+/// The web's four figure cards, the last one what is left (canvas
+/// M-WebMoney; developer, 2026-10-14).
 class _Figures extends StatelessWidget {
   const _Figures({required this.summary, required this.code});
 
@@ -544,11 +554,14 @@ class _Figures extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final total = summary.total;
-    final alert = summary.unaccountedAlert;
+    final left = total.releasedMinor - total.spentMinor;
+    final noReceipt = total.spentMinor - total.spentWithReceiptMinor;
     Widget card(
       String label,
       int amount, {
       String? hint,
+      Color? hintColor,
+      Key? hintKey,
       Color? background,
       Color? color,
       Key? key,
@@ -570,7 +583,7 @@ class _Figures extends StatelessWidget {
               label,
               style: context.textTheme.bodySmall?.copyWith(color: color),
             ),
-            Text(
+            OneLineAmount(
               formatMoney(amount, code),
               style: context.textTheme.headlineSmall?.copyWith(
                 color: color ?? customColors.ink,
@@ -580,15 +593,16 @@ class _Figures extends StatelessWidget {
             if (hint != null)
               Text(
                 hint,
-                style: context.textTheme.bodySmall?.copyWith(color: color),
+                key: hintKey,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: hintColor ?? color,
+                  fontWeight: hintColor != null ? FontWeight.w600 : null,
+                ),
               ),
           ],
         ),
       ),
     );
-    final percent = total.releasedMinor == 0
-        ? 0
-        : (total.unaccountedMinor * 100 / total.releasedMinor).round();
     return Row(
       children: [
         card(
@@ -610,12 +624,16 @@ class _Figures extends StatelessWidget {
         card(l10n.moneyWithReceipt, total.spentWithReceiptMinor),
         const Gap.horizontal(width: 16),
         card(
-          l10n.moneyUnaccounted,
-          total.unaccountedMinor,
-          key: alert ? MoneyPage.alertKey : null,
-          hint: alert ? l10n.moneyUnaccountedHint('$percent') : null,
-          background: alert ? customColors.accentSoft : null,
-          color: alert ? customColors.accent : null,
+          l10n.moneyLeft,
+          left,
+          key: MoneyPage.leftKey,
+          hint: noReceipt > 0
+              ? l10n.moneySpentNoReceipt(formatMoney(noReceipt, code))
+              : null,
+          hintColor: customColors.accent,
+          hintKey: MoneyPage.alertKey,
+          background: customColors.primarySoft,
+          color: left < 0 ? customColors.accent : customColors.primary,
         ),
       ],
     );
@@ -682,13 +700,13 @@ class _ByStage extends StatelessWidget {
                               ? l10n.moneyStageNothing(
                                   formatMoneyInput(lines[i].$2.budgetMinor, code),
                                 )
-                              : l10n.moneyStageLine(
+                              : l10n.moneyStageReleasedSpent(
                                   formatMoneyInput(
                                     lines[i].$2.releasedMinor,
                                     code,
                                   ),
                                   formatMoneyInput(
-                                    lines[i].$2.spentWithReceiptMinor,
+                                    lines[i].$2.spentMinor,
                                     code,
                                   ),
                                 ),
@@ -697,11 +715,19 @@ class _ByStage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (lines[i].$2.unaccountedMinor > 0)
+                  if (lines[i].$2.releasedMinor > 0)
                     Text(
-                      formatMoneyInput(lines[i].$2.unaccountedMinor, code),
+                      l10n.moneyStageLeft(
+                        formatMoneyInput(
+                          lines[i].$2.releasedMinor - lines[i].$2.spentMinor,
+                          code,
+                        ),
+                      ),
                       style: context.textTheme.titleSmall?.copyWith(
-                        color: customColors.accent,
+                        color:
+                            lines[i].$2.releasedMinor < lines[i].$2.spentMinor
+                            ? customColors.accent
+                            : customColors.primary,
                       ),
                     ),
                 ],

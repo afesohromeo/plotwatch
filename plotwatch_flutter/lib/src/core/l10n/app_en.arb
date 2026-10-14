@@ -1863,5 +1863,13 @@
     "errorAccountOwnsSharedProjects": "Complete or archive the projects you share with others first.",
     "@errorAccountOwnsSharedProjects": {"description":"Privacy and account deletion (doc/04g step 6)"},
     "errorDeleteAccount": "Could not delete the account. Try again.",
-    "@errorDeleteAccount": {"description":"Privacy and account deletion (doc/04g step 6)"}
+    "@errorDeleteAccount": {"description":"Privacy and account deletion (doc/04g step 6)"},
+    "moneyLeft": "Left",
+    "@moneyLeft": {"description":"Money tab, what is left (developer, 2026-10-14)"},
+    "moneySpentNoReceipt": "{amount} spent without a receipt",
+    "@moneySpentNoReceipt": {"description":"Money tab, what is left (developer, 2026-10-14)","placeholders":{"amount":{"type":"String"}}},
+    "moneyStageReleasedSpent": "{released} released · {spent} spent",
+    "@moneyStageReleasedSpent": {"description":"Money tab, what is left (developer, 2026-10-14)","placeholders":{"released":{"type":"String"},"spent":{"type":"String"}}},
+    "moneyStageLeft": "{amount} left",
+    "@moneyStageLeft": {"description":"Money tab, what is left (developer, 2026-10-14)","placeholders":{"amount":{"type":"String"}}}
 }

@@ -149,12 +149,6 @@ class RouteManager {
                   projectRepository: context.read<ProjectRepository>(),
                 ),
               ),
-              // The cards' covers (doc/05 §9).
-              BlocProvider(
-                create: (context) => EvidenceMediaBloc(
-                  evidenceRepository: context.read<EvidenceRepository>(),
-                ),
-              ),
             ],
             child: const ProjectListPage(),
           ),
@@ -194,16 +188,10 @@ class RouteManager {
                             projectId: projectId,
                           ),
                         ),
-                    // Thumbnails of the project's photos (doc/05 §9).
-                    child: BlocProvider(
-                      create: (context) => EvidenceMediaBloc(
-                        evidenceRepository: context.read<EvidenceRepository>(),
-                      ),
-                      child: ProjectShell(
-                        projectId: projectId,
-                        location: state.uri.toString(),
-                        child: child,
-                      ),
+                    child: ProjectShell(
+                      projectId: projectId,
+                      location: state.uri.toString(),
+                      child: child,
                     ),
                   ),
                 ),
@@ -543,12 +531,6 @@ class RouteManager {
                       evidenceRepository: context.read<EvidenceRepository>(),
                     ),
                   ),
-                  // The thumbnails of the stage's photos (doc/04d M4-4).
-                  BlocProvider(
-                    create: (context) => EvidenceMediaBloc(
-                      evidenceRepository: context.read<EvidenceRepository>(),
-                    ),
-                  ),
                 ],
                 child: StagePage(
                   projectId: _projectId(state)!,
@@ -609,12 +591,6 @@ class RouteManager {
                           projectRepository: context.read<ProjectRepository>(),
                           authRepository: context.read<AuthRepository>(),
                           stageRepository: context.read<StageRepository>(),
-                        ),
-                      ),
-                      BlocProvider(
-                        create: (context) => EvidenceMediaBloc(
-                          evidenceRepository: context
-                              .read<EvidenceRepository>(),
                         ),
                       ),
                     ],

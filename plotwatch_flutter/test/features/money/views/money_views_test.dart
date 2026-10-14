@@ -96,32 +96,47 @@ void main() {
       verify(() => bloc.add(const MoneyEvent.load(projectId: 1))).called(1);
     });
 
-    testWidgets('then AC-5 reads: released, spent, with a receipt, and the '
-        'unaccounted alert', (tester) async {
+    // The developer (2026-10-14): what is left of the money released, and
+    // what was spent without a receipt, instead of the unaccounted amount.
+    testWidgets('then AC-5 reads: released, spent, with a receipt, what is '
+        'left, and what was spent without a receipt', (tester) async {
       inProject();
       await pumpMoney(tester);
 
       expect(find.text(formatMoney(500000, 'XAF')), findsOneWidget);
       expect(find.text(formatMoneyInput(350000, 'XAF')), findsOneWidget);
       expect(find.text(formatMoneyInput(300000, 'XAF')), findsOneWidget);
-      expect(find.byKey(MoneyPage.alertKey), findsOneWidget);
+      expect(find.byKey(MoneyPage.leftKey), findsOneWidget);
+      expect(find.text(formatMoney(150000, 'XAF')), findsOneWidget);
       expect(
-        find.text(l10n.moneyUnaccountedAmount(formatMoney(200000, 'XAF'))),
+        find.text(l10n.moneySpentNoReceipt(formatMoney(50000, 'XAF'))),
         findsOneWidget,
       );
     });
 
-    testWidgets('then without much unaccounted there is no alert', (
+    testWidgets('then when every expense has a receipt, no warning shows', (
       tester,
     ) async {
       inProject();
-      await pumpMoney(tester, summary: testLedgerSummary(alert: false));
+      await pumpMoney(
+        tester,
+        summary: LedgerSummary(
+          total: testLedgerLine(withReceipt: 350000),
+          stages: const [],
+          unaccountedAlert: false,
+        ),
+      );
 
+      expect(find.byKey(MoneyPage.leftKey), findsOneWidget);
       expect(find.byKey(MoneyPage.alertKey), findsNothing);
     });
 
     testWidgets('then the entries show with their tags', (tester) async {
       inProject();
+      // The Left card sits above the list (2026-10-14): room for all three.
+      tester.view.physicalSize = const Size(800, 1400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
       await pumpMoney(
         tester,
         entries: [testExpense(), testRelease(), testExpense(id: 3, receipt: false)],

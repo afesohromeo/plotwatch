@@ -10,11 +10,14 @@ part 'evidence_media_state.dart';
 part 'evidence_media_bloc.freezed.dart';
 
 /// Loads capture photos and thumbnails through the server and keeps them
-/// while the page is open (doc/04d M4-4). One per page that shows photos.
+/// for the session (doc/04d M4-4): one for the whole app, so a photo seen
+/// on one page shows at once on the next (doc/04g step 10b). Emptied at
+/// sign-out.
 class EvidenceMediaBloc extends Bloc<EvidenceMediaEvent, EvidenceMediaState> {
   EvidenceMediaBloc({required this._evidenceRepository})
     : super(const EvidenceMediaState()) {
     on<_Requested>(_onRequested);
+    on<_Cleared>((event, emit) => emit(const EvidenceMediaState()));
   }
 
   final EvidenceRepository _evidenceRepository;
