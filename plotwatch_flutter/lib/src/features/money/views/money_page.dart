@@ -603,7 +603,10 @@ class _Figures extends StatelessWidget {
         ),
       ),
     );
-    return Row(
+    // The four cards at the same height, whatever their second line.
+    return IntrinsicHeight(
+      child: Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         card(
           l10n.moneyReleased,
@@ -636,6 +639,7 @@ class _Figures extends StatelessWidget {
           color: left < 0 ? customColors.accent : customColors.primary,
         ),
       ],
+    ),
     );
   }
 }
