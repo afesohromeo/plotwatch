@@ -2,6 +2,8 @@
 // colours, font and logo. Run with
 //   flutter test --update-goldens tool/screenshots/video_cards_test.dart
 // and they are written to doc/video/.
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -62,11 +64,32 @@ void main() {
         _Line('plotwatch.serverpod.space', size: 56, accent: true),
       ],
     ),
-    // The last frames: the logo alone (developer, 2026-10-14).
+    // The last frames, as the app's splash screen: the white logo on the
+    // teal, with the name under it (developer, 2026-10-14).
     '04_logo': ColoredBox(
-      color: customColors.ground,
+      color: customColors.primary,
       child: Center(
-        child: SvgPicture.asset(brandMarkAsset, width: 420, height: 420),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Not bundled (an input of the splash generator): read as a file.
+            SvgPicture.string(
+              File('assets/brand/splash_mark.svg').readAsStringSync(),
+              width: 360,
+              height: 360,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Plotwatch',
+              style: TextStyle(
+                fontFamily: 'Manrope',
+                fontSize: 96,
+                fontWeight: FontWeight.w800,
+                color: customColors.onPrimary,
+              ),
+            ),
+          ],
+        ),
       ),
     ),
   };

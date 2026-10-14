@@ -10,7 +10,7 @@ Nothing is changed during the recording: you look and tap, but never
 approve, confirm or post, so the judges find the same demo afterwards.
 
 Ready-made files in [`video/`](video/):
-- `01_problem.png`, `02_title.png`, `03_built_with.png`, `04_logo.png` (the logo alone, for the end): the cards, 1920×1080;
+- `01_problem.png`, `02_title.png`, `03_built_with.png`, `04_logo.png` (the end: the splash screen's white logo on teal, with the name): the cards, 1920×1080;
 - `plotwatch-demo.srt`: the subtitles, timed to the script below.
 
 ---
