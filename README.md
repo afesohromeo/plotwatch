@@ -107,6 +107,15 @@ French) explains what is collected and how to delete an account. Source:
 - **Demo people:** fictional.
 - **Details:** [`plotwatch_server/web/seed/CREDITS.md`](plotwatch_server/web/seed/CREDITS.md).
 
+## AI tools used
+As the hackathon rules ask, the AI tools used to build Plotwatch:
+- **Claude Code** (Anthropic): writing code, tests and documentation with
+  the developer, who decided the product, the design and every change, and
+  reviewed and tested the app.
+- **Google Gemini:** the demo project's site photos (the prompts are in
+  [`plotwatch_server/web/seed/PROMPTS.md`](plotwatch_server/web/seed/PROMPTS.md)),
+  and the demo video's voice-over.
+
 ## Licence
 Copyright © 2026 Afesoh Romeo. All rights reserved. No licence is granted to
 copy, modify or distribute this code, except the licence granted to Serverpod
