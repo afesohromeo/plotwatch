@@ -145,3 +145,21 @@ Signed in as Joseph, the site manager.
 - **YouTube:** title "Plotwatch: oversee your construction project from
   anywhere". Set it to **Public** (Unlisted only if the rules accept it). In
   the description, the live URL and the repository.
+
+## YouTube
+- **Thumbnail:** `video/thumbnail.png` (1280×720, under 2 MB), rendered with
+  `plotwatch_flutter/tool/screenshots/video_thumbnail_test.dart`. Choose
+  **Upload file**.
+- **Description** (no demo password: the video is public; the judges get it
+  from the BuilderBase description):
+
+  ```
+  Plotwatch lets you oversee a construction project from anywhere, stage by stage: verified site photos, stage approvals and a shared ledger of every payment and expense.
+
+  Built with Flutter and Serverpod for "Build Something Real: The Serverpod Hackathon" (2026).
+
+  Try it: https://plotwatch.serverpod.space
+  Code: https://github.com/afesohromeo/plotwatch
+
+  Demo photos and voice generated with Google Gemini. The demo people and shops are fictional.
+  ```
