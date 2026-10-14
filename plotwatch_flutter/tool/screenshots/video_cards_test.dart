@@ -62,6 +62,13 @@ void main() {
         _Line('plotwatch.serverpod.space', size: 56, accent: true),
       ],
     ),
+    // The last frames: the logo alone (developer, 2026-10-14).
+    '04_logo': ColoredBox(
+      color: customColors.ground,
+      child: Center(
+        child: SvgPicture.asset(brandMarkAsset, width: 420, height: 420),
+      ),
+    ),
   };
 
   for (final MapEntry(key: name, value: card) in cards.entries) {

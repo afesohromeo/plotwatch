@@ -10,7 +10,7 @@ Nothing is changed during the recording: you look and tap, but never
 approve, confirm or post, so the judges find the same demo afterwards.
 
 Ready-made files in [`video/`](video/):
-- `01_problem.png`, `02_title.png`, `03_built_with.png`: the cards, 1920×1080;
+- `01_problem.png`, `02_title.png`, `03_built_with.png`, `04_logo.png` (the logo alone, for the end): the cards, 1920×1080;
 - `plotwatch-demo.srt`: the subtitles, timed to the script below.
 
 ---
@@ -53,7 +53,8 @@ cut them to the voice. The times are where each line starts.
 | 1:10 | **Scene 5: on site** (Android) | The site manager works from his phone. He follows each stage's checklist, takes the photos, posts news from the site, and confirms when the money for the work reaches him. |
 | 1:24 | **Scene 6: the money** (Chrome) | Every payment sent to the site, and every expense paid from it, is recorded with its receipt, and nothing can be changed afterwards. Plotwatch shows how much was released for the project, what has been spent and what is left. |
 | 1:45 | Card `03_built_with.png` | Plotwatch is built with Flutter and Serverpod: live streams, scheduled tasks, verified uploads and authentication, on Serverpod Cloud. Try it at plotwatch dot serverpod dot space. |
-| 1:58 | End | |
+| 1:57 | Card `04_logo.png`, no voice, for 2 seconds | |
+| 1:59 | End: **under 2:00** | |
 
 ### A generated voice instead of your own (optional)
 **Google AI Studio's text-to-speech** (Gemini):
@@ -133,7 +134,7 @@ Signed in as Joseph, the site manager.
   1920×1080.
 - **Order:**
   1. the voice-over track first;
-  2. the cards at 0:00, 0:12 and 1:45;
+  2. the cards at 0:00, 0:12 and 1:45, and `04_logo.png` from 1:57 to 1:59, as the last frames;
   3. the scenes, cut to the voice.
 - **Phone scene:** put the phone recording in the middle, on the green
   background of `02_title.png` or a plain colour, scaled to the height.
