@@ -1,7 +1,7 @@
 # Submission text (BuilderBase)
 
-The project description as submitted, for the record. The demo password is
-not repeated here: it is in the submission form only.
+The project description as submitted, for the record. Submitted as plain text (the form doesn't take Markdown), with the demo
+password, which is not repeated here.
 
 ---
 
@@ -59,6 +59,13 @@ and **Serverpod 4** on **Serverpod Cloud**:
 - Or create your own account and project. A photo is only verified on the
   site's plot, so captures from elsewhere come out Unverified, by design.
 - Privacy policy: https://plotwatch.serverpod.space/privacy
+
+**Android app.** Build the release APK from the repository, pointing at the live server:
+```
+cd plotwatch_flutter
+flutter build apk --release --dart-define=SERVER_URL=https://plotwatch.api.serverpod.space/
+```
+The APK is in `plotwatch_flutter/build/app/outputs/flutter-apk/app-release.apk`. The map (a Google Maps key in `android/secrets.properties`) and Google sign-in (tied to the developer's signing key) need the developer's own keys; email sign-in and everything else work.
 
 **Build and run.** See the README: `serverpod start` in `plotwatch_server`
 runs the server, the database and the app; `dart test` and `flutter test`
