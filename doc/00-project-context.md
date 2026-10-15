@@ -232,6 +232,17 @@ See [03-mvp-scope.md §7](03-mvp-scope.md#7-decisions-to-confirm-before-implemen
   - the README for judges, and the developer's checklist [`06`](06-developer-checklist.md).
 - **Next:** the developer works through `06` (Cloud passwords, Google app publishing, builds, the manual acceptance criteria); then both full suites and the merge of `dev` into `main`, with approval.
 
+**Status (2026-10-15): submitted.**
+- Submitted on BuilderBase on 14 Oct 2026 with the demo video (YouTube), the repository and the description in [`08-submission.md`](08-submission.md). `dev` was merged into `main` (fast-forward) with approval.
+- Delivered after step 9:
+  - the demo seed as a future call;
+  - the photo work moved off the server's isolate (calls went from 11–16 s to 0.5–1 s);
+  - a 1280 px display size for photos, and one photo cache for the session;
+  - the Money tab showing "Left";
+  - the video materials (`07`, `video/`).
+- **Judging runs 15–20 Oct:** keep Cloud running; code freeze except for fixes a judge could hit.
+- The feedback log has 20 findings ([`serverpod-feedback.md`](serverpod-feedback.md)). The Most Valuable Feedback form was due with the submission.
+
 **Next steps:**
 1. The user reviews `01`, `02`, `03` and requests changes. Iterate until approved.
 2. Confirm the pending decisions (`03-mvp-scope.md §7`).
