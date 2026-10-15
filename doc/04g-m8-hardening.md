@@ -128,6 +128,14 @@
      - all image work runs on another isolate (`PhotoSizes`, `Isolate.run`);
      - the display size is made at capture, together with the thumbnail;
      - the app keeps one photo cache for the session, emptied at sign-out.
+10d. **An expired session signs out (approved 2026-10-15, deployed during judging; `main` stays as submitted).**
+   - **The bug:** on the web, when the session expired, calls failed with "unauthorized" but the app stayed on its page.
+   - **Why:** the auth module only signs out when it validates the session at start-up.
+   - **The fix:** `ApiErrorHandler.handle` calls `onSessionExpired` for an unauthorized **call**, which comes after the client's own refresh and retry. `ApiProvider` sets it to clear the session locally, once, and the router goes to the welcome page.
+   - **Not wired:**
+     - the client's `onFailedCall`, which fires before the refresh and would sign out on a normal token expiry;
+     - stream errors, since a refused stream may only need a token refresh.
+   - Tests in `api_error_handler_test.dart`.
 10c. **Money tab, as the developer asked (2026-10-14):**
    - The fourth figure is **Left**: released minus spent. "Spent without a receipt" (spent minus spent with a receipt) is a line under it. This replaces the "unaccounted" amount of LED-05, which mixed money not yet spent with money spent without proof. AC-5's example now reads: released 500,000, spent 350,000, with a receipt 300,000, left 150,000, 50,000 without a receipt. The server still computes `unaccountedMinor`.
    - By stage: "X released · Y spent", and what is left on the right.

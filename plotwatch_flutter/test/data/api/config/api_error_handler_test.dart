@@ -179,4 +179,42 @@ void main() {
       },
     );
   });
+
+  // The developer (2026-10-15): when the session expired, the web app stayed
+  // on its page. A call still unauthorized after the client's own refresh
+  // means the session is gone.
+  group('Given a session that expired on the server', () {
+    var expired = 0;
+    setUp(() {
+      expired = 0;
+      ApiErrorHandler.onSessionExpired = () => expired++;
+    });
+    tearDown(() => ApiErrorHandler.onSessionExpired = null);
+
+    test('when a call is unauthorized then the session is cleared', () {
+      final result = ApiErrorHandler.handle(ServerpodClientUnauthorized());
+
+      expect(result, isA<HttpException401>());
+      expect(expired, 1);
+    });
+
+    test('when a live stream is refused then nothing is cleared (its token '
+        'may just need a refresh)', () async {
+      final errors = <Object>[];
+      await Stream<int>.error(ServerpodClientUnauthorized())
+          .transform(ApiErrorHandler.streamErrors<int>())
+          .handleError(errors.add)
+          .drain<void>();
+
+      expect(errors.single, isA<HttpException401>());
+      expect(expired, 0);
+    });
+
+    test('when a call fails for another reason then nothing is cleared', () {
+      ApiErrorHandler.handle(ServerpodClientForbidden());
+      ApiErrorHandler.handle(AppException(code: AppErrorCode.permissionDenied));
+
+      expect(expired, 0);
+    });
+  });
 }

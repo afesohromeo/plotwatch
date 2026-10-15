@@ -9,14 +9,28 @@ import 'package:plotwatch_flutter/plotwatch_flutter.dart';
 class ApiErrorHandler {
   ApiErrorHandler._();
 
-  /// The same conversion for a live stream's errors (doc/04e M5-6).
+  /// Called when a call is still unauthorized after the client's own token
+  /// refresh: the session expired on the server. `ApiProvider` sets it to
+  /// clear the session here, so the router goes to the welcome page
+  /// (developer, 2026-10-15: the web app stayed on its page).
+  static void Function()? onSessionExpired;
+
+  /// The same conversion for a live stream's errors (doc/04e M5-6). A
+  /// refused stream never clears the session: its access token may only need
+  /// the refresh the next call makes.
   static StreamTransformer<T, T> streamErrors<T>() =>
       StreamTransformer<T, T>.fromHandlers(
         handleError: (error, stackTrace, sink) =>
-            sink.addError(handle(error), stackTrace),
+            sink.addError(_convert(error), stackTrace),
       );
 
+  /// A failed call's error, converted.
   static Exception handle(Object e) {
+    if (e is ServerpodClientUnauthorized) onSessionExpired?.call();
+    return _convert(e);
+  }
+
+  static Exception _convert(Object e) {
     if (e is AppException) return HttpException400(code: e.code);
 
     final authCode = _authErrorCode(e);

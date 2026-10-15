@@ -51,6 +51,21 @@ class ApiProvider {
     // server in the background (2 s timeout, never throws).
     await client.auth.restore();
     unawaited(client.auth.initialize());
+
+    // A call still unauthorized after the client's own refresh: the session
+    // expired on the server. Forget it here; the router goes to the welcome
+    // page (developer, 2026-10-15). Once, even when several calls fail
+    // together.
+    var clearing = false;
+    ApiErrorHandler.onSessionExpired = () {
+      if (clearing || !client.auth.isAuthenticated) return;
+      clearing = true;
+      unawaited(
+        client.auth.updateSignedInUser(null).whenComplete(() {
+          clearing = false;
+        }),
+      );
+    };
     await _initializeGoogleSignIn(client);
   }
 
