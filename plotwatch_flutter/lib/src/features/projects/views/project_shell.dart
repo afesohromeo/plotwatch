@@ -156,15 +156,21 @@ class ProjectShell extends StatelessWidget {
               // The logo on top, then the way back (developer, 2026-10-10).
               leading: Column(
                 children: [
-                  SvgPicture.asset(
-                    brandMarkAsset,
+                  // The logo leads back to the project list too
+                  // (developer, 2026-10-17).
+                  IconButton(
                     key: logoKey,
-                    width: 36,
-                    height: 36,
-                    semanticsLabel: l10n.logoLabel,
-                    colorFilter: ColorFilter.mode(
-                      customColors.primary,
-                      BlendMode.srcIn,
+                    tooltip: l10n.allProjects,
+                    onPressed: () => context.goNamed(homeRouteName),
+                    icon: SvgPicture.asset(
+                      brandMarkAsset,
+                      width: 36,
+                      height: 36,
+                      semanticsLabel: l10n.logoLabel,
+                      colorFilter: ColorFilter.mode(
+                        customColors.primary,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                   const Gap.vertical(height: AppSpacing.sm),
@@ -228,13 +234,22 @@ class _Sidebar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // The logo and the name lead back to the project list (developer,
+          // 2026-10-17).
           Padding(
-            padding: const EdgeInsets.fromLTRB(8, 4, 8, 16),
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Tooltip(
+              message: l10n.allProjects,
+              child: InkWell(
+                key: ProjectShell.logoKey,
+                borderRadius: BorderRadius.circular(12),
+                onTap: () => context.goNamed(homeRouteName),
+                child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
             child: Row(
               children: [
                 SvgPicture.asset(
                   brandMarkAsset,
-                  key: ProjectShell.logoKey,
                   width: 32,
                   height: 32,
                   semanticsLabel: l10n.logoLabel,
@@ -256,6 +271,9 @@ class _Sidebar extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+              ),
             ),
           ),
           if (overview != null)

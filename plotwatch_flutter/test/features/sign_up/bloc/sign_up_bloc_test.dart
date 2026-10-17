@@ -82,6 +82,32 @@ void main() {
       ],
     );
 
+    // The developer (2026-10-17): no code page for an email that already
+    // has an account.
+    blocTest<SignUpBloc, SignUpState>(
+      'when the email already has an account then it says so, and stays on '
+      'the details step',
+      setUp: () => when(
+        () => authRepository.startRegistration(email: any(named: 'email')),
+      ).thenThrow(
+        const HttpException400(code: AppErrorCode.emailAlreadyRegistered),
+      ),
+      build: build,
+      act: (bloc) => bloc.add(
+        const SignUpEvent.detailsSubmitted(
+          fullName: 'Ada Lovelace',
+          email: 'ada@example.com',
+        ),
+      ),
+      skip: 1,
+      expect: () => [
+        SignUpState(
+          signUpStatus: GenericStatus.failure,
+          signUpErrorMessage: l10n.errorEmailAlreadyRegistered,
+        ),
+      ],
+    );
+
     // doc/04g, AUTH-04b: one account per email.
     blocTest<SignUpBloc, SignUpState>(
       'when the email is used with Google then it says to continue with '

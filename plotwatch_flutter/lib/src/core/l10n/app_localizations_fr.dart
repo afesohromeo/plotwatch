@@ -2592,7 +2592,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get signUpNoCodeHint =>
-      'Pas de code ? Si vous avez déjà un compte avec cette adresse, connectez-vous ou réinitialisez votre mot de passe.';
+      'Pas de code ? Vérifiez vos courriers indésirables, ou renvoyez un code.';
 
   @override
   String labelColon(String label) {
@@ -2653,4 +2653,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String moneyStageLeft(String amount) {
     return '$amount restants';
   }
+
+  @override
+  String get errorEmailAlreadyRegistered =>
+      'Un compte utilise déjà cette adresse. Connectez-vous, ou réinitialisez votre mot de passe si vous l\'avez oublié.';
 }

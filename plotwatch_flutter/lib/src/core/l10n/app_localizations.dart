@@ -4388,7 +4388,7 @@ abstract class AppLocalizations {
   /// One account per email (doc/04g, AUTH-04b)
   ///
   /// In en, this message translates to:
-  /// **'No code? If you already have an account with this email, sign in or reset your password.'**
+  /// **'No code? Check your spam folder, or send a new code.'**
   String get signUpNoCodeHint;
 
   /// A label before its value; French puts a space before the colon (doc/04g step 5)
@@ -4480,6 +4480,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{amount} left'**
   String moneyStageLeft(String amount);
+
+  /// Sign-up with an email that already has an account (2026-10-17)
+  ///
+  /// In en, this message translates to:
+  /// **'An account already uses this email. Sign in, or reset your password if you forgot it.'**
+  String get errorEmailAlreadyRegistered;
 }
 
 class _AppLocalizationsDelegate

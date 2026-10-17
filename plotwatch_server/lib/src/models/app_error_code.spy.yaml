@@ -78,6 +78,8 @@ values:
   - notEntryAuthor
   # One account per email (doc/04g, AUTH-04b)
   - emailUsesGoogle
+  # Sign-up with an email that already has an account (2026-10-17)
+  - emailAlreadyRegistered
   # Account deletion (doc/04g step 6)
   - accountOwnsSharedProjects
   # Free text longer than its limit

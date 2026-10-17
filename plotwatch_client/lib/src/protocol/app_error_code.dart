@@ -79,6 +79,7 @@ enum AppErrorCode implements _isc.SerializableModel {
   alreadyConfirmed,
   notEntryAuthor,
   emailUsesGoogle,
+  emailAlreadyRegistered,
   accountOwnsSharedProjects,
   textTooLong,
   authInvalidCredentials,
@@ -211,6 +212,8 @@ enum AppErrorCode implements _isc.SerializableModel {
         return AppErrorCode.notEntryAuthor;
       case 'emailUsesGoogle':
         return AppErrorCode.emailUsesGoogle;
+      case 'emailAlreadyRegistered':
+        return AppErrorCode.emailAlreadyRegistered;
       case 'accountOwnsSharedProjects':
         return AppErrorCode.accountOwnsSharedProjects;
       case 'textTooLong':

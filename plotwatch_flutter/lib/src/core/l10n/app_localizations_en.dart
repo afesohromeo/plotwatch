@@ -2536,7 +2536,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signUpNoCodeHint =>
-      'No code? If you already have an account with this email, sign in or reset your password.';
+      'No code? Check your spam folder, or send a new code.';
 
   @override
   String labelColon(String label) {
@@ -2596,4 +2596,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String moneyStageLeft(String amount) {
     return '$amount left';
   }
+
+  @override
+  String get errorEmailAlreadyRegistered =>
+      'An account already uses this email. Sign in, or reset your password if you forgot it.';
 }

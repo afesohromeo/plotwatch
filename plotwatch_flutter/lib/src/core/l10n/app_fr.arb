@@ -711,7 +711,7 @@
     "orDivider": "ou",
     "errorGoogleSignIn": "Connexion avec Google impossible. Réessayez.",
     "errorEmailUsesGoogle": "Cette adresse est utilisée avec Google. Utilisez Continuer avec Google.",
-    "signUpNoCodeHint": "Pas de code ? Si vous avez déjà un compte avec cette adresse, connectez-vous ou réinitialisez votre mot de passe.",
+    "signUpNoCodeHint": "Pas de code ? Vérifiez vos courriers indésirables, ou renvoyez un code.",
     "labelColon": "{label} :",
     "privacyPolicy": "Politique de confidentialité",
     "deleteAccount": "Supprimer le compte",
@@ -726,5 +726,6 @@
     "moneyLeft": "Reste",
     "moneySpentNoReceipt": "{amount} dépensés sans reçu",
     "moneyStageReleasedSpent": "{released} versés · {spent} dépensés",
-    "moneyStageLeft": "{amount} restants"
+    "moneyStageLeft": "{amount} restants",
+    "errorEmailAlreadyRegistered": "Un compte utilise déjà cette adresse. Connectez-vous, ou réinitialisez votre mot de passe si vous l'avez oublié."
 }

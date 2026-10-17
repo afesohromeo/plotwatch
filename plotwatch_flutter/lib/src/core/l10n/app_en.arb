@@ -1840,7 +1840,7 @@
     "@errorGoogleSignIn": {"description":"Google sign-in (doc/04g step 4)"},
     "errorEmailUsesGoogle": "This email is used with Google. Use Continue with Google.",
     "@errorEmailUsesGoogle": {"description":"One account per email (doc/04g, AUTH-04b)"},
-    "signUpNoCodeHint": "No code? If you already have an account with this email, sign in or reset your password.",
+    "signUpNoCodeHint": "No code? Check your spam folder, or send a new code.",
     "@signUpNoCodeHint": {"description":"One account per email (doc/04g, AUTH-04b)"},
     "labelColon": "{label}:",
     "@labelColon": {"description":"A label before its value; French puts a space before the colon (doc/04g step 5)","placeholders":{"label":{"type":"String"}}},
@@ -1871,5 +1871,7 @@
     "moneyStageReleasedSpent": "{released} released · {spent} spent",
     "@moneyStageReleasedSpent": {"description":"Money tab, what is left (developer, 2026-10-14)","placeholders":{"released":{"type":"String"},"spent":{"type":"String"}}},
     "moneyStageLeft": "{amount} left",
-    "@moneyStageLeft": {"description":"Money tab, what is left (developer, 2026-10-14)","placeholders":{"amount":{"type":"String"}}}
+    "@moneyStageLeft": {"description":"Money tab, what is left (developer, 2026-10-14)","placeholders":{"amount":{"type":"String"}}},
+    "errorEmailAlreadyRegistered": "An account already uses this email. Sign in, or reset your password if you forgot it.",
+    "@errorEmailAlreadyRegistered": {"description":"Sign-up with an email that already has an account (2026-10-17)"}
 }

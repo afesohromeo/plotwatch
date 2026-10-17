@@ -51,6 +51,17 @@ class AccountLinkService {
     return password == null;
   }
 
+  /// Whether an email/password account already uses [email]: sign-up is
+  /// then refused with that reason instead of a code that never comes
+  /// (developer, 2026-10-17; this reveals that the email is registered,
+  /// which the developer accepted).
+  Future<bool> isRegisteredEmail(Session session, String email) async =>
+      await EmailAccount.db.findFirstRow(
+        session,
+        where: (t) => t.email.equals(_normalized(email)),
+      ) !=
+      null;
+
   /// As both providers store emails.
   static String _normalized(String email) => email.trim().toLowerCase();
 }

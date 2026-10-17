@@ -37,7 +37,11 @@ class _MoneyCardState extends State<MoneyCard> {
       builder: (context, state) {
         final total = state.summary?.total;
         if (total == null) return const SizedBox.shrink();
-        final alert = state.summary!.unaccountedAlert;
+        // As the Money tab (developer, 2026-10-14): what is left of the
+        // money released, and what was spent without a receipt.
+        final left = total.releasedMinor - total.spentMinor;
+        final noReceipt = total.spentMinor - total.spentWithReceiptMinor;
+        final alert = noReceipt > 0;
         return AppCard(
           key: MoneyCard.cardKey,
           onTap: () => context.goNamed(
@@ -65,17 +69,17 @@ class _MoneyCardState extends State<MoneyCard> {
                       style: context.textTheme.titleSmall,
                     ),
                     Text(
-                      alert
-                          ? l10n.moneyUnaccountedAmount(
-                              formatMoney(total.unaccountedMinor, code),
-                            )
-                          : '${l10n.labelColon(l10n.moneyWithReceipt)} '
-                                '${formatMoney(total.spentWithReceiptMinor, code)}',
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: alert ? customColors.accent : null,
-                        fontWeight: alert ? FontWeight.w700 : null,
-                      ),
+                      l10n.moneyStageLeft(formatMoney(left, code)),
+                      style: context.textTheme.bodySmall,
                     ),
+                    if (alert)
+                      Text(
+                        l10n.moneySpentNoReceipt(formatMoney(noReceipt, code)),
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: customColors.accent,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                   ],
                 ),
               ),

@@ -228,6 +228,22 @@ void main() {
 
       expect(find.text('the projects'), findsOneWidget);
     });
+
+    // The developer (2026-10-17): the logo leads back to the project list.
+    for (final (name, size) in [
+      ('the web sidebar', const Size(1280, 800)),
+      ('the tablet rail', const Size(900, 1100)),
+    ]) {
+      testWidgets('on $name when the logo is tapped then the project list '
+          'opens', (tester) async {
+        await pumpAt(tester, size, '/projects/1');
+
+        await tester.tap(find.byKey(ProjectShell.logoKey));
+        await tester.pumpAndSettle();
+
+        expect(find.text('the projects'), findsOneWidget);
+      });
+    }
   });
 
   group('Given any page (DP-6)', () {

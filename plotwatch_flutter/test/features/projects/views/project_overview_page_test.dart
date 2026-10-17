@@ -72,6 +72,26 @@ void main() {
     ).called(1);
   });
 
+  // The developer (2026-10-17): the card said "unaccounted" while the Money
+  // tab says what is left.
+  testWidgets('Given the money so far then the card shows what was released, '
+      'what is left and what was spent without a receipt', (tester) async {
+    when(() => moneyBloc.state).thenReturn(
+      MoneyState(projectId: 1, summary: testLedgerSummary()),
+    );
+    await pumpWith(tester, loaded(testOverview()));
+    final l10n = setUpTestLocalization();
+
+    expect(
+      find.text(l10n.moneyStageLeft(formatMoney(150000, 'XAF'))),
+      findsOneWidget,
+    );
+    expect(
+      find.text(l10n.moneySpentNoReceipt(formatMoney(50000, 'XAF'))),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('Given a loaded project when refresh is tapped then it reloads', (
     tester,
   ) async {

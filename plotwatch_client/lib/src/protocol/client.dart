@@ -156,7 +156,8 @@ class EndpointEmailIdp extends _iaic.EndpointEmailIdpBase {
   String get name => 'emailIdp';
 
   /// One account per email (AUTH-04b, doc/04g): an email that only a Google
-  /// user has is refused, with "use Continue with Google".
+  /// user has is refused, with "use Continue with Google"; one that already
+  /// has an account, with "sign in" (2026-10-17).
   @override
   _ida.Future<_isc.UuidValue> startRegistration({required String email}) =>
       caller.callServerEndpoint<_isc.UuidValue>(

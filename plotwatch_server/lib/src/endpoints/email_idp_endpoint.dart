@@ -13,7 +13,8 @@ class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
   static const _links = AccountLinkService();
 
   /// One account per email (AUTH-04b, doc/04g): an email that only a Google
-  /// user has is refused, with "use Continue with Google".
+  /// user has is refused, with "use Continue with Google"; one that already
+  /// has an account, with "sign in" (2026-10-17).
   @override
   Future<UuidValue> startRegistration(
     Session session, {
@@ -21,6 +22,9 @@ class EmailIdpEndpoint extends EmailIdpBaseEndpoint {
   }) async {
     if (await _links.isGoogleOnlyEmail(session, email)) {
       throw AppException(code: AppErrorCode.emailUsesGoogle);
+    }
+    if (await _links.isRegisteredEmail(session, email)) {
+      throw AppException(code: AppErrorCode.emailAlreadyRegistered);
     }
     return super.startRegistration(session, email: email);
   }

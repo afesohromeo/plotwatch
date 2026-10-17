@@ -143,6 +143,27 @@ void main() {
           );
         });
 
+        // The developer (2026-10-17): an email that already has an account
+        // must not lead to the code page.
+        test('that already has an account then it is refused, with that '
+            'reason', () async {
+          await passwordUser('grace.hopper@example.com');
+
+          await expectLater(
+            endpoints.emailIdp.startRegistration(
+              sessionBuilder,
+              email: ' Grace.Hopper@Example.com ',
+            ),
+            throwsA(
+              isA<AppException>().having(
+                (e) => e.code,
+                'code',
+                AppErrorCode.emailAlreadyRegistered,
+              ),
+            ),
+          );
+        });
+
         test('that nobody has then the registration starts', () async {
           expect(
             await endpoints.emailIdp.startRegistration(
