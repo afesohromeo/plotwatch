@@ -136,6 +136,10 @@
      - the client's `onFailedCall`, which fires before the refresh and would sign out on a normal token expiry;
      - stream errors, since a refused stream may only need a token refresh.
    - Tests in `api_error_handler_test.dart`.
+10e. **Closing Google's tab cancels the web sign-in (approved 2026-10-17, deployed during judging; `main` stays as submitted).**
+   - **The bug:** flutter_web_auth_2 opens Google in a new tab and waits for its message. A closed tab leaves no trace, so the button span until the package's 5-minute timeout.
+   - **The fix:** `untilAbandoned`. When the person comes back to this tab (focus or visibilitychange, `tab_returns_web.dart`) and no answer follows within 2 s, it counts as a cancel. A later answer is ignored. Tests in `until_abandoned_test.dart`.
+   - **Known limit, not fixed:** on the web, Chrome's password manager often fills only the focused field and doesn't offer again until a reload. Flutter web overlays one browser input at a time instead of a real form. The fields are already in an `AutofillGroup` with email and password hints. Android is fine.
 10c. **Money tab, as the developer asked (2026-10-14):**
    - The fourth figure is **Left**: released minus spent. "Spent without a receipt" (spent minus spent with a receipt) is a line under it. This replaces the "unaccounted" amount of LED-05, which mixed money not yet spent with money spent without proof. AC-5's example now reads: released 500,000, spent 350,000, with a receipt 300,000, left 150,000, 50,000 without a receipt. The server still computes `unaccountedMinor`.
    - By stage: "X released · Y spent", and what is left on the right.

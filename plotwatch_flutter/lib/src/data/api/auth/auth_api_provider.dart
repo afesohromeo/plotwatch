@@ -109,9 +109,13 @@ class AuthApiProvider {
     const scopes = GoogleAuthController.defaultScopes;
     try {
       if (kIsWeb) {
-        final result = await GoogleWebSignInService.instance.signIn(
-          scopes: scopes,
+        // Closing Google's tab leaves no trace: coming back here without a
+        // result counts as a cancel (doc/04g step 10e).
+        final result = await untilAbandoned(
+          GoogleWebSignInService.instance.signIn(scopes: scopes),
+          tabReturns(),
         );
+        if (result == null) return null;
         return await _client.googleIdp.loginWithCode(
           code: result.code,
           codeVerifier: result.codeVerifier,
