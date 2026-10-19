@@ -37,6 +37,11 @@ abstract final class LiveService {
   /// [fetch] returns the rows with an ID above `floorId` that are either
   /// above `lastId` or created since `since`, oldest first. [check] runs
   /// before each read and throws to end the stream (e.g. a removed member).
+  ///
+  /// An `async*` function only notices a cancel when it yields, and a quiet
+  /// stream never yields: it kept polling after the client left, until the
+  /// open loops filled the database pool (doc/04g step 10f). So the cancel
+  /// closes the wake-up stream, which ends the reading loop.
   static Stream<T> watch<T>(
     Session session, {
     required String channel,
@@ -46,21 +51,36 @@ abstract final class LiveService {
     fetch,
     required int Function(T row) idOf,
     required Future<void> Function() check,
-  }) async* {
-    await check();
-    final floorId = afterId ?? await currentMaxId();
-    var lastId = floorId;
-    final sent = <int>{};
-
+  }) {
     final wake = StreamController<void>();
-    final signals = session.messages
-        .createStream<LiveSignal>(channel)
-        .listen((_) => wake.add(null));
-    final timer = Timer.periodic(tick, (_) => wake.add(null));
-    try {
+    StreamSubscription<LiveSignal>? signals;
+    Timer? timer;
+
+    void poke() {
+      if (!wake.isClosed) wake.add(null);
+    }
+
+    void stop() {
+      timer?.cancel();
+      unawaited(signals?.cancel());
+      if (!wake.isClosed) unawaited(wake.close());
+    }
+
+    Stream<T> read() async* {
+      await check();
+      final floorId = afterId ?? await currentMaxId();
+      if (wake.isClosed) return;
+      var lastId = floorId;
+      final sent = <int>{};
+
+      signals = session.messages
+          .createStream<LiveSignal>(channel)
+          .listen((_) => poke());
+      timer = Timer.periodic(tick, (_) => poke());
       // The catch-up, then one read per wake-up.
-      wake.add(null);
+      poke();
       await for (final _ in wake.stream) {
+        if (wake.isClosed) break;
         await check();
         final since = DateTime.now().toUtc().subtract(window);
         for (final row in await fetch(floorId, lastId, since)) {
@@ -70,10 +90,24 @@ abstract final class LiveService {
           yield row;
         }
       }
-    } finally {
-      timer.cancel();
-      await signals.cancel();
-      await wake.close();
     }
+
+    late final StreamController<T> rows;
+    StreamSubscription<T>? reads;
+    rows = StreamController<T>(
+      onListen: () => reads = read().listen(
+        rows.add,
+        onError: rows.addError,
+        onDone: () {
+          stop();
+          unawaited(rows.close());
+        },
+      ),
+      onCancel: () {
+        stop();
+        return reads?.cancel();
+      },
+    );
+    return rows.stream;
   }
 }

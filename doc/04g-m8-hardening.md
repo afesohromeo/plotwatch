@@ -146,6 +146,12 @@
    - Amounts stay on one line (`OneLineAmount`, shrunk to fit).
    - On the web, the lists leave room for the Record a release button.
    - **Bug:** the summary listed stages in the database's order, so the first stage could come last. `stagesByProject` now sorts by plan order. It is used by the summary and the project cards' stage bars.
+10f. **Live streams stop when the client leaves (approved 2026-10-19, deployed during judging; `main` stays as submitted).**
+   - **Seen on Cloud (2026-10-19):** sign-in took about 15 s, the project list about 20 s, and a project page failed with "no connection" (HTTP 504). `scloud log` showed a feed stream running its membership check and its read every 3 s, each query taking 1.4–2 s, even one-row lookups.
+   - **The bug:** `LiveService.watch` was an `async*` loop woken by a 3 s timer. An `async*` function only stops at a `yield`, and a quiet stream never yields. So when a client left a page or closed its tab, the loop kept polling until the next deploy, and its cancel never completed. Every visit left loops behind (a project page opens two activity streams; the app keeps a notification stream), until they filled the database connection pool and every call waited in its queue.
+   - **The fix:** `watch` returns a stream whose cancel stops the timer, cancels the message listener and closes the wake-up stream, so the loop ends at once (or after the read already under way). The catch-up, the check on every wake-up and the errors that end a stream are unchanged. No client, model or migration change.
+   - **Test:** `live_cancel_test.dart`: a quiet stream cancelled after its first reads stops reading, and its cancel completes.
+   - **Set aside:** the project page's two activity streams (feed and Money) could share one. Not needed once streams close.
 11. **Only if early:** hash chain (VER-05).
 
 Set aside, documented in the README as the roadmap: evidence requests, fund requests, comments, the inactivity reminder, photos on updates, proof files for releases, the public verification page, the offline queue, ownership transfer (so an owner can leave an open shared project; decided 2026-10-13).

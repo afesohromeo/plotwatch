@@ -243,6 +243,11 @@ See [03-mvp-scope.md §7](03-mvp-scope.md#7-decisions-to-confirm-before-implemen
 - **Judging runs 15–20 Oct:** keep Cloud running; code freeze except for fixes a judge could hit.
 - The feedback log has 20 findings ([`serverpod-feedback.md`](serverpod-feedback.md)). The Most Valuable Feedback form was due with the submission.
 
+**Status (2026-10-19): fixes during judging, on `dev` only (`main` stays as submitted).**
+- Deployed during judging: an expired session signs out (`04g` 10d); closing Google's tab cancels the sign-in (10e); a registered email can't start a new sign-up; the sidebar logo goes home.
+- **Cloud slowness (2026-10-19):** sign-in took about 15 s, and a project page returned 504. The cause was a leak in our code: live streams kept polling after their client left, until they filled the database pool. Fixed in `04g` 10f; 440 server tests passing. The developer deploys it.
+- The feedback log has 22 findings.
+
 **Next steps:**
 1. The user reviews `01`, `02`, `03` and requests changes. Iterate until approved.
 2. Confirm the pending decisions (`03-mvp-scope.md §7`).
